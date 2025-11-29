@@ -1,0 +1,259 @@
+<div class="dashboard-container">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+                 class="sidenav" 
+                 fixedInViewport
+      [attr.role]="isHandset ? 'dialog' : 'navigation'"
+      [mode]="isHandset ? 'over' : 'side'"
+                 [opened]="sidebarOpen">
+      <app-sidebar
+        [isHandset]="isHandset"
+        [sidebarOpen]="sidebarOpen"
+        [activeNavigationItem]="activeNavigationItem"
+        [navigationItems]="[]"
+        [userName]="userName"
+        [userRole]="userRole"
+        (toggleSidebar)="toggleSidebar()"
+        (navigationClick)="onNavigationClick($event)"
+        (serviceItemClick)="onServiceItemClick($event)">
+      </app-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-content">
+      <app-navbar 
+        [isHandset]="isHandset"
+        [userName]="userName"
+        (toggleSidebar)="toggleSidebar()"
+        (refreshDashboard)="refreshDashboard()"
+        (profileOptionClick)="onProfileOptionClick($event)">
+      </app-navbar>
+
+      <div class="dashboard-content">
+        <!-- Debug: Verificar se o componente está carregando -->
+        <div *ngIf="false" style="padding: 20px; background: yellow; color: black;">
+          Debug: currentView = {{ currentView }}, dashboardStats = {{ dashboardStats ? 'loaded' : 'null' }}
+        </div>
+        
+            <app-overview *ngIf="currentView === 'overview'"></app-overview>
+            
+        <app-attendance-upload *ngIf="currentView === 'attendance-lists-upload'" (navigationClick)="onNavigationClick($event)"></app-attendance-upload>
+        <app-attendance-view *ngIf="currentView === 'attendance-lists-view'" (navigationClick)="onNavigationClick($event)"></app-attendance-view>
+
+        <app-fae *ngIf="currentView === 'fae'" (navigationClick)="onNavigationClick($event)"></app-fae>
+        <app-economic-agent *ngIf="currentView === 'economic-agent'" (navigationClick)="onNavigationClick($event)"></app-economic-agent>
+        <app-user *ngIf="currentView === 'user'" (navigationClick)="onNavigationClick($event)"></app-user>
+        <app-service-view *ngIf="currentView === 'service'" (navigationClick)="onNavigationClick($event)"></app-service-view>
+        <app-training *ngIf="currentView === 'training'" (navigationClick)="onNavigationClick($event)"></app-training>
+        <app-indicators *ngIf="currentView === 'indicators'" (navigationClick)="onNavigationClick($event)"></app-indicators>
+        <app-report *ngIf="currentView === 'report'" (navigationClick)="onNavigationClick($event)"></app-report>
+        <app-form-management *ngIf="currentView === 'form-management'" (navigationClick)="onNavigationClick($event)"></app-form-management>
+        <app-user-management *ngIf="currentView === 'user-management'" (navigationClick)="onNavigationClick($event)"></app-user-management>
+        <app-profile *ngIf="currentView === 'profile'" (navigationClick)="onNavigationClick($event)"></app-profile>
+        
+        <div *ngIf="currentView === 'dashboard'" class="dashboard-main">
+          <div *ngIf="!dashboardStats" class="loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px;">
+            <mat-spinner></mat-spinner>
+            <p>Carregando dashboard...</p>
+          </div>
+          <div *ngIf="dashboardStats">
+            <!-- Header Card Component -->
+            <app-dashboard-header-card
+              [greeting]="greeting"
+              [userName]="userName"
+              [currentDate]="currentDate">
+            </app-dashboard-header-card>
+
+          <!-- Cards Principais - Design Moderno -->
+          <div class="modern-cards-grid">
+            <!-- Card de Membros -->
+            <app-members-card 
+              [stats]="associationStats"
+              (cardClick)="navigateToView('membros')">
+            </app-members-card>
+
+            <!-- Card de Tesouraria -->
+            <app-treasury-card 
+              [stats]="treasuryStats"
+              [formatCurrency]="formatCurrency"
+              (cardClick)="navigateToView('tesouraria')">
+            </app-treasury-card>
+
+            <!-- Card de Parceiros -->
+            <app-partners-card 
+              [partners]="partners"
+              (cardClick)="navigateToView('parceiros')">
+            </app-partners-card>
+          </div>
+
+          <!-- Seção de Gráficos Modernos -->
+          <div class="charts-section">
+            <div class="charts-grid">
+              <!-- Gráfico de Crescimento de Membros -->
+              <div class="modern-chart-card">
+                <div class="chart-header">
+                  <div class="chart-title-section">
+                    <mat-icon>trending_up</mat-icon>
+                    <div>
+                      <h3>Crescimento da Associação</h3>
+                      <p>Evolução do número de membros (últimos 12 meses)</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <svg viewBox="0 0 800 300" class="growth-chart-svg">
+                    <defs>
+                      <linearGradient id="growthGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#05B6D4;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#05B6D4;stop-opacity:0" />
+                      </linearGradient>
+                    </defs>
+                    <!-- Grid -->
+                    <g class="grid">
+                      <line x1="60" y1="20" x2="60" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      <line x1="60" y1="260" x2="760" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      <line *ngFor="let i of [0,1,2,3,4]" 
+                            x1="60" 
+                            [attr.y1]="20 + (i * 60)" 
+                            x2="760" 
+                            [attr.y2]="20 + (i * 60)" 
+                            stroke="#F3F4F6" 
+                            stroke-width="1" 
+                            stroke-dasharray="4,4"/>
+                    </g>
+                    <!-- Area fill -->
+                    <path [attr.d]="getGrowthAreaPath()" fill="url(#growthGradient)"/>
+                    <!-- Line -->
+                    <path [attr.d]="getGrowthLinePath()" 
+                          fill="none" 
+                          stroke="#05B6D4" 
+                          stroke-width="3" 
+                          stroke-linecap="round"/>
+                    <!-- Points -->
+                    <circle *ngFor="let point of getGrowthPoints(); let i = index"
+                            [attr.cx]="point.x"
+                            [attr.cy]="point.y"
+                            r="5"
+                            fill="#05B6D4"
+                            stroke="#fff"
+                            stroke-width="2"/>
+                    <!-- Labels -->
+                    <text *ngFor="let month of growthChartMonths; let i = index"
+                          [attr.x]="60 + (i * 58.33)"
+                          y="285"
+                          text-anchor="middle"
+                          class="axis-label">{{ month }}</text>
+                    <text x="30" y="25" text-anchor="middle" class="axis-label">{{ growthChartMax }}</text>
+                    <text x="30" y="145" text-anchor="middle" class="axis-label">{{ growthChartMax / 2 }}</text>
+                    <text x="30" y="265" text-anchor="middle" class="axis-label">0</text>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Gráfico de Tesouraria -->
+              <div class="modern-chart-card">
+                <div class="chart-header">
+                  <div class="chart-title-section">
+                    <mat-icon>account_balance_wallet</mat-icon>
+                    <div>
+                      <h3>Receitas vs Despesas</h3>
+                      <p>Comparativo mensal (últimos 6 meses)</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-body">
+                  <svg viewBox="0 0 800 300" class="treasury-chart-svg">
+                    <!-- Grid -->
+                    <g class="grid">
+                      <line x1="80" y1="20" x2="80" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      <line x1="80" y1="260" x2="760" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      <line *ngFor="let i of [0,1,2,3,4]" 
+                            x1="80" 
+                            [attr.y1]="20 + (i * 60)" 
+                            x2="760" 
+                            [attr.y2]="20 + (i * 60)" 
+                            stroke="#F3F4F6" 
+                            stroke-width="1" 
+                            stroke-dasharray="4,4"/>
+                    </g>
+                    <!-- Bars -->
+                    <g *ngFor="let data of treasuryChartData; let i = index">
+                      <!-- Receitas bar -->
+                      <rect [attr.x]="80 + (i * 110) + 10"
+                            [attr.y]="260 - (data.receitas / treasuryChartMax * 240)"
+                            width="40"
+                            [attr.height]="data.receitas / treasuryChartMax * 240"
+                            fill="#05B6D4"
+                            rx="4"/>
+                      <!-- Despesas bar -->
+                      <rect [attr.x]="80 + (i * 110) + 55"
+                            [attr.y]="260 - (data.despesas / treasuryChartMax * 240)"
+                            width="40"
+                            [attr.height]="data.despesas / treasuryChartMax * 240"
+                            fill="#8B5CF6"
+                            rx="4"/>
+                      <!-- Labels -->
+                      <text [attr.x]="80 + (i * 110) + 70"
+                            y="285"
+                            text-anchor="middle"
+                            class="axis-label">{{ data.month }}</text>
+                    </g>
+                    <!-- Legend -->
+                    <g class="legend" transform="translate(600, 30)">
+                      <rect x="0" y="0" width="12" height="12" fill="#05B6D4" rx="2"/>
+                      <text x="18" y="10" class="legend-text">Receitas</text>
+                      <rect x="0" y="20" width="12" height="12" fill="#8B5CF6" rx="2"/>
+                      <text x="18" y="30" class="legend-text">Despesas</text>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seção de Parceiros Melhorada -->
+            <div class="partners-section-card">
+              <div class="section-header">
+                <div class="section-title-group">
+                  <mat-icon>handshake</mat-icon>
+                  <div>
+                    <h3>Parceiros Estratégicos</h3>
+                    <p>Organizações e entidades parceiras da ANAM</p>
+                  </div>
+                </div>
+                <button mat-icon-button class="view-all-btn" (click)="navigateToView('parceiros')">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
+              <div class="partners-content" *ngIf="partners && partners.length > 0; else noPartners">
+                <div class="partners-grid-compact">
+                  <div class="partner-card-compact" *ngFor="let partner of partners" [class.active]="partner.ativo">
+                    <div class="partner-card-header">
+                      <div class="partner-icon-compact">
+                        <mat-icon>business</mat-icon>
+                      </div>
+                      <div class="partner-status-badge" [class.active]="partner.ativo">
+                        <span class="status-dot"></span>
+                        <span>{{ partner.ativo ? 'Ativo' : 'Inativo' }}</span>
+                      </div>
+                    </div>
+                    <div class="partner-card-body">
+                      <h4>{{ partner.nome }}</h4>
+                      <p>{{ partner.tipo }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noPartners>
+                <div class="no-data-compact">
+                  <mat-icon>info</mat-icon>
+                  <p>Nenhum parceiro cadastrado</p>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

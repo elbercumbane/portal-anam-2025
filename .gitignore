@@ -7,9 +7,20 @@
 /bazel-out
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.angular/
+
+# Backend
+backend/dist/
+backend/node_modules/
+backend/build/
 
 # IDEs and editors
 .idea/

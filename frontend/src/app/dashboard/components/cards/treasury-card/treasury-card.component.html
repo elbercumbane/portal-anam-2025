@@ -1,0 +1,33 @@
+<div class="modern-card treasury-modern-card" (click)="onCardClick()">
+  <div class="card-glow"></div>
+  <div class="card-background-pattern"></div>
+  <div class="card-content-wrapper">
+    <div class="card-header-modern">
+      <div class="icon-wrapper">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="header-text">
+        <h3>Tesouraria</h3>
+        <span class="card-subtitle">Saldo disponível</span>
+      </div>
+    </div>
+    <div class="main-stat">
+      <span class="big-number currency">{{ formatCurrency(stats?.saldo || 0) }}</span>
+      <div class="stat-change positive">
+        <mat-icon>arrow_upward</mat-icon>
+        <span>{{ formatCurrency(getBalanceChange()) }}</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-item">
+        <span class="footer-label">Receitas</span>
+        <span class="footer-value">{{ formatCurrency(stats?.receitas || 0) }}</span>
+      </div>
+      <div class="footer-item">
+        <span class="footer-label">Despesas</span>
+        <span class="footer-value">{{ formatCurrency(stats?.despesas || 0) }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+

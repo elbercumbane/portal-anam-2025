@@ -1,61 +1,28 @@
 {
-  "name": "associacao-portal",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "start:dev": "ng serve --configuration development",
-    "start:prod": "ng serve --configuration production",
-    "start:public": "ng serve --host 0.0.0.0 --disable-host-check",
-    "start:ngrok": "ng serve --host 0.0.0.0 --disable-host-check --port 4201",
-    "start:4200": "ng serve --port 4200",
-    "start:4201": "ng serve --port 4201",
-    "start:dual": "concurrently \"ng serve --port 4200\" \"ng serve --port 4201\"",
-    "build": "ng build",
-    "build:dev": "ng build --configuration development",
-    "build:prod": "ng build --configuration production",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "test:watch": "ng test --watch=true",
-    "test:coverage": "ng test --code-coverage",
-    "install:deps": "npm install",
-    "clean": "rimraf dist",
-    "clean:all": "rimraf node_modules dist && npm cache clean --force",
-    "lint": "ng lint",
-    "serve:dist": "http-server dist/associacao-portal -p 8080 -c-1"
-  },
+  "name": "portal-anam-workspace",
+  "version": "1.0.0",
+  "description": "Workspace do Portal da Associação e Massinga - Frontend e Backend",
   "private": true,
-  "dependencies": {
-    "@angular/animations": "^18.2.0",
-    "@angular/cdk": "^18.2.14",
-    "@angular/common": "^18.2.0",
-    "@angular/compiler": "^18.2.0",
-    "@angular/core": "^18.2.0",
-    "@angular/forms": "^18.2.0",
-    "@angular/material": "^18.2.14",
-    "@angular/platform-browser": "^18.2.0",
-    "@angular/platform-browser-dynamic": "^18.2.0",
-    "@angular/router": "^18.2.0",
-    "gsap": "^3.13.0",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test"
   },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.21",
-    "@angular/cli": "^17.3.17",
-    "@angular/compiler-cli": "^18.2.0",
-    "@types/jasmine": "~5.1.0",
-    "concurrently": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "http-server": "^14.1.1",
-    "jasmine-core": "~5.2.0",
-    "karma": "~6.4.0",
-    "karma-chrome-launcher": "~3.2.0",
-    "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "rimraf": "^5.0.0",
-    "typescript": "~5.5.2"
-  }
+  "keywords": [
+    "angular",
+    "frontend",
+    "backend",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC"
 }
+

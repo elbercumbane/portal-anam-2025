@@ -1,0 +1,211 @@
+// Navbar Component Styles - Melhorias Visuais Modernas
+.top-navbar {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.98) 0%, 
+    rgba(248, 250, 252, 0.95) 50%,
+    rgba(255, 255, 255, 0.98) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(5, 182, 212, 0.15);
+  box-shadow: 
+    0 4px 20px rgba(5, 182, 212, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  padding: 0 2rem;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1000;
+  
+  // Gradiente sutil no topo - usando #05B6D4 e cor complementar
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      #05B6D4 0%, 
+      #8B5CF6 50%,
+      #05B6D4 100%);
+    opacity: 0.6;
+  }
+  
+  // Left Section: Menu & Title
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  
+  // Center Section: Search
+  .navbar-center {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  // Right Section: Actions & Profile
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 1rem;
+  }
+
+  // System Status Indicator
+  .system-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(5, 182, 212, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(5, 182, 212, 0.2);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(5, 182, 212, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #05B6D4;
+      box-shadow: 0 0 8px rgba(5, 182, 212, 0.6);
+      animation: pulse-dot 2s infinite;
+    }
+
+    .status-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #05B6D4;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.2);
+    }
+  }
+}
+
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .top-navbar {
+    .navbar-center {
+      max-width: 400px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .top-navbar {
+    padding: 0 1.25rem;
+    height: 65px;
+    gap: 1rem;
+    
+    .navbar-center {
+      max-width: 350px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 0 1rem;
+    height: 60px;
+    gap: 0.75rem;
+    
+    .navbar-left {
+      gap: 0.75rem;
+    }
+    
+    .navbar-center {
+      max-width: 250px;
+    }
+    
+    .navbar-right {
+      gap: 0.25rem;
+
+      .system-status {
+        .status-text {
+          display: none;
+        }
+        padding: 0.4rem 0.6rem;
+      }
+    }
+    
+  }
+}
+
+@media (max-width: 600px) {
+  .top-navbar {
+    padding: 0 0.75rem;
+    height: 60px;
+    gap: 0.5rem;
+    
+    .navbar-left {
+      gap: 0.5rem;
+    }
+    
+    .navbar-center {
+      max-width: 200px;
+    }
+    
+    .navbar-right {
+      gap: 0.15rem;
+
+      .system-status {
+        display: none;
+      }
+    }
+    
+  }
+}
+
+@media (max-width: 480px) {
+  .top-navbar {
+    padding: 0 0.75rem;
+    height: 55px;
+    gap: 0.5rem;
+    
+    .navbar-center {
+      display: none; // Hide search on mobile
+    }
+    
+    .navbar-right {
+      gap: 0.1rem;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .top-navbar {
+    padding: 0 0.5rem;
+    height: 50px;
+    min-height: 50px;
+    
+    .navbar-left {
+      gap: 0.25rem;
+    }
+  }
+}

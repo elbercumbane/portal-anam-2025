@@ -1,0 +1,39 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Confirmação de Pagamento</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-button" *ngIf="!processing">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="dialog-body">
+    <div class="payment-notification" *ngIf="processing">
+      <div class="notification-icon">
+        <mat-icon class="phone-icon">phone_android</mat-icon>
+        <div class="notification-pulse"></div>
+      </div>
+      <h3>Confirme no seu telefone</h3>
+      <p>Você receberá uma notificação no seu telemóvel.</p>
+      <p class="instruction">Digite o PIN da sua conta no telefone para confirmar o pagamento.</p>
+      
+      <div class="processing-indicator">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p class="processing-text">Aguardando confirmação...</p>
+      </div>
+    </div>
+    
+    <div class="payment-success" *ngIf="!processing">
+      <mat-icon class="success-icon">check_circle</mat-icon>
+      <h3>Pagamento Confirmado!</h3>
+      <p>O pagamento foi processado com sucesso.</p>
+    </div>
+  </div>
+  
+  <div class="dialog-actions" *ngIf="!processing">
+    <button mat-raised-button color="primary" (click)="onCancel()">
+      <mat-icon>check</mat-icon>
+      <span>Continuar</span>
+    </button>
+  </div>
+</div>
+
