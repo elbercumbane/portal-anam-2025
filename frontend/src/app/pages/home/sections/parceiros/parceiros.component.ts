@@ -1,14 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PARCEIROS, PartnerLogo } from './parceiros.data';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'home-parceiros',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './parceiros.component.html',
   styleUrls: ['./parceiros.component.scss']
 })
-export class ParceirosComponent {
-  parceiros = signal<PartnerLogo[]>(PARCEIROS);
-}
+export class ParceirosComponent {}

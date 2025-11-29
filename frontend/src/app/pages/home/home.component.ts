@@ -35,24 +35,29 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('heroContent', { static: true }) heroContent!: ElementRef;
   @ViewChild('heroTitle', { static: true }) heroTitle!: ElementRef;
   @ViewChild('heroSubtitle', { static: true }) heroSubtitle!: ElementRef;
+  @ViewChild('heroSubtitleBox', { static: true }) heroSubtitleBox!: ElementRef;
   @ViewChild('heroButton') heroButton?: ElementRef;
   @ViewChild('slider', { static: true }) slider!: ElementRef;
   @ViewChild('historiaSection', { static: true }) historiaSection!: ElementRef;
   @ViewChild('quemSomosSection', { static: true }) quemSomosSection!: ElementRef;
 
   public currentSlide = 0;
-  public totalSlides = 2;
+  public totalSlides = 3;
   private slideTimeout: any;
 
   // Textos para cada slide
   private slideTexts = [
     {
       title: "Bem-vindo à Associação de Naturais e Amigos de Massinga",
-      subtitle: "Unidos por uma visão de desenvolvimento e união"
+      subtitle: ""
     },
     {
       title: "Nossa Missão",
-      subtitle: "Desenvolvimento comunitário e fortalecimento dos laços"
+      subtitle: "Promover o desenvolvimento sustentável e melhorar o bem-estar socioeconómico das comunidades do Distrito de Massinga, gerindo e capitalizando estrategicamente os recursos e potencial locais."
+    },
+    {
+      title: "Nossa Visão",
+      subtitle: "Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos."
     }
   ];
 
@@ -105,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     // Animação inicial do conteúdo
     gsap.set(this.heroContent.nativeElement, { opacity: 0 });
     gsap.set(this.heroTitle.nativeElement, { y: 50, opacity: 0 });
-    gsap.set(this.heroSubtitle.nativeElement, { x: -50, opacity: 0 });
+    gsap.set(this.heroSubtitleBox.nativeElement, { y: 30, opacity: 0, scale: 0.95 });
     if (this.heroButton) {
       gsap.set(this.heroButton.nativeElement, { y: 30, opacity: 0 });
     }
@@ -120,9 +125,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         duration: 1, 
         ease: "power3.out" 
       }, "-=0.3")
-      .to(this.heroSubtitle.nativeElement, { 
-        x: 0, 
-        opacity: 1, 
+      .to(this.heroSubtitleBox.nativeElement, { 
+        y: 0, 
+        opacity: 1,
+        scale: 1,
         duration: 1, 
         ease: "power3.out" 
       }, "-=0.7")
@@ -142,9 +148,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     
     // Configurar posição inicial das imagens
     slides.forEach((slide: HTMLElement, index: number) => {
+      // Foto 3 (index 2) começa com menos zoom
+      const initialScale = index === 2 ? 1 : 1.1;
       gsap.set(slide, { 
         opacity: index === 0 ? 1 : 0,
-        scale: 1.1
+        scale: initialScale
       });
     });
   }
@@ -154,7 +162,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private scheduleNextSlide() {
-    const durationsMs = [12000, 12000]; // 12 segundos para cada slide
+    const durationsMs = [12000, 12000, 12000]; // 12 segundos para cada slide
     const currentDuration = durationsMs[this.currentSlide] ?? 12000;
 
     if (this.slideTimeout) {
@@ -187,6 +195,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private animateSlideTransition() {
     const currentText = this.slideTexts[this.currentSlide];
     const slides = this.slider.nativeElement.querySelectorAll('.slide');
+    const hasMissionVisionText = this.currentSlide !== 0;
     
     // Timeline principal para transição profissional
     const masterTl = gsap.timeline();
@@ -202,26 +211,31 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     
     // Animação de entrada da nova imagem - Fade in profissional com zoom inicial
     const newImage = slides[this.currentSlide];
+    // Foto 3 (index 2) tem menos zoom
+    const startScale = this.currentSlide === 2 ? 1 : 1;
+    const endScale = this.currentSlide === 2 ? 1.05 : 1.15;
+    
     masterTl.fromTo(newImage, 
-      { opacity: 0, scale: 1 },
+      { opacity: 0, scale: startScale },
       { 
         opacity: 1, 
-        scale: 1,
+        scale: startScale,
         duration: 1.5, 
         ease: "power2.inOut" 
       }, "-=0.8");
     
     // Efeito Ken Burns - Zoom lento contínuo na imagem enquanto está visível
     masterTl.to(newImage, {
-      scale: 1.15,
+      scale: endScale,
       duration: 12, // Duração do zoom (mesmo tempo que o slide fica visível)
       ease: "linear"
     }, "-=1");
     
-    // Animação de saída do texto - Fade out simples e elegante
-    masterTl.to([this.heroTitle.nativeElement, this.heroSubtitle.nativeElement], { 
+    // Animação de saída do texto e caixa - Fade out elegante
+    masterTl.to([this.heroTitle.nativeElement, this.heroSubtitleBox.nativeElement], { 
       opacity: 0, 
       y: -20,
+      scale: 0.95,
       duration: 0.5, 
       ease: "power2.in" 
     }, "-=12.2");
@@ -232,24 +246,41 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.heroSubtitle.nativeElement.textContent = currentText.subtitle;
     }, [], "-=11.5");
 
-    // Animação de entrada do texto - Fade in profissional
+    // Animação de entrada do título - com efeito especial para Missão/Visão
     masterTl.fromTo(this.heroTitle.nativeElement, 
-      { opacity: 0, y: 30 },
+      { opacity: 0, y: 40, scale: 0.9 },
       { 
         opacity: 1, 
         y: 0,
-        duration: 1, 
-        ease: "power2.out" 
+        scale: 1,
+        duration: 1.2, 
+        ease: "power3.out" 
       }, "-=11.3"
-    )
-    .fromTo(this.heroSubtitle.nativeElement, 
-      { opacity: 0, y: 30 },
-      { 
-        opacity: 1, 
-        y: 0,
-        duration: 1, 
-        ease: "power2.out" 
-      }, "-=11");
+    );
+    
+    // Animação de entrada da caixa do subtítulo - com efeito especial para Missão/Visão
+    if (hasMissionVisionText) {
+      masterTl.fromTo(this.heroSubtitleBox.nativeElement, 
+        { opacity: 0, y: 50, scale: 0.9 },
+        { 
+          opacity: 1, 
+          y: 0,
+          scale: 1,
+          duration: 1.4, 
+          ease: "back.out(1.2)" 
+        }, "-=10.8"
+      );
+    } else {
+      masterTl.fromTo(this.heroSubtitleBox.nativeElement, 
+        { opacity: 0, y: 30 },
+        { 
+          opacity: 1, 
+          y: 0,
+          duration: 1, 
+          ease: "power2.out" 
+        }, "-=11"
+      );
+    }
   }
 
   private getInitialPosition(direction: string) {

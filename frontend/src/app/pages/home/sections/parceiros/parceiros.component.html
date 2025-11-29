@@ -1,20 +1,20 @@
-<!-- parceiros.component.html -->
-<section class="partners" aria-labelledby="partners-title">
-  <div class="container">
-    <h2 id="partners-title" class="title">Nossos Parceiros</h2>
+<section class="partners-section">
+  <div class="section-header">
+    <h2 class="title">Nossos <span class="highlight">Parceiros</span></h2>
+    <p class="subtitle">Organizações que acreditam na nossa missão</p>
+  </div>
 
-    <div class="grid-logos" role="list">
-      <figure class="logo-card" *ngFor="let p of parceiros()" role="listitem">
-        <img
-          [src]="p.src"
-          [alt]="p.alt"
-          loading="lazy"
-          width="220"
-          height="90"
-          sizes="(max-width: 900px) 45vw, 220px"
-        />
-        <figcaption class="sr-only">{{ p.nome }}</figcaption>
-      </figure>
-    </div>
+  <div class="marquee-container">
+    <div class="marquee-track"><div class="marquee-content"><img src="/assets/parceiros.png" alt="Parceiros" class="partners-image"><img src="/assets/parceiros2.png" alt="Parceiros" class="partners-image"></div><div class="marquee-content"><img src="/assets/parceiros.png" alt="Parceiros" class="partners-image"><img src="/assets/parceiros2.png" alt="Parceiros" class="partners-image"></div></div>
+  </div>
+
+  <div class="view-all">
+    <a routerLink="/parceiros" class="btn-view-all">
+      <span>Conheça Nossos Parceiros</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
   </div>
 </section>

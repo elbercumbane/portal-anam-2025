@@ -1,14 +1,102 @@
-export type PartnerLogo = { id: string; nome: string; src: string; alt: string; };
+export type PartnerLogo = { 
+  id: string; 
+  nome: string; 
+  src: string; 
+  alt: string;
+  categoria: string;
+  cor: string;
+  icon: string;
+};
 
 export const PARCEIROS: PartnerLogo[] = [
-  { id: 'mireme', nome: 'MIREME', src: 'https://via.placeholder.com/220x90/8A7D65/FFFFFF?text=MIREME', alt: 'Logotipo MIREME' },
-  { id: 'cta',    nome: 'CTA',    src: 'https://via.placeholder.com/220x90/2563EB/FFFFFF?text=CTA',    alt: 'Logotipo CTA' },
-  { id: 'twf',    nome: 'TWF',    src: 'https://via.placeholder.com/220x90/059669/FFFFFF?text=TWF',    alt: 'Logotipo TWF' },
-  { id: 'aneme',  nome: 'ANEME',  src: 'https://via.placeholder.com/220x90/DC2626/FFFFFF?text=ANEME',  alt: 'Logotipo ANEME' },
-  { id: 'unido',  nome: 'UNIDO',  src: 'https://via.placeholder.com/220x90/7C3AED/FFFFFF?text=UNIDO',  alt: 'Logotipo UNIDO' },
-  { id: 'evolen', nome: 'EVOLEN', src: 'https://via.placeholder.com/220x90/EA580C/FFFFFF?text=EVOLEN', alt: 'Logotipo EVOLEN' },
-  { id: 'xhub',   nome: 'XHUB',   src: 'https://via.placeholder.com/220x90/0891B2/FFFFFF?text=XHUB',   alt: 'Logotipo XHUB' },
-  { id: 'indico', nome: 'ÍNDICO', src: 'https://via.placeholder.com/220x90/BE185D/FFFFFF?text=ÍNDICO', alt: 'Logotipo ÍNDICO' },
-  { id: 'em',     nome: 'E&M',    src: 'https://via.placeholder.com/220x90/16A34A/FFFFFF?text=E%26M',     alt: 'Logotipo E&M' },
-  { id: 'oe',     nome: 'O.E',    src: 'https://via.placeholder.com/220x90/9333EA/FFFFFF?text=O.E',     alt: 'Logotipo O.E' },
+  { 
+    id: 'mireme', 
+    nome: 'MIREME', 
+    src: '', 
+    alt: 'Logotipo MIREME',
+    categoria: 'Ministério',
+    cor: '#1B4332',
+    icon: 'government'
+  },
+  { 
+    id: 'cta', 
+    nome: 'CTA', 
+    src: '', 
+    alt: 'Logotipo CTA - Confederação das Associações Económicas',
+    categoria: 'Confederação',
+    cor: '#2563EB',
+    icon: 'business'
+  },
+  { 
+    id: 'twf', 
+    nome: 'TWF', 
+    src: '', 
+    alt: 'Logotipo TWF',
+    categoria: 'Fundação',
+    cor: '#059669',
+    icon: 'foundation'
+  },
+  { 
+    id: 'aneme', 
+    nome: 'ANEME', 
+    src: '', 
+    alt: 'Logotipo ANEME',
+    categoria: 'Associação',
+    cor: '#DC2626',
+    icon: 'association'
+  },
+  { 
+    id: 'unido', 
+    nome: 'UNIDO', 
+    src: '', 
+    alt: 'Logotipo UNIDO - United Nations Industrial Development',
+    categoria: 'ONU',
+    cor: '#0891B2',
+    icon: 'united-nations'
+  },
+  { 
+    id: 'evolen', 
+    nome: 'EVOLEN', 
+    src: '', 
+    alt: 'Logotipo EVOLEN',
+    categoria: 'Empresa',
+    cor: '#EA580C',
+    icon: 'company'
+  },
+  { 
+    id: 'xhub', 
+    nome: 'XHUB', 
+    src: '', 
+    alt: 'Logotipo XHUB - Hub de Inovação',
+    categoria: 'Inovação',
+    cor: '#7C3AED',
+    icon: 'innovation'
+  },
+  { 
+    id: 'indico', 
+    nome: 'ÍNDICO', 
+    src: '', 
+    alt: 'Logotipo ÍNDICO',
+    categoria: 'Banco',
+    cor: '#0369A1',
+    icon: 'bank'
+  },
+  { 
+    id: 'em', 
+    nome: 'E&M', 
+    src: '', 
+    alt: 'Logotipo E&M',
+    categoria: 'Consultoria',
+    cor: '#16A34A',
+    icon: 'consulting'
+  },
+  { 
+    id: 'oe', 
+    nome: 'O.E', 
+    src: '', 
+    alt: 'Logotipo O.E',
+    categoria: 'Organização',
+    cor: '#B8860B',
+    icon: 'organization'
+  },
 ];

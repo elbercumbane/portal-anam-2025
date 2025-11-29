@@ -1,377 +1,582 @@
-<div class="page-container">
-  <div class="page-header">
-    <h1>Formulário de Candidatura</h1>
-    <p *ngIf="projeto">{{ projeto.titulo }}</p>
+<div class="candidatura-page">
+  <!-- Background Effects -->
+  <div class="background-effects">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
   </div>
 
-  <div class="form-container">
-    <!-- Progress Bar -->
-    <div class="progress-container">
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles">
+      <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="12" y1="18" x2="12" y2="12"/>
+          <line x1="9" y1="15" x2="15" y2="15"/>
+        </svg>
+        <span>Formulário de Candidatura</span>
       </div>
-      <div class="progress-text">
-        Passo {{ currentStep }} de {{ totalSteps }}: {{ getStepTitle(currentStep) }}
+      <h1 class="hero-title">
+        Candidate-se ao <span class="highlight">Projecto</span>
+      </h1>
+      <p class="hero-subtitle" *ngIf="projeto">{{ projeto.titulo }}</p>
+      
+      <!-- Projeto Info Cards -->
+      <div class="projeto-info-cards" *ngIf="projeto">
+        <div class="info-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span class="value">{{ projeto.valorDisponivel }}</span>
+          <span class="label">Disponível</span>
+        </div>
+        <div class="info-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span class="value">{{ projeto.duracao }}</span>
+          <span class="label">Duração</span>
+        </div>
+        <div class="info-card deadline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span class="value">{{ projeto.prazoCandidatura }}</span>
+          <span class="label">Prazo</span>
+        </div>
       </div>
     </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,90 1440,60 L1440,120 L0,120 Z" fill="#fafafa"/>
+      </svg>
+    </div>
+  </section>
 
-    <form (ngSubmit)="submitForm()" #candidaturaForm="ngForm">
-      <!-- Step 1: Dados da Organização -->
-      <div class="form-step" *ngIf="currentStep === 1">
-        <h2>Dados da Organização</h2>
-        
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="nomeOrganizacao">Nome da Organização *</label>
-            <input 
-              type="text" 
-              id="nomeOrganizacao" 
-              name="nomeOrganizacao"
-              [(ngModel)]="formData.nomeOrganizacao" 
-              required
-              class="form-control">
+  <!-- Form Container -->
+  <section class="form-section">
+    <div class="container">
+      <!-- Progress Steps -->
+      <div class="progress-steps">
+        <div class="step" *ngFor="let step of [1,2,3,4]" 
+             [class.active]="currentStep === step"
+             [class.completed]="currentStep > step">
+          <div class="step-circle">
+            <span class="step-number" *ngIf="currentStep <= step">{{ step }}</span>
+            <svg *ngIf="currentStep > step" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
           </div>
-
-          <div class="form-group">
-            <label for="tipoOrganizacao">Tipo de Organização *</label>
-            <select 
-              id="tipoOrganizacao" 
-              name="tipoOrganizacao"
-              [(ngModel)]="formData.tipoOrganizacao" 
-              required
-              class="form-control">
-              <option value="">Selecione...</option>
-              <option *ngFor="let tipo of tiposOrganizacao" [value]="tipo">{{ tipo }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="nif">NIF *</label>
-            <input 
-              type="text" 
-              id="nif" 
-              name="nif"
-              [(ngModel)]="formData.nif" 
-              required
-              class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="endereco">Endereço *</label>
-            <input 
-              type="text" 
-              id="endereco" 
-              name="endereco"
-              [(ngModel)]="formData.endereco" 
-              required
-              class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="cidade">Cidade *</label>
-            <input 
-              type="text" 
-              id="cidade" 
-              name="cidade"
-              [(ngModel)]="formData.cidade" 
-              required
-              class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="provincia">Província *</label>
-            <select 
-              id="provincia" 
-              name="provincia"
-              [(ngModel)]="formData.provincia" 
-              required
-              class="form-control">
-              <option value="">Selecione...</option>
-              <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="telefone">Telefone *</label>
-            <input 
-              type="tel" 
-              id="telefone" 
-              name="telefone"
-              [(ngModel)]="formData.telefone" 
-              required
-              class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email"
-              [(ngModel)]="formData.email" 
-              required
-              class="form-control">
-          </div>
-
-          <div class="form-group full-width">
-            <label for="website">Website</label>
-            <input 
-              type="url" 
-              id="website" 
-              name="website"
-              [(ngModel)]="formData.website" 
-              class="form-control">
-          </div>
+          <span class="step-label">{{ getStepTitle(step) }}</span>
+          <div class="step-connector" *ngIf="step < 4"></div>
         </div>
       </div>
 
-      <!-- Step 2: Dados do Representante -->
-      <div class="form-step" *ngIf="currentStep === 2">
-        <h2>Dados do Representante Legal</h2>
+      <!-- Form Card -->
+      <div class="form-card">
+        <div class="card-glow"></div>
         
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="nomeRepresentante">Nome Completo *</label>
-            <input 
-              type="text" 
-              id="nomeRepresentante" 
-              name="nomeRepresentante"
-              [(ngModel)]="formData.nomeRepresentante" 
-              required
-              class="form-control">
+        <form (ngSubmit)="submitForm()" #candidaturaForm="ngForm">
+          
+          <!-- Step 1: Dados da Organização -->
+          <div class="form-step" *ngIf="currentStep === 1">
+            <div class="step-header">
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V11m14 10V11"/>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h2>Dados da Organização</h2>
+                <p>Informações básicas sobre a sua organização</p>
+              </div>
+            </div>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="nomeOrganizacao">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4"/>
+                  </svg>
+                  Nome da Organização
+                </label>
+                <input type="text" id="nomeOrganizacao" name="nomeOrganizacao"
+                       [(ngModel)]="formData.nomeOrganizacao" required
+                       placeholder="Nome completo da organização">
+              </div>
+
+              <div class="form-group">
+                <label for="tipoOrganizacao">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                  </svg>
+                  Tipo de Organização
+                </label>
+                <select id="tipoOrganizacao" name="tipoOrganizacao"
+                        [(ngModel)]="formData.tipoOrganizacao" required>
+                  <option value="">Selecione o tipo...</option>
+                  <option *ngFor="let tipo of tiposOrganizacao" [value]="tipo">{{ tipo }}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="nif">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                    <line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="12" y2="12"/>
+                  </svg>
+                  NIF
+                </label>
+                <input type="text" id="nif" name="nif"
+                       [(ngModel)]="formData.nif" required
+                       placeholder="Número de Identificação Fiscal">
+              </div>
+
+              <div class="form-group">
+                <label for="endereco">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  Endereço
+                </label>
+                <input type="text" id="endereco" name="endereco"
+                       [(ngModel)]="formData.endereco" required
+                       placeholder="Endereço completo">
+              </div>
+
+              <div class="form-group">
+                <label for="cidade">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/>
+                  </svg>
+                  Cidade
+                </label>
+                <input type="text" id="cidade" name="cidade"
+                       [(ngModel)]="formData.cidade" required
+                       placeholder="Cidade">
+              </div>
+
+              <div class="form-group">
+                <label for="provincia">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                  Província
+                </label>
+                <select id="provincia" name="provincia"
+                        [(ngModel)]="formData.provincia" required>
+                  <option value="">Selecione a província...</option>
+                  <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="telefone">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                  Telefone
+                </label>
+                <input type="tel" id="telefone" name="telefone"
+                       [(ngModel)]="formData.telefone" required
+                       placeholder="+258 XX XXX XXXX">
+              </div>
+
+              <div class="form-group">
+                <label for="email">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 6-10 7L2 6"/>
+                  </svg>
+                  Email
+                </label>
+                <input type="email" id="email" name="email"
+                       [(ngModel)]="formData.email" required
+                       placeholder="email@organizacao.org">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="website">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                  </svg>
+                  Website (opcional)
+                </label>
+                <input type="url" id="website" name="website"
+                       [(ngModel)]="formData.website"
+                       placeholder="https://www.organizacao.org">
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="cargo">Cargo na Organização *</label>
-            <input 
-              type="text" 
-              id="cargo" 
-              name="cargo"
-              [(ngModel)]="formData.cargo" 
-              required
-              class="form-control">
+          <!-- Step 2: Dados do Representante -->
+          <div class="form-step" *ngIf="currentStep === 2">
+            <div class="step-header">
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h2>Dados do Representante Legal</h2>
+                <p>Informações sobre o responsável pela candidatura</p>
+              </div>
+            </div>
+            
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="nomeRepresentante">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Nome Completo
+                </label>
+                <input type="text" id="nomeRepresentante" name="nomeRepresentante"
+                       [(ngModel)]="formData.nomeRepresentante" required
+                       placeholder="Nome completo do representante">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="cargo">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 3v4M8 3v4M2 11h20"/>
+                  </svg>
+                  Cargo na Organização
+                </label>
+                <input type="text" id="cargo" name="cargo"
+                       [(ngModel)]="formData.cargo" required
+                       placeholder="Ex: Director Executivo">
+              </div>
+
+              <div class="form-group">
+                <label for="telefoneRepresentante">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/>
+                  </svg>
+                  Telefone Pessoal
+                </label>
+                <input type="tel" id="telefoneRepresentante" name="telefoneRepresentante"
+                       [(ngModel)]="formData.telefoneRepresentante" required
+                       placeholder="+258 XX XXX XXXX">
+              </div>
+
+              <div class="form-group">
+                <label for="emailRepresentante">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 6-10 7L2 6"/>
+                  </svg>
+                  Email Pessoal
+                </label>
+                <input type="email" id="emailRepresentante" name="emailRepresentante"
+                       [(ngModel)]="formData.emailRepresentante" required
+                       placeholder="representante@email.com">
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="telefoneRepresentante">Telefone *</label>
-            <input 
-              type="tel" 
-              id="telefoneRepresentante" 
-              name="telefoneRepresentante"
-              [(ngModel)]="formData.telefoneRepresentante" 
-              required
-              class="form-control">
+          <!-- Step 3: Detalhes do Projeto -->
+          <div class="form-step" *ngIf="currentStep === 3">
+            <div class="step-header">
+              <div class="step-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h2>Detalhes do Projecto</h2>
+                <p>Descreva a sua proposta de projecto</p>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="tituloProjeto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Título do Projecto
+              </label>
+              <input type="text" id="tituloProjeto" name="tituloProjeto"
+                     [(ngModel)]="formData.tituloProjeto" required
+                     placeholder="Título claro e descritivo">
+            </div>
+
+            <div class="form-group">
+              <label for="descricaoProjeto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                Descrição Detalhada
+              </label>
+              <textarea id="descricaoProjeto" name="descricaoProjeto"
+                        [(ngModel)]="formData.descricaoProjeto" required rows="4"
+                        placeholder="Descreva o projecto em detalhe..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="objetivos">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="6"/>
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Objectivos Específicos
+              </label>
+              <textarea id="objetivos" name="objetivos"
+                        [(ngModel)]="formData.objetivos" required rows="3"
+                        placeholder="Liste os objectivos do projecto..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="metodologia">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Metodologia de Implementação
+              </label>
+              <textarea id="metodologia" name="metodologia"
+                        [(ngModel)]="formData.metodologia" required rows="4"
+                        placeholder="Como pretende implementar o projecto..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="cronograma">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Cronograma de Actividades
+              </label>
+              <textarea id="cronograma" name="cronograma"
+                        [(ngModel)]="formData.cronograma" required rows="3"
+                        placeholder="Descreva o cronograma..."></textarea>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="orcamento">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                  Orçamento Solicitado (MZN)
+                </label>
+                <input type="text" id="orcamento" name="orcamento"
+                       [(ngModel)]="formData.orcamento" required
+                       placeholder="Ex: 2.5M MZN">
+              </div>
+
+              <div class="form-group">
+                <label for="contrapartida">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/>
+                  </svg>
+                  Contrapartida da Organização
+                </label>
+                <input type="text" id="contrapartida" name="contrapartida"
+                       [(ngModel)]="formData.contrapartida" required
+                       placeholder="Ex: 20% do valor total">
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="emailRepresentante">Email *</label>
-            <input 
-              type="email" 
-              id="emailRepresentante" 
-              name="emailRepresentante"
-              [(ngModel)]="formData.emailRepresentante" 
-              required
-              class="form-control">
+          <!-- Step 4: Anexos e Confirmação -->
+          <div class="form-step" *ngIf="currentStep === 4">
+            <div class="step-header">
+              <div class="step-icon success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div class="step-info">
+                <h2>Anexos e Confirmação</h2>
+                <p>Envie os documentos necessários e finalize</p>
+              </div>
+            </div>
+            
+            <div class="upload-grid">
+              <div class="upload-card">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <h4>Estatutos da Organização</h4>
+                <p>PDF, DOC ou DOCX</p>
+                <input type="file" id="estatutos" name="estatutos"
+                       (change)="onFileSelected($event, 'estatutos')"
+                       accept=".pdf,.doc,.docx" required>
+                <label for="estatutos" class="upload-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Selecionar Ficheiro
+                </label>
+              </div>
+
+              <div class="upload-card">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                    <line x1="7" y1="8" x2="17" y2="8"/>
+                    <line x1="7" y1="12" x2="12" y2="12"/>
+                  </svg>
+                </div>
+                <h4>Documento do NIF</h4>
+                <p>PDF, JPG ou PNG</p>
+                <input type="file" id="nifDocument" name="nifDocument"
+                       (change)="onFileSelected($event, 'nifDocument')"
+                       accept=".pdf,.jpg,.jpeg,.png" required>
+                <label for="nifDocument" class="upload-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Selecionar Ficheiro
+                </label>
+              </div>
+
+              <div class="upload-card">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                </div>
+                <h4>Apresentação (PowerPoint)</h4>
+                <p>PPT ou PPTX</p>
+                <input type="file" id="projetoPowerPoint" name="projetoPowerPoint"
+                       (change)="onFileSelected($event, 'projetoPowerPoint')"
+                       accept=".ppt,.pptx" required>
+                <label for="projetoPowerPoint" class="upload-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Selecionar Ficheiro
+                </label>
+              </div>
+
+              <div class="upload-card optional">
+                <div class="upload-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                    <polyline points="13 2 13 9 20 9"/>
+                  </svg>
+                </div>
+                <h4>Outros Documentos</h4>
+                <p>Opcional - Múltiplos ficheiros</p>
+                <input type="file" id="outrosDocumentos" name="outrosDocumentos"
+                       (change)="onMultipleFilesSelected($event, 'outrosDocumentos')"
+                       multiple>
+                <label for="outrosDocumentos" class="upload-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Selecionar Ficheiros
+                </label>
+              </div>
+            </div>
+
+            <!-- Termos -->
+            <div class="terms-section">
+              <label class="checkbox-card">
+                <input type="checkbox" name="aceitaTermos"
+                       [(ngModel)]="formData.aceitaTermos" required>
+                <span class="checkbox-visual">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </span>
+                <span class="checkbox-text">
+                  <strong>Aceito os termos e condições</strong>
+                  <small>Li e concordo com os termos da candidatura</small>
+                </span>
+              </label>
+
+              <label class="checkbox-card">
+                <input type="checkbox" name="autorizaDados"
+                       [(ngModel)]="formData.autorizaDados" required>
+                <span class="checkbox-visual">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </span>
+                <span class="checkbox-text">
+                  <strong>Autorizo o tratamento de dados</strong>
+                  <small>Permito o uso dos meus dados pessoais</small>
+                </span>
+              </label>
+            </div>
           </div>
-        </div>
+
+          <!-- Navigation -->
+          <div class="form-navigation">
+            <button type="button" class="btn-nav btn-prev" 
+                    (click)="prevStep()" [disabled]="currentStep === 1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+              </svg>
+              Anterior
+            </button>
+            
+            <button type="button" class="btn-nav btn-next" 
+                    (click)="nextStep()" *ngIf="currentStep < totalSteps">
+              Próximo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+            
+            <button type="submit" class="btn-nav btn-submit" 
+                    *ngIf="currentStep === totalSteps"
+                    [disabled]="!candidaturaForm.form.valid">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Submeter Candidatura
+            </button>
+          </div>
+        </form>
       </div>
-
-      <!-- Step 3: Detalhes do Projeto -->
-      <div class="form-step" *ngIf="currentStep === 3">
-        <h2>Detalhes do Projeto</h2>
-        
-        <div class="form-group">
-          <label for="tituloProjeto">Título do Projeto *</label>
-          <input 
-            type="text" 
-            id="tituloProjeto" 
-            name="tituloProjeto"
-            [(ngModel)]="formData.tituloProjeto" 
-            required
-            class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label for="descricaoProjeto">Descrição Detalhada do Projeto *</label>
-          <textarea 
-            id="descricaoProjeto" 
-            name="descricaoProjeto"
-            [(ngModel)]="formData.descricaoProjeto" 
-            required
-            rows="4"
-            class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="objetivos">Objetivos Específicos *</label>
-          <textarea 
-            id="objetivos" 
-            name="objetivos"
-            [(ngModel)]="formData.objetivos" 
-            required
-            rows="3"
-            class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="metodologia">Metodologia de Implementação *</label>
-          <textarea 
-            id="metodologia" 
-            name="metodologia"
-            [(ngModel)]="formData.metodologia" 
-            required
-            rows="4"
-            class="form-control"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="cronograma">Cronograma de Atividades *</label>
-          <textarea 
-            id="cronograma" 
-            name="cronograma"
-            [(ngModel)]="formData.cronograma" 
-            required
-            rows="3"
-            class="form-control"></textarea>
-        </div>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="orcamento">Orçamento Solicitado (MZN) *</label>
-            <input 
-              type="text" 
-              id="orcamento" 
-              name="orcamento"
-              [(ngModel)]="formData.orcamento" 
-              required
-              placeholder="Ex: 2.5M MZN"
-              class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label for="contrapartida">Contrapartida da Organização *</label>
-            <input 
-              type="text" 
-              id="contrapartida" 
-              name="contrapartida"
-              [(ngModel)]="formData.contrapartida" 
-              required
-              placeholder="Ex: 20% do valor total"
-              class="form-control">
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 4: Anexos e Confirmação -->
-      <div class="form-step" *ngIf="currentStep === 4">
-        <h2>Anexos e Confirmação</h2>
-        
-        <div class="form-group">
-          <label for="estatutos">Estatutos da Organização *</label>
-          <input 
-            type="file" 
-            id="estatutos" 
-            name="estatutos"
-            (change)="onFileSelected($event, 'estatutos')"
-            accept=".pdf,.doc,.docx"
-            required
-            class="form-control">
-          <small class="form-text">Formatos aceites: PDF, DOC, DOCX</small>
-        </div>
-
-        <div class="form-group">
-          <label for="nifDocument">Documento do NIF *</label>
-          <input 
-            type="file" 
-            id="nifDocument" 
-            name="nifDocument"
-            (change)="onFileSelected($event, 'nifDocument')"
-            accept=".pdf,.jpg,.jpeg,.png"
-            required
-            class="form-control">
-          <small class="form-text">Formatos aceites: PDF, JPG, PNG</small>
-        </div>
-
-        <div class="form-group">
-          <label for="projetoPowerPoint">Apresentação do Projeto (PowerPoint) *</label>
-          <input 
-            type="file" 
-            id="projetoPowerPoint" 
-            name="projetoPowerPoint"
-            (change)="onFileSelected($event, 'projetoPowerPoint')"
-            accept=".ppt,.pptx"
-            required
-            class="form-control">
-          <small class="form-text">Formatos aceites: PPT, PPTX</small>
-        </div>
-
-        <div class="form-group">
-          <label for="outrosDocumentos">Outros Documentos</label>
-          <input 
-            type="file" 
-            id="outrosDocumentos" 
-            name="outrosDocumentos"
-            (change)="onMultipleFilesSelected($event, 'outrosDocumentos')"
-            multiple
-            class="form-control">
-          <small class="form-text">Documentos adicionais que considere relevantes</small>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                name="aceitaTermos"
-                [(ngModel)]="formData.aceitaTermos" 
-                required>
-              <span class="checkmark"></span>
-              Aceito os termos e condições da candidatura *
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                name="autorizaDados"
-                [(ngModel)]="formData.autorizaDados" 
-                required>
-              <span class="checkmark"></span>
-              Autorizo o tratamento dos meus dados pessoais *
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Navigation Buttons -->
-      <div class="form-navigation">
-        <button 
-          type="button" 
-          class="btn btn-secondary" 
-          (click)="prevStep()" 
-          [disabled]="currentStep === 1">
-          Anterior
-        </button>
-        
-        <button 
-          type="button" 
-          class="btn btn-primary" 
-          (click)="nextStep()" 
-          *ngIf="currentStep < totalSteps">
-          Próximo
-        </button>
-        
-        <button 
-          type="submit" 
-          class="btn btn-success" 
-          *ngIf="currentStep === totalSteps"
-          [disabled]="!candidaturaForm.form.valid">
-          Submeter Candidatura
-        </button>
-      </div>
-    </form>
-  </div>
+    </div>
+  </section>
 </div>

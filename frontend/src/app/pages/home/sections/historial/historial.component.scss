@@ -265,3 +265,147 @@
 
 /* Animações GSAP - removidas animações CSS antigas */
 
+/* ==================== SEÇÃO DE VALORES ==================== */
+.valores-section {
+  margin-top: 60px;
+  padding-top: 50px;
+  border-top: 1px solid rgba(138, 125, 101, 0.15);
+}
+
+.valores-title {
+  color: var(--brown-text);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 1.3vw + 0.8rem, 1.8rem);
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #B8860B, #FFD700);
+    border-radius: 2px;
+  }
+}
+
+.valores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.valor-card {
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+  border-radius: 20px;
+  padding: 30px 25px;
+  text-align: center;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(138, 125, 101, 0.08);
+  border: 1px solid rgba(138, 125, 101, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #B8860B, #FFD700, #B8860B);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.1),
+      0 10px 25px rgba(138, 125, 101, 0.15);
+    
+    &::before {
+      transform: scaleX(1);
+    }
+    
+    .valor-icon {
+      transform: scale(1.15) rotate(5deg);
+      background: linear-gradient(135deg, #B8860B 0%, #8B6914 100%);
+      
+      svg {
+        stroke: white;
+      }
+    }
+  }
+}
+
+.valor-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  svg {
+    width: 32px;
+    height: 32px;
+    stroke: #B8860B;
+    transition: all 0.3s ease;
+  }
+}
+
+.valor-card h4 {
+  color: #2c3e50;
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.valor-card p {
+  color: #6c757d;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Responsividade dos Valores */
+@media (max-width: 768px) {
+  .valores-section {
+    margin-top: 40px;
+    padding-top: 40px;
+  }
+  
+  .valores-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .valor-card {
+    padding: 25px 20px;
+  }
+  
+  .valor-icon {
+    width: 60px;
+    height: 60px;
+    
+    svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
+}
+

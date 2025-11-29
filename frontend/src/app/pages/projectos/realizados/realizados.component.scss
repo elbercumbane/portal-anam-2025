@@ -1,320 +1,522 @@
-.realizados-container {
-  padding: 40px 0;
+// ========================================
+// PROJECTOS REALIZADOS - DESIGN ESPETACULAR
+// ========================================
+
+// Variáveis
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$green-success: #10B981;
+$gold-primary: #D4AF37;
+$gold-dark: #B8860B;
+$brown-warm: #8A7D65;
+
+// ============ INTRO DA SECÇÃO ============
+.realizados-page {
+  padding: 20px 0 40px;
 }
 
-.section-header {
+.section-intro {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 50px;
+  animation: fadeInUp 0.6s ease;
   
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba($green-success, 0.1) 0%, rgba($green-success, 0.15) 100%);
+    border: 1px solid rgba($green-success, 0.25);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $green-success;
+    }
+    
+    span {
+      color: $green-success;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+  }
+  
+  .intro-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 800;
     color: #1a1a1a;
-    margin: 0 0 16px;
+    margin: 0 0 15px;
     
-    .highlight {
-      color: #8A7D65;
-      font-style: italic;
+    .gold {
+      color: $gold-primary;
     }
   }
   
-  .section-subtitle {
-    font-size: 1.25rem;
+  .intro-text {
+    font-size: 1.1rem;
     color: #666;
-    margin: 0 0 32px;
+    max-width: 500px;
+    margin: 0 auto 35px;
+    line-height: 1.6;
   }
+}
 
-  .header-stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-top: 32px;
+// ============ ESTATÍSTICAS DE IMPACTO ============
+.impact-stats {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
 
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: linear-gradient(135deg, rgba(138, 125, 101, 0.1) 0%, rgba(138, 125, 101, 0.05) 100%);
-      padding: 24px 32px;
-      border-radius: 16px;
-      border: 1px solid rgba(138, 125, 101, 0.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
-      .stat-number {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.5rem;
-        font-weight: 900;
-        color: #8A7D65;
-        margin-bottom: 8px;
-      }
-
-      .stat-label {
-        font-size: 0.9rem;
-        color: #64748B;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 30px;
+  background: white;
+  border: 1px solid rgba($brown-warm, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.highlight {
+    background: linear-gradient(135deg, $green-dark 0%, $green-medium 100%);
+    border: none;
+    
+    .stat-icon {
+      background: rgba(255, 255, 255, 0.2);
+      
+      svg {
+        stroke: white;
       }
     }
+    
+    .stat-number {
+      color: white;
+    }
+    
+    .stat-label {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+  
+  .stat-icon {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, rgba($green-success, 0.1) 0%, rgba($green-success, 0.15) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      width: 26px;
+      height: 26px;
+      stroke: $green-success;
+    }
+  }
+  
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .stat-number {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #1a1a1a;
+  }
+  
+  .stat-label {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 600;
   }
 }
 
-// Reutilizar estilos dos cards de ativos
-.projetos-grid {
+// ============ SHOWCASE GRID ============
+.projectos-showcase {
   display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  padding: 20px 0;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 25px;
   }
 }
 
-.projeto {
+// ============ CARD DO PROJECTO ============
+.projecto-card {
   background: #fff;
-  border: 1px solid rgba(138, 125, 101, 0.12);
   border-radius: 24px;
-  padding: 32px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.04);
-  position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  opacity: 0;
+  animation: cardEntrance 0.6s ease forwards;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #059669 0%, #10B981 100%);
-    transform: scaleX(1);
+  @for $i from 0 through 5 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.12}s;
+    }
   }
   
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 
-      0 20px 50px rgba(0, 0, 0, 0.12),
-      0 8px 20px rgba(0, 0, 0, 0.08);
-    border-color: rgba(5, 150, 105, 0.25);
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+    
+    .visual-icon svg {
+      transform: scale(1.15);
+    }
+    
+    .success-ribbon {
+      transform: scale(1.1);
+    }
+  }
+  
+  .success-ribbon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, $green-success 0%, darken($green-success, 10%) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba($green-success, 0.4);
+    transition: transform 0.3s ease;
+    
+    svg {
+      width: 22px;
+      height: 22px;
+      stroke: white;
+      stroke-width: 3;
+    }
   }
 }
 
-.projeto-header {
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ VISUAL DO CARD ============
+.card-visual {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, $brown-warm 100%);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   
-  h3 {
-    color: #0F172A;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    margin: 0;
-    font-weight: 800;
-    line-height: 1.3;
-    flex: 1;
+  .visual-pattern {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
   }
   
-  .badge.realizado {
-    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
-    color: #fff;
-    border-radius: 50px;
+  .visual-icon {
+    position: relative;
+    z-index: 2;
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    
+    svg {
+      width: 35px;
+      height: 35px;
+      stroke: white;
+      transition: transform 0.4s ease;
+    }
+  }
+  
+  .completion-badge {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     padding: 8px 16px;
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50px;
     font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-    white-space: nowrap;
+    font-weight: 700;
+    color: $green-success;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    
+    span {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1rem;
+    }
+  }
+}
+
+// ============ CORPO DO CARD ============
+.card-body {
+  padding: 25px;
+}
+
+.projecto-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.projecto-descricao {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+// ============ TIMELINE ============
+.timeline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba($brown-warm, 0.04);
+  border-radius: 12px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  svg {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    background: rgba($brown-warm, 0.1);
+    border-radius: 50%;
+    stroke: $brown-warm;
+  }
+  
+  &.success svg {
+    background: rgba($green-success, 0.15);
+    stroke: $green-success;
+  }
+  
+  .timeline-content {
+    display: flex;
+    flex-direction: column;
+    
+    .label {
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .value {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+  }
+}
+
+.timeline-connector {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 0 10px;
+  
+  .connector-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, rgba($brown-warm, 0.2) 0%, rgba($green-success, 0.3) 100%);
+    border-radius: 1px;
+  }
+  
+  svg {
+    width: 16px;
+    height: 16px;
+    stroke: $green-success;
+    margin-left: -5px;
+  }
+}
+
+// ============ INVESTIMENTO ============
+.investment-highlight {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba($gold-primary, 0.08) 0%, rgba($gold-dark, 0.12) 100%);
+  border: 1px solid rgba($gold-primary, 0.2);
+  border-radius: 14px;
+  margin-bottom: 20px;
+  
+  svg {
+    width: 35px;
+    height: 35px;
+    stroke: $gold-primary;
     flex-shrink: 0;
   }
+  
+  .investment-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: $gold-dark;
+  }
+  
+  .investment-label {
+    font-size: 0.8rem;
+    color: $brown-warm;
+    margin-left: auto;
+  }
 }
 
-.projeto-meta {
-  display: flex;
-  flex-wrap: wrap;
+// ============ KPIs DE IMPACTO ============
+.impact-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.chip {
-  background: rgba(138, 125, 101, 0.08);
-  border: 1px solid rgba(138, 125, 101, 0.15);
-  color: #7A6D55;
-  border-radius: 50px;
-  padding: 8px 14px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(138, 125, 101, 0.12);
-    border-color: rgba(138, 125, 101, 0.25);
-  }
-}
-
-.projeto-descricao {
-  color: #475569;
-  line-height: 1.7;
-  margin-bottom: 24px;
-  font-size: 1rem;
-}
-
-.projeto-progress {
-  margin-bottom: 24px;
-  
-  .progress-track {
-    height: 12px;
-    background: #F1F5F9;
-    border-radius: 50px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
-  }
-  
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #059669 0%, #10B981 50%, #34D399 100%);
-    border-radius: 50px;
-    transition: width 0.6s ease;
-  }
-  
-  .progress-label {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #64748B;
-    font-weight: 700;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
-  padding: 20px;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.03) 0%, rgba(5, 150, 105, 0.08) 100%);
-  border-radius: 16px;
-  border: 1px solid rgba(5, 150, 105, 0.1);
-}
-
 .kpi {
   text-align: center;
-  padding: 12px;
+  padding: 15px 10px;
   background: white;
+  border: 1px solid rgba($brown-warm, 0.1);
   border-radius: 12px;
-  border: 1px solid rgba(5, 150, 105, 0.1);
   transition: all 0.3s ease;
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: rgba(5, 150, 105, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border-color: rgba($green-success, 0.3);
   }
   
   .kpi-value {
     display: block;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
     font-weight: 900;
-    color: #0F172A;
-    font-size: 1.5rem;
+    color: $green-dark;
     margin-bottom: 4px;
-    font-family: 'Playfair Display', serif;
   }
   
   .kpi-label {
-    color: #64748B;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.65rem;
+    color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 600;
   }
 }
 
-.projeto-parceiros {
-  margin-bottom: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(138, 125, 101, 0.1);
+// ============ PARCEIROS ============
+.parceiros-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 15px;
+  border-top: 1px solid rgba($brown-warm, 0.1);
   
-  strong {
-    color: #0F172A;
-    display: block;
-    margin-bottom: 12px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  
-  .parceiros-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .tag {
-    background: rgba(138, 125, 101, 0.1);
-    color: #7A6D55;
-    border: 1px solid rgba(138, 125, 101, 0.2);
+  .parceiro {
     padding: 6px 14px;
+    background: rgba($brown-warm, 0.08);
     border-radius: 50px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
+    color: $brown-warm;
     transition: all 0.2s ease;
     
     &:hover {
-      background: rgba(138, 125, 101, 0.15);
-      border-color: rgba(138, 125, 101, 0.3);
-      transform: translateY(-1px);
+      background: rgba($gold-primary, 0.12);
+      color: $gold-dark;
     }
   }
 }
 
-// Responsividade
+// ============ ANIMAÇÕES ============
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ RESPONSIVO ============
 @media (max-width: 640px) {
-  .section-header {
-    .header-stats {
-      flex-direction: column;
-      gap: 16px;
-
-      .stat-item {
-        padding: 20px 24px;
-
-        .stat-number {
-          font-size: 2rem;
-        }
-      }
-    }
+  .section-intro {
+    margin-bottom: 35px;
   }
   
-  .projeto {
-    padding: 24px;
-  }
-  
-  .projeto-header {
+  .impact-stats {
     flex-direction: column;
-    align-items: flex-start;
     
-    h3 {
-      font-size: 1.25rem;
+    .stat-card {
+      width: 100%;
+      justify-content: center;
     }
   }
   
-  .kpis {
+  .card-visual {
+    height: 140px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .timeline-row {
+    flex-direction: column;
+    gap: 15px;
+    
+    .timeline-connector {
+      transform: rotate(90deg);
+      padding: 5px 0;
+    }
+  }
+  
+  .impact-kpis {
     grid-template-columns: 1fr;
-    gap: 8px;
   }
 }

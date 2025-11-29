@@ -1,158 +1,329 @@
-.page-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+// ========================================
+// CANDIDATURAS - DESIGN ESPETACULAR
+// ========================================
+
+// Variáveis
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$gold-primary: #D4AF37;
+$gold-dark: #B8860B;
+$brown-warm: #8A7D65;
+$blue-accent: #3B82F6;
+$purple-accent: #8B5CF6;
+$orange-accent: #F59E0B;
+$pink-accent: #EC4899;
+
+// ============ PÁGINA ============
+.candidaturas-page {
+  padding: 20px 0 40px;
 }
 
-.page-header {
-  background: linear-gradient(135deg, rgba(139, 120, 95, 0.9) 0%, rgba(166, 139, 91, 0.9) 100%);
-  color: white;
-  padding: 120px 20px 60px 20px;
+.section-intro {
   text-align: center;
-  position: relative;
-  overflow: hidden;
+  margin-bottom: 50px;
+  animation: fadeInUp 0.6s ease;
   
-  h1 {
-    font-size: 3rem;
-    font-weight: 900;
-    margin: 0 0 1rem 0;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    letter-spacing: -0.02em;
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba($blue-accent, 0.1) 0%, rgba($purple-accent, 0.1) 100%);
+    border: 1px solid rgba($blue-accent, 0.25);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $blue-accent;
+    }
+    
+    span {
+      color: $blue-accent;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
   }
   
-  p {
-    font-size: 1.2rem;
-    opacity: 0.95;
-    margin: 0;
-    font-weight: 500;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  .intro-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 15px;
+    
+    .gold {
+      color: $gold-primary;
+    }
+  }
+  
+  .intro-text {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 550px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
 }
 
-.projetos-grid {
+// ============ GRID DE OPORTUNIDADES ============
+.oportunidades-grid {
   display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  padding: 40px 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
 }
 
-.projeto {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+// ============ CARD DE OPORTUNIDADE ============
+.oportunidade-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  opacity: 0;
+  animation: cardEntrance 0.6s ease forwards;
+  
+  @for $i from 0 through 5 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.12}s;
+    }
+  }
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+    
+    .card-corner {
+      transform: scale(1.5);
+      opacity: 0.2;
+    }
+    
+    .btn-candidatar {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba($green-dark, 0.4);
+    }
+  }
+  
+  .card-corner {
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba($gold-primary, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    pointer-events: none;
+  }
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ HEADER DO CARD ============
+.card-header {
+  background: linear-gradient(135deg, $green-dark 0%, $green-medium 50%, $brown-warm 100%);
+  padding: 25px;
   position: relative;
   overflow: hidden;
   
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #8b785f, #a68b5b);
+    inset: 0;
+    background: 
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 20% 80%, rgba($gold-primary, 0.2) 0%, transparent 40%);
   }
   
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.projeto-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  
-  h3 {
-    color: #1a202c;
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0;
-    flex: 1;
-    margin-right: 1rem;
-    line-height: 1.3;
+  .header-visual {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
   }
   
-  .badge.area {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  .area-badge {
+    padding: 8px 18px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
     color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
     font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-}
-
-.projeto-descricao {
-  color: #4a5568;
-  line-height: 1.7;
-  margin-bottom: 2rem;
-  font-size: 1rem;
-}
-
-.projeto-info {
-  margin-bottom: 2rem;
-  
-  .info-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
   }
   
-  .info-item {
-    color: #4a5568;
-    font-size: 0.95rem;
+  .valor-destaque {
+    text-align: right;
+    color: white;
     
-    strong {
-      color: #2d3748;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 0.25rem;
+    svg {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 5px;
+      stroke: $gold-primary;
     }
     
     .valor {
-      color: #38a169;
-      font-weight: 700;
-      font-size: 1.1rem;
+      display: block;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     
-    .prazo {
-      color: #e53e3e;
-      font-weight: 600;
+    .label {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
   }
 }
 
-.requisitos, .beneficios {
-  margin-bottom: 2rem;
+// ============ CORPO DO CARD ============
+.card-body {
+  padding: 25px;
+  position: relative;
+  z-index: 1;
+}
+
+.projeto-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.projeto-descricao {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+// ============ INFO RÁPIDA ============
+.quick-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba($brown-warm, 0.04);
+  border-radius: 12px;
+  border: 1px solid rgba($brown-warm, 0.08);
+  transition: all 0.3s ease;
   
-  h4 {
-    color: #2d3748;
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.75rem 0;
+  &:hover {
+    background: rgba($brown-warm, 0.08);
+    border-color: rgba($brown-warm, 0.15);
+  }
+  
+  &.deadline {
+    background: rgba(#EF4444, 0.05);
+    border-color: rgba(#EF4444, 0.15);
+    
+    .info-icon {
+      background: rgba(#EF4444, 0.15);
+      
+      svg {
+        stroke: #EF4444;
+      }
+    }
+    
+    .info-value {
+      color: #DC2626;
+    }
+  }
+  
+  .info-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba($brown-warm, 0.1);
+    border-radius: 50%;
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     
-    &::before {
-      content: '';
-      width: 4px;
-      height: 16px;
-      background: linear-gradient(135deg, #8b785f, #a68b5b);
-      margin-right: 8px;
-      border-radius: 2px;
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $brown-warm;
+    }
+  }
+  
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    
+    .info-label {
+      font-size: 0.65rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+// ============ REQUISITOS ============
+.requisitos-section {
+  margin-bottom: 20px;
+  
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $green-medium;
     }
   }
   
@@ -160,113 +331,176 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    
-    li {
-      color: #4a5568;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      padding-left: 20px;
-      position: relative;
-      
-      &::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: #38a169;
-        font-weight: bold;
-        font-size: 0.8rem;
-      }
-    }
-  }
-}
-
-.beneficios {
-  h4::before {
-    background: linear-gradient(135deg, #38a169, #48bb78);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
   
-  ul li::before {
-    content: '★';
-    color: #f6ad55;
-  }
-}
-
-.projeto-actions {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
-  
-  .btn {
-    width: 100%;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: inline-flex;
+  li {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    padding: 10px 14px;
+    background: rgba($green-medium, 0.04);
+    border-radius: 10px;
+    border-left: 3px solid $green-medium;
+    transition: all 0.2s ease;
     
-    &.btn-primary {
-      background: linear-gradient(135deg, #8b785f, #a68b5b);
-      color: white;
-      
-      &:hover {
-        background: linear-gradient(135deg, #7a6b52, #96804e);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(139, 120, 95, 0.3);
-      }
+    &:hover {
+      background: rgba($green-medium, 0.08);
+      transform: translateX(5px);
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+      stroke: $green-medium;
+      flex-shrink: 0;
     }
   }
 }
 
-// Responsividade
-@media (max-width: 768px) {
-  .page-header {
-    padding: 100px 15px 40px 15px;
+// ============ BENEFÍCIOS ============
+.beneficios-section {
+  margin-bottom: 25px;
+  
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     
-    h1 {
-      font-size: 2.2rem;
-    }
-    
-    p {
-      font-size: 1rem;
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $gold-primary;
     }
   }
   
-  .projetos-grid {
-    padding: 30px 15px;
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .beneficios-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   
-  .projeto {
+  .beneficio-tag {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba($gold-primary, 0.1) 0%, rgba($gold-dark, 0.15) 100%);
+    border: 1px solid rgba($gold-primary, 0.25);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $gold-dark;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba($gold-primary, 0.2) 0%, rgba($gold-dark, 0.25) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($gold-primary, 0.2);
+    }
+  }
+}
+
+// ============ BOTÃO CANDIDATAR ============
+.btn-candidatar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, $green-dark 0%, $green-medium 100%);
+  border: none;
+  border-radius: 14px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba($green-dark, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    &::before {
+      left: 100%;
+    }
+    
+    svg {
+      transform: translateX(5px);
+    }
+  }
+}
+
+// ============ ANIMAÇÕES ============
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ RESPONSIVO ============
+@media (max-width: 640px) {
+  .section-intro {
+    margin-bottom: 35px;
+  }
+  
+  .card-header {
+    padding: 20px;
+    
+    .valor-destaque .valor {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .card-body {
     padding: 20px;
   }
   
-  .projeto-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    
-    h3 {
-      font-size: 1.2rem;
-      margin-right: 0;
-    }
+  .projeto-titulo {
+    font-size: 1.15rem;
   }
   
-  .projeto-info .info-row {
+  .quick-info {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 10px;
   }
   
-  .projeto-actions {
-    flex-direction: column;
-    gap: 0.75rem;
+  .info-item {
+    padding: 10px;
+  }
+  
+  .requisitos-section li {
+    font-size: 0.85rem;
+    padding: 8px 12px;
   }
 }
-

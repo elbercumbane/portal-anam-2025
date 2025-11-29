@@ -44,6 +44,8 @@
         <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
       </a>
       <div class="dropdown-menu" [class.show]="showMembrosSubmenu">
+        <a mat-button routerLink="/login" class="dropdown-item login-item">🔐 Login</a>
+        <a mat-button routerLink="/associar-se" class="dropdown-item highlight">🤝 Torne-se Membro</a>
         <a mat-button routerLink="/membros" class="dropdown-item">Área de Membros</a>
         <a mat-button routerLink="/membros/organograma" class="dropdown-item">Organograma</a>
         <a mat-button routerLink="/membros/pagar-cotas" class="dropdown-item">Pagar Cotas</a>

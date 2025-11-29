@@ -1,80 +1,235 @@
-:root{
-  --panel:#F5F7FB;        /* fundo cinza-claro da faixa */
-  --ink-900:#0F172A;      /* título */
-  --card-brd: rgba(15,23,42,.06);
-  --card-sh : 0 8px 28px rgba(15,23,42,.08);
-  --radius  : 14px;
+// ========================================
+// PARCEIROS - CARROSSEL FLUIDO E ELEGANTE
+// ========================================
+
+$brown-vibrant: #B8860B;
+$gold-accent: #FFD700;
+
+.partners-section {
+  background: linear-gradient(180deg, #fafafa 0%, #fff 50%, #f8f8f8 100%);
+  padding: 60px 0 70px;
+  overflow: hidden;
+  position: relative;
 }
 
-.container{ 
-  max-width: none; 
-  width: 100%;
-  margin: 0 auto; 
-  padding: 0 16px; 
+// Header da seção
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 24px;
 }
 
-.partners{
-  background: transparent;
-  padding: 36px 0 44px;
-}
-
-.title{
-  text-align:center;
-  color: var(--ink-900);
+.title {
+  color: #0F172A;
+  font-family: 'Playfair Display', serif;
   font-weight: 800;
-  font-size: clamp(1.4rem, 1.4vw + 1rem, 2rem);
-  margin-bottom: 20px;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 12px;
+  
+  .highlight {
+    color: $brown-vibrant;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $brown-vibrant, $gold-accent);
+      border-radius: 2px;
+    }
+  }
 }
 
-/* grelha: mesma largura visual do mock, duas fileiras no desktop */
-.grid-logos{
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(5, 1fr); /* 5 por linha em desktop */
-  @media (max-width: 1200px){ grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 900px) { grid-template-columns: repeat(3, 1fr); }
-  @media (max-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
 }
 
-/* cartão branco com sombra suave e logo centrado */
-.logo-card{
-  background:#fff;
-  border: 1px solid var(--card-brd);
-  border-radius: var(--radius);
-  box-shadow: var(--card-sh);
-  height: 110px;
-  display: grid;
-  place-items: center;
-  padding: 12px;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+// Container do Marquee - FULL WIDTH E CENTRALIZADO
+.marquee-container {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(248,248,248,1) 0%, #fff 50%, rgba(248,248,248,1) 100%);
+  padding: 40px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Gradiente de fade nas bordas - MAIS SUAVE
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,255,255,0.7) 40%,
+      rgba(255,255,255,0) 100%
+    );
+  }
+  
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,255,255,0.7) 40%,
+      rgba(255,255,255,0) 100%
+    );
+  }
 }
 
-.logo-card img{
-  max-width: 220px;
-  max-height: 70px;
-  object-fit: contain;
-  filter: grayscale(0%);             /* logos coloridos */
-  opacity: 1;
-  transition: filter .2s ease, opacity .2s ease, transform .2s ease;
+// Track do Marquee - ANIMAÇÃO ULTRA SUAVE
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: scroll 35s linear infinite;
+  will-change: transform;
+  
+  &:hover {
+    animation-play-state: running;
+    animation-duration: 50s; // Desacelera suavemente
+  }
 }
 
-.logo-card:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(15,23,42,.12);
-  border-color: rgba(15,23,42,.12);
+// Conteúdo do Marquee - ZERO GAPS
+.marquee-content {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 0; // Elimina qualquer espaço
+  line-height: 0;
+  white-space: nowrap;
 }
 
-.logo-card:hover img{
-  filter: grayscale(0%);             /* opcional: colorir no hover */
-  opacity: 1;
-  transform: scale(1.02);
+// Imagem dos parceiros - MAIOR
+.partners-image {
+  height: 160px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  opacity: 0.95;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  
+  .marquee-track:hover & {
+    opacity: 1;
+    filter: brightness(1.03);
+  }
 }
 
-/* acessibilidade */
-.sr-only{
-  position:absolute; 
-  left:-9999px; 
-  width:1px; 
-  height:1px; 
-  overflow:hidden;
+// Animação SUAVE E CONTÍNUA
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Botão Ver Todos
+.view-all {
+  text-align: center;
+  margin-top: 40px;
+  padding: 0 24px;
+}
+
+.btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, $brown-vibrant 0%, darken($brown-vibrant, 10%) 100%);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba($brown-vibrant, 0.35);
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba($brown-vibrant, 0.45);
+    text-decoration: none;
+    
+    svg {
+      transform: translateX(5px);
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .partners-section {
+    padding: 40px 0 50px;
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .marquee-container {
+    padding: 30px 0;
+    
+    &::before,
+    &::after {
+      width: 60px;
+    }
+  }
+  
+  .partners-image {
+    height: 120px;
+  }
+  
+  .marquee-track {
+    animation-duration: 25s;
+  }
+  
+  .btn-view-all {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .partners-image {
+    height: 90px;
+  }
+  
+  .marquee-track {
+    animation-duration: 18s;
+  }
+  
+  .marquee-container {
+    padding: 25px 0;
+    
+    &::before,
+    &::after {
+      width: 30px;
+    }
+  }
 }
