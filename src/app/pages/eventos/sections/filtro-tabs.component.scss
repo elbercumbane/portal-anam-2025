@@ -1,0 +1,29 @@
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.tab-button {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--card-brd);
+  background: white;
+  color: var(--ink-600);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+  
+  &.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+}
+

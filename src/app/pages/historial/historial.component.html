@@ -1,0 +1,258 @@
+<!-- Hero Editorial -->
+<section class="historial-hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-edition">Edição Especial</span>
+    <h1 class="hero-title">
+      Nossa <span class="highlight">História</span>
+    </h1>
+    <p class="hero-subtitle">27 Anos de Transformação e Impacto Social</p>
+    <div class="hero-meta">
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        1998 - 2025
+      </span>
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        Massinga, Moçambique
+      </span>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <polyline points="19 12 12 19 5 12"></polyline>
+    </svg>
+  </div>
+</section>
+
+<!-- Introdução Editorial -->
+<section class="intro-section">
+  <div class="container">
+    <div class="intro-content">
+      <span class="intro-label">A Nossa Jornada</span>
+      <h2 class="intro-title">
+        De um pequeno grupo de visionários a uma força de <span class="highlight">transformação social</span>
+      </h2>
+      <div class="intro-text">
+        <p class="dropcap">
+          Em 1998, um grupo de naturais e amigos de Massinga reuniu-se com um sonho comum: criar uma 
+          associação que pudesse catalisar o desenvolvimento social, cultural e económico da região. 
+          O que começou como uma pequena iniciativa de 15 membros fundadores, transformou-se numa 
+          organização robusta que hoje impacta milhares de vidas.
+        </p>
+        <p>
+          Ao longo de mais de duas décadas, a ANAM tem sido protagonista em inúmeras iniciativas que 
+          moldaram positivamente a comunidade de Massinga. Desde programas de alfabetização até projetos 
+          de desenvolvimento sustentável, cada capítulo da nossa história é marcado por dedicação, união 
+          e resultados concretos.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Estatísticas em Destaque -->
+<section class="stats-highlight">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item" *ngFor="let stat of estatisticas; let i = index" [attr.data-index]="i">
+        <div class="stat-icon">{{ stat.icon }}</div>
+        <h3 class="stat-valor">{{ stat.valor }}</h3>
+        <p class="stat-label">{{ stat.label }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline Editorial -->
+<section class="timeline-section">
+  <div class="container">
+    <div class="timeline-header">
+      <h2 class="section-title">Marcos <span class="highlight">Históricos</span></h2>
+      <p class="section-subtitle">Uma jornada de conquistas e transformações</p>
+    </div>
+    
+    <div class="timeline-magazine">
+      <article class="milestone-article" *ngFor="let milestone of milestones; let i = index" 
+               [class.reverse]="i % 2 !== 0"
+               [attr.data-index]="i">
+        
+        <!-- Imagem da matéria -->
+        <div class="article-image">
+          <img [src]="milestone.imagem" [alt]="milestone.titulo">
+          <div class="image-overlay">
+            <span class="categoria-tag">{{ milestone.categoria }}</span>
+          </div>
+          <div class="ano-badge">{{ milestone.ano }}</div>
+        </div>
+        
+        <!-- Conteúdo da matéria -->
+        <div class="article-content">
+          <div class="content-wrapper">
+            <span class="article-year">{{ milestone.ano }}</span>
+            <h3 class="article-title">{{ milestone.titulo }}</h3>
+            <div class="article-meta">
+              <span class="meta-tag">{{ milestone.categoria }}</span>
+              <span class="meta-divider">•</span>
+              <span class="meta-reading">3 min leitura</span>
+            </div>
+            <p class="article-text">{{ milestone.descricao }}</p>
+            
+            <!-- Quote decorativo -->
+            <div class="article-quote" *ngIf="i === 0 || i === 3">
+              <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+              </svg>
+              <p>"Um marco que mudou para sempre a nossa comunidade"</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Galeria Estilo Revista -->
+<section class="magazine-gallery">
+  <div class="container">
+    <div class="gallery-header">
+      <h2 class="section-title">Memórias em <span class="highlight">Imagens</span></h2>
+      <p class="section-subtitle">Momentos que definem quem somos</p>
+    </div>
+    
+    <div class="photo-essay">
+      <div class="essay-large">
+        <img src="/assets/slider/slide1.jpg" alt="Momentos Históricos">
+        <div class="essay-caption">
+          <h4>Construindo o Futuro</h4>
+          <p>Membros fundadores na primeira assembleia geral, 1998</p>
+        </div>
+      </div>
+      
+      <div class="essay-grid">
+        <div class="essay-small">
+          <img src="/assets/slider/slide2.jpg" alt="Evento Comunitário">
+          <div class="essay-caption">
+            <p>Celebração comunitária, 2005</p>
+          </div>
+        </div>
+        <div class="essay-small">
+          <img src="/assets/slider/slide3.jpg" alt="Projeto Social">
+          <div class="essay-caption">
+            <p>Projeto de desenvolvimento, 2010</p>
+          </div>
+        </div>
+        <div class="essay-small">
+          <img src="/assets/slider/slide1.jpg" alt="Formação">
+          <div class="essay-caption">
+            <p>Centro de formação, 2015</p>
+          </div>
+        </div>
+        <div class="essay-small">
+          <img src="/assets/slider/slide2.jpg" alt="Eventos">
+          <div class="essay-caption">
+            <p>Assembleia geral, 2020</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testemunhos Estilo Editorial -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="testimonials-header">
+      <h2 class="section-title">Vozes da <span class="highlight">Comunidade</span></h2>
+    </div>
+    
+    <div class="testimonials-grid">
+      <div class="testimonial-card featured">
+        <div class="testimonial-quote">
+          <svg class="quote-mark" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+          </svg>
+          <p class="quote-text">
+            "A ANAM mudou completamente a perspectiva da nossa comunidade. Hoje temos jovens empreendedores, 
+            agricultores capacitados e famílias mais unidas. É uma transformação que vai além dos números."
+          </p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">JM</div>
+          <div class="author-info">
+            <h4 class="author-name">João Manuel</h4>
+            <p class="author-role">Membro Fundador</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-quote">
+          <p class="quote-text">
+            "Participar dos programas da ANAM foi fundamental para o crescimento do meu negócio. 
+            As capacitações e a rede de contactos abriram portas que eu nem imaginava."
+          </p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">MS</div>
+          <div class="author-info">
+            <h4 class="author-name">Maria Silva</h4>
+            <p class="author-role">Empresária Local</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-quote">
+          <p class="quote-text">
+            "Ver a evolução da ANAM ao longo destes anos é inspirador. Uma organização que realmente 
+            coloca a comunidade em primeiro lugar e trabalha incansavelmente pelo bem comum."
+          </p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-avatar">AC</div>
+          <div class="author-info">
+            <h4 class="author-name">António Carlos</h4>
+            <p class="author-role">Líder Comunitário</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Editorial -->
+<section class="editorial-cta">
+  <div class="container">
+    <div class="cta-content">
+      <span class="cta-label">Faça Parte da História</span>
+      <h2 class="cta-title">Construa o Futuro Conosco</h2>
+      <p class="cta-text">
+        Cada capítulo da nossa história foi escrito por pessoas como você. 
+        Junte-se a nós e seja parte desta jornada transformadora.
+      </p>
+      <div class="cta-actions">
+        <button class="cta-btn primary">
+          <span>Tornar-se Membro</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button class="cta-btn secondary">
+          <span>Saber Mais</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,25 @@
+<section class="parceiros-preview" aria-labelledby="parceiros-title">
+  <div class="container">
+    <h2 id="parceiros-title">Parceiros</h2>
+    <p class="lead">Conheça algumas das empresas que fazem parte da nossa rede de parceiros</p>
+    
+    <div class="parceiros-grid">
+      <article class="parceiro-card" *ngFor="let parceiro of parceiros">
+        <div class="parceiro-logo">
+          <img [src]="parceiro.logo" [alt]="parceiro.nome" loading="lazy">
+        </div>
+        <div class="parceiro-content">
+          <h3 class="parceiro-nome">{{ parceiro.nome }}</h3>
+          <span class="parceiro-categoria">{{ parceiro.categoria }}</span>
+          <p class="parceiro-descricao">{{ parceiro.descricao }}</p>
+        </div>
+      </article>
+    </div>
+    
+    <div class="ver-todos">
+      <a routerLink="/parceiros" class="btn-ver-todos">
+        Ver Todos os Parceiros
+      </a>
+    </div>
+  </div>
+</section>

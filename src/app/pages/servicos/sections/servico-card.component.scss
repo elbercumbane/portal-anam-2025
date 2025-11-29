@@ -1,0 +1,96 @@
+.servico-card {
+  background: #fff;
+  border: 1px solid rgba(139,120,95,.12);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 28px rgba(15,23,42,.06);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color .35s ease;
+
+  /* top accent ribbon */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #8B785F, #A68B5B);
+    opacity: .9;
+  }
+  
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 44px rgba(15,23,42,.12);
+    border-color: rgba(139,120,95,.22);
+  }
+  
+  h2 {
+    color: #0F172A;
+    margin: 0.2rem 0 0.8rem;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+  }
+  
+  .bullets {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 1.6rem;
+    display: grid;
+    gap: .5rem;
+    
+    li {
+      position: relative;
+      padding-left: 28px;
+      color: #374151;
+      line-height: 1.5;
+      font-size: .98rem;
+      
+      &::before {
+        content: "✓";
+        position: absolute;
+        left: 0; top: 2px;
+        width: 20px; height: 20px;
+        display: grid; place-items: center;
+        background: #10B981;
+        color: #fff;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: .8rem;
+        box-shadow: 0 2px 6px rgba(16,185,129,.35);
+      }
+    }
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #8B785F 0%, #A68B5B 100%);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .3s ease, filter .2s ease;
+    box-shadow: 0 6px 18px rgba(139,120,95,.28);
+
+    &::after {
+      content: '→';
+      font-weight: 800;
+      transition: transform .25s ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(139,120,95,.35);
+      filter: saturate(1.05);
+    }
+
+    &:hover::after { transform: translateX(3px); }
+    &:focus { outline: 2px solid #8B785F; outline-offset: 2px; }
+  }
+}
+

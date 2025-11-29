@@ -1,0 +1,346 @@
+<div class="indicadores-container">
+  <!-- Indicadores Content -->
+  <div class="page-container" (click)="fecharExportMenu()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>assessment</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>Indicadores de Performance</h1>
+            <p>Métricas de tempo e performance dos formulários de avaliação</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-total" title="Total de Avaliações">
+            <mat-icon>storage</mat-icon>
+            <span>Total: {{ totalAvaliacoes }}</span>
+          </button>
+          <button class="btn-analise" title="Análise Detalhada" (click)="abrirAnaliseDetalhada()">
+            <mat-icon>analytics</mat-icon>
+            <span>Análise Detalhada</span>
+          </button>
+          <button class="btn-refresh" title="Atualizar Dados" (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button class="btn-ajuda" title="Ajuda" (click)="mostrarAjuda()">
+            <mat-icon>help</mat-icon>
+          </button>
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+      <div class="filters-content">
+        <h3 class="filters-title">Filtros de Pesquisa</h3>
+        <div class="filters-grid">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Tipo de Formulário</label>
+              <select class="filter-select" [value]="filtroTipoFormulario" (change)="filtrarPorTipoFormulario($event)">
+                <option value="">Todos</option>
+                <option value="fae">FAE</option>
+                <option value="agente-economico">Agente Econômico</option>
+                <option value="utilizador">Utilizador</option>
+                <option value="formacao">Formação</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Período</label>
+              <select class="filter-select" [value]="filtroPeriodo" (change)="filtrarPorPeriodo($event)">
+                <option value="">Todos</option>
+                <option value="hoje">Hoje</option>
+                <option value="semana">Esta Semana</option>
+                <option value="mes">Este Mês</option>
+                <option value="trimestre">Este Trimestre</option>
+                <option value="ano">Este Ano</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Visualização</label>
+              <select class="filter-select" [value]="filtroVisualizacao" (change)="filtrarPorVisualizacao($event)">
+                <option value="todos">Todos os Registros</option>
+                <option value="acima-limite">Acima de 3 minutos</option>
+                <option value="abaixo-limite">Abaixo de 3 minutos</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Data Início</label>
+              <input type="date" class="filter-date" [value]="filtroDataInicio" (change)="filtrarPorDataInicio($event)">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Data Fim</label>
+              <input type="date" class="filter-date" [value]="filtroDataFim" (change)="filtrarPorDataFim($event)">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Ordenar Por</label>
+              <select class="filter-select" [value]="filtroOrdenacao" (change)="filtrarPorOrdenacao($event)">
+                <option value="id-crescente">ID (Crescente)</option>
+                <option value="id-decrescente">ID (Decrescente)</option>
+                <option value="tempo-crescente">Tempo (Mais Curto)</option>
+                <option value="tempo-decrescente">Tempo (Mais Alto)</option>
+                <option value="data-recente">Data (Mais Recente)</option>
+                <option value="data-antiga">Data (Mais Antiga)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Estatísticas dos Filtros -->
+        <div class="filter-stats" *ngIf="registrosFiltrados.length > 0">
+          <div class="stat-item">
+            <span class="stat-label">Total Filtrado:</span>
+            <span class="stat-value">{{ getTotalRegistrosFiltrados() }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Média de Tempo:</span>
+            <span class="stat-value">{{ getMediaTempo() }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Tempo Mais Alto:</span>
+            <span class="stat-value">{{ getTempoMaisAlto() }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Tempo Mais Curto:</span>
+            <span class="stat-value">{{ getTempoMaisCurto() }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Acima de 3 min:</span>
+            <span class="stat-value">{{ getRegistrosAcimaLimite() }}</span>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filtrar" (click)="aplicarFiltros()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filtrar</span>
+          </button>
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            <span>Limpar</span>
+          </button>
+          <div class="btn-exportar-container">
+            <button class="btn-exportar" (click)="toggleExportMenu()">
+              <mat-icon>file_download</mat-icon>
+              <span>Exportar</span>
+              <mat-icon class="dropdown-icon" [class.rotated]="exportMenuOpen">keyboard_arrow_down</mat-icon>
+            </button>
+            <div class="export-menu" *ngIf="exportMenuOpen">
+              <button class="export-option excel-option" (click)="exportarExcel()">
+                <mat-icon>table_chart</mat-icon>
+                <span>Excel</span>
+              </button>
+              <button class="export-option word-option" (click)="exportarWord()">
+                <mat-icon>description</mat-icon>
+                <span>Word</span>
+              </button>
+              <button class="export-option pdf-option" (click)="exportarPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Carregando dados...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="!isLoading && erroCarregamento">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ erroCarregamento }}</p>
+    </div>
+
+    <!-- Cards de Métricas -->
+    <div class="metrics-cards" *ngIf="!isLoading && !erroCarregamento">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <mat-icon>timer</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Tempo Médio de Preenchimento</h3>
+          <div class="metric-value">{{ tempoMedioPreenchimento }}</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <mat-icon>speed</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Tempo Mais Rápido</h3>
+          <div class="metric-value">{{ tempoMaisRapido }}</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <mat-icon>hourglass_empty</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Tempo Mais Lento</h3>
+          <div class="metric-value">{{ tempoMaisLento }}</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Taxa de Conclusão</h3>
+          <div class="metric-value">{{ taxaConclusao }}%</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon">
+          <mat-icon>assessment</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Avaliações</h3>
+          <div class="metric-value">{{ totalAvaliacoesConcluidas }} / {{ totalAvaliacoesIniciadas }}</div>
+          <div class="metric-subtitle">Concluídas / Iniciadas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos e Visualizações -->
+    <div class="charts-section" *ngIf="!isLoading && !erroCarregamento">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Tempo Médio por Tipo de Formulário</h3>
+          <p>Comparação do tempo de preenchimento entre diferentes formulários</p>
+        </div>
+        <div class="chart-content">
+          <div class="chart-bars">
+            <div class="chart-bar" *ngFor="let item of tempoPorFormulario">
+              <div class="bar-label">{{ item.tipo }}</div>
+              <div class="bar-container">
+                <div class="bar-fill" [style.width.%]="(item.tempo / tempoMaximo) * 100" [class]="getBarClass(item.tipo)">
+                  <span class="bar-value">{{ item.tempo }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Distribuição de Tempos de Preenchimento</h3>
+          <p>Frequência dos tempos de preenchimento dos formulários</p>
+        </div>
+        <div class="chart-content">
+          <div class="distribution-chart">
+            <div class="distribution-item" *ngFor="let item of distribuicaoTempos">
+              <div class="distribution-label">{{ item.faixa }}</div>
+              <div class="distribution-bar">
+                <div class="distribution-fill" [style.width.%]="(item.quantidade / quantidadeMaxima) * 100">
+                  <span class="distribution-value">{{ item.quantidade }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Registros Individuais -->
+    <div class="data-table-container" *ngIf="!isLoading && !erroCarregamento">
+      <div class="table-header">
+        <h3>Registros de Avaliação</h3>
+        <span class="table-count">{{ registrosFiltrados.length }} de {{ registrosIndividuais.length }} registros</span>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo de Formulário</th>
+              <th>Tempo de Duração</th>
+              <th>Data Início</th>
+              <th>Data Fim</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registro of registrosPaginados" [class.tempo-acima-limite]="isTempoAcimaLimite(registro.duracaoSegundos)">
+              <td>{{ registro.id }}</td>
+              <td>
+                <span class="form-type-badge" [class]="getFormTypeClass(registro.tipoFormulario)">
+                  {{ getFormTypeLabel(registro.tipoFormulario) }}
+                </span>
+              </td>
+              <td>
+                <span class="time-badge">{{ registro.tempoDuracao }}</span>
+              </td>
+              <td>{{ registro.dataInicio | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+              <td>{{ registro.dataFim | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <div class="pagination" *ngIf="registrosFiltrados.length > 0">
+        <button 
+          class="btn-pagination" 
+          [disabled]="paginaAtual === 1"
+          (click)="paginaAnterior()"
+          [attr.aria-label]="'Página anterior'">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="page-info">
+          <span class="page-numbers" *ngIf="totalPaginas > 1">
+            Página {{ paginaAtual }} de {{ totalPaginas }}
+          </span>
+        </span>
+        <button 
+          class="btn-pagination" 
+          [disabled]="paginaAtual === totalPaginas"
+          (click)="proximaPagina()"
+          [attr.aria-label]="'Próxima página'">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+      
+      <!-- Mensagem quando não há registros -->
+      <div class="no-data-message" *ngIf="registrosFiltrados.length === 0 && !isLoading && !erroCarregamento">
+        <mat-icon>info</mat-icon>
+        <p>Nenhum registro encontrado com os filtros aplicados.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Análise Detalhada -->
+  <app-detailed-analysis
+    *ngIf="mostrarAnaliseDetalhada"
+    [evaluationTimes]="evaluationTimes"
+    [todasAvaliacoes]="todasAvaliacoes"
+    [tempoMedioPreenchimento]="tempoMedioPreenchimento"
+    [tempoMaisRapido]="tempoMaisRapido"
+    [tempoMaisLento]="tempoMaisLento"
+    [taxaConclusao]="taxaConclusao"
+    [totalAvaliacoesIniciadas]="totalAvaliacoesIniciadas"
+    [totalAvaliacoesConcluidas]="totalAvaliacoesConcluidas"
+    [tempoPorFormulario]="tempoPorFormulario"
+    [distribuicaoTempos]="distribuicaoTempos"
+    (close)="fecharAnaliseDetalhada()">
+  </app-detailed-analysis>
+</div>

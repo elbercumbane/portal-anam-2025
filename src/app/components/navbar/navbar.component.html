@@ -1,0 +1,78 @@
+<mat-toolbar class="navbar" [class.scrolled]="scrolled" [class.hidden]="isHidden">
+  <div class="brand">
+    <div class="brand-title">ANAM</div>
+    <div class="brand-subtitle">
+      <div>Associação de Naturais e</div>
+      <div>Amigos de Massinga</div>
+    </div>
+  </div>
+  
+  <nav class="desktop-nav">
+    <a mat-button routerLink="/" class="nav-link">Início</a>
+    
+    <!-- Submenu Páginas -->
+    <div class="dropdown" (mouseenter)="showPaginasSubmenu = true" (mouseleave)="showPaginasSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">
+        Páginas
+        <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+      </a>
+      <div class="dropdown-menu" [class.show]="showPaginasSubmenu">
+        <a mat-button routerLink="/documentacao" class="dropdown-item">Documentação</a>
+        <a mat-button routerLink="/servicos" class="dropdown-item">Serviços</a>
+        <a mat-button (click)="scrollToSection('eventos')" class="dropdown-item">Eventos</a>
+        <a mat-button routerLink="/historial" class="dropdown-item">Historial</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Projectos -->
+    <div class="dropdown" (mouseenter)="showProjectosSubmenu = true" (mouseleave)="showProjectosSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">
+        Projectos
+        <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+      </a>
+      <div class="dropdown-menu" [class.show]="showProjectosSubmenu">
+        <a mat-button routerLink="/projectos/ativos" class="dropdown-item">Projectos Activos</a>
+        <a mat-button routerLink="/projectos/realizados" class="dropdown-item">Projectos Realizados</a>
+        <a mat-button routerLink="/projectos/candidaturas" class="dropdown-item">Candidaturas</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Área de Membros -->
+    <div class="dropdown" (mouseenter)="showMembrosSubmenu = true" (mouseleave)="showMembrosSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">
+        Área de Membros
+        <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+      </a>
+      <div class="dropdown-menu" [class.show]="showMembrosSubmenu">
+        <a mat-button routerLink="/membros" class="dropdown-item">Área de Membros</a>
+        <a mat-button routerLink="/membros/organograma" class="dropdown-item">Organograma</a>
+        <a mat-button routerLink="/membros/pagar-cotas" class="dropdown-item">Pagar Cotas</a>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="nav-actions">
+    <div class="search-container">
+      <button mat-icon-button class="search-icon" aria-label="Pesquisar" (click)="toggleSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+      <div class="search-bar" [class.active]="showSearchBar">
+        <input 
+          type="text" 
+          placeholder="Pesquisar..." 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          class="search-input"
+        />
+        <button mat-icon-button class="search-close" (click)="closeSearch()" aria-label="Fechar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <button mat-icon-button routerLink="/login" class="login-icon" aria-label="Login" title="Login">
+      <mat-icon>person</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+

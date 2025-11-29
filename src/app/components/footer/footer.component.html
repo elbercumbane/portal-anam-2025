@@ -1,0 +1,108 @@
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer__main">
+    <div class="container">
+      <div class="footer__grid">
+        
+        <!-- Coluna 1: ANAM - Sobre Nós & Redes Sociais -->
+        <div class="footer__brand">
+          <div class="footer__logo">
+            <h3>ANAM</h3>
+            <span class="footer__tagline">Associação de Naturais e Amigos de Massinga</span>
+          </div>
+          <p class="footer__description">
+            Promovendo o desenvolvimento social, cultural e económico da comunidade de Massinga através de programas educativos e iniciativas comunitárias.
+          </p>
+          <div class="footer__social">
+            <h4>Redes Sociais</h4>
+            <div class="social-links">
+              <a 
+                *ngFor="let social of socialLinks" 
+                [href]="social.url" 
+                [attr.aria-label]="social.name"
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="social-link"
+                [style.--social-color]="social.color"
+              >
+                <i [class]="social.iconClass"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna 2: Links Úteis -->
+        <div class="footer__section">
+          <h4 class="footer__title">Links Úteis</h4>
+          <ul class="footer__links">
+            <li><a [routerLink]="'sobre'" class="footer__link">Sobre Nós</a></li>
+            <li><a [routerLink]="'membros'" class="footer__link">Associados</a></li>
+            <li><a [routerLink]="'servicos'" class="footer__link">Serviços</a></li>
+            <li><a [routerLink]="'programas'" class="footer__link">Programas</a></li>
+            <li><a [routerLink]="'documentacao'" class="footer__link">Documentação</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Eventos & Atividades -->
+        <div class="footer__section">
+          <h4 class="footer__title">Eventos & Atividades</h4>
+          <ul class="footer__links">
+            <li><a [routerLink]="'eventos'" class="footer__link">Próximos Eventos</a></li>
+            <li><a [routerLink]="'galeria'" class="footer__link">Galeria de Fotos</a></li>
+            <li><a [routerLink]="'eventos'" class="footer__link">Calendário de Atividades</a></li>
+            <li><a [routerLink]="'noticias'" class="footer__link">Notícias</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Contactos -->
+        <div class="footer__section">
+          <h4 class="footer__title">Contactos</h4>
+          <div class="footer__contact">
+            <div class="contact-item">
+              <mat-icon>location_on</mat-icon>
+              <span>{{ contactInfo.address }}</span>
+            </div>
+            <div class="contact-item">
+              <mat-icon>phone</mat-icon>
+              <a [href]="'tel:' + contactInfo.phone">{{ contactInfo.phone }}</a>
+            </div>
+            <div class="contact-item">
+              <mat-icon>email</mat-icon>
+              <a [href]="'mailto:' + contactInfo.email">{{ contactInfo.email }}</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna 5: Horário de Funcionamento -->
+        <div class="footer__section">
+          <h4 class="footer__title">Horário de Funcionamento</h4>
+          <div class="footer__hours">
+            <div class="hours-item">
+              <span class="hours-days">Segunda - Sexta:</span>
+              <span class="hours-time">08:00 - 17:00</span>
+            </div>
+            <div class="hours-item">
+              <span class="hours-days">Sábado:</span>
+              <span class="hours-time">09:00 - 13:00</span>
+            </div>
+            <div class="hours-item">
+              <span class="hours-days">Domingo:</span>
+              <span class="hours-time">Fechado</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de Copyright -->
+  <div class="footer__bottom">
+    <div class="container">
+      <div class="footer__copyright">
+        <p>&copy; {{ currentYear }} ANAM - Associação de Naturais e Amigos de Massinga. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+

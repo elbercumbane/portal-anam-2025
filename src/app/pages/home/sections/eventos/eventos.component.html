@@ -1,0 +1,77 @@
+<section class="eventos" id="eventos" aria-labelledby="eventos-title">
+  <div class="container">
+    <!-- Header Moderno -->
+    <div class="eventos-header">
+      <span class="section-badge">Em Destaque</span>
+      <h2 id="eventos-title" class="section-title">
+        Próximos <span class="highlight">Eventos</span>
+      </h2>
+      <p class="section-subtitle">
+        Participe dos nossos eventos e faça parte da transformação da comunidade
+      </p>
+    </div>
+    
+    <div class="eventos-grid">
+      <article class="evento-card" *ngFor="let evento of eventos; let i = index" [attr.data-index]="i">
+        <!-- Imagem com overlay gradiente -->
+        <div class="evento-imagem">
+          <img [src]="evento.imagem" [alt]="evento.titulo" loading="lazy">
+          <div class="image-overlay"></div>
+          <div class="image-badge">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Evento</span>
+          </div>
+        </div>
+        
+        <!-- Conteúdo do Card -->
+        <div class="evento-content">
+          <div class="content-header">
+            <span class="evento-data">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {{ evento.data }}
+            </span>
+          </div>
+          
+          <h3 class="evento-titulo">{{ evento.titulo }}</h3>
+          <p class="evento-descricao">{{ evento.descricao }}</p>
+          
+          <div class="evento-meta">
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{{ evento.local }}</span>
+            </div>
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>{{ evento.hora }}</span>
+            </div>
+          </div>
+          
+          <button class="btn-inscrever" (click)="inscreverSe(evento.id)">
+            <span class="btn-text">Inscrever-se</span>
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Shine Effect -->
+        <div class="card-shine"></div>
+      </article>
+    </div>
+  </div>
+</section>

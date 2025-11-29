@@ -1,0 +1,42 @@
+<div class="projetos-grid">
+  <article class="card projeto" *ngFor="let projeto of projetos">
+    <div class="projeto-header">
+      <h3>{{ projeto.titulo }}</h3>
+      <span class="badge ativo">{{ projeto.status }}</span>
+    </div>
+
+    <div class="projeto-meta">
+      <span class="chip">Início: {{ projeto.dataInicio }}</span>
+      <span class="chip">Fim: {{ projeto.dataFim }}</span>
+      <span class="chip">Orçamento: {{ projeto.orcamento }}</span>
+    </div>
+
+    <p class="projeto-descricao">{{ projeto.descricao }}</p>
+
+    <div class="projeto-progress" *ngIf="projeto.progresso as p">
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" [style.width.%]="p"></div>
+      </div>
+      <div class="progress-label">Progresso: {{ p }}%</div>
+    </div>
+
+    <div class="kpis" *ngIf="projeto.kpis">
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.beneficiarios }}</span><span class="kpi-label">Beneficiários</span></div>
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.parcerias }}</span><span class="kpi-label">Parcerias</span></div>
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.eventos }}</span><span class="kpi-label">Eventos</span></div>
+    </div>
+
+    <div class="projeto-parceiros">
+      <strong>Parceiros:</strong>
+      <div class="parceiros-tags">
+        <span class="tag" *ngFor="let parceiro of projeto.parceiros">{{ parceiro }}</span>
+      </div>
+    </div>
+
+    <div class="projeto-actions">
+      <a class="btn btn-secondary" *ngIf="projeto.linkPlano" [href]="projeto.linkPlano" target="_blank" rel="noopener">Plano</a>
+      <a class="btn btn-primary" *ngIf="projeto.linkDetalhes" [href]="projeto.linkDetalhes">Detalhes</a>
+    </div>
+  </article>
+</div>
+

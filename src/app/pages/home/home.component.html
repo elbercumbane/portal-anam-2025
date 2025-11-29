@@ -1,0 +1,33 @@
+<!-- Hero Section - MANTER COMO ESTÁ -->
+<section class="hero with-slider" aria-labelledby="hero-title">
+  <div class="slider" #slider>
+    <div class="slide" style="background-image: url('/assets/FOTO1 ANAM.jpeg')"></div>
+    <div class="slide" style="background-image: url('/assets/FOTO 4 ANAM.jpeg')"></div>
+  </div>
+  <div class="hero__scrim hero__scrim--bright"></div>
+  <div class="hero-content hero__content" #heroContent>
+    <h1 id="hero-title" class="hero__title" #heroTitle></h1>
+    <p #heroSubtitle></p>
+    <!-- Ações removidas conforme solicitado -->
+  </div>
+  
+  <!-- Controles do Slider -->
+  <div class="hero-dots">
+    <button 
+      *ngFor="let slide of [0, 1]; let i = index"
+      class="hero-dot" 
+      [class.active]="currentSlide === i"
+      (click)="goToSlide(i)"
+      [attr.aria-label]="'Slide ' + (i + 1)">
+    </button>
+  </div>
+</section>
+
+<!-- NOVA ESTRUTURA DA HOME -->
+<app-historial></app-historial>
+<app-eventos></app-eventos>
+<app-galeria></app-galeria>
+<home-parceiros></home-parceiros>
+<app-message-popup></app-message-popup>
+
+

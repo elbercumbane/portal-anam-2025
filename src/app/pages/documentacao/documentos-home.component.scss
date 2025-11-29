@@ -1,0 +1,330 @@
+// Forçar navbar sólido nesta página
+:host {
+  // Estilos globais para esta página
+}
+
+// Classe global para forçar navbar sólido
+:host ::ng-deep body.navbar-solid .navbar,
+:host-context(body.navbar-solid) ::ng-deep .navbar {
+  background: rgba(139, 120, 95, 0.95) !important;
+  border-bottom: 1px solid rgba(139, 120, 95, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(139, 120, 95, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+// Hero Section com Biblioteca
+.docs-hero {
+  position: relative;
+  height: 400px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 60px;
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(27, 67, 50, 0.85) 0%,
+      rgba(64, 145, 108, 0.75) 50%,
+      rgba(138, 125, 101, 0.85) 100%
+    );
+    backdrop-filter: blur(2px);
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 24px;
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      margin: 0 0 20px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .lead {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    height: 300px;
+    margin-bottom: 40px;
+    
+    .hero-content {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .lead {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Conteúdo da Página
+.docs-page {
+  padding: 0 16px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 40px;
+    
+    .chip {
+      border: 2px solid rgba(138, 125, 101, 0.2);
+      background: white;
+      color: #8A7D65;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      
+      &.is-active,
+      &:hover {
+        background: linear-gradient(135deg, #8A7D65 0%, #6B5B47 100%);
+        color: white;
+        border-color: #8A7D65;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(138, 125, 101, 0.3);
+      }
+    }
+  }
+
+  .docs-list {
+    display: grid;
+    gap: 20px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .doc-item {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+    
+    // Animação em cascata
+    @for $i from 0 through 10 {
+      &[data-index="#{$i}"] {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+  }
+
+  .doc-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px;
+    background: white;
+    border: 1px solid rgba(138, 125, 101, 0.12);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      border-color: rgba(138, 125, 101, 0.25);
+    }
+
+    .doc-icon {
+      font-size: 32px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(138, 125, 101, 0.1) 0%, rgba(138, 125, 101, 0.05) 100%);
+      border-radius: 16px;
+    }
+
+    .doc-main {
+      h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+      
+      p {
+        margin: 0 0 12px;
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      
+      .meta {
+        margin-top: 8px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      
+      .badge {
+        background: rgba(138, 125, 101, 0.1);
+        color: #8A7D65;
+        border-radius: 50px;
+        padding: 4px 12px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .muted {
+        color: #999;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+    }
+
+    .doc-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #8A7D65 0%, #6B5B47 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(138, 125, 101, 0.3);
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(138, 125, 101, 0.4);
+      }
+    }
+    
+    .btn-secondary {
+      background: white;
+      color: #8A7D65;
+      border: 2px solid rgba(138, 125, 101, 0.3);
+      
+      &:hover {
+        background: rgba(138, 125, 101, 0.1);
+        border-color: #8A7D65;
+      }
+    }
+  }
+  
+  // Empty State
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    animation: fadeIn 0.5s ease;
+    
+    .empty-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      opacity: 0.6;
+    }
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0 0 12px;
+    }
+    
+    p {
+      font-size: 1rem;
+      color: #666;
+      margin: 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .doc-item {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      
+      .doc-icon {
+        display: none;
+      }
+      
+      .doc-actions {
+        flex-direction: column;
+        
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+    
+    .empty-state {
+      padding: 60px 20px;
+      
+      .empty-icon {
+        font-size: 60px;
+      }
+      
+      h3 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+// Animações
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

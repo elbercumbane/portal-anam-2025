@@ -1,0 +1,77 @@
+<div class="economic-help-modal-overlay"
+     *ngIf="isVisible"
+     [class.economic-help-modal-visible]="isVisible"
+     (click)="onOverlayClick($event)">
+
+  <div class="economic-help-modal-container"
+       [class.economic-help-modal-visible]="isVisible">
+
+    <div class="economic-help-modal-header">
+      <div class="economic-help-modal-icon">
+        <mat-icon>support</mat-icon>
+      </div>
+      <div class="economic-help-modal-header-text">
+        <h3 class="economic-help-modal-title">Guia rápido do Agente Econômico</h3>
+        <p class="economic-help-modal-subtitle">Escolha um tema para visualizar orientações compactas.</p>
+      </div>
+      <button class="economic-help-modal-close" (click)="close()" title="Fechar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="economic-help-modal-body">
+      <div class="economic-help-modal-layout">
+        <nav class="economic-help-modal-nav">
+          <button
+            type="button"
+            class="nav-item"
+            *ngFor="let section of sections"
+            (click)="selectSection(section.id)"
+            [class.active]="isActive(section.id)">
+            <div class="nav-item-icon">
+              <mat-icon>{{ section.icon }}</mat-icon>
+          </div>
+            <div class="nav-item-text">
+              <span class="nav-item-title">{{ section.title }}</span>
+              <span class="nav-item-summary">{{ section.summary }}</span>
+          </div>
+            <mat-icon class="nav-item-arrow">chevron_right</mat-icon>
+          </button>
+        </nav>
+
+        <section class="economic-help-modal-content" *ngIf="activeSection as section">
+          <header class="content-header">
+            <div class="content-header-icon">
+              <mat-icon>{{ section.icon }}</mat-icon>
+          </div>
+            <div class="content-header-text">
+              <h4>{{ section.title }}</h4>
+              <p>{{ section.description }}</p>
+          </div>
+          </header>
+
+          <div class="help-item" *ngFor="let item of section.items">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.content }}</p>
+          </div>
+
+          <ul class="tips-list" *ngIf="section.tips?.length">
+            <li *ngFor="let tip of section.tips">
+              <mat-icon>lightbulb</mat-icon>
+              <span>{{ tip }}</span>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="economic-help-modal-footer">
+      <button type="button"
+              class="economic-help-modal-btn economic-help-modal-btn-close"
+              (click)="close()">
+        <mat-icon>check</mat-icon>
+        Entendi
+      </button>
+    </div>
+  </div>
+</div>

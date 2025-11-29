@@ -1,0 +1,52 @@
+<!-- Notifications Button -->
+<button mat-icon-button 
+        [matMenuTriggerFor]="notificationsMenu" 
+        class="action-btn" 
+        matTooltip="Notificações">
+  <mat-icon [matBadge]="getUnreadCount()" 
+            matBadgeColor="warn">notifications</mat-icon>
+</button>
+
+<!-- Notifications Menu -->
+<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+  <div class="menu-header">
+    <span>Notificações</span>
+    <button mat-icon-button>
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <!-- Notification Items -->
+  <div class="notification-item" 
+       *ngFor="let notification of notifications.slice(0, 5)"
+       [class.unread]="!notification.read">
+    <mat-icon [style.color]="getNotificationColor(notification)">
+      {{ getNotificationIcon(notification) }}
+    </mat-icon>
+    <div class="notification-content">
+      <span class="notification-text">{{ notification.message }}</span>
+      <span class="notification-time">{{ formatTimeAgo(notification.timestamp) }}</span>
+    </div>
+    <button mat-icon-button 
+            *ngIf="!notification.read"
+            (click)="onMarkAsRead(notification.id)"
+            class="mark-read-btn">
+      <mat-icon>mark_email_read</mat-icon>
+    </button>
+  </div>
+  
+  <mat-divider></mat-divider>
+  
+  <!-- Actions -->
+  <button mat-menu-item (click)="onMarkAllAsRead()">
+    <mat-icon>mark_email_read</mat-icon>
+    <span>Marcar todas como lidas</span>
+  </button>
+  
+  <button mat-menu-item>
+    <mat-icon>settings</mat-icon>
+    <span>Configurar Notificações</span>
+  </button>
+</mat-menu>

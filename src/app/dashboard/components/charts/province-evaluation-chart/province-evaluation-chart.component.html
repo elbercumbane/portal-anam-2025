@@ -1,0 +1,79 @@
+<mat-card class="province-eval-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>{{ icon }}</mat-icon>
+      {{ title }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <ng-container *ngIf="hasData; else noProvinceData">
+      <div class="charts-wrapper">
+        <div class="chart-panel">
+          <div class="chart-panel__title">
+            <mat-icon>support_agent</mat-icon>
+            <span>Atendimento</span>
+          </div>
+          <svg [attr.viewBox]="'0 0 ' + svgWidth + ' ' + svgHeight">
+            <g *ngFor="let provincia of data; let i = index; trackBy: trackByName">
+              <rect class="bar atendimento"
+                    [attr.x]="getBarX(i)"
+                    [attr.y]="getBarY(provincia.atendimentoScore)"
+                    [attr.width]="getBarWidth()"
+                    [attr.height]="getBarHeight(provincia.atendimentoScore)"></rect>
+              <text class="value-label atendimento"
+                    [attr.x]="getLabelX(i)"
+                    [attr.y]="getValueLabelY(provincia.atendimentoScore)"
+                    text-anchor="middle">
+                {{ provincia.atendimentoScore | number:'1.0-0' }}%
+              </text>
+              <text class="province-label"
+                    [attr.x]="getLabelX(i)"
+                    y="345"
+                    text-anchor="middle">
+                {{ provincia.name }}
+              </text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="chart-panel">
+          <div class="chart-panel__title">
+            <mat-icon>school</mat-icon>
+            <span>Formação</span>
+          </div>
+          <svg [attr.viewBox]="'0 0 ' + svgWidth + ' ' + svgHeight">
+            <g *ngFor="let provincia of data; let i = index; trackBy: trackByName">
+              <rect class="bar formacao"
+                    [attr.x]="getBarX(i)"
+                    [attr.y]="getBarY(provincia.formacaoScore)"
+                    [attr.width]="getBarWidth()"
+                    [attr.height]="getBarHeight(provincia.formacaoScore)"></rect>
+              <text class="value-label formacao"
+                    [attr.x]="getLabelX(i)"
+                    [attr.y]="getValueLabelY(provincia.formacaoScore)"
+                    text-anchor="middle">
+                {{ provincia.formacaoScore | number:'1.0-0' }}%
+              </text>
+              <text class="province-label"
+                    [attr.x]="getLabelX(i)"
+                    y="345"
+                    text-anchor="middle">
+                {{ provincia.name }}
+              </text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noProvinceData>
+      <div class="empty-state">
+        <mat-icon>info</mat-icon>
+        <p>Sem dados suficientes para gerar o comparativo por província.</p>
+      </div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
+

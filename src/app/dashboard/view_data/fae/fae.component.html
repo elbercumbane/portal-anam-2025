@@ -1,0 +1,290 @@
+  <!-- FAE Content -->
+<div (click)="fecharExportMenu()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>assignment</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>FAE (Funcionário ou Agente do Estado)</h1>
+            <p>Visualização e gestão das avaliações dos funcionários e agentes do estado</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-total" title="Total de Avaliações">
+            <mat-icon>storage</mat-icon>
+            <span>Total: {{ avaliacoes.length }}</span>
+          </button>
+          <button class="btn-refresh" title="Atualizar Dados" (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button class="btn-ajuda" title="Ajuda" (click)="mostrarAjuda()">
+            <mat-icon>help</mat-icon>
+          </button>
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+      <div class="filters-content">
+        <h3 class="filters-title">Filtros de Pesquisa</h3>
+        <div class="filters-grid">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Grau de Satisfação</label>
+              <select class="filter-select" [value]="filtroGrauSatisfacao" (change)="filtrarPorAvaliacao($event)">
+                <option value="">Todos</option>
+                <option *ngFor="let opcao of opcoesGrauSatisfacao" [value]="opcao">
+                  {{ getSatisfactionLabel(opcao) }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Tipo de Problema</label>
+              <select class="filter-select" [value]="filtroTipoProblema" (change)="filtrarPorProblema($event)">
+                <option value="">Todos</option>
+                <option *ngFor="let opcao of opcoesTipoProblema" [value]="opcao">
+                  {{ getTipoProblemaLabel(opcao) }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Problema Resolvido</label>
+              <select class="filter-select" [value]="filtroProblemaResolvido" (change)="filtrarPorResolvido($event)">
+                <option value="">Todos</option>
+                <option *ngFor="let opcao of opcoesProblemaResolvido" [value]="opcao">
+                  {{ opcao === 'sim' ? 'Sim' : 'Não' }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">O que lhe Agradou</label>
+              <select class="filter-select" [value]="filtroAgradou" (change)="filtrarPorAgradou($event)">
+                <option value="">Todos</option>
+                <option *ngFor="let opcao of opcoesAgradou" [value]="opcao">
+                  {{ getAgradouLabel(opcao) }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">O que não lhe Agradou</label>
+              <select class="filter-select" [value]="filtroNaoAgradou" (change)="filtrarPorNaoAgradou($event)">
+                <option value="">Todos</option>
+                <option *ngFor="let opcao of opcoesNaoAgradou" [value]="opcao">
+                  {{ getNaoAgradouLabel(opcao) }}
+                </option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Província</label>
+              <select class="filter-select" [value]="filtroProvincia" (change)="filtrarPorProvincia($event)">
+                <option value="">Todas</option>
+                <option *ngFor="let opcao of opcoesProvincia" [value]="opcao">
+                  {{ formatarProvincia(opcao) }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Data Início</label>
+              <input type="date" 
+                     class="filter-date" 
+                     [value]="filtroDataInicio" 
+                     [max]="getMaxDateInicio()"
+                     (change)="filtrarPorDataInicio($event)" 
+                     [class.error]="erroDataInicio">
+              <span class="error-message" *ngIf="erroDataInicio">{{ erroDataInicio }}</span>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Data Fim</label>
+              <input type="date" 
+                     class="filter-date" 
+                     [value]="filtroDataFim" 
+                     [min]="getMinDateFim()"
+                     (change)="filtrarPorDataFim($event)" 
+                     [class.error]="erroDataFim">
+              <span class="error-message" *ngIf="erroDataFim">{{ erroDataFim }}</span>
+            </div>
+            <div class="filter-group">
+              <!-- Espaço vazio para manter o layout -->
+            </div>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filtrar" (click)="aplicarFiltros()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filtrar</span>
+          </button>
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            <span>Limpar</span>
+          </button>
+          <div class="btn-exportar-container">
+            <button class="btn-exportar" (click)="toggleExportMenu()">
+              <mat-icon>file_download</mat-icon>
+              <span>Exportar</span>
+              <mat-icon class="dropdown-icon" [class.rotated]="exportMenuOpen">keyboard_arrow_down</mat-icon>
+            </button>
+            <div class="export-menu" *ngIf="exportMenuOpen">
+              <button class="export-option excel-option" (click)="exportarExcel()">
+                <mat-icon>table_chart</mat-icon>
+                <span>Excel</span>
+              </button>
+              <button class="export-option word-option" (click)="exportarWord()">
+                <mat-icon>description</mat-icon>
+                <span>Word</span>
+              </button>
+              <button class="export-option pdf-option" (click)="exportarPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Dados -->
+    <div class="data-table-container">
+      <div class="table-header">
+        <h3>Avaliações FAE</h3>
+        <span class="table-count">{{ avaliacoesFiltradas.length }} avaliações encontradas</span>
+      </div>
+      
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <p>Carregando avaliações...</p>
+      </div>
+      
+      <div class="table-wrapper" *ngIf="!isLoading">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Grau de Satisfação</th>
+              <th>Problema Resolvido</th>
+              <th>Tipo de Problema</th>
+              <th>Observações do Problema</th>
+              <th>O que lhe Agradou</th>
+              <th>Observações do Agradou</th>
+              <th>O que não lhe Agradou</th>
+              <th>Observações do Não Agradou</th>
+              <th>Província</th>
+              <th>Data e Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let avaliacao of avaliacoes">
+              <td>{{ avaliacao.id }}</td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(avaliacao.grauSatisfacao)">
+                  {{ getSatisfactionLabel(avaliacao.grauSatisfacao) }}
+                </span>
+              </td>
+              <td>
+                <span class="status-badge" 
+                      [class.resolvido]="isProblemaResolvido(avaliacao.problemaResolvido)"
+                      [class.nao-resolvido]="isProblemaNaoResolvido(avaliacao.problemaResolvido)">
+                  {{ getProblemaResolvidoLabel(avaliacao.problemaResolvido) }}
+                </span>
+              </td>
+              <td>{{ getTipoProblemaLabel(avaliacao.tipoProblema) }}</td>
+              <td class="observations-cell">
+                <span *ngIf="avaliacao.observacoesProblema; else noObservationsProblema">
+                  {{ avaliacao.observacoesProblema }}
+                </span>
+                <ng-template #noObservationsProblema>
+                  <span class="no-data">-</span>
+                </ng-template>
+              </td>
+              <td>{{ getAgradouLabel(avaliacao.agradou) }}</td>
+              <td class="observations-cell">
+                <span *ngIf="avaliacao.observacoesAgradou; else noObservationsAgradou">
+                  {{ avaliacao.observacoesAgradou }}
+                </span>
+                <ng-template #noObservationsAgradou>
+                  <span class="no-data">-</span>
+                </ng-template>
+              </td>
+              <td>{{ getNaoAgradouLabel(avaliacao.naoAgradou) }}</td>
+              <td class="observations-cell">
+                <span *ngIf="avaliacao.observacoesNaoAgradou; else noObservationsNaoAgradou">
+                  {{ avaliacao.observacoesNaoAgradou }}
+                </span>
+                <ng-template #noObservationsNaoAgradou>
+                  <span class="no-data">-</span>
+                </ng-template>
+              </td>
+              <td>{{ formatarProvincia(avaliacao.provincia) }}</td>
+              <td>{{ avaliacao.dataSubmissao | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <div class="pagination" *ngIf="avaliacoesFiltradas.length">
+        <div class="page-size-control">
+          <span>Mostrar</span>
+          <select [value]="itensPorPagina" (change)="alterarItensPorPagina($event)">
+            <option *ngFor="let opcao of pageSizeOptions" [value]="opcao">{{ opcao }}</option>
+          </select>
+          <span>registos</span>
+        </div>
+        <div class="page-navigation">
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === 1"
+                  (click)="irParaPrimeiraPagina()"
+                  title="Primeira página">
+            <mat-icon>first_page</mat-icon>
+          </button>
+        <button class="btn-pagination" 
+                [disabled]="paginaAtual === 1"
+                (click)="paginaAnterior()"
+                title="Página anterior">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="page-info">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+        <button class="btn-pagination" 
+                [disabled]="paginaAtual === totalPaginas"
+                (click)="proximaPagina()"
+                title="Próxima página">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === totalPaginas"
+                  (click)="irParaUltimaPagina()"
+                  title="Última página">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
+        <div class="page-shortcuts">
+          <button class="btn-pagination"
+                  (click)="irParaInicioDaPagina()"
+                  title="Ir para o início da página">
+            <mat-icon>vertical_align_top</mat-icon>
+          </button>
+          <button class="btn-pagination"
+                  (click)="irParaFimDaPagina()"
+                  title="Ir para o final da página">
+            <mat-icon>vertical_align_bottom</mat-icon>
+          </button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal de Ajuda -->
+<app-fae-help-modal #helpModal></app-fae-help-modal>

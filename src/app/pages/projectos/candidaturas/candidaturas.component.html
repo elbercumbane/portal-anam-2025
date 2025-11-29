@@ -1,0 +1,60 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Oportunidades de Candidatura</h1>
+    <p>Descubra projetos incríveis e candidate-se para fazer a diferença</p>
+  </div>
+  
+  <div class="projetos-grid">
+    <article class="card projeto" *ngFor="let projeto of projetos">
+      <div class="projeto-header">
+        <h3>{{ projeto.titulo }}</h3>
+        <span class="badge area">{{ projeto.area }}</span>
+      </div>
+      
+      <p class="projeto-descricao">{{ projeto.descricao }}</p>
+      
+      <div class="projeto-info">
+        <div class="info-row">
+          <div class="info-item">
+            <strong>Valor Disponível:</strong>
+            <span class="valor">{{ projeto.valorDisponivel }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Prazo de Candidatura:</strong>
+            <span class="prazo">{{ projeto.prazoCandidatura }}</span>
+          </div>
+        </div>
+        
+        <div class="info-row">
+          <div class="info-item">
+            <strong>Início:</strong> {{ projeto.dataInicio }}
+          </div>
+          <div class="info-item">
+            <strong>Duração:</strong> {{ projeto.duracao }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="requisitos">
+        <h4>Requisitos:</h4>
+        <ul>
+          <li *ngFor="let requisito of projeto.requisitos">{{ requisito }}</li>
+        </ul>
+      </div>
+      
+      <div class="beneficios">
+        <h4>Benefícios:</h4>
+        <ul>
+          <li *ngFor="let beneficio of projeto.beneficios">{{ beneficio }}</li>
+        </ul>
+      </div>
+      
+      <div class="projeto-actions">
+        <button class="btn btn-primary" (click)="candidatarSe(projeto.id)">
+          Candidatar-se
+        </button>
+      </div>
+    </article>
+  </div>
+</div>
+

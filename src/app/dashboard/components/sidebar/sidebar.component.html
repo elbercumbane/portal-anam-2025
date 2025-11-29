@@ -1,0 +1,27 @@
+<div class="sidebar-content">
+  <div class="sidebar-header">
+    <div class="logo-section">
+      <div class="logo-icon">
+        <img src="assets/icon/Emblem_of_Mozambique.svg.png" alt="Emblema de Moçambique" class="emblem">
+      </div>
+      <div class="logo-text">
+        <h2>Ministério das Finanças</h2>
+        <span>CEDSIF, IP</span>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onToggleSidebar()" class="close-btn" *ngIf="isHandset">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <app-user-info
+    [userInfo]="userInfo">
+  </app-user-info>
+
+  <app-navigation 
+    [navigationItems]="navigationItems"
+    [activeItem]="activeNavigationItem"
+    (navigationClick)="onNavigationClick($event)"
+    (serviceItemClick)="onServiceItemClick($event)">
+  </app-navigation>
+</div>

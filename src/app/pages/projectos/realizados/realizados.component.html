@@ -1,0 +1,53 @@
+<div class="realizados-container">
+  <div class="section-header">
+    <h2 class="section-title">Projectos <span class="highlight">Realizados</span></h2>
+    <p class="section-subtitle">Conheça os projectos que transformaram vidas e comunidades</p>
+    <div class="header-stats">
+      <div class="stat-item">
+        <span class="stat-number">{{ projetos.length }}</span>
+        <span class="stat-label">Projectos Concluídos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ formatarValor(totalInvestido) }}</span>
+        <span class="stat-label">Valor Total Investido</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="projetos-grid">
+    <article class="card projeto" *ngFor="let projeto of projetos">
+    <div class="projeto-header">
+      <h3>{{ projeto.titulo }}</h3>
+      <span class="badge realizado">{{ projeto.status }}</span>
+    </div>
+
+    <div class="projeto-meta">
+      <span class="chip">Início: {{ projeto.dataInicio }}</span>
+      <span class="chip">Fim: {{ projeto.dataFim }}</span>
+      <span class="chip">Orçamento: {{ projeto.orcamento }}</span>
+    </div>
+
+    <p class="projeto-descricao">{{ projeto.descricao }}</p>
+
+    <div class="projeto-progress" *ngIf="projeto.progresso as p">
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" [style.width.%]="p"></div>
+      </div>
+      <div class="progress-label">Progresso: {{ p }}%</div>
+    </div>
+
+    <div class="kpis" *ngIf="projeto.kpis">
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.beneficiarios }}</span><span class="kpi-label">Beneficiários</span></div>
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.parcerias }}</span><span class="kpi-label">Parcerias</span></div>
+      <div class="kpi"><span class="kpi-value">{{ projeto.kpis.eventos }}</span><span class="kpi-label">Eventos</span></div>
+    </div>
+
+    <div class="projeto-parceiros">
+      <strong>Parceiros:</strong>
+      <div class="parceiros-tags">
+        <span class="tag" *ngFor="let parceiro of projeto.parceiros">{{ parceiro }}</span>
+      </div>
+    </div>
+  </article>
+  </div>
+</div>

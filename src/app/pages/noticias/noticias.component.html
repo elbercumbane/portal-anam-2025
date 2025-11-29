@@ -1,0 +1,27 @@
+<section class="noticias-page" #noticiasContent>
+  <div class="container">
+    <h1>Notícias</h1>
+    <p class="intro-text">
+      Fique por dentro das últimas novidades, projetos e iniciativas da nossa associação. 
+      Aqui você encontra informações sobre o que está acontecendo na nossa comunidade.
+    </p>
+
+    <div class="noticias-grid">
+      <article class="noticia-card" *ngFor="let noticia of noticias">
+        <div class="noticia-header">
+          <span class="noticia-data">{{ noticia.data }}</span>
+          <span class="noticia-categoria">{{ noticia.categoria }}</span>
+        </div>
+        <div class="noticia-content">
+          <h3>{{ noticia.titulo }}</h3>
+          <p>{{ noticia.resumo }}</p>
+        </div>
+        <div class="noticia-actions">
+          <button mat-stroked-button color="primary" (click)="lerMais(noticia)">
+            Ler mais
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

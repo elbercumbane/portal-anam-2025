@@ -1,0 +1,559 @@
+<div class="relatorio-container">
+  <!-- Relatório Content -->
+  <div class="page-container" (click)="fecharExportMenu()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>description</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>Relatório Consolidado</h1>
+            <p>Visão geral completa de todos os formulários, avaliações e indicadores do sistema</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-total" title="Total de Avaliações">
+            <mat-icon>storage</mat-icon>
+            <span>Total: {{ getTotalAvaliacoes() }}</span>
+          </button>
+          <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button class="btn-ajuda" title="Ajuda" (click)="mostrarAjuda()">
+            <mat-icon>help</mat-icon>
+          </button>
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+      <div class="filters-content">
+        <h3 class="filters-title">Filtros de Pesquisa</h3>
+        <form [formGroup]="filtroForm">
+          <div class="filters-grid">
+            <div class="filter-row">
+              <div class="filter-group">
+                <label class="filter-label">Data Início</label>
+                <input 
+                  type="date" 
+                  class="filter-date" 
+                  formControlName="dataInicio"
+                  (change)="filtrarPorDataInicio($event)">
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Data Fim</label>
+                <input 
+                  type="date" 
+                  class="filter-date" 
+                  formControlName="dataFim"
+                  (change)="filtrarPorDataFim($event)">
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Tipo de Formulário</label>
+                <select 
+                  class="filter-select" 
+                  formControlName="tipoFormulario"
+                  (change)="filtrarPorTipoFormulario($event)">
+                  <option value="">Todos</option>
+                  <option value="fae">FAE</option>
+                  <option value="agente-economico">Agente Econômico</option>
+                  <option value="utilizador">Utilizador</option>
+                  <option value="formacao">Formação</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-row">
+              <div class="filter-group">
+                <label class="filter-label">Grau de Satisfação</label>
+                <select 
+                  class="filter-select" 
+                  formControlName="grauSatisfacao"
+                  (change)="filtrarPorSatisfacao($event)">
+                  <option value="">Todos</option>
+                  <option value="muito-satisfeito">Muito Satisfeito</option>
+                  <option value="satisfeito">Satisfeito</option>
+                  <option value="neutro">Neutro</option>
+                  <option value="insatisfeito">Insatisfeito</option>
+                  <option value="muito-insatisfeito">Muito Insatisfeito</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label class="filter-label">Província</label>
+                <select 
+                  class="filter-select" 
+                  formControlName="provincia"
+                  (change)="filtrarPorProvincia($event)">
+                  <option value="">Todas</option>
+                  <option value="maputo">Maputo</option>
+                  <option value="gaza">Gaza</option>
+                  <option value="inhambane">Inhambane</option>
+                  <option value="sofala">Sofala</option>
+                  <option value="manica">Manica</option>
+                  <option value="tete">Tete</option>
+                  <option value="zambezia">Zambézia</option>
+                  <option value="nampula">Nampula</option>
+                  <option value="niassa">Niassa</option>
+                  <option value="cabo-delgado">Cabo Delgado</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <!-- Espaço vazio para manter o layout -->
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="filter-actions">
+          <button class="btn-filtrar" (click)="aplicarFiltros()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filtrar</span>
+          </button>
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            <span>Limpar</span>
+          </button>
+          <div class="btn-exportar-container">
+            <button class="btn-exportar" (click)="toggleExportMenu()">
+              <mat-icon>file_download</mat-icon>
+              <span>Exportar</span>
+              <mat-icon class="dropdown-icon" [class.rotated]="exportMenuOpen">keyboard_arrow_down</mat-icon>
+            </button>
+            <div class="export-menu" *ngIf="exportMenuOpen">
+              <button class="export-option excel-option" (click)="exportarExcel()">
+                <mat-icon>table_chart</mat-icon>
+                <span>Excel</span>
+              </button>
+              <button class="export-option word-option" (click)="exportarWord()">
+                <mat-icon>description</mat-icon>
+                <span>Word</span>
+              </button>
+              <button class="export-option pdf-option" (click)="exportarPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Carregando dados do relatório...</p>
+    </div>
+
+    <!-- Conteúdo do Relatório com Tabs -->
+    <div class="report-content" *ngIf="!isLoading">
+      <mat-tab-group [(selectedIndex)]="abaAtiva" class="report-tabs">
+        
+        <!-- Tab 1: Visão Geral -->
+        <mat-tab label="Visão Geral">
+          <div class="tab-content">
+            <!-- Cards de Estatísticas -->
+            <div class="stats-cards">
+              <div class="stat-card fae-card">
+                <div class="stat-icon">
+                  <mat-icon>assignment</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>FAE</h3>
+                  <p class="stat-number">{{ getTotalFAE() }}</p>
+                  <p class="stat-label">Avaliações</p>
+                </div>
+              </div>
+              
+              <div class="stat-card agente-card">
+                <div class="stat-icon">
+                  <mat-icon>business</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Agente Econômico</h3>
+                  <p class="stat-number">{{ getTotalAgenteEconomico() }}</p>
+                  <p class="stat-label">Avaliações</p>
+                </div>
+              </div>
+              
+              <div class="stat-card utilizador-card">
+                <div class="stat-icon">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Utilizador</h3>
+                  <p class="stat-number">{{ getTotalUtilizador() }}</p>
+                  <p class="stat-label">Avaliações</p>
+                </div>
+              </div>
+              
+              <div class="stat-card formacao-card">
+                <div class="stat-icon">
+                  <mat-icon>school</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Formação</h3>
+                  <p class="stat-number">{{ getTotalFormacao() }}</p>
+                  <p class="stat-label">Avaliações</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráficos do Dashboard -->
+            <div class="charts-section">
+              <!-- Gráfico: Satisfação Geral (Pizza) -->
+              <div class="chart-card">
+                <div class="chart-header">
+                  <h3>Satisfação Geral</h3>
+                  <p>Distribuição de satisfação agregada</p>
+                </div>
+                <div class="chart-content">
+                  <div class="pie-chart">
+                    <svg viewBox="0 0 200 200" class="pie-svg">
+                      <circle 
+                        *ngFor="let item of satisfactionData; let i = index" 
+                        cx="100" cy="100" r="80" fill="none" 
+                        [attr.stroke]="item.color" 
+                        stroke-width="16" 
+                        [attr.stroke-dasharray]="getPieDashArray(item.value)" 
+                        [attr.stroke-dashoffset]="i === 0 ? 0 : getPieSegmentOffset(i)" 
+                        class="pie-segment">
+                      </circle>
+                      <circle cx="100" cy="100" r="40" fill="white" class="pie-center"></circle>
+                      <text x="100" y="100" text-anchor="middle" dy="0.3em" class="pie-center-text">
+                        {{ getSatisfacaoGeral() }}%
+                      </text>
+                    </svg>
+                    <div class="pie-legend">
+                      <div class="legend-item" *ngFor="let item of satisfactionData">
+                        <div class="legend-color" [style.background-color]="item.color"></div>
+                        <span>{{ item.label }} ({{ item.value }}%)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gráfico: Distribuição por Província -->
+              <div class="chart-card">
+                <div class="chart-header">
+                  <h3>Distribuição por Província</h3>
+                  <p>Formulários e atendimentos por região</p>
+                </div>
+                <div class="chart-content">
+                  <div class="province-chart">
+                    <svg viewBox="0 0 800 400" class="province-svg">
+                      <g *ngFor="let provincia of getFilteredProvincesData(); let i = index">
+                        <rect [attr.x]="80 + i * 70" y="50" width="30" height="300" fill="#E5E7EB" rx="15"></rect>
+                        <rect 
+                          [attr.x]="80 + i * 70" 
+                          [attr.y]="350 - (provincia.avaliacoes / 5)" 
+                          width="30" 
+                          [attr.height]="provincia.avaliacoes / 5" 
+                          fill="#3B82F6" 
+                          rx="15">
+                        </rect>
+                        <text [attr.x]="95 + i * 70" y="380" text-anchor="middle" class="province-label">
+                          {{ provincia.name }}
+                        </text>
+                        <text 
+                          [attr.x]="95 + i * 70" 
+                          [attr.y]="340 - (provincia.avaliacoes / 5)" 
+                          text-anchor="middle" 
+                          class="value-label">
+                          {{ provincia.avaliacoes }}
+                        </text>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gráfico: Performance Mensal -->
+              <div class="chart-card full-width">
+                <div class="chart-header">
+                  <h3>Performance Mensal</h3>
+                  <p>Evolução dos formulários ao longo dos meses</p>
+                </div>
+                <div class="chart-content">
+                  <div class="timeline-chart">
+                    <svg viewBox="0 0 700 300" class="timeline-svg">
+                      <defs>
+                        <pattern id="timelineGrid" width="58.33" height="30" patternUnits="userSpaceOnUse">
+                          <path d="M 58.33 0 L 0 0 0 30" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                        </pattern>
+                      </defs>
+                      <rect x="40" y="20" width="600" height="240" fill="url(#timelineGrid)" />
+                      <line x1="40" y1="20" x2="40" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      <line x1="40" y1="260" x2="640" y2="260" stroke="#E5E7EB" stroke-width="1"/>
+                      
+                      <path 
+                        [attr.d]="getMonthlyLinePath(monthlyFormData.fae, getMaxMonthlyValue())" 
+                        fill="none" 
+                        stroke="#3B82F6" 
+                        stroke-width="3" 
+                        class="line-path">
+                      </path>
+                      <path 
+                        [attr.d]="getMonthlyLinePath(monthlyFormData.economicAgent, getMaxMonthlyValue())" 
+                        fill="none" 
+                        stroke="#F59E0B" 
+                        stroke-width="3" 
+                        class="line-path">
+                      </path>
+                      <path 
+                        [attr.d]="getMonthlyLinePath(monthlyFormData.userEvaluation, getMaxMonthlyValue())" 
+                        fill="none" 
+                        stroke="#10B981" 
+                        stroke-width="3" 
+                        class="line-path">
+                      </path>
+                      <path 
+                        [attr.d]="getMonthlyLinePath(monthlyFormData.training, getMaxMonthlyValue())" 
+                        fill="none" 
+                        stroke="#06B6D4" 
+                        stroke-width="3" 
+                        class="line-path">
+                      </path>
+                      
+                      <g *ngFor="let i of [0,1,2,3,4,5,6,7,8,9,10,11]">
+                        <text [attr.x]="40 + (i * 50)" y="280" text-anchor="middle" class="axis-label">
+                          {{ i + 1 }}
+                        </text>
+                      </g>
+                    </svg>
+                    <div class="chart-legend">
+                      <div class="legend-item">
+                        <span class="legend-color" style="background: #3B82F6;"></span>
+                        <span>FAE</span>
+                      </div>
+                      <div class="legend-item">
+                        <span class="legend-color" style="background: #F59E0B;"></span>
+                        <span>Agente Econômico</span>
+                      </div>
+                      <div class="legend-item">
+                        <span class="legend-color" style="background: #10B981;"></span>
+                        <span>Utilizador</span>
+                      </div>
+                      <div class="legend-item">
+                        <span class="legend-color" style="background: #06B6D4;"></span>
+                        <span>Formação</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab 2: Dados dos Formulários -->
+        <mat-tab label="Dados dos Formulários">
+          <div class="tab-content">
+            <div class="data-table-container">
+              <div class="table-header">
+                <h3>Relatório Consolidado de Formulários</h3>
+                <span class="table-count">{{ getTotalAvaliacoes() }} avaliações encontradas</span>
+              </div>
+              
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tipo</th>
+                      <th>ID</th>
+                      <th>Grau de Satisfação</th>
+                      <th>Problema Resolvido</th>
+                      <th>Tipo de Problema</th>
+                      <th>Serviço</th>
+                      <th>Província</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Dados FAE -->
+                    <tr *ngFor="let avaliacao of dadosFAE">
+                      <td><span class="type-badge fae-badge">FAE</span></td>
+                      <td>{{ avaliacao.id }}</td>
+                      <td>
+                        <span class="satisfaction-badge" [class]="getSatisfactionClass(avaliacao.serviceRating)">
+                          {{ getSatisfactionLabel(avaliacao.serviceRating) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="status-badge" [class.resolvido]="avaliacao.problemResolved === 'sim'">
+                          {{ getProblemaResolvidoLabel(avaliacao.problemResolved) }}
+                        </span>
+                      </td>
+                      <td>{{ avaliacao.problem || '-' }}</td>
+                      <td>-</td>
+                      <td>{{ avaliacao.province || '-' }}</td>
+                      <td>{{ avaliacao.createdAt | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                    
+                    <!-- Dados Agente Econômico -->
+                    <tr *ngFor="let avaliacao of dadosAgenteEconomico">
+                      <td><span class="type-badge agente-badge">AE</span></td>
+                      <td>{{ avaliacao.id }}</td>
+                      <td>
+                        <span class="satisfaction-badge" [class]="getSatisfactionClass(avaliacao.satisfactionDegree)">
+                          {{ getSatisfactionLabel(avaliacao.satisfactionDegree) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="status-badge" [class.resolvido]="avaliacao.problemResolved === 'sim'">
+                          {{ getProblemaResolvidoLabel(avaliacao.problemResolved) }}
+                        </span>
+                      </td>
+                      <td>{{ avaliacao.problemType || '-' }}</td>
+                      <td>-</td>
+                      <td>{{ avaliacao.province || '-' }}</td>
+                      <td>{{ avaliacao.createdAt | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                    
+                    <!-- Dados Utilizador -->
+                    <tr *ngFor="let avaliacao of dadosUtilizador">
+                      <td><span class="type-badge utilizador-badge">U</span></td>
+                      <td>{{ avaliacao.id }}</td>
+                      <td>
+                        <span class="satisfaction-badge" [class]="getSatisfactionClass(avaliacao.serviceRating)">
+                          {{ getSatisfactionLabel(avaliacao.serviceRating) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="status-badge" [class.resolvido]="avaliacao.problemResolved === 'sim'">
+                          {{ getProblemaResolvidoLabel(avaliacao.problemResolved) }}
+                        </span>
+                      </td>
+                      <td>{{ avaliacao.problemType || '-' }}</td>
+                      <td>{{ avaliacao.service || '-' }}</td>
+                      <td>{{ avaliacao.province || '-' }}</td>
+                      <td>{{ avaliacao.createdAt | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                    
+                    <!-- Dados Formação -->
+                    <tr *ngFor="let avaliacao of dadosFormacao">
+                      <td><span class="type-badge formacao-badge">F</span></td>
+                      <td>{{ avaliacao.id }}</td>
+                      <td>
+                        <span class="satisfaction-badge" [class]="getSatisfactionClass(avaliacao.finalSatisfaction)">
+                          {{ getSatisfactionLabel(avaliacao.finalSatisfaction) }}
+                        </span>
+                      </td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>{{ avaliacao.province || '-' }}</td>
+                      <td>{{ avaliacao.createdAt | date:'dd/MM/yyyy' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab 3: Indicadores -->
+        <mat-tab label="Indicadores">
+          <div class="tab-content">
+            <!-- Cards de Métricas -->
+            <div class="stats-cards">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <mat-icon>timer</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Tempo Médio</h3>
+                  <p class="stat-number">{{ tempoMedioPreenchimento }}</p>
+                  <p class="stat-label">Preenchimento</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <mat-icon>speed</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Tempo Mais Rápido</h3>
+                  <p class="stat-number">{{ tempoMaisRapido }}</p>
+                  <p class="stat-label">Avaliação</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <mat-icon>hourglass_empty</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Tempo Mais Lento</h3>
+                  <p class="stat-number">{{ tempoMaisLento }}</p>
+                  <p class="stat-label">Avaliação</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Taxa de Conclusão</h3>
+                  <p class="stat-number">{{ taxaConclusao }}%</p>
+                  <p class="stat-label">Avaliações</p>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <mat-icon>assessment</mat-icon>
+                </div>
+                <div class="stat-content">
+                  <h3>Avaliações</h3>
+                  <p class="stat-number">{{ totalAvaliacoesConcluidas }} / {{ totalAvaliacoesIniciadas }}</p>
+                  <p class="stat-label">Concluídas / Iniciadas</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela de Indicadores -->
+            <div class="data-table-container">
+              <div class="table-header">
+                <h3>Registros de Avaliação</h3>
+                <span class="table-count">{{ evaluationTimes.length }} registros</span>
+              </div>
+              
+              <div class="table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo de Formulário</th>
+                      <th>Tempo de Duração</th>
+                      <th>Data Início</th>
+                      <th>Data Fim</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let registro of evaluationTimes">
+                      <td>{{ registro.id }}</td>
+                      <td>
+                        <span class="form-type-badge">
+                          {{ registro.formType }}
+                        </span>
+                      </td>
+                      <td>{{ formatarTempo(registro.durationSeconds || 0) }}</td>
+                      <td>{{ registro.startTime | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                      <td>{{ registro.endTime | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

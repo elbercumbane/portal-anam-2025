@@ -1,0 +1,20 @@
+<!-- parceiros.component.html -->
+<section class="partners" aria-labelledby="partners-title">
+  <div class="container">
+    <h2 id="partners-title" class="title">Nossos Parceiros</h2>
+
+    <div class="grid-logos" role="list">
+      <figure class="logo-card" *ngFor="let p of parceiros()" role="listitem">
+        <img
+          [src]="p.src"
+          [alt]="p.alt"
+          loading="lazy"
+          width="220"
+          height="90"
+          sizes="(max-width: 900px) 45vw, 220px"
+        />
+        <figcaption class="sr-only">{{ p.nome }}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>

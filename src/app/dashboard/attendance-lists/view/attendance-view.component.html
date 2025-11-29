@@ -1,0 +1,107 @@
+<!-- Attendance View Content -->
+<div>
+  <!-- Header da Página -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <div class="header-icon">
+        <mat-icon>visibility</mat-icon>
+          </div>
+        <div class="header-text">
+          <h1>Ver Listas de Presença</h1>
+          <p>Visualize as listas de presença carregadas para salas de formação</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-total" title="Total de Registros">
+          <mat-icon>storage</mat-icon>
+          <span>Total: {{ totalRegistros }}</span>
+        </button>
+        <button class="btn-refresh" title="Atualizar" (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button class="btn-fechar" title="Voltar" (click)="goBackToDashboard()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+    </div>
+        </div>
+
+  <div class="list-type-toggle">
+    <span class="toggle-label">Visualizar:</span>
+    <div class="toggle-buttons">
+      <button type="button"
+              [class.active]="listType === 'ATENDIMENTO'"
+              (click)="setListType('ATENDIMENTO')">
+        <mat-icon>support_agent</mat-icon>
+        Atendimento
+      </button>
+      <button type="button"
+              [class.active]="listType === 'FORMACAO'"
+              (click)="setListType('FORMACAO')">
+        <mat-icon>school</mat-icon>
+        Formação
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabela de Dados -->
+  <div class="data-table-container" *ngIf="!isLoading">
+    <div class="table-header">
+      <h3>Listas de Presença - {{ listType === 'ATENDIMENTO' ? 'Atendimento' : 'Formação' }}</h3>
+      <span class="table-count">{{ totalRegistros }} registros encontrados</span>
+</div>
+
+    <div class="table-wrapper" *ngIf="attendanceRecords.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th *ngFor="let column of displayedColumns">{{ getColumnLabel(column) }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of attendanceRecords">
+            <td *ngFor="let column of displayedColumns">
+              <ng-container [ngSwitch]="column">
+                <span *ngSwitchCase="'uploadedAt'">{{ record.uploadedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span *ngSwitchDefault>{{ getCellValue(record, column) }}</span>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="totalRegistros > 0 && totalPaginas > 1">
+      <button class="btn-pagination" 
+              [disabled]="paginaAtual === 1"
+              (click)="paginaAnterior()"
+              title="Página anterior">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="page-info">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+      <button class="btn-pagination" 
+              [disabled]="paginaAtual === totalPaginas"
+              (click)="proximaPagina()"
+              title="Próxima página">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <div class="pagination" *ngIf="totalRegistros > 0 && totalPaginas <= 1">
+      <span class="page-info">Página 1 de 1</span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Carregando listas de presença...</p>
+  </div>
+
+  <!-- Mensagem quando não há registros -->
+  <div class="no-data-message" *ngIf="!isLoading && attendanceRecords.length === 0">
+    <mat-icon>info</mat-icon>
+    <p>Nenhum registro encontrado para {{ listType === 'ATENDIMENTO' ? 'Atendimento' : 'Formação' }}.</p>
+  </div>
+</div>
