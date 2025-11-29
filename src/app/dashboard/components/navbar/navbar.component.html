@@ -1,0 +1,46 @@
+<!-- Professional Top Navbar -->
+<mat-toolbar class="top-navbar">
+  <!-- Left Section: Menu & Title -->
+  <div class="navbar-left">
+    <app-navbar-menu-button (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
+    <app-navbar-title 
+      [title]="title" 
+      [subtitle]="subtitle">
+    </app-navbar-title>
+  </div>
+  
+  <!-- Center Section: Search -->
+  <div class="navbar-center">
+    <app-navbar-search (search)="onSearch($event)"></app-navbar-search>
+  </div>
+  
+  <!-- Right Section: Actions & Profile -->
+  <div class="navbar-right">
+    <!-- Clock -->
+    <app-navbar-clock></app-navbar-clock>
+    
+    <app-navbar-actions>
+      <!-- Theme Toggle -->
+      <app-navbar-theme-toggle (themeToggle)="onThemeToggle($event)"></app-navbar-theme-toggle>
+      
+      <!-- Divider -->
+      <div class="action-divider"></div>
+      
+      <!-- Notifications -->
+      <app-navbar-notifications 
+        [notificationCount]="notificationCount"
+        (notificationsClick)="onNotificationsClick()">
+      </app-navbar-notifications>
+      
+      <!-- Divider -->
+      <div class="action-divider"></div>
+      
+      <!-- User Profile -->
+      <app-navbar-user-profile 
+        [userName]="userName"
+        [userRole]="userRole"
+        (profileOptionClick)="onProfileOptionClick($event)">
+      </app-navbar-user-profile>
+    </app-navbar-actions>
+  </div>
+</mat-toolbar>

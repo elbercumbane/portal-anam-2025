@@ -1,0 +1,23 @@
+<!-- Atendimento Submenu -->
+<mat-expansion-panel [expanded]="isExpanded" class="submenu-panel">
+  <mat-expansion-panel-header class="submenu-header">
+    <mat-panel-title>
+      <mat-icon class="submenu-icon">headset_mic</mat-icon>
+      <span>Atendimento</span>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <mat-nav-list class="submenu-list">
+    <a mat-list-item 
+       *ngFor="let item of serviceItems"
+       [routerLink]="item.route"
+       class="submenu-item"
+       (click)="onItemClick(item)">
+      <mat-icon matListItemIcon class="item-icon">{{ item.icon }}</mat-icon>
+      <div matListItemTitle class="item-content">
+        <span class="item-label">{{ item.label }}</span>
+        <span class="item-description">{{ item.description }}</span>
+      </div>
+    </a>
+  </mat-nav-list>
+</mat-expansion-panel>

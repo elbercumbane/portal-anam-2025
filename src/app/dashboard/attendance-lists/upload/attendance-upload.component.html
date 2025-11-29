@@ -1,0 +1,200 @@
+<!-- Attendance Upload Content -->
+<div>
+  <!-- Header da Página -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <div class="header-icon">
+          <mat-icon>cloud_upload</mat-icon>
+        </div>
+        <div class="header-text">
+          <h1>Carregar Lista de Presença</h1>
+          <p>Carregue listas de presença em ficheiro Excel para sala de formação</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-template" [matMenuTriggerFor]="templateMenu" title="Baixar Template Excel">
+          <mat-icon>download</mat-icon>
+          <span>Template Excel</span>
+          <mat-icon class="arrow-icon">expand_more</mat-icon>
+        </button>
+        <mat-menu #templateMenu="matMenu">
+          <button mat-menu-item (click)="downloadTemplate('ATENDIMENTO')">
+            <mat-icon>support_agent</mat-icon>
+            Atendimento
+          </button>
+          <button mat-menu-item (click)="downloadTemplate('FORMACAO')">
+            <mat-icon>school</mat-icon>
+            Formação
+          </button>
+        </mat-menu>
+        <button class="btn-view" title="Ver Listas" (click)="goToView()">
+          <mat-icon>visibility</mat-icon>
+          <span>Ver Listas</span>
+        </button>
+        <button class="btn-fechar" title="Voltar" (click)="goBackToDashboard()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="list-type-toggle">
+    <span class="toggle-label">Tipo de lista:</span>
+    <div class="toggle-buttons">
+      <button type="button"
+              [class.active]="listType === 'ATENDIMENTO'"
+              (click)="setListType('ATENDIMENTO')">
+        <mat-icon>support_agent</mat-icon>
+        Atendimento
+      </button>
+      <button type="button"
+              [class.active]="listType === 'FORMACAO'"
+              (click)="setListType('FORMACAO')">
+        <mat-icon>school</mat-icon>
+        Formação
+      </button>
+    </div>
+  </div>
+
+  <!-- Informações sobre a estrutura -->
+  <div class="info-section">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Estrutura Obrigatória do Excel
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>O ficheiro Excel deve conter as seguintes colunas obrigatórias:</p>
+        <ul class="required-columns">
+          <li><strong>Tipo</strong> - Informe “Atendimento” ou “Formação” para identificar o ficheiro</li>
+          <li><strong>Nome</strong> - Nome completo do participante</li>
+          <li><strong>Contacto</strong> - Número de telefone ou email</li>
+          <li><strong>Local de Formação</strong> - Local onde a formação será realizada</li>
+          <li><strong>Curso</strong> (apenas Formação) - Nome do curso frequentado</li>
+          <li><strong>Instituição</strong> (apenas Formação) - Nome da instituição ou entidade formadora</li>
+        </ul>
+        <p class="template-hint">
+          <mat-icon>lightbulb</mat-icon>
+          Baixe o template Excel acima para garantir que o ficheiro está no formato correto.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>
+          <mat-icon>cloud_upload</mat-icon>
+          Carregar Ficheiro Excel
+      </mat-card-title>
+        <mat-card-subtitle>Arraste e solte ou selecione um ficheiro Excel (.xls ou .xlsx)</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="drop-area" 
+             [class.dragging]="isDragging"
+             (drop)="onDrop($event)" 
+             (dragover)="onDragOver($event)" 
+             (dragleave)="onDragLeave($event)">
+        <mat-icon>file_upload</mat-icon>
+          <p>Arraste e solte o ficheiro Excel de {{ listType === 'ATENDIMENTO' ? 'Atendimento' : 'Formação' }} aqui</p>
+        <span>ou</span>
+        <label class="file-button">
+          <input type="file" [accept]="acceptedTypes" multiple (change)="onFileInputChange($event)">
+            Escolher Arquivo
+        </label>
+          </div>
+          
+        <div class="files-list" *ngIf="uploadedFiles.length > 0">
+          <h3>Arquivos Carregados ({{ uploadedFiles.length }})</h3>
+          <div class="files-grid">
+            <div class="file-item" *ngFor="let file of uploadedFiles; let i = index">
+              <mat-icon class="file-icon">table_chart</mat-icon>
+              <div class="file-info">
+                <div class="file-name" [title]="file.name">{{ file.name }}</div>
+                <div class="file-size">{{ formatSize(file.size) }}</div>
+            </div>
+              <button mat-icon-button color="warn" (click)="removeFile(i)" title="Remover">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isProcessing || isUploading" class="processing">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <p *ngIf="isProcessing">Validando arquivos...</p>
+          <p *ngIf="isUploading">Enviando registros para o servidor...</p>
+      </div>
+
+        <div *ngIf="validationErrors.length > 0" class="validation-errors">
+          <h4>Erros de Validação:</h4>
+          <ul>
+            <li *ngFor="let error of validationErrors">{{ error }}</li>
+          </ul>
+        </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+  <!-- Pré-visualização -->
+  <div class="preview-section" *ngIf="hasPreview">
+    <mat-card class="preview-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>preview</mat-icon>
+          Pré-visualização das Listas
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ readyBatches.length }} ficheiro(s) • {{ totalReadyRecords }} registo(s)
+        </mat-card-subtitle>
+        <div class="preview-actions">
+          <button class="btn-refresh" (click)="clearAll()" [disabled]="isUploading || isProcessing">
+            <mat-icon>close</mat-icon>
+            Limpar
+          </button>
+          <button class="btn-upload"
+                  [disabled]="isUploading"
+                  (click)="uploadReadyBatches()">
+            <mat-icon>cloud_upload</mat-icon>
+            Carregar Listas
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="preview-files">
+          <div class="preview-file" *ngFor="let batch of readyBatches">
+            <div class="file-name" [title]="batch.file.name">{{ batch.file.name }}</div>
+            <div class="file-meta">
+              {{ batch.records.length }} registos • {{ getListTypeLabel(batch.detectedType || listType) }}
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-table" *ngIf="previewRecords.length > 0">
+          <table>
+            <thead>
+              <tr>
+                <th *ngFor="let column of previewColumns">{{ getPreviewColumnLabel(column) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let record of previewRecords">
+                <td *ngFor="let column of previewColumns">
+                  {{ record[column] || '-' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="preview-hint" *ngIf="totalReadyRecords > previewRecords.length">
+            Mostrando {{ previewRecords.length }} de {{ totalReadyRecords }} registos.
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

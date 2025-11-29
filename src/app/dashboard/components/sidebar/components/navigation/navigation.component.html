@@ -1,0 +1,146 @@
+<!-- Navigation Menu -->
+<mat-nav-list class="nav-list">
+  <!-- Dashboard Item -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'dashboard'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[0])">
+      <mat-icon class="nav-icon">home</mat-icon>
+      <span class="nav-text">Dashboard</span>
+    </a>
+  </div>
+  
+  <!-- Overview Item -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'overview'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[1])">
+      <mat-icon class="nav-icon">dashboard</mat-icon>
+      <span class="nav-text">Visão Geral</span>
+    </a>
+  </div>
+  
+  <!-- Service -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       (click)="toggleService()">
+      <mat-icon class="nav-icon">headset_mic</mat-icon>
+      <span class="nav-text">Atendimento</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="serviceExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Service -->
+  <div class="submenu-container" [class.expanded]="serviceExpanded">
+    <div class="submenu-item-wrapper">
+      <a class="submenu-item"
+         [class.active]="activeItem === 'fae'"
+         (click)="onNavigationClick(getDefaultNavigationItems()[2])">
+        <mat-icon class="submenu-icon">assignment</mat-icon>
+        <span class="nav-text">FAE</span>
+      </a>
+    </div>
+    
+    <div class="submenu-item-wrapper">
+      <a class="submenu-item"
+         [class.active]="activeItem === 'economic-agent'"
+         (click)="onNavigationClick(getDefaultNavigationItems()[3])">
+        <mat-icon class="submenu-icon">business</mat-icon>
+        <span class="nav-text">Agente Econômico</span>
+      </a>
+    </div>
+    
+    <div class="submenu-item-wrapper">
+      <a class="submenu-item"
+         [class.active]="activeItem === 'user'"
+         (click)="onNavigationClick(getDefaultNavigationItems()[4])">
+        <mat-icon class="submenu-icon">person</mat-icon>
+        <span class="nav-text">Utilizador</span>
+      </a>
+    </div>
+    
+    <div class="submenu-item-wrapper">
+      <a class="submenu-item"
+         [class.active]="activeItem === 'service'"
+         (click)="onNavigationClick(getDefaultNavigationItems()[5])">
+        <mat-icon class="submenu-icon">support_agent</mat-icon>
+        <span class="nav-text">Atendimento</span>
+      </a>
+    </div>
+  </div>
+  
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'training'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[6])">
+      <mat-icon class="nav-icon">school</mat-icon>
+      <span class="nav-text">Formação</span>
+    </a>
+  </div>
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'indicators'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[7])">
+      <mat-icon class="nav-icon">assessment</mat-icon>
+      <span class="nav-text">Indicadores</span>
+    </a>
+  </div>
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'report'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[8])">
+      <mat-icon class="nav-icon">description</mat-icon>
+      <span class="nav-text">Relatório</span>
+    </a>
+  </div>
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'attendance-lists-upload'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[9])">
+      <mat-icon class="nav-icon">cloud_upload</mat-icon>
+      <span class="nav-text">Carregar Lista de Presença</span>
+    </a>
+  </div>
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'attendance-lists-view'"
+         (click)="onNavigationClick(getDefaultNavigationItems()[10])">
+      <mat-icon class="nav-icon">visibility</mat-icon>
+      <span class="nav-text">Ver Listas</span>
+      </a>
+  </div>
+  
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'form-management'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[11])">
+      <mat-icon class="nav-icon">settings</mat-icon>
+      <span class="nav-text">Gestão de Formulários</span>
+    </a>
+  </div>
+  
+  
+  <mat-divider class="nav-divider"></mat-divider>
+  
+  <!-- Progress Bar -->
+  <div class="progress-section">
+    <div class="progress-bar">
+      <div class="progress-slider"></div>
+    </div>
+  </div>
+  
+  <!-- Logout -->
+  <div class="nav-item-wrapper">
+    <a routerLink="/login" 
+       class="nav-item logout"
+       (click)="onNavigationClick(getDefaultNavigationItems()[11])">
+      <mat-icon class="nav-icon">logout</mat-icon>
+      <span class="nav-text">Sair</span>
+    </a>
+  </div>
+</mat-nav-list>

@@ -1,0 +1,124 @@
+<div class="profile-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <div class="header-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="header-text">
+          <h1>Meu Perfil</h1>
+          <p>Visualize suas informações de acesso e altere sua senha</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando informações do perfil...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && userProfile" class="profile-content">
+    <!-- User Information Card -->
+    <mat-card class="info-card">
+      <div class="card-header">
+        <h2>Informações do Usuário</h2>
+        <p class="card-subtitle">Estas informações são somente leitura</p>
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">
+            <mat-icon>email</mat-icon>
+            <span>Email</span>
+          </div>
+          <div class="info-value">{{ userProfile.email }}</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">
+            <mat-icon>person</mat-icon>
+            <span>Nome Completo</span>
+          </div>
+          <div class="info-value">{{ userProfile.fullName || '-' }}</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">
+            <mat-icon>business</mat-icon>
+            <span>Departamento</span>
+          </div>
+          <div class="info-value">{{ userProfile.department || '-' }}</div>
+        </div>
+        
+        <div class="info-item" *ngIf="userProfile.province">
+          <div class="info-label">
+            <mat-icon>location_on</mat-icon>
+            <span>Província</span>
+          </div>
+          <div class="info-value">{{ userProfile.province }}</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">
+            <mat-icon>security</mat-icon>
+            <span>Permissão</span>
+          </div>
+          <div class="info-value">{{ getRoleLabel(userProfile.role) }}</div>
+        </div>
+        
+        <div class="info-item">
+          <div class="info-label">
+            <mat-icon>{{ userProfile.active ? 'check_circle' : 'block' }}</mat-icon>
+            <span>Status</span>
+          </div>
+          <div class="info-value" [class.status-active]="userProfile.active" [class.status-inactive]="!userProfile.active">
+            {{ userProfile.active ? 'Ativo' : 'Inativo' }}
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Change Password Card -->
+    <mat-card class="password-card">
+      <div class="card-header">
+        <h2>Alterar Senha</h2>
+        <p class="card-subtitle">Digite a nova senha e confirme</p>
+      </div>
+      
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <div class="form-content">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nova Senha</mat-label>
+            <input matInput type="password" formControlName="newPassword" placeholder="Mínimo 6 caracteres">
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <mat-error *ngIf="passwordForm.get('newPassword')?.touched">
+              {{ getErrorMessage('newPassword') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Confirmar Nova Senha</mat-label>
+            <input matInput type="password" formControlName="confirmPassword" placeholder="Confirme a nova senha">
+            <mat-icon matPrefix>lock_reset</mat-icon>
+            <mat-error *ngIf="passwordForm.get('confirmPassword')?.touched">
+              {{ getErrorMessage('confirmPassword') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="isSavingPassword || passwordForm.invalid">
+            <mat-icon *ngIf="!isSavingPassword">lock</mat-icon>
+            <mat-spinner *ngIf="isSavingPassword" diameter="20"></mat-spinner>
+            {{ isSavingPassword ? 'Alterando...' : 'Alterar Senha' }}
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+

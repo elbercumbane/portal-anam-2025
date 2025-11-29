@@ -1,0 +1,42 @@
+<mat-card class="chart-card" [ngClass]="cardClass">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>{{ icon }}</mat-icon>
+      {{ title }}
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="chart-container-medium" *ngIf="hasData(); else emptyState">
+      <div class="pie-chart">
+        <svg viewBox="0 0 200 200" class="pie-svg">
+          <circle *ngFor="let item of satisfactionData; let i = index"
+                  cx="100" cy="100" r="80" fill="none"
+                  [attr.stroke]="item.color"
+                  stroke-width="16"
+                  [attr.stroke-dasharray]="getPieDashArray(item.value)"
+                  [attr.stroke-dashoffset]="getPieSegmentOffset(i)"
+                  class="pie-segment">
+          </circle>
+          <circle cx="100" cy="100" r="40" fill="white" class="pie-center"></circle>
+          <text x="100" y="100" text-anchor="middle" dy="0.3em" class="pie-center-text">
+            {{ totalValue }}%
+          </text>
+        </svg>
+
+        <div class="pie-legend">
+          <div class="legend-item" *ngFor="let item of satisfactionData">
+            <div class="legend-color" [style.background-color]="item.color"></div>
+            <span>{{ item.label }} ({{ item.value }}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">Sem dados disponíveis</div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
+

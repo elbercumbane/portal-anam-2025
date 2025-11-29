@@ -1,0 +1,53 @@
+<!-- src/app/pages/parceiros/parceiros.component.html -->
+<section class="p-hero" aria-labelledby="parc-title">
+  <div class="container">
+    <h1 id="parc-title">Parceiros</h1>
+    <p class="lead">Conheça as empresas que fazem parte da nossa rede e descubra oportunidades de parceria.</p>
+  </div>
+</section>
+
+<section class="p-list" aria-labelledby="list-title">
+  <div class="container">
+    <h2 id="list-title">Empresas Parceiras</h2>
+
+    <!-- TABS -->
+    <div class="tabs" role="tablist" aria-label="Filtrar por categoria">
+      <button *ngFor="let t of tabs"
+              class="tab"
+              [class.is-active]="activeTab() === t"
+              role="tab"
+              [attr.aria-selected]="activeTab() === t"
+              (click)="setTab(t)">{{ t }}</button>
+    </div>
+
+    <!-- GRID CARDS -->
+    <div class="grid">
+      <article class="card" *ngFor="let p of filtered()">
+        <div class="card__header">
+          <div class="logo-container">
+            <img *ngIf="p.logoUrl" 
+                 [src]="p.logoUrl" 
+                 [alt]="'Logo ' + p.nome" 
+                 class="partner-logo"
+                 (error)="onImageError($event)">
+            <div *ngIf="!p.logoUrl" 
+                 class="avatar" 
+                 [style.background]="bgFor(p.initials)" 
+                 [style.color]="fgFor()">{{ p.initials }}</div>
+          </div>
+          <div class="meta">
+            <h3 class="name">{{ p.nome }}</h3>
+            <div class="cat">{{ p.categoria }}</div>
+          </div>
+        </div>
+
+        <p class="desc">{{ p.descricao }}</p>
+
+        <div class="footer">
+          <span class="since">Membro desde {{ p.membroDesde }}</span>
+          <a class="link" [href]="p.perfilUrl || '#'" target="_blank" rel="noopener">Ver Perfil</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

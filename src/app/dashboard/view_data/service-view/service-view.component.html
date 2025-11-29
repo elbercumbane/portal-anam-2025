@@ -1,0 +1,298 @@
+  <!-- Atendimento Content -->
+<div (click)="fecharExportMenu()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>support_agent</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>Atendimento Consolidado</h1>
+            <p>Visualização e gestão de todos os atendimentos (FAE, Agente Econômico e Utilizador)</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-total" title="Total de Atendimentos">
+            <mat-icon>storage</mat-icon>
+            <span>Total: {{ totalFiltrados }}</span>
+          </button>
+          <button class="btn-refresh" title="Atualizar Dados" (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button class="btn-ajuda" title="Ajuda" (click)="mostrarAjuda()">
+            <mat-icon>help</mat-icon>
+          </button>
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+      <div class="filters-content">
+        <h3 class="filters-title">Filtros de Pesquisa</h3>
+        <div class="filters-grid">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Tipo de Formulário</label>
+              <select class="filter-select" (change)="filtrarPorTipoFormulario($event)">
+                <option value="">Todos</option>
+                <option value="fae">FAE</option>
+                <option value="agente-economico">Agente Econômico</option>
+                <option value="utilizador">Utilizador</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Grau de Satisfação</label>
+              <select class="filter-select" (change)="filtrarPorAvaliacao($event)">
+                <option value="">Todos</option>
+                <option value="muito-satisfeito">Muito Satisfeito</option>
+                <option value="satisfeito">Satisfeito</option>
+                <option value="neutro">Neutro</option>
+                <option value="insatisfeito">Insatisfeito</option>
+                <option value="muito-insatisfeito">Muito Insatisfeito</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Problema Resolvido</label>
+              <select class="filter-select" (change)="filtrarPorResolvido($event)">
+                <option value="">Todos</option>
+                <option value="sim">Sim</option>
+                <option value="nao">Não</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Tipo de Problema</label>
+              <select class="filter-select" (change)="filtrarPorProblema($event)">
+                <option value="">Todos</option>
+                <option value="demora">Demora no Atendimento</option>
+                <option value="informacao">Falta de Informação</option>
+                <option value="documentacao">Documentação</option>
+                <option value="localizacao">Localização</option>
+                <option value="funcionarios">Funcionários</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Serviço</label>
+              <select class="filter-select" (change)="filtrarPorServico($event)">
+                <option value="">Todos</option>
+                <option value="atendimento-presencial">Atendimento Presencial</option>
+                <option value="atendimento-telefonico">Atendimento Telefônico</option>
+                <option value="atendimento-online">Atendimento Online</option>
+                <option value="consultoria">Consultoria</option>
+                <option value="formacao">Formação</option>
+                <option value="suporte-tecnico">Suporte Técnico</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Província</label>
+              <select class="filter-select" (change)="filtrarPorProvincia($event)">
+                <option value="">Todas</option>
+                <option value="maputo">Maputo</option>
+                <option value="gaza">Gaza</option>
+                <option value="inhambane">Inhambane</option>
+                <option value="sofala">Sofala</option>
+                <option value="manica">Manica</option>
+                <option value="tete">Tete</option>
+                <option value="zambezia">Zambézia</option>
+                <option value="nampula">Nampula</option>
+                <option value="niassa">Niassa</option>
+                <option value="cabo-delgado">Cabo Delgado</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">O que lhe Agradou</label>
+              <select class="filter-select" (change)="filtrarPorAgradou($event)">
+                <option value="">Todos</option>
+                <option value="atendimento">Atendimento</option>
+                <option value="rapidez">Rapidez</option>
+                <option value="localizacao">Localização</option>
+                <option value="funcionarios">Funcionários</option>
+                <option value="processo">Processo</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">O que não lhe Agradou</label>
+              <select class="filter-select" (change)="filtrarPorNaoAgradou($event)">
+                <option value="">Todos</option>
+                <option value="demora">Demora</option>
+                <option value="informacao">Falta de Informação</option>
+                <option value="documentacao">Documentação</option>
+                <option value="localizacao">Localização</option>
+                <option value="funcionarios">Funcionários</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <!-- Espaço vazio para manter o layout -->
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Data Início</label>
+              <input type="date" class="filter-date" (change)="filtrarPorDataInicio($event)">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Data Fim</label>
+              <input type="date" class="filter-date" (change)="filtrarPorDataFim($event)">
+            </div>
+            <div class="filter-group">
+              <!-- Espaço vazio para manter o layout -->
+            </div>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filtrar" (click)="aplicarFiltros()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filtrar</span>
+          </button>
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            <span>Limpar</span>
+          </button>
+          <div class="btn-exportar-container">
+            <button class="btn-exportar" (click)="toggleExportMenu()">
+              <mat-icon>file_download</mat-icon>
+              <span>Exportar</span>
+              <mat-icon class="dropdown-icon" [class.rotated]="exportMenuOpen">keyboard_arrow_down</mat-icon>
+            </button>
+            <div class="export-menu" *ngIf="exportMenuOpen">
+              <button class="export-option excel-option" (click)="exportarExcel()">
+                <mat-icon>table_chart</mat-icon>
+                <span>Excel</span>
+              </button>
+              <button class="export-option word-option" (click)="exportarWord()">
+                <mat-icon>description</mat-icon>
+                <span>Word</span>
+              </button>
+              <button class="export-option pdf-option" (click)="exportarPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Dados -->
+    <div class="data-table-container">
+      <div class="table-header">
+        <h3>Atendimentos Consolidados</h3>
+        <span class="table-count">{{ totalFiltrados }} atendimentos encontrados</span>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo de Formulário</th>
+              <th>Grau de Satisfação</th>
+              <th>Problema Resolvido</th>
+              <th>Tipo de Problema</th>
+              <th>Serviço</th>
+              <th>O que lhe Agradou</th>
+              <th>O que não lhe Agradou</th>
+              <th>Província</th>
+              <th>Observações</th>
+              <th>Data/Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let atendimento of atendimentos">
+              <td>{{ atendimento.id }}</td>
+              <td>
+                <span class="form-type-badge" [class]="getFormTypeClass(atendimento.tipoFormulario)">
+                  {{ getFormTypeLabel(atendimento.tipoFormulario) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(atendimento.grauSatisfacao)">
+                  {{ getSatisfactionLabel(atendimento.grauSatisfacao) }}
+                </span>
+              </td>
+              <td>
+                <span class="status-badge" [class.resolvido]="atendimento.problemaResolvido === 'sim'">
+                  {{ getProblemaResolvidoLabel(atendimento.problemaResolvido) }}
+                </span>
+              </td>
+              <td>{{ atendimento.tipoProblema }}</td>
+              <td>
+                <span class="service-badge" [class]="getServiceClass(atendimento.servico)" *ngIf="atendimento.servico">
+                  {{ getServiceLabel(atendimento.servico) }}
+                </span>
+                <span class="no-service" *ngIf="!atendimento.servico">-</span>
+              </td>
+              <td>{{ getAgradouLabel(atendimento.agradou) }}</td>
+              <td>{{ getNaoAgradouLabel(atendimento.naoAgradou) }}</td>
+              <td>{{ atendimento.provincia }}</td>
+              <td>{{ atendimento.observacoes }}</td>
+              <td>{{ atendimento.dataSubmissao | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <div class="pagination" *ngIf="totalFiltrados > 0">
+        <div class="page-size-control">
+          <span>Mostrar</span>
+          <select [value]="itensPorPagina" (change)="alterarItensPorPagina($event)">
+            <option *ngFor="let opcao of pageSizeOptions" [value]="opcao">{{ opcao }}</option>
+          </select>
+          <span>registos</span>
+        </div>
+        <div class="page-navigation">
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === 1"
+                  (click)="irParaPrimeiraPagina()"
+                  title="Primeira página">
+            <mat-icon>first_page</mat-icon>
+          </button>
+        <button class="btn-pagination"
+                [disabled]="paginaAtual === 1"
+                (click)="paginaAnterior()"
+                title="Página anterior">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="page-info">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+        <button class="btn-pagination"
+                [disabled]="paginaAtual === totalPaginas"
+                (click)="proximaPagina()"
+                title="Próxima página">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === totalPaginas"
+                  (click)="irParaUltimaPagina()"
+                  title="Última página">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
+        <div class="page-shortcuts">
+          <button class="btn-pagination"
+                  (click)="irParaInicioDaPagina()"
+                  title="Ir para o início da página">
+            <mat-icon>vertical_align_top</mat-icon>
+          </button>
+          <button class="btn-pagination"
+                  (click)="irParaFimDaPagina()"
+                  title="Ir para o final da página">
+            <mat-icon>vertical_align_bottom</mat-icon>
+          </button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <app-service-view-help-modal #helpModal></app-service-view-help-modal>

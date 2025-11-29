@@ -1,0 +1,54 @@
+<!-- Statistics Cards -->
+<div class="stats-grid">
+  <mat-card class="stat-card total">
+    <mat-card-content>
+      <div class="stat-icon">
+        <mat-icon>description</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalFormularios }}</h3>
+        <p>Total de Formulários</p>
+        <mat-progress-bar mode="determinate" [value]="100" class="progress-bar"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card active">
+    <mat-card-content>
+      <div class="stat-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.formulariosAtivos }}</h3>
+        <p>Formulários Ativos</p>
+        <mat-progress-bar mode="determinate" [value]="(stats.formulariosAtivos / stats.totalFormularios) * 100" class="progress-bar"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card inactive">
+    <mat-card-content>
+      <div class="stat-icon">
+        <mat-icon>cancel</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.formulariosInativos }}</h3>
+        <p>Formulários Inativos</p>
+        <mat-progress-bar mode="determinate" [value]="(stats.formulariosInativos / stats.totalFormularios) * 100" class="progress-bar"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="stat-card responses">
+    <mat-card-content>
+      <div class="stat-icon">
+        <mat-icon>assessment</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalRespostas }}</h3>
+        <p>Total de Respostas</p>
+        <mat-progress-bar mode="determinate" [value]="stats.taxaResposta" class="progress-bar"></mat-progress-bar>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

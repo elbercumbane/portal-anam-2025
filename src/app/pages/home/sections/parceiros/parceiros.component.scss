@@ -1,0 +1,80 @@
+:root{
+  --panel:#F5F7FB;        /* fundo cinza-claro da faixa */
+  --ink-900:#0F172A;      /* título */
+  --card-brd: rgba(15,23,42,.06);
+  --card-sh : 0 8px 28px rgba(15,23,42,.08);
+  --radius  : 14px;
+}
+
+.container{ 
+  max-width: none; 
+  width: 100%;
+  margin: 0 auto; 
+  padding: 0 16px; 
+}
+
+.partners{
+  background: transparent;
+  padding: 36px 0 44px;
+}
+
+.title{
+  text-align:center;
+  color: var(--ink-900);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 1.4vw + 1rem, 2rem);
+  margin-bottom: 20px;
+}
+
+/* grelha: mesma largura visual do mock, duas fileiras no desktop */
+.grid-logos{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(5, 1fr); /* 5 por linha em desktop */
+  @media (max-width: 1200px){ grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 900px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 640px) { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* cartão branco com sombra suave e logo centrado */
+.logo-card{
+  background:#fff;
+  border: 1px solid var(--card-brd);
+  border-radius: var(--radius);
+  box-shadow: var(--card-sh);
+  height: 110px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.logo-card img{
+  max-width: 220px;
+  max-height: 70px;
+  object-fit: contain;
+  filter: grayscale(0%);             /* logos coloridos */
+  opacity: 1;
+  transition: filter .2s ease, opacity .2s ease, transform .2s ease;
+}
+
+.logo-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(15,23,42,.12);
+  border-color: rgba(15,23,42,.12);
+}
+
+.logo-card:hover img{
+  filter: grayscale(0%);             /* opcional: colorir no hover */
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* acessibilidade */
+.sr-only{
+  position:absolute; 
+  left:-9999px; 
+  width:1px; 
+  height:1px; 
+  overflow:hidden;
+}

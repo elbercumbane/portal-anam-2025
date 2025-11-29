@@ -1,0 +1,400 @@
+<div class="detailed-analysis-container">
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-content">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Carregando dados...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-overlay" *ngIf="!isLoading && erroCarregamento">
+    <div class="error-content">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ erroCarregamento }}</p>
+      <button class="btn-retry" (click)="loadData()">
+        <mat-icon>refresh</mat-icon>
+        <span>Tentar Novamente</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="analysis-header" *ngIf="!isLoading && !erroCarregamento">
+    <div class="header-content">
+      <div class="header-info">
+        <div class="header-icon">
+          <mat-icon>analytics</mat-icon>
+        </div>
+        <div class="header-text">
+          <h1>Análise Detalhada</h1>
+          <p>Gráficos estatísticos dos indicadores de performance</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-fechar" title="Fechar" (click)="fechar()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="summary-cards" *ngIf="!isLoading && !erroCarregamento">
+    <div class="summary-card">
+      <div class="card-icon blue">
+        <mat-icon>timer</mat-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-label">Tempo Médio</div>
+        <div class="card-value">{{ tempoMedioPreenchimento }}</div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="card-icon green">
+        <mat-icon>speed</mat-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-label">Tempo Mais Rápido</div>
+        <div class="card-value">{{ tempoMaisRapido }}</div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="card-icon orange">
+        <mat-icon>hourglass_empty</mat-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-label">Tempo Mais Lento</div>
+        <div class="card-value">{{ tempoMaisLento }}</div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="card-icon purple">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-label">Taxa de Conclusão</div>
+        <div class="card-value">{{ taxaConclusao }}%</div>
+      </div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="card-icon teal">
+        <mat-icon>assessment</mat-icon>
+      </div>
+      <div class="card-content">
+        <div class="card-label">Avaliações</div>
+        <div class="card-value">{{ totalAvaliacoesConcluidas }} / {{ totalAvaliacoesIniciadas }}</div>
+        <div class="card-subtitle">Concluídas / Iniciadas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-section" *ngIf="!isLoading && !erroCarregamento">
+    <!-- Gráfico 1: Tempo Médio por Formulário -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Tempo Médio de Preenchimento por Formulário</h3>
+        <p>Comparação do tempo médio entre diferentes tipos de formulários</p>
+      </div>
+      <div class="chart-content">
+        <div class="bar-chart-container">
+          <div class="chart-bars">
+            <div class="bar-item" *ngFor="let item of comparacaoFormularios">
+              <div class="bar-wrapper">
+                <div class="bar-label">{{ item.tipo }}</div>
+                <div class="bar-container">
+                  <div 
+                    class="bar-fill" 
+                    [style.width.%]="(item.tempoMedio / getMaxTempoFormulario()) * 100"
+                    [style.height.px]="200">
+                    <span class="bar-value">{{ formatarTempo(item.tempoMedio) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico 2: Taxa de Conclusão por Formulário -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Taxa de Conclusão por Formulário</h3>
+        <p>Percentual de avaliações concluídas em relação às iniciadas</p>
+      </div>
+      <div class="chart-content">
+        <div class="bar-chart-container">
+          <div class="chart-bars">
+            <div class="bar-item" *ngFor="let item of comparacaoFormularios">
+              <div class="bar-wrapper">
+                <div class="bar-label">{{ item.tipo }}</div>
+                <div class="bar-container">
+                  <div 
+                    class="bar-fill percentage" 
+                    [style.width.%]="item.taxa"
+                    [style.height.px]="200">
+                    <span class="bar-value">{{ item.taxa.toFixed(1) }}%</span>
+                  </div>
+                </div>
+                <div class="bar-stats">
+                  <span class="stat-item">{{ item.concluidas }} concluídas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico 3: Evolução Temporal do Tempo Médio -->
+    <div class="chart-card full-width">
+      <div class="chart-header">
+        <h3>Evolução do Tempo Médio ao Longo do Tempo</h3>
+        <p>Tendência do tempo médio de preenchimento por data</p>
+      </div>
+      <div class="chart-content">
+        <div class="line-chart-container">
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #3B82F6;"></span>
+              <span>Tempo Médio (segundos)</span>
+            </div>
+          </div>
+          <div class="line-chart-wrapper">
+            <svg viewBox="0 0 1000 400" class="line-chart-svg">
+              <!-- Grid horizontal -->
+              <g class="grid-lines">
+                <line *ngFor="let i of [0,1,2,3,4,5]" 
+                      x1="80" 
+                      [attr.y1]="60 + (i * 60)" 
+                      x2="920" 
+                      [attr.y2]="60 + (i * 60)" 
+                      stroke="#E5E7EB" 
+                      stroke-width="1" 
+                      stroke-dasharray="2,2"/>
+              </g>
+              
+              <!-- Eixos -->
+              <line x1="80" y1="60" x2="80" y2="360" stroke="#374151" stroke-width="2"/>
+              <line x1="80" y1="360" x2="920" y2="360" stroke="#374151" stroke-width="2"/>
+              
+              <!-- Linha do gráfico -->
+              <path 
+                [attr.d]="getTempoMedioPath()" 
+                fill="none" 
+                stroke="#3B82F6" 
+                stroke-width="3" 
+                class="line-path"/>
+              
+              <!-- Área preenchida -->
+              <path 
+                [attr.d]="getTempoMedioAreaPath()" 
+                fill="url(#gradientBlue)" 
+                opacity="0.2" 
+                class="area-path"/>
+              
+              <!-- Gradiente -->
+              <defs>
+                <linearGradient id="gradientBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:0" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Pontos de dados -->
+              <g *ngFor="let item of dadosTemporais; let i = index">
+                <circle 
+                  [attr.cx]="getXPosition(i, dadosTemporais.length)" 
+                  [attr.cy]="getYPosition(item.tempoMedio, getMaxTempoMedio())"
+                  r="5" 
+                  fill="#3B82F6" 
+                  stroke="white" 
+                  stroke-width="2"
+                  class="data-point">
+                  <title>{{ item.data }}: {{ formatarTempo(item.tempoMedio) }}</title>
+                </circle>
+              </g>
+              
+              <!-- Labels do eixo X -->
+              <g *ngFor="let item of dadosTemporais; let i = index">
+                <text 
+                  *ngIf="i % Math.max(1, Math.floor(dadosTemporais.length / 10)) === 0"
+                  [attr.x]="getXPosition(i, dadosTemporais.length)" 
+                  y="385" 
+                  text-anchor="middle" 
+                  class="axis-label">
+                  {{ item.data }}
+                </text>
+              </g>
+              
+              <!-- Labels do eixo Y -->
+              <g *ngFor="let i of [0,1,2,3,4,5]">
+                <text 
+                  x="75" 
+                  [attr.y]="365 - (i * 60)" 
+                  text-anchor="end" 
+                  class="axis-label">
+                  {{ formatarTempo((getMaxTempoMedio() / 5) * (5 - i)) }}
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico 4: Evolução da Taxa de Conclusão -->
+    <div class="chart-card full-width">
+      <div class="chart-header">
+        <h3>Evolução da Taxa de Conclusão</h3>
+        <p>Tendência da taxa de conclusão ao longo do tempo</p>
+      </div>
+      <div class="chart-content">
+        <div class="line-chart-container">
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #10B981;"></span>
+              <span>Taxa de Conclusão (%)</span>
+            </div>
+          </div>
+          <div class="line-chart-wrapper">
+            <svg viewBox="0 0 1000 400" class="line-chart-svg">
+              <!-- Grid horizontal -->
+              <g class="grid-lines">
+                <line *ngFor="let i of [0,1,2,3,4,5]" 
+                      x1="80" 
+                      [attr.y1]="60 + (i * 60)" 
+                      x2="920" 
+                      [attr.y2]="60 + (i * 60)" 
+                      stroke="#E5E7EB" 
+                      stroke-width="1" 
+                      stroke-dasharray="2,2"/>
+              </g>
+              
+              <!-- Eixos -->
+              <line x1="80" y1="60" x2="80" y2="360" stroke="#374151" stroke-width="2"/>
+              <line x1="80" y1="360" x2="920" y2="360" stroke="#374151" stroke-width="2"/>
+              
+              <!-- Linha do gráfico -->
+              <path 
+                [attr.d]="getTaxaConclusaoPath()" 
+                fill="none" 
+                stroke="#10B981" 
+                stroke-width="3" 
+                class="line-path"/>
+              
+              <!-- Área preenchida -->
+              <path 
+                [attr.d]="getTaxaConclusaoAreaPath()" 
+                fill="url(#gradientGreen)" 
+                opacity="0.2" 
+                class="area-path"/>
+              
+              <!-- Gradiente -->
+              <defs>
+                <linearGradient id="gradientGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+                </linearGradient>
+              </defs>
+              
+              <!-- Pontos de dados -->
+              <g *ngFor="let item of taxaConclusaoTemporal; let i = index">
+                <circle 
+                  [attr.cx]="getXPosition(i, taxaConclusaoTemporal.length)" 
+                  [attr.cy]="getYPosition(item.taxa, getMaxTaxaConclusao())"
+                  r="5" 
+                  fill="#10B981" 
+                  stroke="white" 
+                  stroke-width="2"
+                  class="data-point">
+                  <title>{{ item.data }}: {{ item.taxa.toFixed(1) }}%</title>
+                </circle>
+              </g>
+              
+              <!-- Labels do eixo X -->
+              <g *ngFor="let item of taxaConclusaoTemporal; let i = index">
+                <text 
+                  *ngIf="i % Math.max(1, Math.floor(taxaConclusaoTemporal.length / 10)) === 0"
+                  [attr.x]="getXPosition(i, taxaConclusaoTemporal.length)" 
+                  y="385" 
+                  text-anchor="middle" 
+                  class="axis-label">
+                  {{ item.data }}
+                </text>
+              </g>
+              
+              <!-- Labels do eixo Y -->
+              <g *ngFor="let i of [0,1,2,3,4,5]">
+                <text 
+                  x="75" 
+                  [attr.y]="365 - (i * 60)" 
+                  text-anchor="end" 
+                  class="axis-label">
+                  {{ Math.round((getMaxTaxaConclusao() / 5) * (5 - i)) }}%
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico 5: Avaliações Concluídas vs Iniciadas -->
+    <div class="chart-card full-width" *ngIf="dadosTemporais.length > 0">
+      <div class="chart-header">
+        <h3>Avaliações Concluídas vs Iniciadas</h3>
+        <p>Comparação entre avaliações iniciadas e concluídas por data</p>
+      </div>
+      <div class="chart-content">
+        <div class="bar-chart-container-horizontal">
+          <div class="chart-bars-horizontal">
+            <div class="bar-item-horizontal" *ngFor="let item of dadosTemporais; let i = index">
+              <div class="bar-row">
+                <div class="bar-label-horizontal">{{ item.data }}</div>
+                <div class="bar-group-horizontal">
+                  <div class="bar-wrapper-horizontal">
+                    <div class="bar-fill-horizontal iniciadas" [style.width.%]="(item.iniciadas / getMaxIniciadas()) * 100">
+                      <span class="bar-value-horizontal">{{ item.iniciadas }}</span>
+                    </div>
+                  </div>
+                  <div class="bar-wrapper-horizontal">
+                    <div class="bar-fill-horizontal concluidas" [style.width.%]="(item.concluidas / getMaxIniciadas()) * 100">
+                      <span class="bar-value-horizontal">{{ item.concluidas }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-legend-horizontal">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #F59E0B;"></span>
+              <span>Iniciadas</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #10B981;"></span>
+              <span>Concluídas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mensagem quando não há dados -->
+    <div class="chart-card full-width" *ngIf="dadosTemporais.length === 0 && !isLoading && !erroCarregamento">
+      <div class="chart-content">
+        <div class="no-data-message">
+          <mat-icon>info</mat-icon>
+          <p>Nenhum dado disponível para exibir o gráfico de avaliações.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<!-- Seção Eventos -->
+<section class="eventos-section" id="eventos" #eventosSection>
+  <div class="container">
+    <h2>Eventos</h2>
+    <p class="intro-text">
+      Participe dos nossos eventos e encontros. Aqui você pode se conectar com outros membros da comunidade, 
+      aprender novas habilidades e contribuir para o desenvolvimento de Massinga.
+    </p>
+
+    <div class="eventos-grid">
+      <div class="evento-card" *ngFor="let evento of eventos">
+        <div class="evento-header">
+          <h3>{{ evento.titulo }}</h3>
+          <span class="evento-data">{{ evento.data }}</span>
+        </div>
+        <div class="evento-content">
+          <p>{{ evento.descricao }}</p>
+          <div class="evento-details">
+            <span class="evento-local">📍 {{ evento.local }}</span>
+            <span class="evento-horario">🕒 {{ evento.horario }}</span>
+          </div>
+        </div>
+        <div class="evento-actions">
+          <button mat-raised-button color="primary" (click)="inscreverSe(evento)">
+            Inscrever-se
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

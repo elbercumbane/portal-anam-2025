@@ -1,0 +1,113 @@
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Área de Membros</p>
+      <h1>Um lugar para quem quer construir agora</h1>
+      <p class="hero-subtitle">
+        Pessoas e organizações que se unem para apoiar Massinga e a diáspora com ações concretas.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/membros/cadastro" class="primary-cta">Quero fazer parte</a>
+        <a routerLink="/membros/organograma" class="ghost-cta">Conhecer a estrutura</a>
+      </div>
+
+      <div class="stats-pill">
+        <div class="stat" *ngFor="let stat of stats">
+          <span class="stat-number">{{ stat.number }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section highlights-section">
+  <div class="container">
+    <div class="highlights-grid">
+      <article class="highlight-card" *ngFor="let item of highlights">
+        <div class="highlight-icon">{{ item.icon }}</div>
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section pillars-section">
+  <div class="container">
+    <div class="section-header compact">
+      <h2>Como a associação cuida dos seus membros</h2>
+      <p>Três compromissos simples: encontros regulares, oportunidades reais e apoio institucional.</p>
+  </div>
+  
+    <div class="pillars-grid">
+      <article class="pillar-card" *ngFor="let pillar of benefitPillars">
+        <h3>{{ pillar.title }}</h3>
+        <p>{{ pillar.text }}</p>
+      </article>
+    </div>
+  </div>
+  </section>
+  
+<section class="section steps-section">
+  <div class="container">
+    <div class="steps-wrapper">
+      <article class="step-card" *ngFor="let step of joinSteps">
+        <span class="step-number">{{ step.step }}</span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.text }}</p>
+      </article>
+    </div>
+  </div>
+  </section>
+  
+<section class="section benefits-list-section">
+  <div class="container">
+    <div class="benefits-card">
+      <h2>Benefícios essenciais para quem se associa</h2>
+      <ul>
+        <li *ngFor="let benefit of benefitHighlights">
+          <span>✔</span>
+          {{ benefit }}
+        </li>
+    </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section how-join-section">
+  <div class="container">
+    <div class="how-join-card">
+      <h2>Como se tornar membro</h2>
+      <ol>
+        <li *ngFor="let item of howToJoin">{{ item }}</li>
+      </ol>
+      <div class="how-join-actions">
+        <a routerLink="/associar-se" class="primary-cta">Associar-se</a>
+        <a routerLink="/membros/cadastro" class="ghost-cta">Pré-cadastro</a>
+      </div>
+    </div>
+  </div>
+  </section>
+  
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <h2>Entrada simples, participação constante.</h2>
+      <p>Preencha o formulário, escolha um grupo e já comece a colaborar nos próximos 30 dias.</p>
+      <div class="cta-actions">
+        <a routerLink="/membros/cadastro" class="primary-cta">
+          Enviar pedido de adesão
+        </a>
+        <a routerLink="/membros/organograma" class="ghost-cta">
+          Ver áreas de actuação
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+

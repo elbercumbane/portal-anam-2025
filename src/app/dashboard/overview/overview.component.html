@@ -1,0 +1,434 @@
+<div class="visao-geral-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h1 class="page-title">
+          <mat-icon>dashboard</mat-icon>
+          Visão Geral do Sistema
+        </h1>
+        <p class="page-subtitle">Análise completa de todos os dados e métricas do SAQS</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="toggleFilterPanel()" class="filter-toggle-btn">
+          <mat-icon>tune</mat-icon>
+          Filtros Avançados
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Painel de Filtros -->
+  <div class="filter-panel" [class.active]="showFilterPanel">
+    <mat-card class="filter-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>filter_list</mat-icon>
+          Filtros Avançados
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="filter-tabs">
+          <mat-tab-group>
+            <!-- Tab: Período -->
+            <mat-tab label="Período">
+              <div class="filter-section">
+                <mat-form-field appearance="outline">
+                  <mat-label>Período</mat-label>
+                  <mat-select [(ngModel)]="selectedPeriod">
+                    <mat-option value="today">Hoje</mat-option>
+                    <mat-option value="week">Esta Semana</mat-option>
+                    <mat-option value="month">Este Mês</mat-option>
+                    <mat-option value="quarter">Este Trimestre</mat-option>
+                    <mat-option value="year">Este Ano</mat-option>
+                    <mat-option value="custom">Período Personalizado</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <div class="custom-period" *ngIf="selectedPeriod === 'custom'">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Data Inicial</mat-label>
+                    <input matInput [matDatepicker]="startPicker" [(ngModel)]="customStartDate">
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                  </mat-form-field>
+                  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Data Final</mat-label>
+                    <input matInput [matDatepicker]="endPicker" [(ngModel)]="customEndDate">
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Tab: Localização -->
+            <mat-tab label="Localização">
+              <div class="filter-section">
+                <mat-form-field appearance="outline">
+                  <mat-label>Províncias</mat-label>
+                  <mat-select [(ngModel)]="selectedProvinces" multiple>
+                    <mat-option *ngFor="let province of provinces" [value]="province">
+                      {{ province }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </mat-tab>
+
+            <!-- Tab: Categorias -->
+            <mat-tab label="Categorias">
+              <div class="filter-section">
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipos de Formulário</mat-label>
+                  <mat-select [(ngModel)]="selectedFormTypes" multiple>
+                    <mat-option *ngFor="let type of formTypes" [value]="type">
+                      {{ type }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Status</mat-label>
+                  <mat-select [(ngModel)]="selectedStatuses" multiple>
+                    <mat-option *ngFor="let status of statuses" [value]="status">
+                      {{ status }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                  <mat-label>Nível de Satisfação</mat-label>
+                  <mat-select [(ngModel)]="selectedSatisfactionLevels" multiple>
+                    <mat-option *ngFor="let level of satisfactionLevels" [value]="level">
+                      {{ level }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+        
+        <div class="filter-actions">
+          <button mat-button (click)="resetFilters()">
+            <mat-icon>refresh</mat-icon>
+            Limpar
+          </button>
+          <button mat-raised-button color="primary" (click)="applyFilters()">
+            <mat-icon>check</mat-icon>
+            Aplicar Filtros
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="summary-cards">
+    <mat-card class="summary-card">
+      <div class="card-icon">
+        <mat-icon>assignment</mat-icon>
+      </div>
+      <div class="card-content">
+        <h3>{{ getTotalFormularios() }}</h3>
+        <p>Total de Formulários</p>
+      </div>
+      <div class="card-trend positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+12%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <div class="card-icon">
+        <mat-icon>support_agent</mat-icon>
+      </div>
+      <div class="card-content">
+        <h3>{{ getTotalAtendimentos() }}</h3>
+        <p>Total de Atendimentos</p>
+      </div>
+      <div class="card-trend positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+8%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <div class="card-icon">
+        <mat-icon>school</mat-icon>
+      </div>
+      <div class="card-content">
+        <h3>{{ dashboardData.totalFormacoes }}</h3>
+        <p>Formações Realizadas</p>
+      </div>
+      <div class="card-trend positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+15%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="summary-card">
+      <div class="card-icon">
+        <mat-icon>sentiment_satisfied</mat-icon>
+      </div>
+      <div class="card-content">
+        <h3>{{ getSatisfacaoGeral() }}%</h3>
+        <p>Satisfação Geral</p>
+      </div>
+      <div class="card-trend positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+5%</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Gráficos Principais -->
+  <div class="main-charts">
+    <!-- Gráfico: Distribuição por Província -->
+    <mat-card class="chart-card chart-wide">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>location_on</mat-icon>
+          Distribuição por Província
+        </mat-card-title>
+        <mat-card-subtitle>Formulários e atendimentos por região</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="province-chart">
+            <svg viewBox="0 0 800 400" class="province-svg">
+              <!-- Barras para formulários -->
+              <g *ngFor="let provincia of getFilteredProvincesData(); let i = index">
+                <!-- Background bar -->
+                <rect [attr.x]="80 + i * 70" y="50" width="30" height="300" fill="#E5E7EB" rx="15"></rect>
+                <!-- Formulários bar -->
+                <rect [attr.x]="80 + i * 70" [attr.y]="350 - (provincia.formularios / 5)" width="30" [attr.height]="provincia.formularios / 5" fill="#3B82F6" rx="15"></rect>
+                
+                <!-- Atendimentos bar -->
+                <rect [attr.x]="115 + i * 70" y="50" width="30" height="300" fill="#E5E7EB" rx="15"></rect>
+                <rect [attr.x]="115 + i * 70" [attr.y]="350 - (provincia.atendimentos / 5)" width="30" [attr.height]="provincia.atendimentos / 5" fill="#10B981" rx="15"></rect>
+                
+                <!-- Labels -->
+                <text [attr.x]="110 + i * 70" y="380" text-anchor="middle" class="province-label">{{ provincia.name }}</text>
+                <text [attr.x]="95 + i * 70" [attr.y]="340 - (provincia.formularios / 5)" text-anchor="middle" class="value-label">{{ provincia.formularios }}</text>
+                <text [attr.x]="130 + i * 70" [attr.y]="340 - (provincia.atendimentos / 5)" text-anchor="middle" class="value-label">{{ provincia.atendimentos }}</text>
+              </g>
+              
+              <!-- Legend -->
+              <g class="legend">
+                <rect x="50" y="20" width="15" height="15" fill="#3B82F6"></rect>
+                <text x="75" y="32" class="legend-text">Formulários</text>
+                <rect x="170" y="20" width="15" height="15" fill="#10B981"></rect>
+                <text x="195" y="32" class="legend-text">Atendimentos</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gráfico: Evolução Temporal -->
+    <mat-card class="chart-card chart-wide">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>timeline</mat-icon>
+          Evolução Temporal
+        </mat-card-title>
+        <mat-card-subtitle>Acompanhamento mensal por categoria</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="timeline-chart">
+            <svg viewBox="0 0 800 300" class="timeline-svg">
+              <!-- Grid lines -->
+              <defs>
+                <pattern id="timelineGrid" width="66.67" height="30" patternUnits="userSpaceOnUse">
+                  <path d="M 66.67 0 L 0 0 0 30" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect x="50" y="30" width="700" height="240" fill="url(#timelineGrid)" />
+              
+              <!-- Linhas dos dados dinâmicos -->
+              <path [attr.d]="getMonthlyLinePath(getMonthlyFormData().fae, getMaxMonthlyValue())" 
+                    fill="none" stroke="#3B82F6" stroke-width="3" class="line-path"></path>
+              <path [attr.d]="getMonthlyLinePath(getMonthlyFormData().economicAgent, getMaxMonthlyValue())" 
+                    fill="none" stroke="#F59E0B" stroke-width="3" class="line-path"></path>
+              <path [attr.d]="getMonthlyLinePath(getMonthlyFormData().userEvaluation, getMaxMonthlyValue())" 
+                    fill="none" stroke="#10B981" stroke-width="3" class="line-path"></path>
+              <path [attr.d]="getMonthlyLinePath(getMonthlyFormData().training, getMaxMonthlyValue())" 
+                    fill="none" stroke="#06B6D4" stroke-width="3" class="line-path"></path>
+              
+              <!-- Data points dinâmicos -->
+              <g *ngFor="let monthData of getFilteredMonthlyData(); let i = index">
+                <circle *ngIf="monthData.fae !== undefined && monthData.fae > 0" 
+                        [attr.cx]="50 + (i * (700 / (getFilteredMonthlyData().length - 1 || 1)))" 
+                        [attr.cy]="270 - ((monthData.fae / getMaxMonthlyValue()) * 240)" 
+                        r="4" fill="#3B82F6"></circle>
+                <circle *ngIf="monthData.economicAgent !== undefined && monthData.economicAgent > 0" 
+                        [attr.cx]="50 + (i * (700 / (getFilteredMonthlyData().length - 1 || 1)))" 
+                        [attr.cy]="270 - ((monthData.economicAgent / getMaxMonthlyValue()) * 240)" 
+                        r="4" fill="#F59E0B"></circle>
+                <circle *ngIf="monthData.userEvaluation !== undefined && monthData.userEvaluation > 0" 
+                        [attr.cx]="50 + (i * (700 / (getFilteredMonthlyData().length - 1 || 1)))" 
+                        [attr.cy]="270 - ((monthData.userEvaluation / getMaxMonthlyValue()) * 240)" 
+                        r="4" fill="#10B981"></circle>
+                <circle *ngIf="monthData.training !== undefined && monthData.training > 0" 
+                        [attr.cx]="50 + (i * (700 / (getFilteredMonthlyData().length - 1 || 1)))" 
+                        [attr.cy]="270 - ((monthData.training / getMaxMonthlyValue()) * 240)" 
+                        r="4" fill="#06B6D4"></circle>
+                
+                <!-- Month labels -->
+                <text [attr.x]="50 + (i * (700 / (getFilteredMonthlyData().length - 1 || 1)))" y="285" text-anchor="middle" class="month-label">{{ monthData.month }}</text>
+              </g>
+              
+              <!-- Legend -->
+              <g class="legend">
+                <rect x="50" y="10" width="12" height="3" fill="#3B82F6"></rect>
+                <text x="70" y="18" class="legend-text">FAE</text>
+                <rect x="150" y="10" width="12" height="3" fill="#F59E0B"></rect>
+                <text x="170" y="18" class="legend-text">Agente Econômico</text>
+                <rect x="300" y="10" width="12" height="3" fill="#10B981"></rect>
+                <text x="320" y="18" class="legend-text">Utilizador</text>
+                <rect x="450" y="10" width="12" height="3" fill="#06B6D4"></rect>
+                <text x="470" y="18" class="legend-text">Formando</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Gráficos Secundários -->
+  <div class="secondary-charts">
+    <!-- Gráfico: Satisfação por Província -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>mood</mat-icon>
+          Satisfação por Província
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="satisfaction-chart">
+            <div class="satisfaction-list">
+              <div class="satisfaction-item" *ngFor="let provincia of getFilteredProvincesData().slice(0, 5)">
+                <div class="provincia-name">{{ provincia.name }}</div>
+                <div class="satisfaction-bar">
+                  <div class="satisfaction-fill" 
+                       [style.width.%]="provincia.satisfacao" 
+                       [style.background-color]="getSatisfactionColor(provincia.satisfacao)">
+                  </div>
+                </div>
+                <span class="satisfaction-value">{{ provincia.satisfacao }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gráfico: Performance Geral -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>speed</mat-icon>
+          Performance Geral
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <div class="performance-metrics">
+            <div class="metric-item">
+              <div class="metric-icon">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div class="metric-content">
+                <h4>{{ dashboardData.performanceData.tempoMedioResposta }}</h4>
+                <p>Tempo Médio de Resposta</p>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon">
+                <mat-icon>check_circle</mat-icon>
+              </div>
+              <div class="metric-content">
+                <h4>{{ dashboardData.performanceData.taxaConclusao }}%</h4>
+                <p>Taxa de Conclusão</p>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon">
+                <mat-icon>people</mat-icon>
+              </div>
+              <div class="metric-content">
+                <h4>{{ dashboardData.performanceData.usuariosAtivos }}</h4>
+                <p>Usuários Ativos</p>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon">
+                <mat-icon>trending_up</mat-icon>
+              </div>
+              <div class="metric-content">
+                <h4>+{{ dashboardData.performanceData.crescimento }}%</h4>
+                <p>Crescimento</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tabela de Dados Detalhados -->
+  <mat-card class="data-table-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>table_chart</mat-icon>
+        Dados Detalhados por Província
+      </mat-card-title>
+      <mat-card-subtitle>Informações completas filtradas</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="data-table">
+        <table class="province-table">
+          <thead>
+            <tr>
+              <th>Província</th>
+              <th>Formulários</th>
+              <th>Atendimentos</th>
+              <th>Satisfação</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let provincia of getFilteredProvincesData()">
+              <td class="province-name">{{ provincia.name }}</td>
+              <td class="number">{{ provincia.formularios }}</td>
+              <td class="number">{{ provincia.atendimentos }}</td>
+              <td class="satisfaction">
+                <span class="satisfaction-badge" [style.background-color]="getSatisfactionColor(provincia.satisfacao)">
+                  {{ provincia.satisfacao }}%
+                </span>
+              </td>
+              <td class="status">
+                <mat-icon class="status-icon" [class.high]="provincia.satisfacao >= 75" 
+                          [class.medium]="provincia.satisfacao >= 70 && provincia.satisfacao < 75" 
+                          [class.low]="provincia.satisfacao < 70">
+                  {{ provincia.satisfacao >= 75 ? 'trending_up' : provincia.satisfacao >= 70 ? 'trending_flat' : 'trending_down' }}
+                </mat-icon>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

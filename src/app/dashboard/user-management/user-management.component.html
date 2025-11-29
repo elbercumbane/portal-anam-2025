@@ -1,0 +1,292 @@
+<!-- User Management Content -->
+<div (click)="fecharExportMenu()">
+  <!-- Header da Página -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-info">
+        <div class="header-icon">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="header-text">
+          <h1>Gestão de Usuários</h1>
+          <p>Gerencie os acessos ao dashboard e permissões dos usuários</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-total" title="Total de Usuários">
+          <mat-icon>storage</mat-icon>
+          <span>Total: {{ filteredUsers.length }}</span>
+        </button>
+        <button class="btn-refresh" title="Atualizar Dados" (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+        <button class="btn-novo" title="Novo Usuário" (click)="openCreateForm()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button class="btn-fechar" title="Voltar" (click)="goBackToDashboard()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de Filtros -->
+  <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+    <div class="filters-content">
+      <h3 class="filters-title">Filtros de Pesquisa</h3>
+      <div class="filters-grid">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label class="filter-label">Buscar</label>
+            <input type="text" 
+                   class="filter-input" 
+                   [(ngModel)]="searchTerm" 
+                   (ngModelChange)="onSearchChange()"
+                   placeholder="Email, nome, função, departamento ou província">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Função</label>
+            <select class="filter-select" [(ngModel)]="roleFilter" (ngModelChange)="onRoleFilterChange()">
+              <option value="">Todas</option>
+              <option *ngFor="let role of roles" [value]="role">{{ getRoleLabel(role) }}</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Departamento</label>
+            <select class="filter-select" [(ngModel)]="departmentFilter" (ngModelChange)="onDepartmentFilterChange()">
+              <option value="">Todos</option>
+              <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select class="filter-select" [(ngModel)]="activeFilter" (ngModelChange)="onActiveFilterChange($event)">
+              <option [value]="null">Todos</option>
+              <option [value]="true">Ativos</option>
+              <option [value]="false">Inativos</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <!-- Espaço vazio para manter o layout -->
+          </div>
+          <div class="filter-group">
+            <!-- Espaço vazio para manter o layout -->
+          </div>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-filtrar" (click)="aplicarFiltros()">
+          <mat-icon>filter_list</mat-icon>
+          <span>Filtrar</span>
+        </button>
+        <button class="btn-limpar" (click)="limparFiltros()">
+          <mat-icon>clear</mat-icon>
+          <span>Limpar</span>
+      </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela de Dados -->
+  <div class="data-table-container">
+    <div class="table-header">
+      <h3>Usuários</h3>
+      <span class="table-count">{{ filteredUsers.length }} usuários encontrados</span>
+    </div>
+    
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Carregando usuários...</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="!isLoading">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nome Completo</th>
+            <th>Departamento</th>
+            <th>Província</th>
+            <th>Função</th>
+            <th>Status</th>
+            <th>Criado em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of paginatedUsers">
+            <td>{{ user.email }}</td>
+            <td>{{ user.fullName || '-' }}</td>
+            <td>{{ getDepartmentLabel(user.department) }}</td>
+            <td>
+              <span *ngIf="user.province; else noProvince" class="province-badge">{{ user.province }}</span>
+              <ng-template #noProvince>
+                <span class="no-data">-</span>
+              </ng-template>
+          </td>
+            <td>
+              <span class="role-badge" 
+                    [class.role-tecnico]="user.role === 'tecnico'" 
+                    [class.role-administrador]="user.role === 'administrador'" 
+                    [class.role-super-administrador]="user.role === 'super-administrador'">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </td>
+            <td>
+              <span class="status-badge" 
+                    [class.status-active]="user.active" 
+                    [class.status-inactive]="!user.active">
+              {{ user.active ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+            <td>{{ formatDate(user.createdAt) }}</td>
+            <td>
+            <div class="action-buttons">
+                <button class="action-btn edit-btn" (click)="openEditForm(user)" title="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+                <button class="action-btn toggle-btn" 
+                        (click)="toggleUserActive(user)" 
+                        [title]="user.active ? 'Desativar' : 'Ativar'"
+                        [class.active]="user.active">
+                <mat-icon>{{ user.active ? 'block' : 'check_circle' }}</mat-icon>
+              </button>
+                <button class="action-btn delete-btn" (click)="deleteUser(user)" title="Excluir">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mensagem quando não há registros -->
+    <div class="no-data-message" *ngIf="!isLoading && filteredUsers.length === 0">
+      <mat-icon>info</mat-icon>
+      <p>Nenhum usuário encontrado com os filtros aplicados.</p>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination" *ngIf="!isLoading && totalPaginas > 1">
+      <button class="btn-pagination" 
+              [disabled]="paginaAtual === 1"
+              (click)="paginaAnterior()"
+              title="Página anterior">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="page-info">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+      <button class="btn-pagination" 
+              [disabled]="paginaAtual === totalPaginas"
+              (click)="proximaPagina()"
+              title="Próxima página">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <div class="pagination" *ngIf="!isLoading && totalPaginas <= 1">
+      <span class="page-info">Página 1 de 1</span>
+    </div>
+  </div>
+</div>
+
+  <!-- User Form Modal -->
+  <div class="form-modal" *ngIf="showUserForm" (click)="closeForm()">
+    <div class="form-modal-content" (click)="$event.stopPropagation()">
+      <div class="form-header">
+        <h2>{{ isEditMode ? 'Editar Usuário' : 'Novo Usuário' }}</h2>
+        <button mat-icon-button (click)="closeForm()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+        <div class="form-content">
+          <mat-form-field appearance="outline" class="full-width email-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" placeholder="usuario@cedsif.gov.mz">
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="userForm.get('email')?.touched">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width password-field">
+            <mat-label>Senha</mat-label>
+            <input matInput type="password" formControlName="password" [placeholder]="isEditMode ? 'Deixe em branco para manter a senha atual' : 'Mínimo 6 caracteres'">
+            <mat-icon matPrefix>lock</mat-icon>
+            <mat-error *ngIf="userForm.get('password')?.touched">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+            <mat-hint *ngIf="isEditMode">Deixe em branco para manter a senha atual</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width fullname-field">
+            <mat-label>Nome Completo</mat-label>
+            <input matInput formControlName="fullName" placeholder="Nome completo do usuário">
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width department-field">
+            <mat-label>Departamento</mat-label>
+            <mat-select formControlName="department">
+              <mat-option *ngFor="let dept of departments" [value]="dept">
+                {{ dept }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-error *ngIf="userForm.get('department')?.touched">
+              {{ getErrorMessage('department') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width province-field" *ngIf="showProvinceField">
+            <mat-label>Província</mat-label>
+            <mat-select formControlName="province">
+              <mat-option *ngFor="let province of provinces" [value]="province">
+                {{ province }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>location_on</mat-icon>
+            <mat-error *ngIf="userForm.get('province')?.touched">
+              {{ getErrorMessage('province') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width role-field">
+            <mat-label>Permissão</mat-label>
+            <mat-select formControlName="role">
+              <mat-option *ngFor="let role of roles" [value]="role">
+                {{ getRoleLabel(role) }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>security</mat-icon>
+            <mat-error *ngIf="userForm.get('role')?.touched">
+              {{ getErrorMessage('role') }}
+            </mat-error>
+            <mat-hint>
+              <span *ngIf="userForm.get('role')?.value === 'tecnico'">Vê informações padrões</span>
+              <span *ngIf="userForm.get('role')?.value === 'administrador'">Acesso administrativo completo</span>
+              <span *ngIf="userForm.get('role')?.value === 'super-administrador'">Acesso total ao sistema</span>
+            </mat-hint>
+          </mat-form-field>
+
+          <div class="checkbox-field">
+            <mat-checkbox formControlName="active">Usuário ativo</mat-checkbox>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="closeForm()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="isLoading || userForm.invalid">
+            <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+            {{ isEditMode ? 'Salvar' : 'Criar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

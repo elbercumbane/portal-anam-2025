@@ -1,0 +1,42 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Estrutura organizacional</p>
+      <h1>Uma árvore viva de liderança e serviço</h1>
+      <p class="hero-subtitle">
+        Do presidente às comissões locais, cada ramo sustenta o impacto da Associação de Naturais e Amigos de Massinga.
+      </p>
+    </div>
+          </div>
+</section>
+      
+<section class="tree-section">
+  <div class="container">
+    <div class="tree-wrapper">
+      <ul class="org-tree">
+        <ng-container *ngTemplateOutlet="renderNode; context: { node: orgStructure }"></ng-container>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<ng-template #renderNode let-node="node">
+  <li>
+    <div class="node-card" [class.node-root]="node === orgStructure">
+      <span class="node-tag">{{ node.tag }}</span>
+      <h3>{{ node.label }}</h3>
+      <p class="node-name" *ngIf="node.name">{{ node.name }}</p>
+      <a *ngIf="node.contact" class="node-contact" [href]="'mailto:' + node.contact">
+        {{ node.contact }}
+      </a>
+    </div>
+    <ul *ngIf="node.children?.length">
+      <ng-container *ngFor="let child of node.children">
+        <ng-container *ngTemplateOutlet="renderNode; context: { node: child }"></ng-container>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template>
+

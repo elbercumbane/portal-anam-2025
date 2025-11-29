@@ -1,0 +1,19 @@
+# Configurações específicas para Windows
+# Este arquivo contém configurações para melhorar a compatibilidade com Windows
+
+# Configurações do npm para Windows
+npm_config_cache=C:\Users\%USERNAME%\AppData\Roaming\npm-cache
+npm_config_prefix=C:\Users\%USERNAME%\AppData\Roaming\npm
+
+# Configurações de encoding para Windows
+encoding=utf-8
+
+# Configurações de linha de comando para Windows
+shell=cmd.exe
+shell-option=/k
+
+# Configurações de path para Windows
+path-separator=\
+
+# Configurações específicas do Angular CLI para Windows
+angular-cli-path=node_modules\.bin\ng.cmd

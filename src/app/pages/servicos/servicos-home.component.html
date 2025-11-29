@@ -1,0 +1,167 @@
+<!-- Hero Section com Background -->
+<section class="servicos-hero" aria-labelledby="servicos-title">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-badge">Nossos Serviços</span>
+    <h1 id="servicos-title">
+      Impulsionamos o Seu <span class="highlight">Crescimento</span>
+    </h1>
+    <p class="hero-description">
+      Uma oferta completa de serviços para apoiar o crescimento e competitividade dos nossos associados.
+    </p>
+  </div>
+</section>
+
+<!-- Estatísticas com Gráficos -->
+<section class="estatisticas-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Nosso Impacto em <span class="highlight">Números</span></h2>
+      <p class="section-subtitle">Resultados concretos que fazem a diferença</p>
+    </div>
+    
+    <div class="estatisticas-grid">
+      <div class="stat-card" *ngFor="let stat of estatisticas; let i = index" [attr.data-index]="i">
+        <!-- Gráfico Circular -->
+        <div class="stat-chart">
+          <svg class="circular-chart" viewBox="0 0 36 36">
+            <path class="circle-bg"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+            <path class="circle"
+              [attr.stroke]="stat.cor"
+              [style.stroke-dasharray]="stat.percentual + ', 100'"
+              d="M18 2.0845
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+            />
+          </svg>
+          <div class="stat-icon">{{ stat.icon }}</div>
+        </div>
+        
+        <!-- Informações -->
+        <div class="stat-info">
+          <h3 class="stat-valor" [style.color]="stat.cor">{{ stat.valor }}</h3>
+          <p class="stat-label">{{ stat.label }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Serviços com Design Moderno -->
+<section class="servicos-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Nossos <span class="highlight">Serviços</span></h2>
+      <p class="section-subtitle">Soluções completas para o seu negócio crescer</p>
+    </div>
+    
+    <div class="servicos-grid">
+      <article class="servico-card" *ngFor="let servico of servicos; let i = index" [attr.data-index]="i">
+        <!-- Ícone com Background Colorido -->
+        <div class="servico-icon-wrapper" [style.background]="'linear-gradient(135deg, ' + servico.cor + '15 0%, ' + servico.cor + '08 100%)'">
+          <span class="servico-icon">
+            {{ servico.icon }}
+          </span>
+        </div>
+        
+        <!-- Conteúdo -->
+        <div class="servico-content">
+          <h3 class="servico-titulo">{{ servico.titulo }}</h3>
+          <p class="servico-descricao">{{ servico.descricao }}</p>
+          
+          <!-- Lista de Benefícios -->
+          <ul class="beneficios-list">
+            <li *ngFor="let beneficio of servico.beneficios">
+              <svg class="check-icon" [style.color]="servico.cor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>{{ beneficio }}</span>
+            </li>
+          </ul>
+          
+          <!-- Botão -->
+          <button class="servico-btn" [style.background]="servico.cor">
+            <span>Saber Mais</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Gráfico de Progresso / Timeline -->
+<section class="progresso-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Como <span class="highlight">Funcionamos</span></h2>
+      <p class="section-subtitle">Um processo simples e eficaz</p>
+    </div>
+    
+    <div class="timeline">
+      <div class="timeline-item" data-step="1">
+        <div class="timeline-marker">
+          <span class="step-number">1</span>
+        </div>
+        <div class="timeline-content">
+          <h3>Adesão à Associação</h3>
+          <p>Torne-se membro e tenha acesso imediato a todos os serviços</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-step="2">
+        <div class="timeline-marker">
+          <span class="step-number">2</span>
+        </div>
+        <div class="timeline-content">
+          <h3>Diagnóstico de Necessidades</h3>
+          <p>Identificamos as áreas prioritárias do seu negócio</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-step="3">
+        <div class="timeline-marker">
+          <span class="step-number">3</span>
+        </div>
+        <div class="timeline-content">
+          <h3>Implementação</h3>
+          <p>Aplicamos as soluções personalizadas para o seu caso</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item" data-step="4">
+        <div class="timeline-marker">
+          <span class="step-number">4</span>
+        </div>
+        <div class="timeline-content">
+          <h3>Acompanhamento Contínuo</h3>
+          <p>Monitoramos resultados e ajustamos estratégias</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Final -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Pronto para Impulsionar o Seu Negócio?</h2>
+      <p>Junte-se a centenas de empresas que já transformaram seus resultados</p>
+      <button class="cta-btn">
+        <span>Tornar-se Membro</span>
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>

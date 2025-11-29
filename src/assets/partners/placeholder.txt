@@ -1,0 +1,17 @@
+# Placeholders para logos dos parceiros
+
+Esta pasta contém os logos dos parceiros em formato PNG/SVG.
+
+Logos necessários:
+- mireme.png
+- cta.png
+- twf.png
+- aneme.png
+- unido.png
+- evolen.png
+- xhub.png
+- indico.png
+- em.png
+- oe.png
+
+Para produção, substitua estes placeholders pelos logos reais dos parceiros.

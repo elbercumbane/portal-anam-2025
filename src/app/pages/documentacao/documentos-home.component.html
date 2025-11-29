@@ -1,0 +1,84 @@
+<!-- Hero Section com Biblioteca -->
+<section class="docs-hero" aria-labelledby="docs-title">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+  <h1 id="docs-title">Documentação</h1>
+  <p class="lead">Aceda aos estatutos, regulamentos, relatórios e outros documentos oficiais da associação.</p>
+  </div>
+</section>
+
+<!-- Conteúdo Principal -->
+<section class="container docs-page">
+  <!-- Filtros -->
+  <div class="filters" role="group" aria-label="Filtrar documentos">
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Todos'"
+      (click)="filtrar('Todos')">
+      Todos
+    </button>
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Estatutos'"
+      (click)="filtrar('Estatutos')">
+      Estatutos
+    </button>
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Regulamentos'"
+      (click)="filtrar('Regulamentos')">
+      Regulamentos
+    </button>
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Relatórios'"
+      (click)="filtrar('Relatórios')">
+      Relatórios
+    </button>
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Planos'"
+      (click)="filtrar('Planos')">
+      Planos
+    </button>
+    <button 
+      class="chip" 
+      [class.is-active]="filtroAtivo === 'Políticas'"
+      (click)="filtrar('Políticas')">
+      Políticas
+    </button>
+  </div>
+
+  <!-- Lista Dinâmica -->
+  <div class="docs-list">
+    <article 
+      class="doc-item card" 
+      *ngFor="let doc of documentosFiltrados; let i = index"
+      [attr.data-index]="i">
+      <div class="doc-icon" [style.background]="'linear-gradient(135deg, ' + doc.cor + '15 0%, ' + doc.cor + '08 100%)'">
+        <span [style.filter]="'drop-shadow(0 2px 4px ' + doc.cor + '40)'">{{ doc.icon }}</span>
+      </div>
+      <div class="doc-main">
+        <h2>{{ doc.titulo }}</h2>
+        <p>{{ doc.descricao }}</p>
+        <div class="meta">
+          <span class="badge" [style.background]="doc.cor + '15'" [style.color]="doc.cor">{{ doc.tipo }}</span>
+          <span class="muted">{{ doc.tamanho }}</span>
+        </div>
+      </div>
+      <div class="doc-actions">
+        <a class="btn btn-secondary" [href]="doc.url || '#'" target="_blank" rel="noopener">Ver</a>
+        <a class="btn btn-primary" [href]="doc.url || '#'" download>
+          Baixar
+        </a>
+      </div>
+    </article>
+  </div>
+  
+  <!-- Mensagem quando não há documentos -->
+  <div class="empty-state" *ngIf="documentosFiltrados.length === 0">
+    <div class="empty-icon">📂</div>
+    <h3>Nenhum documento encontrado</h3>
+    <p>Não há documentos nesta categoria no momento.</p>
+  </div>
+</section>

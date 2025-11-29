@@ -1,0 +1,40 @@
+// User Info Component Styles
+.user-session-card {
+  padding: 0.5rem 0.25rem 1rem 0.25rem;
+  margin: 0 1.5rem 0.5rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  
+  .session-line {
+    margin: 0;
+    display: flex;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: #2c3e50;
+
+    &.session-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      color: #6c757d;
+  }
+  
+    &.session-date {
+      font-size: 0.8rem;
+      color: #6c757d;
+  }
+  
+    .session-label {
+      font-weight: 600;
+      color: #5b6472;
+    }
+    
+    .session-value {
+      font-weight: 500;
+      color: #1f2d3d;
+    }
+  }
+}

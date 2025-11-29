@@ -1,0 +1,34 @@
+<div class="eventos-grid">
+  <article class="evento-card" *ngFor="let evento of eventosFiltrados">
+    <div class="evento-imagem">
+      <img [src]="evento.imagem" [alt]="evento.titulo" loading="lazy">
+      <span class="badge" [class.proximo]="evento.status === 'proximo'" [class.realizado]="evento.status === 'realizado'">
+        {{ evento.status === 'proximo' ? 'Próximo' : 'Realizado' }}
+      </span>
+    </div>
+    <div class="evento-content">
+      <h3 class="evento-titulo">{{ evento.titulo }}</h3>
+      <p class="evento-descricao">{{ evento.descricao }}</p>
+      
+      <div class="evento-info">
+        <div class="info-item">
+          <span class="info-icon">📅</span>
+          <span>{{ evento.data }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">📍</span>
+          <span>{{ evento.local }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-icon">🕐</span>
+          <span>{{ evento.hora }}</span>
+        </div>
+      </div>
+      
+      <button class="btn" *ngIf="evento.status === 'proximo'" (click)="inscreverSe(evento.id)">
+        Inscrever-se
+      </button>
+    </div>
+  </article>
+</div>
+

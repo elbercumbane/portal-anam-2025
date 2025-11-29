@@ -1,0 +1,79 @@
+<section class="login-page">
+  <div class="login-header">
+    <div class="brand-section">
+      <div class="brand-title">ANAM</div>
+      <div class="brand-subtitle">
+        <div>Associação de Naturais e</div>
+        <div>Amigos de Massinga</div>
+      </div>
+    </div>
+    <button mat-raised-button routerLink="/" class="portal-button">
+      <mat-icon>home</mat-icon>
+      <span>Ir ao Portal</span>
+    </button>
+  </div>
+
+  <div class="login-card">
+    <div class="card-header">
+      <div class="header-text">
+        <h1>ANAM</h1>
+        <p class="anam-definition">Associação de Naturais e Amigos de Massinga</p>
+        <span>Login</span>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="login($event)" class="login-form">
+      <mat-form-field appearance="outline" class="form-field-enhanced">
+        <mat-label>Email</mat-label>
+        <input 
+          matInput 
+          type="email" 
+          formControlName="email" 
+          placeholder="seu@email.com"
+          autocomplete="email" />
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field-enhanced">
+        <mat-label>Senha</mat-label>
+        <input 
+          matInput 
+          [type]="hidePassword ? 'password' : 'text'"
+          formControlName="senha" 
+          placeholder="••••••••"
+          autocomplete="current-password" />
+        <mat-icon matPrefix>lock</mat-icon>
+        <button 
+          mat-icon-button 
+          matSuffix 
+          type="button"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="'Mostrar senha'"
+          [attr.aria-pressed]="!hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div class="form-options">
+        <a href="#" class="forgot-password">
+          <mat-icon>help_outline</mat-icon>
+          <span>Esqueci minha senha</span>
+        </a>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="btn-login"
+          [disabled]="isLoading">
+          <mat-icon *ngIf="!isLoading">login</mat-icon>
+          <mat-icon *ngIf="isLoading" class="spinning">refresh</mat-icon>
+          <span>{{ isLoading ? 'Entrando...' : 'Entrar' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+

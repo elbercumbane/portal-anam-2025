@@ -1,0 +1,377 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Formulário de Candidatura</h1>
+    <p *ngIf="projeto">{{ projeto.titulo }}</p>
+  </div>
+
+  <div class="form-container">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+      </div>
+      <div class="progress-text">
+        Passo {{ currentStep }} de {{ totalSteps }}: {{ getStepTitle(currentStep) }}
+      </div>
+    </div>
+
+    <form (ngSubmit)="submitForm()" #candidaturaForm="ngForm">
+      <!-- Step 1: Dados da Organização -->
+      <div class="form-step" *ngIf="currentStep === 1">
+        <h2>Dados da Organização</h2>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nomeOrganizacao">Nome da Organização *</label>
+            <input 
+              type="text" 
+              id="nomeOrganizacao" 
+              name="nomeOrganizacao"
+              [(ngModel)]="formData.nomeOrganizacao" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="tipoOrganizacao">Tipo de Organização *</label>
+            <select 
+              id="tipoOrganizacao" 
+              name="tipoOrganizacao"
+              [(ngModel)]="formData.tipoOrganizacao" 
+              required
+              class="form-control">
+              <option value="">Selecione...</option>
+              <option *ngFor="let tipo of tiposOrganizacao" [value]="tipo">{{ tipo }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nif">NIF *</label>
+            <input 
+              type="text" 
+              id="nif" 
+              name="nif"
+              [(ngModel)]="formData.nif" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="endereco">Endereço *</label>
+            <input 
+              type="text" 
+              id="endereco" 
+              name="endereco"
+              [(ngModel)]="formData.endereco" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="cidade">Cidade *</label>
+            <input 
+              type="text" 
+              id="cidade" 
+              name="cidade"
+              [(ngModel)]="formData.cidade" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="provincia">Província *</label>
+            <select 
+              id="provincia" 
+              name="provincia"
+              [(ngModel)]="formData.provincia" 
+              required
+              class="form-control">
+              <option value="">Selecione...</option>
+              <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone *</label>
+            <input 
+              type="tel" 
+              id="telefone" 
+              name="telefone"
+              [(ngModel)]="formData.telefone" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email"
+              [(ngModel)]="formData.email" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="website">Website</label>
+            <input 
+              type="url" 
+              id="website" 
+              name="website"
+              [(ngModel)]="formData.website" 
+              class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Dados do Representante -->
+      <div class="form-step" *ngIf="currentStep === 2">
+        <h2>Dados do Representante Legal</h2>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nomeRepresentante">Nome Completo *</label>
+            <input 
+              type="text" 
+              id="nomeRepresentante" 
+              name="nomeRepresentante"
+              [(ngModel)]="formData.nomeRepresentante" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="cargo">Cargo na Organização *</label>
+            <input 
+              type="text" 
+              id="cargo" 
+              name="cargo"
+              [(ngModel)]="formData.cargo" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="telefoneRepresentante">Telefone *</label>
+            <input 
+              type="tel" 
+              id="telefoneRepresentante" 
+              name="telefoneRepresentante"
+              [(ngModel)]="formData.telefoneRepresentante" 
+              required
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="emailRepresentante">Email *</label>
+            <input 
+              type="email" 
+              id="emailRepresentante" 
+              name="emailRepresentante"
+              [(ngModel)]="formData.emailRepresentante" 
+              required
+              class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Detalhes do Projeto -->
+      <div class="form-step" *ngIf="currentStep === 3">
+        <h2>Detalhes do Projeto</h2>
+        
+        <div class="form-group">
+          <label for="tituloProjeto">Título do Projeto *</label>
+          <input 
+            type="text" 
+            id="tituloProjeto" 
+            name="tituloProjeto"
+            [(ngModel)]="formData.tituloProjeto" 
+            required
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="descricaoProjeto">Descrição Detalhada do Projeto *</label>
+          <textarea 
+            id="descricaoProjeto" 
+            name="descricaoProjeto"
+            [(ngModel)]="formData.descricaoProjeto" 
+            required
+            rows="4"
+            class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="objetivos">Objetivos Específicos *</label>
+          <textarea 
+            id="objetivos" 
+            name="objetivos"
+            [(ngModel)]="formData.objetivos" 
+            required
+            rows="3"
+            class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="metodologia">Metodologia de Implementação *</label>
+          <textarea 
+            id="metodologia" 
+            name="metodologia"
+            [(ngModel)]="formData.metodologia" 
+            required
+            rows="4"
+            class="form-control"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="cronograma">Cronograma de Atividades *</label>
+          <textarea 
+            id="cronograma" 
+            name="cronograma"
+            [(ngModel)]="formData.cronograma" 
+            required
+            rows="3"
+            class="form-control"></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="orcamento">Orçamento Solicitado (MZN) *</label>
+            <input 
+              type="text" 
+              id="orcamento" 
+              name="orcamento"
+              [(ngModel)]="formData.orcamento" 
+              required
+              placeholder="Ex: 2.5M MZN"
+              class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="contrapartida">Contrapartida da Organização *</label>
+            <input 
+              type="text" 
+              id="contrapartida" 
+              name="contrapartida"
+              [(ngModel)]="formData.contrapartida" 
+              required
+              placeholder="Ex: 20% do valor total"
+              class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Anexos e Confirmação -->
+      <div class="form-step" *ngIf="currentStep === 4">
+        <h2>Anexos e Confirmação</h2>
+        
+        <div class="form-group">
+          <label for="estatutos">Estatutos da Organização *</label>
+          <input 
+            type="file" 
+            id="estatutos" 
+            name="estatutos"
+            (change)="onFileSelected($event, 'estatutos')"
+            accept=".pdf,.doc,.docx"
+            required
+            class="form-control">
+          <small class="form-text">Formatos aceites: PDF, DOC, DOCX</small>
+        </div>
+
+        <div class="form-group">
+          <label for="nifDocument">Documento do NIF *</label>
+          <input 
+            type="file" 
+            id="nifDocument" 
+            name="nifDocument"
+            (change)="onFileSelected($event, 'nifDocument')"
+            accept=".pdf,.jpg,.jpeg,.png"
+            required
+            class="form-control">
+          <small class="form-text">Formatos aceites: PDF, JPG, PNG</small>
+        </div>
+
+        <div class="form-group">
+          <label for="projetoPowerPoint">Apresentação do Projeto (PowerPoint) *</label>
+          <input 
+            type="file" 
+            id="projetoPowerPoint" 
+            name="projetoPowerPoint"
+            (change)="onFileSelected($event, 'projetoPowerPoint')"
+            accept=".ppt,.pptx"
+            required
+            class="form-control">
+          <small class="form-text">Formatos aceites: PPT, PPTX</small>
+        </div>
+
+        <div class="form-group">
+          <label for="outrosDocumentos">Outros Documentos</label>
+          <input 
+            type="file" 
+            id="outrosDocumentos" 
+            name="outrosDocumentos"
+            (change)="onMultipleFilesSelected($event, 'outrosDocumentos')"
+            multiple
+            class="form-control">
+          <small class="form-text">Documentos adicionais que considere relevantes</small>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="aceitaTermos"
+                [(ngModel)]="formData.aceitaTermos" 
+                required>
+              <span class="checkmark"></span>
+              Aceito os termos e condições da candidatura *
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                name="autorizaDados"
+                [(ngModel)]="formData.autorizaDados" 
+                required>
+              <span class="checkmark"></span>
+              Autorizo o tratamento dos meus dados pessoais *
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="form-navigation">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="prevStep()" 
+          [disabled]="currentStep === 1">
+          Anterior
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          (click)="nextStep()" 
+          *ngIf="currentStep < totalSteps">
+          Próximo
+        </button>
+        
+        <button 
+          type="submit" 
+          class="btn btn-success" 
+          *ngIf="currentStep === totalSteps"
+          [disabled]="!candidaturaForm.form.valid">
+          Submeter Candidatura
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

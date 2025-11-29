@@ -1,0 +1,267 @@
+:root{
+  --blue-600:#2563EB; 
+  --blue-500:#3B82F6; 
+  --blue-soft:#E8F1FF;
+  --ink-900:#0F172A; 
+  --ink-600:#334155;
+  --brown-text:#8A7D65;
+  --brown-soft:#A0957A;
+  --brown-light:#B5A88A;
+  --brown-pale:#C4B59A;
+}
+
+.historial{ 
+  padding:56px 0; 
+  background:#fff; 
+  text-align:center; 
+}
+
+/* Container agora é global - removido regra local */
+
+.historial h2{ 
+  color:var(--brown-text); 
+  font-weight:800; 
+  font-size:clamp(1.6rem, 1.5vw + 1rem, 2.2rem); 
+  margin-bottom: 1rem;
+}
+
+.historial .lead{ 
+  color:var(--ink-600); 
+  max-width:80ch; 
+  margin:10px auto 28px; 
+  line-height: 1.6;
+}
+
+/* Container dos Cards */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 40px;
+  padding-bottom: 40px;
+
+  @media(min-width: 980px) {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+  }
+}
+
+/* Cards Circulares Modernos */
+.circular-card {
+  background: transparent;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  padding: 35px 25px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  overflow: hidden;
+  
+  /* Efeito de vidro moderno */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  
+  &:hover {
+    transform: translateY(-20px) scale(1.08);
+    box-shadow: 
+      0 30px 60px rgba(0, 0, 0, 0.15),
+      0 15px 30px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  @media(max-width: 979px) {
+    width: 280px;
+    height: 280px;
+    padding: 30px 20px;
+  }
+}
+
+
+/* Ícones dos Cards Modernos */
+.card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+  color: #B5A88A;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+}
+
+.circular-card:hover .card-icon {
+  transform: scale(1.15) rotate(8deg);
+}
+
+/* Cores específicas para cada card - harmonizadas com a página */
+.missao-card .card-icon {
+  color: #8A7D65;
+}
+
+.missao-card:hover .card-icon {
+  color: #6B5B47;
+}
+
+.visao-card .card-icon {
+  color: #A0957A;
+}
+
+.visao-card:hover .card-icon {
+  color: #8A7D65;
+}
+
+/* Detalhes dos Cards Modernos */
+.card-details {
+  margin-top: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.circular-card:hover .card-details {
+  max-height: 300px;
+  margin-top: 20px;
+  opacity: 1;
+}
+
+
+/* Títulos e Textos Modernos */
+.circular-card h3 { 
+  color: #2c3e50; 
+  font-weight: 600; 
+  margin-bottom: 15px; 
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 2;
+}
+
+.circular-card p {
+  color: #6c757d;
+  line-height: 1.5;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+  max-width: 240px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+}
+
+.balao p, .balao li{ 
+  color:var(--brown-light); 
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* Listas Modernas */
+.bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 220px;
+}
+
+.bullets li{ 
+  position: relative; 
+  padding-left: 20px; 
+  margin: 0.4rem 0; 
+  color: #6c757d;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.bullets li::before{ 
+  content: "•"; 
+  position: absolute; 
+  left: 0; 
+  top: 0; 
+  color: #007bff;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Pill Moderna */
+.pill{ 
+  background: transparent; 
+  border-radius: 16px; 
+  padding: 18px 20px; 
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 15px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  max-width: 220px;
+}
+
+.pill h4 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+}
+
+.pill ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pill li {
+  position: relative;
+  padding-left: 18px;
+  margin: 0.35rem 0;
+  color: #6c757d;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.pill li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Animações GSAP - removidas animações CSS antigas */
+

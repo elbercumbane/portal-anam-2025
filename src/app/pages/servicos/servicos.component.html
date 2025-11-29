@@ -1,0 +1,128 @@
+<!-- Página Serviços -->
+<main class="servicos-page">
+  
+  <!-- Hero Section -->
+  <section class="s-hero" aria-labelledby="srv-title">
+    <div class="container">
+      <h1 id="srv-title">Serviços</h1>
+      <p class="lead">
+        Uma oferta completa para apoiar o crescimento e competitividade dos nossos associados.
+      </p>
+    </div>
+  </section>
+
+  <!-- Benefícios rápidos -->
+  <section class="s-benefits" aria-label="Benefícios dos serviços">
+    <div class="container">
+      <ul class="benefits" role="list">
+        <li class="benefit" role="listitem">
+          <div class="benefit__icon">⚡</div>
+          <div class="benefit__text">
+            <h3>Acelere o Crescimento</h3>
+            <p>Programas práticos para resultados reais.</p>
+          </div>
+        </li>
+        <li class="benefit" role="listitem">
+          <div class="benefit__icon">🤝</div>
+          <div class="benefit__text">
+            <h3>Rede de Parcerias</h3>
+            <p>Conexões que geram oportunidades.</p>
+          </div>
+        </li>
+        <li class="benefit" role="listitem">
+          <div class="benefit__icon">🎯</div>
+          <div class="benefit__text">
+            <h3>Consultoria Direcionada</h3>
+            <p>Suporte especializado para o seu desafio.</p>
+          </div>
+        </li>
+        <li class="benefit" role="listitem">
+          <div class="benefit__icon">📚</div>
+          <div class="benefit__text">
+            <h3>Recursos e Ferramentas</h3>
+            <p>Acesso a conteúdos e fornecedores.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Grid de Serviços -->
+  <section class="s-grid" aria-label="Lista de serviços">
+    <div class="container">
+      <div class="grid">
+        <article 
+          *ngFor="let service of services" 
+          class="card"
+          [attr.aria-labelledby]="getServiceId(service)"
+        >
+          <div class="iconwrap">
+            <span class="icon" [attr.aria-hidden]="true">{{ service.icon }}</span>
+          </div>
+          <h2 [id]="getServiceId(service)">{{ service.title }}</h2>
+          <div class="tags" *ngIf="getTags(service).length">
+            <span class="tag" *ngFor="let tag of getTags(service)">{{ tag }}</span>
+          </div>
+          <p>{{ service.description }}</p>
+          <ul class="checks" role="list">
+            <li *ngFor="let feature of service.features" role="listitem">
+              <span class="check-icon" aria-hidden="true">✓</span>
+              {{ feature }}
+            </li>
+          </ul>
+          <a 
+            [routerLink]="service.ctaLink" 
+            class="btn btn-primary"
+            [attr.aria-label]="service.ctaText + ' - ' + service.title"
+          >
+            {{ service.ctaText }}
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção Como Funciona -->
+  <section class="s-how" aria-labelledby="how-title">
+    <div class="container">
+      <h2 id="how-title">Como Funciona</h2>
+      <div class="steps">
+        <div 
+          *ngFor="let step of steps" 
+          class="step"
+          [attr.aria-labelledby]="getStepId(step)"
+        >
+          <div class="bubble" [attr.aria-label]="getStepAriaLabel(step)">{{ step.number }}</div>
+          <h3 [id]="getStepId(step)">{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </div>
+      </div>
+      <div class="cta">
+        <a 
+          routerLink="/associar-se" 
+          class="btn btn-primary btn-lg"
+          aria-label="Torne-se membro da ANAM hoje"
+        >
+          Torne-se Membro Hoje
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="s-cta" aria-labelledby="cta-title">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-text">
+          <h2 id="cta-title">Pronto para levar a sua empresa ao próximo nível?</h2>
+          <p>Fale com a nossa equipa e descubra como podemos apoiar o seu crescimento.</p>
+        </div>
+        <div class="cta-actions">
+          <a routerLink="/contato" class="btn btn-primary" aria-label="Fale com a nossa equipa">Fale Connosco</a>
+          <a routerLink="/eventos" class="btn btn-secondary" aria-label="Veja a agenda de eventos">Ver Agenda</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

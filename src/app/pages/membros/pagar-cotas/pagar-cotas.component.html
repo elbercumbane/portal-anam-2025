@@ -1,0 +1,148 @@
+<div class="pagar-cotas-container">
+  <div class="page-header">
+    <h1>Pagar Cotas</h1>
+    <p>Cota: {{ valorCota | number }} MT/mês</p>
+  </div>
+
+  <div class="content-wrapper">
+    <!-- Seleção de Meses -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>Selecionar Meses</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="meses-grid">
+          <div 
+            *ngFor="let mes of meses" 
+            class="mes-card"
+            [class.selected]="mes.selected"
+            (click)="toggleMes(mes.value)">
+            <mat-checkbox 
+              [checked]="mes.selected"
+              (change)="toggleMes(mes.value)"
+              (click)="$event.stopPropagation()">
+            </mat-checkbox>
+            <span class="mes-label">{{ mes.label }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Resumo e Método de Pagamento -->
+    <mat-card class="section-card" *ngIf="quantidadeMeses > 0">
+      <mat-card-header>
+        <mat-card-title>Resumo e Pagamento</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Resumo -->
+        <div class="resumo-compacto">
+          <div class="resumo-item">
+            <span class="label">Meses:</span>
+            <span class="value">{{ mesesSelecionadosLabels }}</span>
+          </div>
+          <div class="resumo-item">
+            <span class="label">Quantidade:</span>
+            <span class="value">{{ quantidadeMeses }} mês{{ quantidadeMeses > 1 ? 'es' : '' }}</span>
+          </div>
+          <div class="resumo-item calculo">
+            <span class="label">Cálculo:</span>
+            <span class="value">{{ calculoDetalhado }}</span>
+          </div>
+          <div class="resumo-item total">
+            <span class="label">Total:</span>
+            <span class="value">{{ valorTotal | number }} MT</span>
+          </div>
+        </div>
+
+        <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+
+        <!-- Método de Pagamento -->
+        <form [formGroup]="paymentForm" class="payment-form">
+          <div class="payment-methods">
+            <div 
+              class="payment-method-card"
+              [class.selected]="metodoPagamento === 'mpesa'"
+              (click)="selecionarMetodoPagamento('mpesa')">
+              <mat-radio-button 
+                value="mpesa"
+                formControlName="metodoPagamento"
+                (click)="$event.stopPropagation()">
+              </mat-radio-button>
+              <div class="method-icon mpesa-icon">
+                <span class="icon-text">M-Pesa</span>
+              </div>
+            </div>
+
+            <div 
+              class="payment-method-card"
+              [class.selected]="metodoPagamento === 'emola'"
+              (click)="selecionarMetodoPagamento('emola')">
+              <mat-radio-button 
+                value="emola"
+                formControlName="metodoPagamento"
+                (click)="$event.stopPropagation()">
+              </mat-radio-button>
+              <div class="method-icon emola-icon">
+                <span class="icon-text">Emola</span>
+              </div>
+            </div>
+
+            <div 
+              class="payment-method-card"
+              [class.selected]="metodoPagamento === 'visa'"
+              (click)="selecionarMetodoPagamento('visa')">
+              <mat-radio-button 
+                value="visa"
+                formControlName="metodoPagamento"
+                (click)="$event.stopPropagation()">
+              </mat-radio-button>
+              <div class="method-icon visa-icon">
+                <span class="icon-text">Visa</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field-wrapper" *ngIf="metodoPagamento && metodoPagamento !== 'visa'">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de Telefone</mat-label>
+              <input 
+                matInput 
+                type="tel"
+                formControlName="telefone"
+                placeholder="84 123 4567"
+                maxlength="9">
+              <mat-icon matPrefix>phone</mat-icon>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('required')">
+                Número de telefone é obrigatório
+              </mat-error>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('pattern')">
+                Digite um número válido (9 dígitos)
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botão de Pagamento -->
+    <div class="action-buttons">
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="btn-pagar"
+        [disabled]="quantidadeMeses === 0 || !metodoPagamento || paymentForm.invalid"
+        (click)="processarPagamento()">
+        <mat-icon>payment</mat-icon>
+        <span>{{ textoBotaoPagamento }}</span>
+      </button>
+      <button 
+        mat-stroked-button 
+        routerLink="/membros"
+        class="btn-cancelar">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Voltar</span>
+      </button>
+    </div>
+  </div>
+</div>
+

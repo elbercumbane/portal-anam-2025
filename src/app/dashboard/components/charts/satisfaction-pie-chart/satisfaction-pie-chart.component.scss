@@ -1,0 +1,98 @@
+:host {
+  display: block;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+
+    mat-icon {
+      color: #3b82f6;
+    }
+  }
+
+  mat-card-subtitle {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+}
+
+.chart-container-medium {
+  padding: 1rem 0;
+}
+
+.pie-chart {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .pie-svg {
+    width: 200px;
+    height: 200px;
+
+    .pie-segment {
+      transition: all 0.3s ease;
+      transform-origin: center;
+
+      &:hover {
+        stroke-width: 20;
+        transform: scale(1.05);
+      }
+    }
+
+    .pie-center {
+      fill: white;
+      stroke: #e5e7eb;
+      stroke-width: 2;
+    }
+
+    .pie-center-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      fill: #1e293b;
+    }
+  }
+
+  .pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+      }
+
+      span {
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 0;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
