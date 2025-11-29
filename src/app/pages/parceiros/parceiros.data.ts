@@ -1,31 +1,103 @@
 export type Partner = {
   id: string;
   nome: string;
-  categoria: 'Tecnologia' | 'Serviços' | 'Comércio';
+  categoria: 'Governo' | 'Associação' | 'ONG' | 'Empresa' | 'Internacional';
   descricao: string;
-  membroDesde: string;   // "desde 2020" ou "2019"
-  initials: string;      // "EA", "EB", "EC"...
-  logoUrl?: string;      // URL do logo da empresa
-  perfilUrl?: string;    // link externo opcional
+  membroDesde: string;
+  initials: string;
+  logoUrl?: string;
+  perfilUrl?: string;
+  icon: string;
+  cor: string;
 };
 
 export const PARTNERS: Partner[] = [
-  { id:'ea', nome:'Empresa Alfa', categoria:'Tecnologia', initials:'EA',
-    descricao:'Especializada em soluções digitais para empresas, com transformação digital e consultoria de software.',
-    membroDesde:'2020', logoUrl:'https://via.placeholder.com/48x48/2563EB/FFFFFF?text=EA', perfilUrl:'#' },
-  { id:'eb', nome:'Empresa Beta', categoria:'Serviços', initials:'EB',
-    descricao:'Consultoria empresarial focada em gestão financeira e planeamento estratégico.',
-    membroDesde:'2019', logoUrl:'https://via.placeholder.com/48x48/059669/FFFFFF?text=EB', perfilUrl:'#' },
-  { id:'ec', nome:'Empresa Gama', categoria:'Comércio', initials:'EC',
-    descricao:'Distribuidora de produtos locais, conectando produtores rurais com mercados urbanos da região.',
-    membroDesde:'2021', logoUrl:'https://via.placeholder.com/48x48/DC2626/FFFFFF?text=EC', perfilUrl:'#' },
-  { id:'ed', nome:'Empresa Delta', categoria:'Tecnologia', initials:'ED',
-    descricao:'IoT para agricultura, ajudando produtores a otimizar colheitas.',
-    membroDesde:'2022', logoUrl:'https://via.placeholder.com/48x48/7C3AED/FFFFFF?text=ED', perfilUrl:'#' },
-  { id:'ee', nome:'Empresa Épsilon', categoria:'Serviços', initials:'EE',
-    descricao:'Agência de marketing digital para PMEs (redes sociais e e-commerce).',
-    membroDesde:'2020', logoUrl:'https://via.placeholder.com/48x48/EA580C/FFFFFF?text=EE', perfilUrl:'#' },
-  { id:'ez', nome:'Empresa Zeta', categoria:'Comércio', initials:'EZ',
-    descricao:'Materiais de construção com foco sustentável; produtos ecológicos e reciclados.',
-    membroDesde:'2018', logoUrl:'https://via.placeholder.com/48x48/0891B2/FFFFFF?text=EZ', perfilUrl:'#' },
+  { 
+    id: 'mireme', 
+    nome: 'MIREME', 
+    categoria: 'Governo', 
+    initials: 'MI',
+    descricao: 'Ministério dos Recursos Minerais e Energia de Moçambique, parceiro estratégico no desenvolvimento energético.',
+    membroDesde: '2019',
+    icon: 'government',
+    cor: '#1B4332',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'cta', 
+    nome: 'CTA', 
+    categoria: 'Associação', 
+    initials: 'CT',
+    descricao: 'Confederação das Associações Económicas de Moçambique, promovendo o desenvolvimento empresarial.',
+    membroDesde: '2018',
+    icon: 'business',
+    cor: '#2563EB',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'unido', 
+    nome: 'UNIDO', 
+    categoria: 'Internacional', 
+    initials: 'UN',
+    descricao: 'Organização das Nações Unidas para o Desenvolvimento Industrial, apoiando projetos de industrialização.',
+    membroDesde: '2020',
+    icon: 'globe',
+    cor: '#0891B2',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'aneme', 
+    nome: 'ANEME', 
+    categoria: 'Associação', 
+    initials: 'AN',
+    descricao: 'Associação Nacional das Empresas Metalúrgicas e Electromecânicas, fortalecendo a indústria nacional.',
+    membroDesde: '2019',
+    icon: 'industry',
+    cor: '#DC2626',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'twf', 
+    nome: 'TWF', 
+    categoria: 'ONG', 
+    initials: 'TW',
+    descricao: 'The World Foundation, fundação internacional focada em desenvolvimento sustentável e educação.',
+    membroDesde: '2021',
+    icon: 'heart',
+    cor: '#059669',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'evolen', 
+    nome: 'EVOLEN', 
+    categoria: 'Empresa', 
+    initials: 'EV',
+    descricao: 'Empresa líder em soluções energéticas e tecnológicas para o mercado moçambicano.',
+    membroDesde: '2020',
+    icon: 'lightning',
+    cor: '#EA580C',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'xhub', 
+    nome: 'XHUB', 
+    categoria: 'Empresa', 
+    initials: 'XH',
+    descricao: 'Hub de inovação e tecnologia, acelerando startups e promovendo empreendedorismo digital.',
+    membroDesde: '2022',
+    icon: 'rocket',
+    cor: '#7C3AED',
+    perfilUrl: '#'
+  },
+  { 
+    id: 'indico', 
+    nome: 'Banco Índico', 
+    categoria: 'Empresa', 
+    initials: 'BI',
+    descricao: 'Instituição financeira comprometida com o crescimento económico e inclusão financeira.',
+    membroDesde: '2019',
+    icon: 'bank',
+    cor: '#0369A1',
+    perfilUrl: '#'
+  },
 ];

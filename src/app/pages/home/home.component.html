@@ -3,18 +3,22 @@
   <div class="slider" #slider>
     <div class="slide" style="background-image: url('/assets/FOTO1 ANAM.jpeg')"></div>
     <div class="slide" style="background-image: url('/assets/FOTO 4 ANAM.jpeg')"></div>
+    <div class="slide" style="background-image: url('/assets/FOTO 3 ANAM.jpeg')"></div>
   </div>
   <div class="hero__scrim hero__scrim--bright"></div>
   <div class="hero-content hero__content" #heroContent>
-    <h1 id="hero-title" class="hero__title" #heroTitle></h1>
-    <p #heroSubtitle></p>
+    <h1 id="hero-title" class="hero__title" #heroTitle [class.mission-vision-title]="currentSlide !== 0"></h1>
+    <div class="hero-subtitle-box" [class.active]="currentSlide !== 0" #heroSubtitleBox>
+      <div class="subtitle-glow"></div>
+      <p #heroSubtitle></p>
+    </div>
     <!-- Ações removidas conforme solicitado -->
   </div>
   
   <!-- Controles do Slider -->
   <div class="hero-dots">
     <button 
-      *ngFor="let slide of [0, 1]; let i = index"
+      *ngFor="let slide of [0, 1, 2]; let i = index"
       class="hero-dot" 
       [class.active]="currentSlide === i"
       (click)="goToSlide(i)"

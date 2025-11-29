@@ -1,357 +1,592 @@
-.projetos-grid {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  padding: 20px 0;
+// ========================================
+// PROJECTOS ACTIVOS - DESIGN ESPETACULAR
+// ========================================
+
+// Variáveis
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$gold-primary: #D4AF37;
+$gold-dark: #B8860B;
+$brown-warm: #8A7D65;
+$brown-light: #A68B5B;
+
+// ============ INTRO DA SECÇÃO ============
+.ativos-page {
+  padding: 20px 0 40px;
+}
+
+.section-intro {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: fadeInUp 0.6s ease;
   
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba($green-dark, 0.1) 0%, rgba($green-medium, 0.1) 100%);
+    border: 1px solid rgba($green-dark, 0.2);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $green-medium;
+    }
+    
+    span {
+      color: $green-dark;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+  }
+  
+  .intro-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 15px;
+    
+    .gold {
+      color: $gold-primary;
+    }
+  }
+  
+  .intro-text {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
 }
 
-.projeto {
-  background: #fff;
-  border: 1px solid rgba(138, 125, 101, 0.12);
-  border-radius: 24px;
-  padding: 32px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.04);
-  position: relative;
-  overflow: hidden;
+// ============ SHOWCASE GRID ============
+.projectos-showcase {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #8A7D65 0%, #D4AF37 100%);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+// ============ CARD DO PROJECTO ============
+.projecto-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.08),
+    0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  opacity: 0;
+  animation: cardEntrance 0.6s ease forwards;
+  
+  @for $i from 0 through 5 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.15}s;
+    }
   }
   
   &:hover {
-    transform: translateY(-8px);
+    transform: translateY(-12px);
     box-shadow: 
-      0 20px 50px rgba(0, 0, 0, 0.12),
-      0 8px 20px rgba(0, 0, 0, 0.08);
-    border-color: rgba(138, 125, 101, 0.25);
+      0 25px 60px rgba(0, 0, 0, 0.15),
+      0 10px 25px rgba(0, 0, 0, 0.1);
     
-    &::before {
-      transform: scaleX(1);
+    .card-visual {
+      .visual-gradient {
+        opacity: 0.85;
+      }
+      
+      .visual-icon svg {
+        transform: scale(1.15) rotate(5deg);
+      }
     }
+    
+    .card-decoration {
+      transform: scale(1.5);
+      opacity: 0.15;
+    }
+    
+    .btn-primary {
+      transform: translateX(5px);
+    }
+  }
+  
+  .card-decoration {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba($gold-primary, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    pointer-events: none;
   }
 }
 
-.projeto-header {
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ VISUAL DO CARD ============
+.card-visual {
+  position: relative;
+  height: 160px;
+  background: linear-gradient(135deg, $green-dark 0%, $green-medium 50%, $brown-warm 100%);
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   
-  h3 {
-    color: #0F172A;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    margin: 0;
-    font-weight: 800;
-    line-height: 1.3;
-    flex: 1;
+  .visual-gradient {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba($gold-primary, 0.2) 0%, transparent 50%);
+    opacity: 1;
+    transition: opacity 0.4s ease;
   }
   
-  .badge.ativo {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-    color: #fff;
+  .visual-icon {
+    position: relative;
+    z-index: 2;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    
+    svg {
+      width: 40px;
+      height: 40px;
+      stroke: white;
+      transition: transform 0.4s ease;
+    }
+  }
+  
+  .status-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(16, 185, 129, 0.95);
     border-radius: 50px;
-    padding: 8px 16px;
+    color: white;
     font-weight: 700;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    white-space: nowrap;
-    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    
+    .pulse {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
   }
 }
 
-.projeto-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.chip {
-  background: rgba(138, 125, 101, 0.08);
-  border: 1px solid rgba(138, 125, 101, 0.15);
-  color: #7A6D55;
-  border-radius: 50px;
-  padding: 8px 14px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: rgba(138, 125, 101, 0.12);
-    border-color: rgba(138, 125, 101, 0.25);
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
   }
 }
 
-.projeto-descricao {
-  color: #475569;
+// ============ CORPO DO CARD ============
+.card-body {
+  padding: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.projecto-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.projecto-descricao {
+  font-size: 0.95rem;
+  color: #666;
   line-height: 1.7;
-  margin-bottom: 24px;
-  font-size: 1rem;
+  margin: 0 0 25px;
 }
 
-.projeto-progress {
-  margin-bottom: 24px;
+// ============ SECÇÃO DE PROGRESSO ============
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba($green-dark, 0.03) 0%, rgba($brown-warm, 0.05) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba($brown-warm, 0.1);
+}
+
+.progress-circle {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  flex-shrink: 0;
   
-  .progress-track {
-    height: 12px;
-    background: #F1F5F9;
-    border-radius: 50px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  
+  .progress-bg {
+    fill: none;
+    stroke: rgba($brown-warm, 0.15);
+    stroke-width: 8;
   }
   
   .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #8A7D65 0%, #A68B5B 50%, #D4AF37 100%);
-    border-radius: 50px;
-    transition: width 0.6s ease;
-    position: relative;
-    overflow: hidden;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.3) 50%,
-        transparent 100%
-      );
-      animation: shimmer 2s infinite;
-    }
+    fill: none;
+    stroke: url(#progressGradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke: $gold-primary;
+    transition: stroke-dasharray 1s ease;
   }
   
-  .progress-label {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #64748B;
-    font-weight: 700;
+  .progress-value {
+    position: absolute;
+    inset: 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+    .number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: $green-dark;
+      line-height: 1;
+    }
+    
+    .percent {
+      font-size: 0.7rem;
+      color: $brown-warm;
+      font-weight: 700;
+    }
   }
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
+.progress-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #666;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $brown-warm;
+      flex-shrink: 0;
+    }
+    
+    &.highlight {
+      font-weight: 700;
+      color: $green-dark;
+      font-size: 1.05rem;
+      
+      svg {
+        stroke: $gold-primary;
+      }
+    }
   }
 }
 
-.kpis {
+// ============ KPIs ============
+.kpis-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
-  padding: 20px;
-  background: linear-gradient(135deg, rgba(138, 125, 101, 0.03) 0%, rgba(138, 125, 101, 0.08) 100%);
-  border-radius: 16px;
-  border: 1px solid rgba(138, 125, 101, 0.1);
+  margin-bottom: 25px;
 }
 
-.kpi {
+.kpi-item {
   text-align: center;
-  padding: 12px;
+  padding: 14px 10px;
   background: white;
-  border-radius: 12px;
-  border: 1px solid rgba(138, 125, 101, 0.1);
+  border: 1px solid rgba($brown-warm, 0.12);
+  border-radius: 14px;
   transition: all 0.3s ease;
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-color: rgba(138, 125, 101, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: rgba($gold-primary, 0.3);
+    
+    .kpi-icon {
+      background: linear-gradient(135deg, $gold-primary 0%, $gold-dark 100%);
+      
+      svg {
+        stroke: white;
+      }
+    }
+  }
+  
+  .kpi-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 10px;
+    background: rgba($gold-primary, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $gold-primary;
+      transition: stroke 0.3s ease;
+    }
   }
   
   .kpi-value {
     display: block;
-    font-weight: 900;
-    color: #0F172A;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.5rem;
+    font-weight: 900;
+    color: #1a1a1a;
     margin-bottom: 4px;
-    font-family: 'Playfair Display', serif;
   }
   
   .kpi-label {
-    color: #64748B;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 600;
   }
 }
 
-.projeto-parceiros {
-  margin-bottom: 24px;
+// ============ PARCEIROS ============
+.parceiros-section {
+  margin-bottom: 25px;
   padding-top: 20px;
-  border-top: 1px solid rgba(138, 125, 101, 0.1);
+  border-top: 1px solid rgba($brown-warm, 0.1);
   
-  strong {
-    color: #0F172A;
+  .parceiros-label {
     display: block;
-    margin-bottom: 12px;
+    font-size: 0.8rem;
     font-weight: 700;
-    font-size: 0.9rem;
+    color: #888;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
   }
   
-  .parceiros-tags {
+  .parceiros-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
   
-  .tag {
-    background: rgba(138, 125, 101, 0.1);
-    color: #7A6D55;
-    border: 1px solid rgba(138, 125, 101, 0.2);
-    padding: 6px 14px;
+  .parceiro-tag {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba($brown-warm, 0.08) 0%, rgba($brown-light, 0.12) 100%);
+    border: 1px solid rgba($brown-warm, 0.15);
     border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    color: $brown-warm;
+    transition: all 0.3s ease;
     
     &:hover {
-      background: rgba(138, 125, 101, 0.15);
-      border-color: rgba(138, 125, 101, 0.3);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, rgba($gold-primary, 0.15) 0%, rgba($gold-dark, 0.2) 100%);
+      border-color: rgba($gold-primary, 0.3);
+      color: $gold-dark;
+      transform: translateY(-2px);
     }
   }
 }
 
-.projeto-actions {
+// ============ ACÇÕES ============
+.card-actions {
   display: flex;
   gap: 12px;
-  margin-top: 24px;
 }
 
-.btn {
-  padding: 14px 24px;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 0.95rem;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
+.btn-outline {
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  padding: 14px 20px;
+  background: transparent;
+  border: 2px solid rgba($brown-warm, 0.25);
+  border-radius: 12px;
+  color: $brown-warm;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+  svg {
+    width: 18px;
+    height: 18px;
   }
   
-  &:hover::before {
-    width: 300px;
-    height: 300px;
-  }
-  
-  span {
-    position: relative;
-    z-index: 1;
+  &:hover {
+    background: rgba($brown-warm, 0.08);
+    border-color: $brown-warm;
+    transform: translateY(-2px);
   }
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #8A7D65 0%, #A68B5B 100%);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(138, 125, 101, 0.3);
-  flex: 1;
+  flex: 1.5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, $green-dark 0%, $green-medium 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba($green-dark, 0.25);
+  transition: all 0.3s ease;
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(138, 125, 101, 0.4);
+  svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
   }
   
-  &:active {
+  &:hover {
+    box-shadow: 0 10px 30px rgba($green-dark, 0.35);
+    
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+// ============ ANIMAÇÕES ============
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
     transform: translateY(0);
   }
 }
 
-.btn-secondary {
-  background: rgba(138, 125, 101, 0.08);
-  color: #7A6D55;
-  border: 2px solid rgba(138, 125, 101, 0.2);
-  
-  &:hover {
-    background: rgba(138, 125, 101, 0.15);
-    border-color: rgba(138, 125, 101, 0.3);
-    transform: translateY(-2px);
-  }
-}
-
-// Responsividade
+// ============ RESPONSIVO ============
 @media (max-width: 640px) {
-  .projeto {
-    padding: 24px;
-  }
-  
-  .projeto-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .section-intro {
+    margin-bottom: 35px;
     
-    h3 {
-      font-size: 1.25rem;
+    .intro-title {
+      font-size: 1.8rem;
     }
   }
   
-  .kpis {
+  .card-visual {
+    height: 150px;
+  }
+  
+  .card-body {
+    padding: 22px;
+  }
+  
+  .projecto-titulo {
+    font-size: 1.2rem;
+  }
+  
+  .progress-section {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .progress-circle {
+    margin: 0 auto;
+  }
+  
+  .progress-info {
+    align-items: center;
+  }
+  
+  .kpis-row {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 10px;
   }
   
-  .projeto-actions {
-    flex-direction: column;
+  .kpi-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    padding: 15px;
     
-    .btn {
-      width: 100%;
+    .kpi-icon {
+      margin: 0;
     }
+  }
+  
+  .card-actions {
+    flex-direction: column;
   }
 }
-
