@@ -1,0 +1,49 @@
+<div class="dashboard-header-card">
+  <div class="header-background"></div>
+  <div class="header-content">
+    <div class="greeting-section">
+      <div class="greeting-icon">
+        <mat-icon>waving_hand</mat-icon>
+      </div>
+      <div class="greeting-text">
+        <h2 class="greeting-title">
+          <span class="greeting-label">{{ greeting }},</span>
+          <span class="user-name">{{ userName }}!</span>
+        </h2>
+        <p class="welcome-message">
+          Bem-vindo ao Dashboard da ANAM - Associação de Naturais e Amigos de Massinga.
+        </p>
+      </div>
+    </div>
+    
+    <div class="date-time-section">
+      <div class="date-time-item">
+        <mat-icon class="date-icon">calendar_today</mat-icon>
+        <div class="date-time-content">
+          <span class="date-time-label">Hoje</span>
+          <span class="date-time-value">{{ getFormattedDate() }}</span>
+        </div>
+      </div>
+      <div class="date-time-item">
+        <mat-icon class="time-icon">access_time</mat-icon>
+        <div class="date-time-content">
+          <span class="date-time-label">Hora</span>
+          <span class="date-time-value">{{ getFormattedTime() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button mat-icon-button class="action-btn" matTooltip="Atualizar dados">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button class="action-btn" matTooltip="Configurações">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <button mat-icon-button class="action-btn" matTooltip="Ajuda">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+

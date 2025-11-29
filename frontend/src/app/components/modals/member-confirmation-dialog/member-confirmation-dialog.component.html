@@ -1,0 +1,57 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Confirmar Dados do Membro</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="dialog-body">
+    <div class="member-confirm-info">
+      <div class="info-item">
+        <span class="label">Nome:</span>
+        <span class="value">{{ data.member.nome }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Número de Membro:</span>
+        <span class="value">{{ data.member.numero }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value">{{ data.member.email }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Contacto:</span>
+        <span class="value">{{ data.telefone }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Tipo de Pagamento:</span>
+        <span class="value">{{ data.tipoPagamento === 'anual' ? 'Anual' : 'Mensal' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Meses:</span>
+        <span class="value">{{ data.meses.join(', ') }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Método:</span>
+        <span class="value">{{ metodoNome }}</span>
+      </div>
+      <div class="info-item total">
+        <span class="label">Total a Pagar:</span>
+        <span class="value">{{ data.valorTotal | number }} MT</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      <span>Editar Informação</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="onPay()">
+      <mat-icon>payment</mat-icon>
+      <span>Pagar</span>
+    </button>
+  </div>
+</div>
+

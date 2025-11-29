@@ -1,0 +1,157 @@
+.dialog-container {
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #211712;
+  }
+  
+  .close-button {
+    color: #6c5e58;
+  }
+}
+
+.dialog-body {
+  padding: 1.5rem;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  
+  button {
+    min-width: 140px;
+    
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.payment-notification {
+  text-align: center;
+  padding: 2rem 1rem;
+  
+  .notification-icon {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+    
+    .phone-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: #8b785f;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .notification-pulse {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: rgba(139, 120, 95, 0.3);
+      animation: pulse 2s infinite;
+    }
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #211712;
+    margin: 0 0 1rem 0;
+  }
+  
+  p {
+    margin: 0.75rem 0;
+    color: #6c5e58;
+    font-size: 1rem;
+    
+    &.instruction {
+      font-weight: 600;
+      color: #8b785f;
+      margin-top: 1rem;
+    }
+  }
+  
+  .processing-indicator {
+    margin-top: 2rem;
+    
+    .processing-text {
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #8b785f;
+    }
+  }
+}
+
+.payment-success {
+  text-align: center;
+  padding: 2rem 1rem;
+  
+  .success-icon {
+    font-size: 5rem;
+    width: 5rem;
+    height: 5rem;
+    color: #4caf50;
+    margin-bottom: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #211712;
+    margin: 0 0 1rem 0;
+  }
+  
+  p {
+    color: #6c5e58;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .dialog-container {
+    min-width: 100%;
+    margin: 1rem;
+  }
+  
+  .dialog-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+

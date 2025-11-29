@@ -1,24 +1,34 @@
 # Portal da Associação e Massinga
 
-Portal web da Associação e Massinga desenvolvido com Angular 18.2.21.
+Portal web completo da Associação e Massinga com frontend Angular e backend API.
+
+## 📁 Estrutura do Projeto
+
+```
+portalmassinga/
+├── frontend/          # Aplicação Angular (Frontend)
+│   ├── src/          # Código fonte do Angular
+│   ├── public/       # Assets públicos
+│   ├── angular.json  # Configuração do Angular
+│   └── package.json  # Dependências do frontend
+├── backend/          # API Backend (a implementar)
+│   ├── src/          # Código fonte do backend
+│   └── package.json  # Dependências do backend
+└── README.md         # Este arquivo
+```
 
 ## 🖥️ Compatibilidade
 
-Esta aplicação foi desenvolvida no macOS e está totalmente compatível com:
+Este projeto é compatível com:
 - ✅ **Windows** (Windows 10/11)
 - ✅ **macOS** (todas as versões suportadas)
 - ✅ **Linux** (Ubuntu, CentOS, etc.)
 
 ## 📋 Pré-requisitos
 
-### Para Windows:
 - **Node.js** versão 18 ou superior
 - **npm** (incluído com Node.js)
-- **PowerShell** 5.1+ (recomendado) ou **Command Prompt**
-
-### Para macOS/Linux:
-- **Node.js** versão 18 ou superior
-- **npm** (incluído com Node.js)
+- **Git** (para controle de versão)
 
 ### Instalação do Node.js:
 1. Acesse [https://nodejs.org/](https://nodejs.org/)
@@ -27,174 +37,109 @@ Esta aplicação foi desenvolvida no macOS e está totalmente compatível com:
 
 ## 🚀 Instalação e Execução
 
-### Windows (Método Automático)
+### 1. Instalar Dependências
 
-#### Opção 1: Usando PowerShell (Recomendado)
-```powershell
-# Execute como Administrador se necessário
-.\setup-windows.ps1
-```
-
-#### Opção 2: Usando arquivos .bat
-```cmd
-# 1. Instalar dependências
-install-windows.bat
-
-# 2. Iniciar aplicação
-start-windows.bat
-
-# 3. Build para produção
-build-windows.bat
-```
-
-### Windows (Método Manual)
-```cmd
-# 1. Instalar dependências
-npm install
-
-# 2. Iniciar servidor de desenvolvimento
-npm start
-```
-
-### macOS/Linux
+#### Frontend
 ```bash
-# 1. Instalar dependências
+cd frontend
 npm install
+```
 
-# 2. Iniciar servidor de desenvolvimento
+#### Backend (quando implementado)
+```bash
+cd backend
+npm install
+```
+
+### 2. Executar Aplicação
+
+#### Frontend (Desenvolvimento)
+```bash
+cd frontend
 npm start
 ```
+A aplicação estará disponível em: **http://localhost:4200**
+
+#### Backend (quando implementado)
+```bash
+cd backend
+npm run dev
+```
+
+## 📁 Estrutura Detalhada
+
+### Frontend (`frontend/`)
+- **Angular 18.2.21** - Framework frontend
+- **Angular Material** - Componentes UI
+- **TypeScript** - Linguagem
+- **SCSS** - Estilos
+
+### Backend (`backend/`)
+- **A implementar** - API RESTful
+- Sugestões: Node.js + Express ou NestJS
+- Banco de dados: MongoDB ou PostgreSQL
 
 ## 🛠️ Scripts Disponíveis
 
-| Comando | Descrição |
-|---------|-----------|
-| `npm start` | Inicia servidor de desenvolvimento (http://localhost:4200) |
-| `npm run start:dev` | Inicia em modo desenvolvimento |
-| `npm run start:prod` | Inicia em modo produção |
-| `npm run build` | Build para produção |
-| `npm run build:dev` | Build para desenvolvimento |
-| `npm run build:prod` | Build otimizado para produção |
-| `npm test` | Executa testes unitários |
-| `npm run test:watch` | Executa testes em modo watch |
-| `npm run test:coverage` | Executa testes com relatório de cobertura |
-| `npm run clean` | Remove pasta dist |
-| `npm run clean:all` | Remove node_modules, dist e limpa cache |
-| `npm run lint` | Executa linting do código |
-| `npm run serve:dist` | Serve arquivos de produção (http://localhost:8080) |
+### Frontend
+```bash
+cd frontend
 
-## 📁 Estrutura do Projeto
-
+npm start              # Inicia servidor de desenvolvimento
+npm run build          # Build para produção
+npm test              # Executa testes
+npm run lint          # Linting do código
 ```
-src/
-├── app/
-│   ├── components/     # Componentes reutilizáveis
-│   ├── pages/         # Páginas da aplicação
-│   ├── layout/        # Componentes de layout
-│   ├── services/      # Serviços Angular
-│   └── app.routes.ts  # Configuração de rotas
-├── public/
-│   └── assets/        # Imagens, ícones e outros assets
-└── styles.scss        # Estilos globais
+
+### Backend
+```bash
+cd backend
+
+npm run dev           # Inicia servidor de desenvolvimento
+npm run build         # Compila TypeScript
+npm test             # Executa testes
 ```
 
 ## 🔧 Resolução de Problemas
 
-### Windows
-
-#### Erro: "node não é reconhecido"
+### Erro: "node não é reconhecido"
 - Reinstale o Node.js do site oficial
 - Verifique se o PATH está configurado corretamente
-- Reinicie o terminal/Command Prompt
+- Reinicie o terminal
 
-#### Erro de permissão durante npm install
-- Execute o terminal como Administrador
+### Erro de permissão durante npm install
+- Execute o terminal como Administrador (Windows)
 - Ou execute: `npm install --force`
 
-#### Antivírus bloqueando instalação
-- Desative temporariamente o antivírus
-- Adicione a pasta do projeto às exceções
-
-#### Problemas com PowerShell
-- Execute: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
-- Ou use Command Prompt (.bat) em vez de PowerShell
-
-### macOS/Linux
-- Se houver problemas de permissão, use `sudo` com cuidado
-- Para limpar cache: `npm cache clean --force`
-
-## 🌐 Acesso à Aplicação
-
-### Acesso Local:
-- **Desenvolvimento**: http://localhost:4200
-- **Porta alternativa**: http://localhost:4201
-- **Produção**: http://localhost:8080 (após build)
-
-### Acesso Público (ngrok):
-
-Para permitir acesso de outras máquinas/redes:
-
-#### Opção 1 - Script Automático:
-```cmd
-# Windows (.bat)
-start-ngrok-windows.bat
-
-# Windows (PowerShell)
-.\start-ngrok.ps1
-```
-
-#### Opção 2 - Manual:
-```cmd
-# 1. Iniciar servidor para acesso público
-npm run start:ngrok
-
-# 2. Em outro terminal, iniciar ngrok
-ngrok http 4201
-```
-
-#### Opção 3 - Comando direto:
-```cmd
-npm run start:public
-```
-
-## 🧪 Testes
-
-```bash
-# Executar todos os testes
-npm test
-
-# Executar testes em modo watch
-npm run test:watch
-
-# Executar testes com cobertura
-npm run test:coverage
-```
-
-## 📦 Build de Produção
-
-```bash
-# Build para produção
-npm run build:prod
-
-# Os arquivos estarão em: dist/associacao-portal/
-```
-
-## 🆘 Suporte
-
-Para problemas específicos do Windows:
-1. Verifique se o Node.js está instalado corretamente
-2. Execute os scripts .bat como Administrador
-3. Desative temporariamente o antivírus
-4. Verifique se há conflitos de porta (4200, 8080)
+### Problemas com dependências
+- Delete `node_modules` e `package-lock.json`
+- Execute `npm install` novamente
 
 ## 📚 Tecnologias Utilizadas
 
+### Frontend
 - **Angular** 18.2.0
 - **Angular Material** 18.2.14
 - **GSAP** 3.13.0 (animações)
 - **TypeScript** 5.5.2
 - **SCSS** para estilos
 
+### Backend
+- **A definir** (sugerido: Node.js + Express/NestJS)
+
+## 📝 Próximos Passos
+
+1. ✅ Estrutura do projeto organizada
+2. ⏳ Implementar backend API
+3. ⏳ Configurar banco de dados
+4. ⏳ Implementar autenticação
+5. ⏳ Integrar frontend com backend
+
 ## 📄 Licença
 
 Este projeto é propriedade da Associação e Massinga.
+
+## 📖 Documentação Adicional
+
+- [Frontend README](frontend/README.md) - Documentação do frontend
+- [Backend README](backend/README.md) - Documentação do backend
