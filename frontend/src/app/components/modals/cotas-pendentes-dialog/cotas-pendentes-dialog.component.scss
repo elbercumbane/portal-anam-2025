@@ -1,0 +1,246 @@
+// Cores do login
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$green-light: #40916C;
+$brown-vibrant: #B8860B;
+$brown-gold: #C4A052;
+$gold-accent: #FFD700;
+$gold-shine: #F4D03F;
+$copper: #CD7F32;
+$brown-warm: #A67C52;
+$gradient-gold: linear-gradient(135deg, $brown-vibrant 0%, $gold-accent 50%, $copper 100%);
+$gradient-primary: linear-gradient(135deg, $green-dark 0%, $green-medium 50%, $brown-warm 100%);
+
+.cotas-pendentes-dialog {
+  padding: 0;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+}
+
+.btn-close-x {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.95);
+  width: 36px;
+  height: 36px;
+  backdrop-filter: blur(10px);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg) scale(1.1);
+    color: white;
+  }
+
+  &:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+}
+
+.dialog-header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+  background: $gradient-primary;
+  color: white;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 20px rgba($green-dark, 0.3);
+
+  .warning-icon {
+    margin-bottom: 1rem;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: $gold-accent;
+      filter: drop-shadow(0 0 10px rgba($gold-accent, 0.5));
+    }
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dialog-content {
+  padding: 2rem;
+
+  .greeting {
+    font-size: 1.1rem;
+    color: $green-dark;
+    margin-bottom: 1.5rem;
+    text-align: center;
+
+    strong {
+      color: $brown-vibrant;
+      font-weight: 700;
+    }
+  }
+
+  .warning-message {
+    background: linear-gradient(135deg, rgba($gold-shine, 0.15) 0%, rgba($brown-gold, 0.1) 100%);
+    border-left: 4px solid $brown-vibrant;
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba($brown-vibrant, 0.2);
+
+    p {
+      margin: 0.5rem 0;
+      color: $green-dark;
+      font-size: 1rem;
+      line-height: 1.6;
+
+      strong {
+        color: $brown-vibrant;
+        font-weight: 700;
+      }
+    }
+
+    .meses-info {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba($brown-vibrant, 0.3);
+    }
+  }
+
+  .payment-info {
+    margin-bottom: 1.5rem;
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba($green-light, 0.1) 0%, rgba($green-medium, 0.05) 100%);
+      border-radius: 8px;
+      border-left: 4px solid $green-medium;
+      border: 1px solid rgba($green-medium, 0.2);
+
+      mat-icon {
+        color: $green-medium;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+      }
+
+      span {
+        color: $green-dark;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .amount-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgba($gold-accent, 0.1) 0%, rgba($brown-gold, 0.05) 100%);
+    border-radius: 8px;
+    border: 2px solid $brown-vibrant;
+    box-shadow: 0 4px 15px rgba($brown-vibrant, 0.2);
+
+    .label {
+      font-size: 1rem;
+      color: $green-dark;
+      font-weight: 600;
+    }
+
+    .amount {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $brown-vibrant;
+      text-shadow: 0 2px 5px rgba($brown-vibrant, 0.2);
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e0e0e0;
+  justify-content: flex-end;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .btn-cancel {
+    background: transparent;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+
+    &:hover {
+      background: #ffebee;
+      color: #c62828;
+      border-color: #c62828;
+    }
+  }
+
+  .btn-pay {
+    background: $gradient-primary;
+    color: white;
+    box-shadow: 0 4px 12px rgba($green-dark, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba($green-dark, 0.4);
+      background: linear-gradient(135deg, darken($green-dark, 5%) 0%, darken($green-medium, 5%) 50%, darken($brown-warm, 5%) 100%);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .dialog-content {
+    padding: 1.5rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+    padding: 1rem 1.5rem;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+

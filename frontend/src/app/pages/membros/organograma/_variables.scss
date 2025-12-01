@@ -1,0 +1,18 @@
+// Variáveis do Organograma
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$green-light: #40916C;
+$brown-trunk: #5D4037;
+$brown-bark: #3E2723;
+$gold-primary: #D4AF37;
+$gold-light: #F4D03F;
+$gold-shine: #FFD700;
+$gold-dark: #B8860B;
+$copper: #CD7F32;
+$cream: #FDF8F0;
+
+// Gradientes
+$gradient-gold: linear-gradient(135deg, $gold-dark 0%, $gold-primary 50%, $gold-light 100%);
+$gradient-trunk: linear-gradient(180deg, $brown-bark 0%, $brown-trunk 50%, darken($brown-trunk, 10%) 100%);
+$gradient-leaf: linear-gradient(135deg, rgba($green-medium, 0.9) 0%, rgba($green-dark, 0.95) 100%);
+

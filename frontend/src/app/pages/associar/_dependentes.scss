@@ -1,0 +1,93 @@
+@import 'variables';
+
+// Dependentes
+.dependentes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.dependente-item {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1.2fr 0.6fr 40px;
+  gap: 0.5rem;
+  align-items: center;
+  
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f8f8f8;
+    border-radius: 12px;
+    
+    &:nth-child(5) {
+      grid-column: span 2;
+      justify-self: end;
+    }
+  }
+  
+  input, select {
+    padding: 0.7rem 0.75rem;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    
+    &:focus {
+      outline: none;
+      border-color: $brown-gold;
+    }
+  }
+}
+
+.btn-remove {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #fee2e2;
+  color: #e53935;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1rem;
+  
+  &:hover {
+    background: #e53935;
+    color: white;
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 0 4px 15px rgba(#e53935, 0.4);
+  }
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem;
+  border: 2px dashed rgba($gold-accent, 0.5);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba($gold-accent, 0.05) 0%, transparent 100%);
+  color: $brown-vibrant;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    border-color: $gold-accent;
+    background: linear-gradient(135deg, rgba($gold-accent, 0.15) 0%, rgba($brown-vibrant, 0.08) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($gold-accent, 0.2);
+    
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+  
+  svg {
+    transition: transform 0.4s ease;
+  }
+}
+

@@ -1,0 +1,34 @@
+// Responsividade
+@media (max-width: 768px) {
+  .servicos-hero {
+    height: 350px;
+  }
+  
+  .estatisticas-section,
+  .servicos-section,
+  .progresso-section {
+    padding: 60px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .timeline-item {
+    gap: 16px;
+    
+    .timeline-marker {
+      width: 60px;
+      height: 60px;
+      
+      .step-number {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  
+  .cta-section {
+    padding: 60px 0;
+  }
+}
+

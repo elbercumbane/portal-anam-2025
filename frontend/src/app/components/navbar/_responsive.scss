@@ -1,0 +1,13 @@
+@import 'variables';
+
+// Media Queries - Responsividade
+@media (min-width: $desktop-breakpoint) {
+  .desktop-nav { 
+    display: flex; 
+  }
+  
+  .nav-actions { 
+    display: flex; 
+  }
+}
+

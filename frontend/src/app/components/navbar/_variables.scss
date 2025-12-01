@@ -1,0 +1,31 @@
+// Variáveis do Navbar - Nova Paleta de Cores
+$navbar-z-index: 1200;
+$navbar-padding: 12px 24px;
+$navbar-transition: all 0.3s ease;
+
+// Nova Paleta de Cores
+$creme: #FFF8E7;
+$branco: #FFFFFF;
+$verde: #4CAF50;
+$preto: #1a1a1a;
+$cinzento: #808080;
+$cinzento-claro: #E0E0E0;
+$cinzento-escuro: #666666;
+
+// Cores do Navbar
+$navbar-bg-scrolled: rgba(255, 248, 231, 0.98); // Creme com transparência
+$navbar-border-scrolled: rgba(76, 175, 80, 0.2); // Verde suave
+$navbar-shadow-scrolled: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+// Dropdown
+$dropdown-bg: rgba(255, 248, 231, 0.98); // Creme
+$dropdown-border: rgba(76, 175, 80, 0.3); // Verde
+$dropdown-item-hover: rgba(76, 175, 80, 0.15); // Verde claro
+
+// Search
+$search-bar-width: 220px;
+$search-bar-bg: rgba(255, 255, 255, 0.95);
+
+// Breakpoints
+$desktop-breakpoint: 960px;
+

@@ -1,0 +1,112 @@
+@import 'variables';
+
+// Controles do Hero (dots de navegação)
+.hero-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  
+  .hero-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.7);
+      border-color: rgba(255, 255, 255, 0.9);
+      transform: scale(1.2);
+    }
+    
+    &.active {
+      background: #8A7D65; // Marrom da página
+      border-color: #8A7D65;
+      box-shadow: 0 0 8px rgba(138, 125, 101, 0.6);
+    }
+  }
+}
+
+.hero-actions {
+  margin-top: var(--space-2xl);
+  display: flex;
+  gap: var(--space-lg);
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease-out 0.4s both;
+  
+  button {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, #f4e4bc 100%) !important;
+    color: var(--neutral-900) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    padding: var(--space-md) var(--space-2xl) !important;
+    font-family: var(--font-primary) !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    text-transform: none !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: all var(--transition-normal) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left var(--transition-slow);
+    }
+    
+    &:hover {
+      transform: translateY(-3px) !important;
+      box-shadow: var(--shadow-xl) !important;
+      
+      &::before {
+        left: 100%;
+      }
+    }
+    
+    &:active {
+      transform: translateY(-1px) !important;
+    }
+  }
+  
+  .hero-cta-secondary {
+    background: transparent !important;
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 50px !important;
+    padding: var(--space-md) var(--space-2xl) !important;
+    font-family: var(--font-primary) !important;
+    font-weight: 500 !important;
+    font-size: 1.1rem !important;
+    text-transform: none !important;
+    transition: all var(--transition-normal) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-color: white !important;
+      transform: translateY(-3px) !important;
+      box-shadow: var(--shadow-lg) !important;
+    }
+    
+    &:active {
+      transform: translateY(-1px) !important;
+    }
+  }
+}
+

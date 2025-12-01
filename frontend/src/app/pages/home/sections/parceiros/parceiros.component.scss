@@ -2,11 +2,11 @@
 // PARCEIROS - CARROSSEL FLUIDO E ELEGANTE
 // ========================================
 
-$brown-vibrant: #B8860B;
-$gold-accent: #FFD700;
+$verde: #4CAF50;
+$verde-escuro: rgba(76, 175, 80, 0.8);
 
 .partners-section {
-  background: linear-gradient(180deg, #fafafa 0%, #fff 50%, #f8f8f8 100%);
+  background: linear-gradient(180deg, #FFF8E7 0%, #fff 50%, #FFF8E7 100%); // Creme
   padding: 60px 0 70px;
   overflow: hidden;
   position: relative;
@@ -27,7 +27,7 @@ $gold-accent: #FFD700;
   margin-bottom: 12px;
   
   .highlight {
-    color: $brown-vibrant;
+    color: $verde;
     position: relative;
     
     &::after {
@@ -37,7 +37,7 @@ $gold-accent: #FFD700;
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, $brown-vibrant, $gold-accent);
+      background: linear-gradient(90deg, $verde, $verde-escuro);
       border-radius: 2px;
     }
   }
@@ -155,7 +155,7 @@ $gold-accent: #FFD700;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(135deg, $brown-vibrant 0%, darken($brown-vibrant, 10%) 100%);
+  background: linear-gradient(135deg, $verde 0%, $verde-escuro 100%);
   color: white;
   padding: 14px 32px;
   border-radius: 50px;
@@ -163,7 +163,7 @@ $gold-accent: #FFD700;
   font-size: 1rem;
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba($brown-vibrant, 0.35);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.35);
   
   svg {
     width: 20px;
@@ -173,7 +173,7 @@ $gold-accent: #FFD700;
   
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba($brown-vibrant, 0.45);
+    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.45);
     text-decoration: none;
     
     svg {

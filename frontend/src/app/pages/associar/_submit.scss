@@ -1,0 +1,154 @@
+@import 'variables';
+@import 'animations';
+
+// Submit Section
+.submit-section {
+  text-align: center;
+  padding: 2rem 0;
+  
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, $brown-vibrant 0%, $copper 50%, $brown-warm 100%);
+    color: white;
+    border: none;
+    padding: 1.1rem 3rem;
+    border-radius: 50px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+      0 10px 35px rgba($brown-vibrant, 0.45),
+      0 5px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    // Efeito de brilho
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 
+        0 15px 45px rgba($brown-vibrant, 0.55),
+        0 8px 25px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, darken($brown-vibrant, 5%) 0%, darken($copper, 5%) 50%, darken($brown-warm, 5%) 100%);
+      
+      &::before {
+        left: 100%;
+      }
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(-2px) scale(1.01);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(30%);
+    }
+    
+    svg {
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover:not(:disabled) svg {
+      transform: translateX(8px);
+    }
+  }
+  
+  .submit-note {
+    margin-top: 1rem;
+    color: #888;
+    font-size: 0.85rem;
+  }
+}
+
+// Modal
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 24px;
+  padding: 3rem;
+  max-width: 400px;
+  text-align: center;
+  animation: slideUp 0.4s ease;
+  
+  .modal-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, $green-success 0%, darken($green-success, 10%) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    
+    svg {
+      stroke: white;
+    }
+  }
+  
+  h3 {
+    font-family: 'Playfair Display', serif;
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .btn-modal {
+    background: linear-gradient(135deg, $brown-vibrant 0%, $copper 100%);
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 25px rgba($brown-vibrant, 0.35);
+    
+    &:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 35px rgba($brown-vibrant, 0.5);
+    }
+  }
+}
+

@@ -11,7 +11,6 @@ export const routes: Routes = [
       { path: 'historial', loadComponent: () => import('./pages/historial/historial.component').then(m => m.HistorialComponent) },
       { path: 'documentacao', loadChildren: () => import('./pages/documentacao/documentacao.module').then(m => m.DocumentacaoModule) },
       { path: 'projectos', loadChildren: () => import('./pages/projectos/projectos.module').then(m => m.ProjectosModule) },
-      { path: 'membros', loadChildren: () => import('./pages/membros/membros.module').then(m => m.MembrosModule) },
       // Manter rotas existentes
       { path: 'sobre', loadComponent: () => import('./pages/sobre/sobre.component').then(m => m.SobreComponent) },
       { path: 'associar-se', loadComponent: () => import('./pages/associar/associar.component').then(m => m.AssociarComponent) },
@@ -21,7 +20,9 @@ export const routes: Routes = [
       { path: 'parceiros', loadComponent: () => import('./pages/parceiros/parceiros.component').then(m => m.ParceirosComponent) },
     ],
   },
+  // Rotas sem navbar (fora do shell)
       { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
+  { path: 'membros', loadChildren: () => import('./pages/membros/membros.module').then(m => m.MembrosModule) },
   { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: '**', redirectTo: '' },
 ];

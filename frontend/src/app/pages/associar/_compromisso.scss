@@ -1,0 +1,96 @@
+@import 'variables';
+
+// Compromisso Section
+.compromisso-content {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .compromisso-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+  }
+  
+  .compromisso-text {
+    h3 {
+      font-family: 'Playfair Display', serif;
+      color: $brown-vibrant;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      color: #555;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      
+      strong {
+        color: $green-dark;
+      }
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.4rem;
+        color: #555;
+        font-size: 0.9rem;
+        
+        &::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: $green-success;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+.checkbox-group {
+  padding: 0 1.5rem 1.5rem;
+  
+  .custom-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 1rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #e8e8e8;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: $brown-gold;
+    }
+    
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: $green-dark;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .checkbox-text {
+      color: #333;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
+}
+

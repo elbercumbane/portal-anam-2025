@@ -1,0 +1,74 @@
+// Responsivo
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 45vh;
+    padding: 80px 15px 60px;
+    
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .projeto-info-cards {
+    flex-direction: column;
+    
+    .info-card {
+      width: 100%;
+    }
+  }
+  
+  .form-section {
+    padding: 40px 15px 60px;
+  }
+  
+  .progress-steps {
+    flex-wrap: wrap;
+    gap: 20px;
+    
+    .step {
+      flex: 0 0 45%;
+      
+      .step-connector {
+        display: none;
+      }
+    }
+  }
+  
+  .form-card {
+    padding: 30px 20px;
+    border-radius: 20px;
+  }
+  
+  .step-header {
+    flex-direction: column;
+    text-align: center;
+    
+    .step-info h2 {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .upload-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-navigation {
+    flex-direction: column;
+    gap: 15px;
+    
+    .btn-nav {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+

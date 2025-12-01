@@ -1,11 +1,11 @@
-// Seção de Eventos Moderna
+// Seção de Eventos Moderna - Nova Paleta
 .eventos {
   padding: 100px 0 80px;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  background: linear-gradient(180deg, #FFF8E7 0%, #ffffff 100%); // Creme para branco
   position: relative;
   overflow: hidden;
   
-  // Efeito de fundo sutil
+  // Efeito de fundo sutil - Nova Paleta
   &::before {
     content: '';
     position: absolute;
@@ -14,8 +14,8 @@
     right: 0;
     height: 600px;
     background: 
-      radial-gradient(circle at 15% 50%, rgba(138, 125, 101, 0.03) 0%, transparent 50%),
-      radial-gradient(circle at 85% 30%, rgba(122, 109, 85, 0.03) 0%, transparent 50%);
+      radial-gradient(circle at 15% 50%, rgba(76, 175, 80, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 85% 30%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
   }
@@ -34,8 +34,8 @@
   
   .section-badge {
     display: inline-block;
-    background: linear-gradient(135deg, rgba(138, 125, 101, 0.1) 0%, rgba(138, 125, 101, 0.05) 100%);
-    color: #8A7D65;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.08) 100%);
+    color: #4CAF50;
     padding: 8px 20px;
     border-radius: 50px;
     font-size: 0.875rem;
@@ -43,7 +43,7 @@
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-bottom: 16px;
-    border: 1px solid rgba(138, 125, 101, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.3);
   }
   
   .section-title {
@@ -55,7 +55,7 @@
     line-height: 1.2;
     
     .highlight {
-      background: linear-gradient(135deg, #8A7D65 0%, #6B5B47 100%);
+      background: linear-gradient(135deg, #4CAF50 0%, rgba(76, 175, 80, 0.8) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -120,7 +120,7 @@
     }
     
     .btn-inscrever {
-      background: linear-gradient(135deg, #6B5B47 0%, #5A4A3A 100%);
+      background: linear-gradient(135deg, #4CAF50 0%, rgba(76, 175, 80, 0.9) 100%);
       color: white;
       
       .btn-icon {
@@ -175,7 +175,7 @@
     .badge-icon {
       width: 16px;
       height: 16px;
-      stroke: #8A7D65;
+      stroke: #4CAF50;
     }
     
     span {
@@ -203,8 +203,8 @@
     gap: 8px;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #8A7D65;
-    background: rgba(138, 125, 101, 0.08);
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
     padding: 6px 14px;
     border-radius: 50px;
     
@@ -255,11 +255,11 @@
     font-size: 0.875rem;
     color: #666;
     
-    .meta-icon {
+      .meta-icon {
       width: 16px;
       height: 16px;
       stroke-width: 2;
-      color: #8A7D65;
+      color: #4CAF50;
       flex-shrink: 0;
     }
     

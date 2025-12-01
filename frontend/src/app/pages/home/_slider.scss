@@ -1,0 +1,33 @@
+.with-slider .slider {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.with-slider .slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  
+  // Foto 3 (terceiro slide) - posicionamento ajustado para mostrar melhor o grupo
+  &:nth-child(3) {
+    background-position: center 30%;
+    background-size: cover;
+  }
+}
+
+.with-slider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.6));
+  z-index: 1;
+}
+

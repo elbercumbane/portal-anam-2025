@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { DecimalPipe } from '@angular/common';
+import { gsap } from 'gsap';
 
 export interface PaymentReceipt {
   id: string;
@@ -48,7 +49,7 @@ export interface PaymentReceipt {
   templateUrl: './consultar-recibos.component.html',
   styleUrls: ['./consultar-recibos.component.scss']
 })
-export class ConsultarRecibosComponent implements OnInit {
+export class ConsultarRecibosComponent implements OnInit, AfterViewInit, OnDestroy {
   consultReceiptForm!: FormGroup;
   
   receipts: PaymentReceipt[] = [];
@@ -58,6 +59,8 @@ export class ConsultarRecibosComponent implements OnInit {
   tokenVerified = false;
   searchFilter = '';
   metodoConsulta: 'contacto' | 'email' = 'contacto';
+  particles = Array.from({ length: 15 }, (_, i) => i + 1);
+  private animations: gsap.core.Tween[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -78,6 +81,73 @@ export class ConsultarRecibosComponent implements OnInit {
     
     // Carregar recibos do localStorage (simulação)
     this.loadReceiptsFromStorage();
+  }
+
+  ngAfterViewInit(): void {
+    // Pequeno delay para garantir que os elementos estejam renderizados
+    setTimeout(() => {
+      this.initializeAnimations();
+    }, 100);
+  }
+
+  ngOnDestroy(): void {
+    this.animations.forEach(anim => anim.kill());
+  }
+
+  private initializeAnimations(): void {
+    // Animação do overlay de fundo
+    const overlay = document.querySelector('.animated-overlay');
+    if (overlay) {
+      const anim = gsap.to(overlay, {
+        opacity: 0.6,
+        scale: 1.1,
+        duration: 8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+      this.animations.push(anim);
+    }
+
+    // Animações das partículas
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach((particle, index) => {
+      const anim = gsap.to(particle, {
+        y: -window.innerHeight - 100,
+        x: `+=${(Math.random() - 0.5) * 200}`,
+        rotation: 360,
+        opacity: 0,
+        duration: 15 + Math.random() * 10,
+        delay: index * 0.3,
+        repeat: -1,
+        ease: 'none'
+      });
+      this.animations.push(anim);
+    });
+
+    // Animações dos elementos decorativos
+    const elements = document.querySelectorAll('.element');
+    elements.forEach((element, index) => {
+      const anim = gsap.to(element, {
+        rotation: 360,
+        scale: 1.2,
+        duration: 20 + index * 5,
+        repeat: -1,
+        ease: 'none'
+      });
+      this.animations.push(anim);
+    });
+
+    // Animação de entrada do card
+    const card = document.querySelector('.section-card');
+    if (card) {
+      gsap.from(card, {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+    }
   }
   
   toggleMetodoConsulta(metodo: 'contacto' | 'email'): void {

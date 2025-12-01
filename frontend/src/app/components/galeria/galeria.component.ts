@@ -52,12 +52,97 @@ export class GaleriaComponent implements OnInit, OnDestroy {
       local: 'Sede da Associação',
       descricao: 'Reunião estratégica onde membros da associação discutem projetos em curso, planos futuros e desafios da comunidade, fortalecendo a união e o compromisso coletivo.',
       fotos: [
-        { src: '/assets/slider/slide3.jpg', alt: 'Encontro - Reunião de Membros' },
-        { src: '/assets/slider/slide1.jpg', alt: 'Encontro - Discussão de Projetos' },
-        { src: '/assets/slider/slide2.jpg', alt: 'Encontro - Membros Participativos' }
+        { src: '/assets/galeria/encontro1.jpg', alt: 'Encontro - Reunião de Membros' },
+        { src: '/assets/galeria/encontro2.jpg', alt: 'Encontro - Discussão de Projetos' },
+        { src: '/assets/galeria/encontro3.jpg', alt: 'Encontro - Membros Participativos' }
       ],
       categoria: 'Reunião',
       participantes: 25
+    },
+    {
+      id: 4,
+      titulo: 'Festival Cultural',
+      data: '10 de Fevereiro, 2024',
+      local: 'Praça Central de Massinga',
+      descricao: 'Celebração da cultura local com música, dança e gastronomia tradicional, unindo a comunidade em uma festa memorável.',
+      fotos: [
+        { src: '/assets/galeria/festival1.jpg', alt: 'Festival - Apresentação Cultural' },
+        { src: '/assets/galeria/festival2.jpg', alt: 'Festival - Dança Tradicional' },
+        { src: '/assets/galeria/festival3.jpg', alt: 'Festival - Música ao Vivo' },
+        { src: '/assets/galeria/festival4.jpg', alt: 'Festival - Gastronomia' }
+      ],
+      categoria: 'Cultural',
+      participantes: 300
+    },
+    {
+      id: 5,
+      titulo: 'Campanha de Limpeza',
+      data: '5 de Março, 2024',
+      local: 'Bairros de Massinga',
+      descricao: 'Iniciativa comunitária para manter os bairros limpos e promover a consciência ambiental entre os residentes.',
+      fotos: [
+        { src: '/assets/galeria/limpeza1.jpg', alt: 'Limpeza - Voluntários' },
+        { src: '/assets/galeria/limpeza2.jpg', alt: 'Limpeza - Ação Comunitária' },
+        { src: '/assets/galeria/limpeza3.jpg', alt: 'Limpeza - Resultados' }
+      ],
+      categoria: 'Meio Ambiente',
+      participantes: 80
+    },
+    {
+      id: 6,
+      titulo: 'Workshop de Empreendedorismo',
+      data: '25 de Março, 2024',
+      local: 'Centro Comunitário',
+      descricao: 'Capacitação para jovens e adultos interessados em iniciar seus próprios negócios, com foco em sustentabilidade.',
+      fotos: [
+        { src: '/assets/galeria/workshop1.jpg', alt: 'Workshop - Sessão de Aprendizado' },
+        { src: '/assets/galeria/workshop2.jpg', alt: 'Workshop - Participantes' },
+        { src: '/assets/galeria/workshop3.jpg', alt: 'Workshop - Atividades Práticas' }
+      ],
+      categoria: 'Workshop',
+      participantes: 60
+    },
+    {
+      id: 7,
+      titulo: 'Feira de Artesanato',
+      data: '15 de Abril, 2024',
+      local: 'Praça Central',
+      descricao: 'Exposição e venda de produtos artesanais locais, valorizando o trabalho manual e a criatividade da comunidade.',
+      fotos: [
+        { src: '/assets/galeria/feira1.jpg', alt: 'Feira - Artesanato Local' },
+        { src: '/assets/galeria/feira2.jpg', alt: 'Feira - Produtos Artesanais' },
+        { src: '/assets/galeria/feira3.jpg', alt: 'Feira - Visitantes' }
+      ],
+      categoria: 'Feira',
+      participantes: 200
+    },
+    {
+      id: 8,
+      titulo: 'Festival de Música',
+      data: '1 de Maio, 2024',
+      local: 'Anfiteatro Municipal',
+      descricao: 'Celebração musical com artistas locais e regionais, promovendo a cultura e o entretenimento.',
+      fotos: [
+        { src: '/assets/galeria/festival5.jpg', alt: 'Festival - Artistas Locais' },
+        { src: '/assets/galeria/festival6.jpg', alt: 'Festival - Público' },
+        { src: '/assets/galeria/festival7.jpg', alt: 'Festival - Apresentação' }
+      ],
+      categoria: 'Cultural',
+      participantes: 500
+    },
+    {
+      id: 9,
+      titulo: 'Dia de Limpeza Comunitária',
+      data: '20 de Maio, 2024',
+      local: 'Parques e Praças',
+      descricao: 'Ação coletiva para preservar e melhorar os espaços públicos da comunidade.',
+      fotos: [
+        { src: '/assets/galeria/limpeza4.jpg', alt: 'Limpeza - Espaços Públicos' },
+        { src: '/assets/galeria/limpeza5.jpg', alt: 'Limpeza - Comunidade Unida' },
+        { src: '/assets/galeria/limpeza6.jpg', alt: 'Limpeza - Resultados Finais' }
+      ],
+      categoria: 'Meio Ambiente',
+      participantes: 120
     },
   ];
 
@@ -71,23 +156,97 @@ export class GaleriaComponent implements OnInit, OnDestroy {
   categorias: string[] = [];
   galeriaFiltrada: any[] = [];
 
-  // Slider automático
+  // Paginação - 5 páginas, cada uma mostra um evento diferente
+  paginationDots: number[] = [0, 1, 2, 3, 4];
+  currentPage = 0;
+  eventosPorPagina: any[] = [];
+
+  // Slider automático da galeria principal
   private slideInterval: any;
-  private readonly SLIDE_DURATION = 4000; // 4 segundos
+  private readonly SLIDE_DURATION = 8000; // 8 segundos
 
   ngOnInit() {
     this.initScrollAnimations();
     this.extrairCategorias();
-    this.galeriaFiltrada = [...this.galeria];
+    this.prepararEventosPorPagina();
+    this.iniciarSlideAutomaticoGaleria();
   }
 
   ngOnDestroy() {
     this.pararSlideAutomatico();
+    this.pararSlideAutomaticoGaleria();
+  }
+
+  prepararEventosPorPagina(): void {
+    // Seleciona os primeiros 5 eventos, um por página
+    this.eventosPorPagina = this.galeria.slice(0, 5);
+    this.atualizarGaleriaFiltrada();
+  }
+
+  atualizarGaleriaFiltrada(): void {
+    // Fade out suave antes de atualizar
+    const gridElement = document.querySelector('.galeria-grid');
+    const headerElement = document.querySelector('.galeria-header');
+    
+    if (gridElement && headerElement) {
+      (gridElement as HTMLElement).style.opacity = '0';
+      (headerElement as HTMLElement).style.opacity = '0';
+      
+      setTimeout(() => {
+        // Mostra as fotos do evento da página atual
+        const eventoAtual = this.eventosPorPagina[this.currentPage];
+        if (eventoAtual) {
+          // Limita a 9 fotos para o grid (ou menos se não houver 9)
+          const fotosParaMostrar = eventoAtual.fotos.slice(0, 9);
+          // Cria itens individuais para cada foto do evento
+          this.galeriaFiltrada = fotosParaMostrar.map((foto: any, index: number) => ({
+            ...eventoAtual,
+            fotoAtual: foto,
+            fotoIndex: index
+          }));
+        }
+        
+        // Fade in suave após atualizar
+        setTimeout(() => {
+          (gridElement as HTMLElement).style.opacity = '1';
+          (headerElement as HTMLElement).style.opacity = '1';
+        }, 50);
+      }, 500); // Meio segundo para fade out
+    } else {
+      // Fallback se os elementos não existirem ainda
+      const eventoAtual = this.eventosPorPagina[this.currentPage];
+      if (eventoAtual) {
+        const fotosParaMostrar = eventoAtual.fotos.slice(0, 9);
+        this.galeriaFiltrada = fotosParaMostrar.map((foto: any, index: number) => ({
+          ...eventoAtual,
+          fotoAtual: foto,
+          fotoIndex: index
+        }));
+      }
+    }
+  }
+
+  getEventoAtual(): any {
+    return this.eventosPorPagina[this.currentPage];
   }
 
   extrairCategorias(): void {
     const categoriasSet = new Set(this.galeria.map(e => e.categoria));
     this.categorias = Array.from(categoriasSet).sort();
+  }
+
+  trackByEventoId(index: number, evento: any): any {
+    return evento ? evento.id : index;
+  }
+
+  trackByFotoIndex(index: number, item: any): any {
+    return item ? `${item.id}-${item.fotoIndex}` : index;
+  }
+
+  getItemClass(index: number, item: any): string {
+    // Cada foto tem uma posição fixa no grid baseada no seu índice
+    const position = (index % 9) + 1;
+    return `item-${position}`;
   }
 
   filtrarCategoria(categoria: string): void {
@@ -112,6 +271,42 @@ export class GaleriaComponent implements OnInit, OnDestroy {
 
   getCategoriCount(categoria: string): number {
     return this.galeria.filter(e => e.categoria === categoria).length;
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.atualizarGaleriaFiltrada();
+    this.reiniciarSlideAutomaticoGaleria();
+  }
+
+  proximaPagina(): void {
+    this.currentPage = (this.currentPage + 1) % this.paginationDots.length;
+    this.atualizarGaleriaFiltrada();
+  }
+
+  // Slide automático da galeria principal
+  private iniciarSlideAutomaticoGaleria(): void {
+    this.pararSlideAutomaticoGaleria();
+    this.slideInterval = setInterval(() => {
+      this.proximaPagina();
+    }, this.SLIDE_DURATION);
+  }
+
+  private pararSlideAutomaticoGaleria(): void {
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.slideInterval = null;
+    }
+  }
+
+  private reiniciarSlideAutomaticoGaleria(): void {
+    this.pararSlideAutomaticoGaleria();
+    this.iniciarSlideAutomaticoGaleria();
+  }
+
+  // Retorna uma classe de layout diferente para cada página
+  getLayoutClass(): string {
+    return `layout-${this.currentPage + 1}`;
   }
 
   private initScrollAnimations() {

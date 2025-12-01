@@ -1,0 +1,157 @@
+@import 'variables';
+@import 'animations';
+
+// Serviços Grid
+.servicos-section {
+  padding: 100px 0;
+  background: white;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, transparent 0%, #fafafa 100%);
+    pointer-events: none;
+  }
+}
+
+.servicos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.servico-card {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(180deg, #8A7D65 0%, #D4AF37 100%);
+    transition: height 0.4s ease;
+  }
+  
+  @for $i from 0 through 10 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.15}s;
+    }
+  }
+  
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: rgba(138, 125, 101, 0.3);
+    
+    &::before {
+      height: 100%;
+    }
+    
+    .servico-icon-wrapper {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+}
+
+.servico-icon-wrapper {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  margin-bottom: 28px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  
+  .servico-icon {
+    font-size: 3rem;
+    animation: iconFloat 3s ease-in-out infinite;
+  }
+}
+
+.servico-content {
+  .servico-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 12px;
+  }
+  
+  .servico-descricao {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0 0 24px;
+  }
+}
+
+.beneficios-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  
+  li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: #444;
+    
+    .check-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.servico-btn {
+  width: 100%;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  .btn-arrow {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    
+    .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+}
+

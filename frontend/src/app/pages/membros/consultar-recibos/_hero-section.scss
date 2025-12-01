@@ -1,0 +1,215 @@
+// ============ HERO SECTION ============
+@import 'variables';
+@import 'animations';
+
+// Forçar navbar sólido nesta página
+// Classe global para forçar navbar sólido
+:host ::ng-deep body.navbar-solid .navbar,
+:host-context(body.navbar-solid) ::ng-deep .navbar {
+  background: rgba(139, 120, 95, 0.95) !important;
+  border-bottom: 1px solid rgba(139, 120, 95, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(139, 120, 95, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+// Animação de fade-in para a página
+:host {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Hero Section
+.receipts-hero {
+  position: relative;
+  height: 350px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(27, 67, 50, 0.85) 0%,
+      rgba(64, 145, 108, 0.75) 50%,
+      rgba(138, 125, 101, 0.85) 100%
+    );
+    backdrop-filter: blur(2px);
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 24px;
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin: 0 0 16px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .lead {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin: 0 0 1.5rem 0;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      max-width: 100%;
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      
+      .hero-btn {
+        min-width: 180px;
+        height: 48px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+        transition: all 0.3s ease;
+        
+        mat-icon {
+          margin-right: 0.5rem;
+          font-size: 1.3rem;
+          width: 1.3rem;
+          height: 1.3rem;
+        }
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35);
+        }
+        
+        &.hero-btn-primary {
+          background: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+          }
+          
+          &.active {
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            color: #8b785f;
+            border: 2px solid rgba(139, 120, 95, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+          }
+        }
+        
+        &.hero-btn-secondary {
+          background: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(10px);
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+          }
+          
+          &.active {
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            color: #8b785f;
+            border: 2px solid rgba(139, 120, 95, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+  
+.hero-benefits {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 2;
+  animation: fadeIn 0.6s ease-in 0.3s both;
+  
+  .benefits-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    mat-icon {
+      font-size: 1.1rem;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+  
+  @media (max-width: 768px) {
+    height: 320px;
+    margin-bottom: 30px;
+    
+    .hero-content {
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      .lead {
+        font-size: 0.95rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+        
+        .hero-btn {
+          width: 100%;
+          min-width: unset;
+          height: 44px;
+          font-size: 0.95rem;
+        }
+      }
+    }
+  }
+}
