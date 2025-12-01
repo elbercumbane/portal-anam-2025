@@ -1,0 +1,9 @@
+// Forçar navbar sólido
+:host ::ng-deep body.navbar-solid .navbar {
+  background: rgba(139, 120, 95, 0.95) !important;
+  border-bottom: 1px solid rgba(139, 120, 95, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(139, 120, 95, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+

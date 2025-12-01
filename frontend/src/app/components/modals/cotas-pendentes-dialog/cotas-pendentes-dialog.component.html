@@ -1,0 +1,45 @@
+<div class="cotas-pendentes-dialog">
+  <button class="btn-close-x" (click)="onFechar()" aria-label="Fechar">
+    <mat-icon>close</mat-icon>
+  </button>
+  
+  <div class="dialog-header">
+    <div class="warning-icon">
+      <mat-icon>warning</mat-icon>
+    </div>
+    <h2>Cotas por Pagar</h2>
+  </div>
+
+  <div class="dialog-content">
+    <p class="greeting">Olá, <strong>{{ data.nomeMembro }}</strong></p>
+    
+    <div class="warning-message">
+      <p>Você possui <strong>{{ data.meses }} {{ data.meses === 1 ? 'mês' : 'meses' }}</strong> de cotas por pagar.</p>
+      <p class="meses-info">Meses que deve: <strong>{{ getMesesTexto() }}</strong></p>
+    </div>
+
+    <div class="payment-info">
+      <div class="info-item">
+        <mat-icon>info</mat-icon>
+        <span>Para ter acesso completo à área de membros, é necessário regularizar o pagamento das cotas pendentes.</span>
+      </div>
+    </div>
+
+    <div class="amount-box">
+      <span class="label">Valor Total por Pagar:</span>
+      <span class="amount">{{ data.valorTotal.toLocaleString('pt-MZ') }} MT</span>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-button class="btn-cancel" (click)="onFechar()">
+      <mat-icon>close</mat-icon>
+      Fechar
+    </button>
+    <button mat-raised-button class="btn-pay" (click)="onPagar()">
+      <mat-icon>payment</mat-icon>
+      Pagar Cotas Agora
+    </button>
+  </div>
+</div>
+

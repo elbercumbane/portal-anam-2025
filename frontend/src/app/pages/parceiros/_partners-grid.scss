@@ -1,0 +1,170 @@
+@import 'variables';
+@import 'animations';
+
+// Grid de Parceiros
+.partners-grid-section {
+  background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+  padding: 40px 0 80px;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.partner-card {
+  --card-color: #8A7D65;
+  
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  animation: fadeInUp 0.6s ease backwards;
+  animation-delay: calc(var(--index) * 0.1s);
+  
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-color);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+      0 30px 60px rgba(0, 0, 0, 0.12),
+      0 0 0 1px var(--card-color);
+    
+    .card-glow {
+      transform: scaleX(1);
+    }
+    
+    .logo-wrapper {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .view-btn {
+      padding-right: 28px;
+      
+      svg {
+        transform: translateX(4px);
+      }
+    }
+  }
+  
+  .card-header {
+    padding: 24px 24px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .logo-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    
+    svg {
+      width: 32px;
+      height: 32px;
+      stroke: white;
+    }
+  }
+  
+  .category-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .card-content {
+    padding: 20px 24px;
+    
+    .partner-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+    
+    .partner-desc {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+  
+  .card-footer {
+    padding: 16px 24px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #f0f0f0;
+    
+    .since {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: #888;
+      
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      
+      svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+      }
+      
+      &:hover {
+        text-decoration: none;
+        filter: brightness(1.1);
+      }
+    }
+  }
+}
+

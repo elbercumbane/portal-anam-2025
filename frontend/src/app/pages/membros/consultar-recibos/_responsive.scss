@@ -1,0 +1,25 @@
+// ============ RESPONSIVIDADE ============
+@import 'variables';
+
+@media (max-width: 768px) {
+  .consult-form {
+    .action-buttons {
+      flex-direction: column;
+      
+      .btn-consultar,
+      .btn-voltar {
+        width: 100%;
+      }
+    }
+  }
+  
+  .receipt-card .receipt-body {
+    flex-direction: column;
+    gap: 1rem;
+    
+    .receipt-total {
+      text-align: left;
+    }
+  }
+}
+

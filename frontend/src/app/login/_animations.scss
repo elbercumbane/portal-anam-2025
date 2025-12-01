@@ -1,0 +1,106 @@
+@import 'variables';
+
+// Animações
+@keyframes overlayPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes patternMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(0) rotate(0deg) scale(0);
+  }
+  10% {
+    opacity: 0.9;
+    transform: translateY(80vh) translateX(20px) rotate(45deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(40vh) translateX(-20px) rotate(180deg) scale(1.2);
+  }
+  90% {
+    opacity: 0.9;
+    transform: translateY(-10vh) translateX(20px) rotate(315deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20vh) translateX(0) rotate(360deg) scale(0);
+  }
+}
+
+@keyframes pulseShape {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.4;
+  }
+  25% {
+    transform: scale(1.1) translate(10px, 10px);
+  }
+  50% {
+    transform: scale(1.3) translate(0, 20px);
+    opacity: 0.6;
+  }
+  75% {
+    transform: scale(1.1) translate(-10px, 10px);
+  }
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba($gold-accent, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba($gold-accent, 0.8));
+  }
+}
+
+@keyframes cardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glowRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

@@ -12,21 +12,21 @@
 
 .historial{ 
   padding:56px 0; 
-  background:#fff; 
+  background:#FFF8E7; // Creme
   text-align:center; 
 }
 
 /* Container agora é global - removido regra local */
 
 .historial h2{ 
-  color:var(--brown-text); 
+  color:#4CAF50; // Verde
   font-weight:800; 
   font-size:clamp(1.6rem, 1.5vw + 1rem, 2.2rem); 
   margin-bottom: 1rem;
 }
 
 .historial .lead{ 
-  color:var(--ink-600); 
+  color:#1a1a1a; // Preto
   max-width:80ch; 
   margin:10px auto 28px; 
   line-height: 1.6;
@@ -123,21 +123,21 @@
   transform: scale(1.15) rotate(8deg);
 }
 
-/* Cores específicas para cada card - harmonizadas com a página */
+/* Cores específicas para cada card - Nova Paleta */
 .missao-card .card-icon {
-  color: #8A7D65;
+  color: #4CAF50;
 }
 
 .missao-card:hover .card-icon {
-  color: #6B5B47;
+  color: rgba(76, 175, 80, 0.8);
 }
 
 .visao-card .card-icon {
-  color: #A0957A;
+  color: #4CAF50;
 }
 
 .visao-card:hover .card-icon {
-  color: #8A7D65;
+  color: rgba(76, 175, 80, 0.8);
 }
 
 /* Detalhes dos Cards Modernos */
@@ -273,7 +273,7 @@
 }
 
 .valores-title {
-  color: var(--brown-text);
+  color: #4CAF50; // Verde
   font-weight: 800;
   font-size: clamp(1.4rem, 1.3vw + 0.8rem, 1.8rem);
   margin-bottom: 40px;
@@ -288,7 +288,7 @@
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: linear-gradient(90deg, #B8860B, #FFD700);
+    background: linear-gradient(90deg, #4CAF50, rgba(76, 175, 80, 0.7));
     border-radius: 2px;
   }
 }

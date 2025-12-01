@@ -1,0 +1,68 @@
+// Responsividade
+@media (max-width: 768px) {
+  .galeria-section {
+    padding: 80px 16px 60px;
+  }
+  
+  .galeria-header {
+    margin-bottom: 40px;
+    
+    .section-title {
+      font-size: 2rem;
+    }
+    
+    .section-description {
+      font-size: 1rem;
+    }
+  }
+  
+  .filtros-container {
+    margin-bottom: 40px;
+    
+    .filtro-btn {
+      padding: 10px 16px;
+      font-size: 0.875rem;
+    }
+  }
+  
+  .galeria-masonry {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .evento-card {
+    &.tall, &.wide {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
+  
+  .card-content {
+    padding: 20px;
+  }
+  
+  .modal-content {
+    .modal-header {
+      padding: 24px;
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .close-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+      }
+    }
+    
+    .modal-body {
+      padding: 24px;
+      
+      .foto-principal img {
+        height: 300px;
+      }
+    }
+  }
+}
+

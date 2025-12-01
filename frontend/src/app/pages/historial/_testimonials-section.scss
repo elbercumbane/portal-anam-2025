@@ -1,0 +1,136 @@
+@import 'variables';
+
+// Testemunhos Estilo Editorial
+.testimonials-section {
+  padding: 100px 0;
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+}
+
+.testimonials-header {
+  text-align: center;
+  margin-bottom: 60px;
+  
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0;
+    
+    .highlight {
+      color: #8A7D65;
+      font-style: italic;
+    }
+  }
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimonial-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(138, 125, 101, 0.1);
+  transition: all 0.4s ease;
+  
+  &.featured {
+    grid-row: span 2;
+    background: linear-gradient(135deg, #8A7D65 0%, #6B5B47 100%);
+    color: white;
+    border: none;
+    
+    @media (max-width: 968px) {
+      grid-row: span 1;
+    }
+    
+    .quote-text {
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .author-name {
+      color: #D4AF37;
+    }
+    
+    .author-role {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .author-avatar {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.testimonial-quote {
+  margin-bottom: 32px;
+  
+  .quote-mark {
+    width: 48px;
+    height: 48px;
+    color: #8A7D65;
+    opacity: 0.2;
+    margin-bottom: 16px;
+  }
+  
+  .quote-text {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #444;
+    margin: 0;
+    font-style: italic;
+  }
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  
+  .author-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #8A7D65 0%, #6B5B47 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    border: 3px solid rgba(138, 125, 101, 0.2);
+    flex-shrink: 0;
+  }
+  
+  .author-info {
+    .author-name {
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: #1a1a1a;
+      margin: 0 0 4px;
+    }
+    
+    .author-role {
+      font-size: 0.875rem;
+      color: #666;
+      margin: 0;
+    }
+  }
+}
+

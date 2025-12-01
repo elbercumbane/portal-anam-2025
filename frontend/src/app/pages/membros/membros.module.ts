@@ -8,13 +8,15 @@ import { OrganogramaComponent } from './organograma/organograma.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { PagarCotasComponent } from './pagar-cotas/pagar-cotas.component';
 import { ConsultarRecibosComponent } from './consultar-recibos/consultar-recibos.component';
+import { authGuard } from '../../guards/auth.guard';
+
 const routes: Routes = [
-  { path: '', component: MembrosHomeComponent },
-  { path: 'organograma', component: OrganogramaComponent },
-  { path: 'cadastro', component: CadastroComponent },
-  { path: 'pagar-cotas', component: PagarCotasComponent },
-  { path: 'consultar-recibos', component: ConsultarRecibosComponent },
-  { path: 'pagamento-confirmado', loadComponent: () => import('./pagamento-confirmado/pagamento-confirmado.component').then(m => m.PagamentoConfirmadoComponent) }
+  { path: '', component: MembrosHomeComponent, canActivate: [authGuard] },
+  { path: 'organograma', component: OrganogramaComponent, canActivate: [authGuard] },
+  { path: 'cadastro', component: CadastroComponent, canActivate: [authGuard] },
+  { path: 'pagar-cotas', component: PagarCotasComponent, canActivate: [authGuard] },
+  { path: 'consultar-recibos', component: ConsultarRecibosComponent, canActivate: [authGuard] },
+  { path: 'pagamento-confirmado', loadComponent: () => import('./pagamento-confirmado/pagamento-confirmado.component').then(m => m.PagamentoConfirmadoComponent), canActivate: [authGuard] }
 ];
 
 @NgModule({

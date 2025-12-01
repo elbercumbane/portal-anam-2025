@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -15,10 +15,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { DecimalPipe } from '@angular/common';
+import { gsap } from 'gsap';
 import { MemberConfirmationDialogComponent, MemberConfirmationData } from '../../../components/modals/member-confirmation-dialog/member-confirmation-dialog.component';
 import { PinConfirmationDialogComponent } from '../../../components/modals/pin-confirmation-dialog/pin-confirmation-dialog.component';
 import { PaymentReceiptDialogComponent, PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
 import { BeneficiosDialogComponent } from '../../../components/modals/beneficios-dialog/beneficios-dialog.component';
+import { MESES, VALOR_COTA, validateMpesaNumber, validateEmolaNumber, calcularValorTotal, formatarMesesSelecionados, Mes } from './pagar-cotas.helpers';
 
 @Component({
   selector: 'app-pagar-cotas',
@@ -44,7 +46,7 @@ import { BeneficiosDialogComponent } from '../../../components/modals/beneficios
   templateUrl: './pagar-cotas.component.html',
   styleUrls: ['./pagar-cotas.component.scss']
 })
-export class PagarCotasComponent implements OnInit {
+export class PagarCotasComponent implements OnInit, AfterViewInit, OnDestroy {
   memberForm!: FormGroup;
   paymentForm!: FormGroup;
   
@@ -52,25 +54,14 @@ export class PagarCotasComponent implements OnInit {
   member: { numero: string; nome: string; email: string; telefone: string } | null = null;
   memberLoading = false;
   
-  valorCota = 1200; // Valor fixo da cota
+  valorCota = VALOR_COTA;
   tipoPagamento: 'mensal' | 'anual' = 'mensal';
   mesesSelecionados: number[] = [];
   metodoPagamento: 'mpesa' | 'emola' | 'visa' | '' = '';
+  particles = Array.from({ length: 15 }, (_, i) => i + 1);
+  private animations: gsap.core.Tween[] = [];
   
-  meses = [
-    { value: 1, label: 'Janeiro', selected: false },
-    { value: 2, label: 'Fevereiro', selected: false },
-    { value: 3, label: 'Março', selected: false },
-    { value: 4, label: 'Abril', selected: false },
-    { value: 5, label: 'Maio', selected: false },
-    { value: 6, label: 'Junho', selected: false },
-    { value: 7, label: 'Julho', selected: false },
-    { value: 8, label: 'Agosto', selected: false },
-    { value: 9, label: 'Setembro', selected: false },
-    { value: 10, label: 'Outubro', selected: false },
-    { value: 11, label: 'Novembro', selected: false },
-    { value: 12, label: 'Dezembro', selected: false }
-  ];
+  meses: Mes[] = MESES.map(m => ({ ...m }));
 
   constructor(
     private fb: FormBuilder,
@@ -87,6 +78,74 @@ export class PagarCotasComponent implements OnInit {
     this.paymentForm = this.fb.group({
       metodoPagamento: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]]
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Pequeno delay para garantir que os elementos estejam renderizados
+    setTimeout(() => {
+      this.initializeAnimations();
+    }, 100);
+  }
+
+  ngOnDestroy(): void {
+    this.animations.forEach(anim => anim.kill());
+  }
+
+  private initializeAnimations(): void {
+    // Animação do overlay de fundo
+    const overlay = document.querySelector('.animated-overlay');
+    if (overlay) {
+      const anim = gsap.to(overlay, {
+        opacity: 0.6,
+        scale: 1.1,
+        duration: 8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut'
+      });
+      this.animations.push(anim);
+    }
+
+    // Animações das partículas
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach((particle, index) => {
+      const anim = gsap.to(particle, {
+        y: -window.innerHeight - 100,
+        x: `+=${(Math.random() - 0.5) * 200}`,
+        rotation: 360,
+        opacity: 0,
+        duration: 15 + Math.random() * 10,
+        delay: index * 0.3,
+        repeat: -1,
+        ease: 'none'
+      });
+      this.animations.push(anim);
+    });
+
+    // Animações dos elementos decorativos
+    const elements = document.querySelectorAll('.element');
+    elements.forEach((element, index) => {
+      const anim = gsap.to(element, {
+        rotation: 360,
+        scale: 1.2,
+        duration: 20 + index * 5,
+        repeat: -1,
+        ease: 'none'
+      });
+      this.animations.push(anim);
+    });
+
+    // Animação de entrada dos cards
+    const cards = document.querySelectorAll('.section-card');
+    cards.forEach((card, index) => {
+      gsap.from(card, {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: 'power3.out'
+      });
     });
   }
 
@@ -158,20 +217,11 @@ export class PagarCotasComponent implements OnInit {
   }
 
   get valorTotal(): number {
-    if (this.tipoPagamento === 'anual') {
-      return this.valorCota * 12;
-    }
-    return this.valorCota * this.quantidadeMeses;
+    return calcularValorTotal(this.tipoPagamento, this.quantidadeMeses, this.valorCota);
   }
 
   get mesesSelecionadosLabels(): string {
-    if (this.tipoPagamento === 'anual') {
-      return 'Ano completo (12 meses)';
-    }
-    if (this.mesesSelecionados.length === 0) return '';
-    return this.mesesSelecionados
-      .map(v => this.meses.find(m => m.value === v)?.label)
-      .join(', ');
+    return formatarMesesSelecionados(this.meses, this.mesesSelecionados, this.tipoPagamento);
   }
 
   get calculoDetalhado(): string {
@@ -200,13 +250,13 @@ export class PagarCotasComponent implements OnInit {
         telefoneControl?.setValidators([
           Validators.required, 
           Validators.pattern(/^[0-9]{9}$/),
-          this.validateMpesaNumber.bind(this)
+          validateMpesaNumber
         ]);
       } else if (metodo === 'emola') {
         telefoneControl?.setValidators([
           Validators.required, 
           Validators.pattern(/^[0-9]{9}$/),
-          this.validateEmolaNumber.bind(this)
+          validateEmolaNumber
         ]);
       }
       telefoneControl?.updateValueAndValidity();
@@ -277,23 +327,6 @@ export class PagarCotasComponent implements OnInit {
     this.paymentForm.get('telefone')?.updateValueAndValidity();
   }
 
-  validateMpesaNumber(control: any): { [key: string]: any } | null {
-    if (!control.value) return null;
-    const value = control.value.toString();
-    if (value.length === 9 && (value.startsWith('84') || value.startsWith('85'))) {
-      return null; // Válido
-    }
-    return { invalidMpesa: true };
-  }
-
-  validateEmolaNumber(control: any): { [key: string]: any } | null {
-    if (!control.value) return null;
-    const value = control.value.toString();
-    if (value.length === 9 && (value.startsWith('87') || value.startsWith('86'))) {
-      return null; // Válido
-    }
-    return { invalidEmola: true };
-  }
 
   get telefoneValue(): string {
     return this.paymentForm.get('telefone')?.value || '';

@@ -1,0 +1,16 @@
+// Variáveis do Login
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$green-light: #40916C;
+$brown-vibrant: #B8860B;
+$brown-gold: #C4A052;
+$gold-accent: #FFD700;
+$gold-shine: #F4D03F;
+$copper: #CD7F32;
+$brown-warm: #A67C52;
+
+// Gradientes
+$gradient-primary: linear-gradient(135deg, $green-dark 0%, $green-medium 50%, $brown-warm 100%);
+$gradient-gold: linear-gradient(135deg, $brown-vibrant 0%, $gold-accent 50%, $copper 100%);
+$gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+

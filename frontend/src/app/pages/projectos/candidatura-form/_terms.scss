@@ -1,0 +1,119 @@
+@import 'variables';
+@import 'animations';
+
+// Terms Section
+.terms-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.checkbox-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 25px;
+  background: #f8fafc;
+  border: 2px solid #e8ecf0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba($green-medium, 0.05) 0%, rgba($gold-primary, 0.08) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover {
+    border-color: $green-medium;
+    background: white;
+    transform: translateX(8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    
+    &::before {
+      opacity: 1;
+    }
+    
+    .checkbox-visual {
+      border-color: $gold-primary;
+      transform: scale(1.1);
+    }
+    
+    .checkbox-text strong {
+      color: $green-dark;
+    }
+  }
+  
+  &:active {
+    transform: translateX(8px) scale(0.98);
+  }
+  
+  input {
+    display: none;
+  }
+  
+  .checkbox-visual {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #d1d9e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+      stroke: white;
+      opacity: 0;
+      transform: scale(0.5) rotate(-45deg);
+      transition: all 0.3s ease;
+    }
+  }
+  
+  input:checked + .checkbox-visual {
+    background: linear-gradient(135deg, $green-dark 0%, $green-medium 100%);
+    border-color: $green-medium;
+    box-shadow: 0 4px 15px rgba($green-dark, 0.3);
+    animation: checkPop 0.4s ease;
+    
+    svg {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+  
+  input:checked ~ .checkbox-text strong {
+    color: $green-dark;
+  }
+  
+  .checkbox-text {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    
+    strong {
+      color: #1a1a1a;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+    
+    small {
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 3px;
+    }
+  }
+}
+

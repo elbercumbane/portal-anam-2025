@@ -1,0 +1,212 @@
+@import 'variables';
+@import 'animations';
+
+// Hero
+.hero-section {
+  position: relative;
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(135deg, rgba(27, 67, 50, 0.9) 0%, rgba(138, 125, 101, 0.85) 100%),
+      url('/assets/FOTO 3 ANAM.jpeg');
+    background-size: cover;
+    background-position: center 25%;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+  }
+  
+  // HOVER na imagem - zoom suave
+  &:hover .hero-bg {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+    transition: background 0.5s ease;
+  }
+  
+  // HOVER no overlay - fica um pouco mais transparente
+  &:hover .hero-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  }
+  
+  // Partículas flutuantes
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba($gold-accent, 0.3);
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+      
+      @for $i from 1 through 8 {
+        &:nth-child(#{$i}) {
+          left: random(100) * 1%;
+          top: random(100) * 1%;
+          animation-delay: -#{$i * 2}s;
+          animation-duration: #{15 + $i * 2}s;
+          width: #{5 + $i * 2}px;
+          height: #{5 + $i * 2}px;
+          opacity: #{0.2 + $i * 0.05};
+        }
+      }
+    }
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    max-width: 800px;
+    transition: transform 0.5s ease;
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transition: all 0.4s ease;
+      animation: floatBadge 3s ease-in-out infinite;
+      
+      svg {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.3s ease;
+        animation: rotatePulse 4s ease-in-out infinite;
+      }
+    }
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      line-height: 1.1;
+      transition: all 0.4s ease;
+      animation: fadeInUp 1s ease, textGlow 4s ease-in-out infinite;
+      
+      .highlight {
+        color: $gold-accent;
+        font-style: italic;
+        transition: all 0.3s ease;
+        animation: shimmerGold 3s ease-in-out infinite;
+        display: inline-block;
+      }
+    }
+    
+    p {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+      transition: all 0.4s ease;
+      animation: fadeInUp 1.2s ease, subtleFloat 5s ease-in-out infinite;
+    }
+  }
+  
+  // HOVER no conteúdo - animações mais intensas
+  &:hover .hero-content {
+    transform: translateY(-8px) scale(1.02);
+    
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: $gold-accent;
+      transform: scale(1.1);
+      box-shadow: 0 10px 40px rgba($gold-accent, 0.3);
+      animation-play-state: paused;
+      
+      svg {
+        transform: rotate(360deg) scale(1.2);
+        animation-play-state: paused;
+      }
+    }
+    
+    h1 {
+      text-shadow: 0 8px 50px rgba(0, 0, 0, 0.5);
+      letter-spacing: 2px;
+      transform: scale(1.03);
+      
+      .highlight {
+        color: $gold-shine;
+        text-shadow: 0 0 40px rgba($gold-accent, 0.8), 0 0 80px rgba($gold-accent, 0.4);
+        transform: scale(1.05);
+      }
+    }
+    
+    p {
+      opacity: 1;
+      transform: translateY(-5px);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  // Animação nas partículas no hover
+  &:hover .hero-particles .particle {
+    animation-duration: 5s;
+    opacity: 0.8;
+  }
+  
+  // Hover na imagem de fundo - zoom mais intenso
+  &:hover .hero-bg {
+    transform: scale(1.08);
+  }
+  
+  .hero-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    
+    svg {
+      display: block;
+      width: 100%;
+      height: 80px;
+      
+      path {
+        fill: #f8f9fa;
+      }
+    }
+  }
+}
+

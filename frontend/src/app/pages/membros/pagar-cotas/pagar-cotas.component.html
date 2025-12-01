@@ -36,6 +36,19 @@
 
 <!-- Conteúdo Principal -->
 <div class="pagar-cotas-container">
+  <!-- Efeitos de fundo animados -->
+  <div class="background-effects">
+    <div class="animated-overlay"></div>
+    <div class="floating-particles">
+      <div class="particle" *ngFor="let i of particles"></div>
+    </div>
+    <div class="decorative-elements">
+      <div class="element element-1"></div>
+      <div class="element element-2"></div>
+      <div class="element element-3"></div>
+    </div>
+  </div>
+  
   <div class="content-section">
   <div class="content-wrapper">
         <!-- Buscar Membro -->
@@ -97,13 +110,19 @@
                 class="payment-type-card"
                 [class.selected]="tipoPagamento === 'mensal'"
                 (click)="selecionarTipoPagamento('mensal')">
-                <mat-radio-button 
-                  value="mensal"
-                  [checked]="tipoPagamento === 'mensal'">
-                </mat-radio-button>
+                <div class="type-icon-wrapper">
+                  <mat-icon class="type-icon">calendar_month</mat-icon>
+                  <div class="radio-indicator" [class.checked]="tipoPagamento === 'mensal'">
+                    <div class="radio-dot"></div>
+                  </div>
+                </div>
                 <div class="type-content">
                   <h4>Pagamento Mensal</h4>
                   <p>Escolha os meses que deseja pagar</p>
+                  <div class="type-badge" *ngIf="tipoPagamento === 'mensal'">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>Selecionado</span>
+                  </div>
                 </div>
               </div>
               
@@ -111,12 +130,19 @@
                 class="payment-type-card"
                 [class.selected]="tipoPagamento === 'anual'"
                 (click)="selecionarTipoPagamento('anual')">
-                <mat-radio-button 
-                  value="anual"
-                  [checked]="tipoPagamento === 'anual'">
-                </mat-radio-button>
+                <div class="type-icon-wrapper">
+                  <mat-icon class="type-icon">calendar_today</mat-icon>
+                  <div class="radio-indicator" [class.checked]="tipoPagamento === 'anual'">
+                    <div class="radio-dot"></div>
+                  </div>
+                </div>
                 <div class="type-content">
                   <h4>Pagamento Anual</h4>
+                  <p>Pague todos os 12 meses de uma vez</p>
+                  <div class="type-badge" *ngIf="tipoPagamento === 'anual'">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>Selecionado</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -124,7 +150,13 @@
             <!-- Seleção de Meses (apenas para mensal) -->
             <div *ngIf="tipoPagamento === 'mensal'" class="meses-section">
               <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+              <div class="meses-header">
               <h4>Selecionar Meses</h4>
+                <div class="meses-counter" *ngIf="quantidadeMeses > 0">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>{{ quantidadeMeses }} mês{{ quantidadeMeses > 1 ? 'es' : '' }} selecionado{{ quantidadeMeses > 1 ? 's' : '' }}</span>
+                </div>
+              </div>
               <div class="meses-grid-modern">
                 <div 
                   *ngFor="let mes of meses; let i = index" 
@@ -141,6 +173,7 @@
                     <span class="mes-label-modern">{{ mes.label }}</span>
                     <span class="mes-value">{{ valorCota | number }} MT</span>
                   </div>
+                  <div class="mes-glow" *ngIf="mes.selected"></div>
                 </div>
           </div>
         </div>
