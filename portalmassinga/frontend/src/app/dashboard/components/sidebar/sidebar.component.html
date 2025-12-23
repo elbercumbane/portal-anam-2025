@@ -1,0 +1,24 @@
+<div class="sidebar-content">
+  <div class="sidebar-header">
+    <div class="logo-section">
+      <div class="logo-text">
+        <h2>ANAM</h2>
+        <span>Associação de Naturais e Amigos de Massinga</span>
+      </div>
+    </div>
+    <button mat-icon-button (click)="onToggleSidebar()" class="close-btn" *ngIf="isHandset">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <app-user-info
+    [userInfo]="userInfo">
+  </app-user-info>
+
+  <app-navigation 
+    [navigationItems]="navigationItems"
+    [activeItem]="activeNavigationItem"
+    (navigationClick)="onNavigationClick($event)"
+    (serviceItemClick)="onServiceItemClick($event)">
+  </app-navigation>
+</div>

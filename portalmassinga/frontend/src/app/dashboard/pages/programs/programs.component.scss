@@ -1,0 +1,10 @@
+@import '../_shared-styles.scss';
+
+// Tema: Páginas (Azul)
+@include category-theme($color-paginas, #2563eb);
+
+.programs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

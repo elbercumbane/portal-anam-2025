@@ -1,0 +1,481 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gestão de Membros</h1>
+    <p>Gerencie os membros da associação</p>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getTotalMembers() }}</h3>
+        <p>Total de Membros</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon pending">
+        <mat-icon>schedule</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getPendingMembers() }}</h3>
+        <p>Pendentes</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon approved">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getApprovedMembers() }}</h3>
+        <p>Aprovados</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros e Busca -->
+  <div class="filters-section">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input 
+        type="text" 
+        placeholder="Buscar por nome, email ou telefone..." 
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()">
+    </div>
+    <div class="filter-box">
+      <mat-icon>filter_list</mat-icon>
+      <select [(ngModel)]="statusFilter" (change)="onStatusFilterChange()">
+        <option value="all">Todos os Status</option>
+        <option value="Pendente">Pendente</option>
+        <option value="Aprovado">Aprovado</option>
+        <option value="Rejeitado">Rejeitado</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Mensagem de Erro -->
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <mat-icon>error</mat-icon>
+    <div class="error-content">
+      <h3>Erro ao carregar membros</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadMembers()">
+        <mat-icon>refresh</mat-icon>
+        Tentar Novamente
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando membros...</p>
+  </div>
+
+  <!-- Tabela de Membros -->
+  <div class="table-container" *ngIf="!isLoading && !errorMessage">
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Celular</th>
+          <th>Profissão</th>
+          <th>Data Cadastro</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of filteredMembers" class="member-row">
+          <td class="photo-cell">
+            <div class="member-photo">
+              <img *ngIf="member.foto" [src]="member.foto" [alt]="member.nome">
+              <div *ngIf="!member.foto" class="photo-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+            </div>
+          </td>
+          <td class="name-cell">{{ member.nome }}</td>
+          <td>{{ member.email }}</td>
+          <td>{{ member.celular }}</td>
+          <td>{{ member.profissao || '-' }}</td>
+          <td>{{ member.dataCadastro ? (member.dataCadastro | date:'dd/MM/yyyy') : '-' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusBadgeClass(member.status)">
+              {{ member.status }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="btn-action btn-view" (click)="viewMemberDetails(member)" title="Ver Detalhes">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button 
+              *ngIf="member.status === 'Pendente'"
+              class="btn-action btn-approve" 
+              (click)="updateMemberStatus(member.id, 'Aprovado')" 
+              title="Aprovar">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button 
+              *ngIf="member.status === 'Pendente'"
+              class="btn-action btn-reject" 
+              (click)="updateMemberStatus(member.id, 'Rejeitado')" 
+              title="Rejeitar">
+              <mat-icon>close</mat-icon>
+            </button>
+            <button class="btn-action btn-delete" (click)="deleteMember(member.id)" title="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredMembers.length === 0 && !isLoading">
+          <td colspan="8" class="no-data">
+            <mat-icon>info</mat-icon>
+            <p>Nenhum membro encontrado</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal de Detalhes -->
+  <div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="selectedMember">
+      <div class="modal-header">
+        <div class="header-title-section">
+          <h2>{{ isEditing ? 'Editar Membro' : 'Detalhes do Membro' }}</h2>
+          <span class="status-badge" [ngClass]="getStatusBadgeClass(selectedMember.status)">
+            {{ selectedMember.status }}
+          </span>
+        </div>
+        <div class="header-actions">
+          <button *ngIf="!isEditing" class="btn-edit" (click)="toggleEditMode()" title="Editar">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+        <button class="btn-close" (click)="closeDetailsModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="member-details">
+          
+          <!-- Seção: Dados Pessoais -->
+          <div class="detail-card main-card">
+            <div class="card-header">
+              <div class="header-icon">👤</div>
+              <div class="header-text">
+                <h3>Dados Pessoais</h3>
+                <span class="header-badge required-badge">Obrigatório</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <!-- Foto + Nome lado a lado (igual ao formulário) -->
+              <div class="photo-name-row">
+                <div class="detail-photo">
+                  <img *ngIf="selectedMember.foto" [src]="selectedMember.foto" [alt]="selectedMember.nome">
+                  <div *ngIf="!selectedMember.foto" class="photo-placeholder-large">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="name-fields">
+                  <div class="detail-item full-width">
+                    <label>Nome Completo <span class="required-mark">*</span>:</label>
+                    <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.nome" class="edit-input">
+                    <p *ngIf="!isEditing" class="member-name-large">{{ selectedMember.nome }}</p>
+                  </div>
+                  <div class="detail-row">
+                    <div class="detail-item">
+                      <label>Filho/a de (Pai) <span class="required-mark">*</span>:</label>
+                      <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.nomePai" class="edit-input">
+                      <p *ngIf="!isEditing">{{ selectedMember.nomePai || '-' }}</p>
+                    </div>
+                    <div class="detail-item">
+                      <label>e de (Mãe) <span class="required-mark">*</span>:</label>
+                      <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.nomeMae" class="edit-input">
+                      <p *ngIf="!isEditing">{{ selectedMember.nomeMae || '-' }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="detail-row three-cols">
+                <div class="detail-item">
+                  <label>Data de Nascimento <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="date" [(ngModel)]="editedMember!.dataNascimento" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.dataNascimento ? (selectedMember.dataNascimento | date:'dd/MM/yyyy') : '-' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Estado Civil <span class="required-mark">*</span>:</label>
+                  <select *ngIf="isEditing" [(ngModel)]="editedMember!.estadoCivil" class="edit-input">
+                    <option value="">Selecione...</option>
+                    <option value="solteiro">Solteiro(a)</option>
+                    <option value="casado">Casado(a)</option>
+                    <option value="uniao_marital">União Marital</option>
+                    <option value="viuvo">Viúvo(a)</option>
+                    <option value="divorciado">Divorciado(a)</option>
+                  </select>
+                  <p *ngIf="!isEditing">{{ getEstadoCivilLabel(selectedMember.estadoCivil) }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Profissão <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.profissao" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.profissao || '-' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Contatos -->
+          <div class="detail-card main-card">
+            <div class="card-header">
+              <div class="header-icon">📱</div>
+              <div class="header-text">
+                <h3>Contatos</h3>
+                <span class="header-badge required-badge">Obrigatório</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="detail-row three-cols">
+                <div class="detail-item">
+                  <label>Celular <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="tel" [(ngModel)]="editedMember!.celular" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.celular || '-' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Email <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="email" [(ngModel)]="editedMember!.email" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.email || '-' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Telefone Fixo:</label>
+                  <input *ngIf="isEditing" type="tel" [(ngModel)]="editedMember!.telefone" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.telefone || '-' }}</p>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-item flex-2">
+                  <label>Endereço (Rua/Avenida) <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.rua" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.rua || '-' }}</p>
+                </div>
+                <div class="detail-item flex-1">
+                  <label>Bairro <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.bairro" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.bairro || '-' }}</p>
+                </div>
+                <div class="detail-item flex-1">
+                  <label>Cidade <span class="required-mark">*</span>:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.cidade" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.cidade || '-' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Informações do Cônjuge -->
+          <div class="detail-card" *ngIf="(selectedMember.nomeConjuge || selectedMember.dataNascimentoConjuge || selectedMember.filiacaoPaiConjuge || selectedMember.filiacaoMaeConjuge) || isEditing">
+            <div class="card-header">
+              <div class="header-icon">💑</div>
+              <div class="header-text">
+                <h3>Informações do Cônjuge</h3>
+                <span class="header-badge optional-badge">Opcional</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="detail-row">
+                <div class="detail-item flex-2">
+                  <label>Nome do/a Cônjuge:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.nomeConjuge" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.nomeConjuge || '-' }}</p>
+                </div>
+                <div class="detail-item flex-1">
+                  <label>Data de Nascimento:</label>
+                  <input *ngIf="isEditing" type="date" [(ngModel)]="editedMember!.dataNascimentoConjuge" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.dataNascimentoConjuge ? (selectedMember.dataNascimentoConjuge | date:'dd/MM/yyyy') : '-' }}</p>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-item">
+                  <label>Filho/a de (Pai):</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.filiacaoPaiConjuge" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.filiacaoPaiConjuge || '-' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>e de (Mãe):</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.filiacaoMaeConjuge" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.filiacaoMaeConjuge || '-' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Dependentes -->
+          <div class="detail-card" *ngIf="selectedMember.dependentes && selectedMember.dependentes.length > 0">
+            <div class="card-header">
+              <div class="header-icon"><mat-icon>family_restroom</mat-icon></div>
+              <div class="header-text">
+                <h3>Dependentes</h3>
+                <span class="header-badge optional-badge">Opcional</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="dependentes-list">
+                <div class="dependente-item" *ngFor="let dep of selectedMember.dependentes">
+                  <div class="dependente-info">
+                    <h4>{{ dep.nome }}</h4>
+                    <div class="dependente-details">
+                      <span *ngIf="dep.parentesco">
+                        <strong>Parentesco:</strong> {{ getParentescoLabel(dep.parentesco) }}
+                      </span>
+                      <span *ngIf="dep.profissao">
+                        <strong>Profissão:</strong> {{ dep.profissao }}
+                      </span>
+                      <span *ngIf="dep.idade">
+                        <strong>Idade:</strong> {{ dep.idade }} anos
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Local de Trabalho -->
+          <div class="detail-card" *ngIf="(selectedMember.localTrabalho || selectedMember.cargo || selectedMember.enderecoTrabalho || selectedMember.telefoneTrabalho) || isEditing">
+            <div class="card-header">
+              <div class="header-icon">💼</div>
+              <div class="header-text">
+                <h3>Local de Trabalho</h3>
+                <span class="header-badge optional-badge">Opcional</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="detail-row">
+                <div class="detail-item flex-2">
+                  <label>Empresa/Instituição:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.localTrabalho" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.localTrabalho || '-' }}</p>
+                </div>
+                <div class="detail-item flex-1">
+                  <label>Cargo:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.cargo" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.cargo || '-' }}</p>
+                </div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-item flex-2">
+                  <label>Endereço do Trabalho:</label>
+                  <input *ngIf="isEditing" type="text" [(ngModel)]="editedMember!.enderecoTrabalho" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.enderecoTrabalho || '-' }}</p>
+                </div>
+                <div class="detail-item flex-1">
+                  <label>Telefone:</label>
+                  <input *ngIf="isEditing" type="tel" [(ngModel)]="editedMember!.telefoneTrabalho" class="edit-input">
+                  <p *ngIf="!isEditing">{{ selectedMember.telefoneTrabalho || '-' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Outras Informações -->
+          <div class="detail-card" *ngIf="selectedMember.outrasInformacoes || isEditing">
+            <div class="card-header">
+              <div class="header-icon">📝</div>
+              <div class="header-text">
+                <h3>Outras Informações</h3>
+                <span class="header-badge optional-badge">Opcional</span>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="detail-item full-width">
+                <label>Informações adicionais que julgar pertinentes:</label>
+                <textarea *ngIf="isEditing" [(ngModel)]="editedMember!.outrasInformacoes" class="edit-input" rows="4"></textarea>
+                <p *ngIf="!isEditing" class="text-content">{{ selectedMember.outrasInformacoes }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção: Informações do Sistema -->
+          <div class="detail-card system-card">
+            <div class="card-header">
+              <div class="header-icon">📋</div>
+              <div class="header-text">
+                <h3>Informações do Sistema</h3>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="detail-row">
+                <div class="detail-item">
+                  <label>Data de Cadastro:</label>
+                  <p>{{ selectedMember.dataCadastro ? (selectedMember.dataCadastro | date:'dd/MM/yyyy HH:mm') : '-' }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>ID:</label>
+                  <p class="id-text">{{ selectedMember.id }}</p>
+                </div>
+                <div class="detail-item">
+                  <label>Termos Aceitos:</label>
+                  <p>
+                    <span class="badge" [ngClass]="selectedMember.aceitaTermos ? 'badge-success' : 'badge-danger'">
+                      {{ selectedMember.aceitaTermos ? 'Sim' : 'Não' }}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <!-- Informação sobre login após aprovação -->
+              <div *ngIf="selectedMember.status === 'Aprovado'" class="login-info-box">
+                <div class="info-header">
+                  <mat-icon>login</mat-icon>
+                  <h4>Membro Aprovado - Pode Fazer Login</h4>
+                </div>
+                <div class="info-content">
+                  <p><strong>Email:</strong> {{ selectedMember.email }}</p>
+                  <p><strong>Senha padrão:</strong> membro123</p>
+                  <p class="info-note">O membro deve alterar a senha após o primeiro login.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="!isEditing" class="footer-actions-view">
+        <button class="btn-secondary" (click)="closeDetailsModal()">Fechar</button>
+        <button 
+          *ngIf="selectedMember.status === 'Pendente'"
+          class="btn-approve" 
+          (click)="updateMemberStatus(selectedMember.id, 'Aprovado')">
+          <mat-icon>check</mat-icon>
+          Aprovar Membro
+        </button>
+        <button 
+          *ngIf="selectedMember.status === 'Pendente'"
+          class="btn-reject" 
+          (click)="updateMemberStatus(selectedMember.id, 'Rejeitado')">
+          <mat-icon>close</mat-icon>
+          Rejeitar
+        </button>
+        </div>
+        <div *ngIf="isEditing" class="footer-actions-edit">
+          <button class="btn-secondary" (click)="toggleEditMode()">Cancelar</button>
+          <button class="btn-save" (click)="saveMemberChanges()">
+            <mat-icon>save</mat-icon>
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

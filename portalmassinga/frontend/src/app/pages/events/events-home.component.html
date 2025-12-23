@@ -1,0 +1,6 @@
+<section class="container">
+  <h1>Eventos</h1>
+  <app-filtro-tabs [tabs]="['Próximos','Realizados']" (change)="onTabChange($event)"></app-filtro-tabs>
+  <app-lista-eventos [tipo]="tab"></app-lista-eventos>
+</section>
+

@@ -1,0 +1,74 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Relatórios</h1>
+    <p>Gerencie relatórios financeiros e informações</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Tipos de Relatórios -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>assessment</mat-icon>
+          Tipos de Relatórios
+        </mat-card-title>
+        <button mat-icon-button color="primary" class="add-btn">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="reports-list">
+          <mat-expansion-panel *ngFor="let report of [1,2,3]; let i = index">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Relatório {{ i + 1 }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="form-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título do Relatório</mat-label>
+                <input matInput placeholder="Ex: Relatório Anual 2024">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="3"></textarea>
+              </mat-form-field>
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Período Inicial</mat-label>
+                  <input matInput [matDatepicker]="picker">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Período Final</mat-label>
+                  <input matInput [matDatepicker]="picker2">
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="file-upload-section">
+                <label class="upload-label">Arquivo PDF do Relatório</label>
+                <button mat-raised-button color="primary" class="upload-btn">
+                  <mat-icon>attach_file</mat-icon>
+                  Upload Relatório
+                </button>
+              </div>
+              <mat-checkbox>Disponível para Membros</mat-checkbox>
+              <button mat-button color="warn" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+                Remover Relatório
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+    </div>
+  </div>
+</div>

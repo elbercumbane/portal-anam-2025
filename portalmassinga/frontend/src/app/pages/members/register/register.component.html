@@ -1,0 +1,168 @@
+<section class="container">
+  <h1>Cadastro de Membro</h1>
+  <p class="lead">Preencha o formulário abaixo para se candidatar a membro da nossa associação.</p>
+  
+  <!-- Mensagens de erro e sucesso -->
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  
+  <form class="cadastro-form" (ngSubmit)="onSubmit()" [class.loading]="isLoading">
+    <h2>Dados Pessoais</h2>
+    
+    <div class="form-group">
+      <label for="nome">Nome Completo *</label>
+      <input type="text" id="nome" name="nome" [(ngModel)]="formData.nome" required>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nome_pai">Nome do Pai *</label>
+        <input type="text" id="nome_pai" name="nome_pai" [(ngModel)]="formData.nome_pai" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="nome_mae">Nome da Mãe *</label>
+        <input type="text" id="nome_mae" name="nome_mae" [(ngModel)]="formData.nome_mae" required>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="data_nascimento">Data de Nascimento *</label>
+        <input type="date" id="data_nascimento" name="data_nascimento" [(ngModel)]="formData.data_nascimento" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="estado_civil">Estado Civil *</label>
+        <select id="estado_civil" name="estado_civil" [(ngModel)]="formData.estado_civil" required>
+          <option value="">Selecione...</option>
+          <option value="solteiro">Solteiro(a)</option>
+          <option value="casado">Casado(a)</option>
+          <option value="uniao_marital">União Marital</option>
+          <option value="viuvo">Viúvo(a)</option>
+          <option value="divorciado">Divorciado(a)</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="profissao">Profissão *</label>
+      <input type="text" id="profissao" name="profissao" [(ngModel)]="formData.profissao" required>
+    </div>
+    
+    <h2>Contatos</h2>
+    
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="celular">Celular *</label>
+        <input type="tel" id="celular" name="celular" [(ngModel)]="formData.celular" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="telefone">Telefone Fixo</label>
+        <input type="tel" id="telefone" name="telefone" [(ngModel)]="formData.telefone">
+      </div>
+    </div>
+    
+    <h2>Endereço</h2>
+    
+    <div class="form-group">
+      <label for="rua">Rua/Avenida *</label>
+      <input type="text" id="rua" name="rua" [(ngModel)]="formData.rua" required>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="bairro">Bairro *</label>
+        <input type="text" id="bairro" name="bairro" [(ngModel)]="formData.bairro" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="cidade">Cidade *</label>
+        <input type="text" id="cidade" name="cidade" [(ngModel)]="formData.cidade" required>
+      </div>
+    </div>
+    
+    <h2>Informações do Cônjuge (Opcional)</h2>
+    
+    <div class="form-group">
+      <label for="nome_conjuge">Nome do Cônjuge</label>
+      <input type="text" id="nome_conjuge" name="nome_conjuge" [(ngModel)]="formData.nome_conjuge">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="data_nascimento_conjuge">Data de Nascimento do Cônjuge</label>
+        <input type="date" id="data_nascimento_conjuge" name="data_nascimento_conjuge" [(ngModel)]="formData.data_nascimento_conjuge">
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="filiacao_pai_conjuge">Filiação - Pai do Cônjuge</label>
+        <input type="text" id="filiacao_pai_conjuge" name="filiacao_pai_conjuge" [(ngModel)]="formData.filiacao_pai_conjuge">
+      </div>
+      
+      <div class="form-group">
+        <label for="filiacao_mae_conjuge">Filiação - Mãe do Cônjuge</label>
+        <input type="text" id="filiacao_mae_conjuge" name="filiacao_mae_conjuge" [(ngModel)]="formData.filiacao_mae_conjuge">
+      </div>
+    </div>
+    
+    <h2>Informações de Trabalho (Opcional)</h2>
+    
+    <div class="form-group">
+      <label for="local_trabalho">Local de Trabalho</label>
+      <input type="text" id="local_trabalho" name="local_trabalho" [(ngModel)]="formData.local_trabalho">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cargo">Cargo</label>
+        <input type="text" id="cargo" name="cargo" [(ngModel)]="formData.cargo">
+      </div>
+      
+      <div class="form-group">
+        <label for="telefone_trabalho">Telefone do Trabalho</label>
+        <input type="tel" id="telefone_trabalho" name="telefone_trabalho" [(ngModel)]="formData.telefone_trabalho">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="endereco_trabalho">Endereço do Trabalho</label>
+      <input type="text" id="endereco_trabalho" name="endereco_trabalho" [(ngModel)]="formData.endereco_trabalho">
+    </div>
+    
+    <h2>Outras Informações</h2>
+    
+    <div class="form-group">
+      <label for="outras_informacoes">Outras Informações</label>
+      <textarea id="outras_informacoes" name="outras_informacoes" rows="4" [(ngModel)]="formData.outras_informacoes" 
+                placeholder="Conte-nos mais sobre si e o seu interesse em fazer parte da associação..."></textarea>
+    </div>
+    
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="formData.aceita_termos" name="aceita_termos" required>
+        <span>Eu aceito os termos e condições *</span>
+      </label>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" routerLink="/membros" [disabled]="isLoading">Cancelar</button>
+      <button type="submit" class="btn" [disabled]="isLoading || !formData.aceita_termos">
+        <span *ngIf="isLoading">Enviando...</span>
+        <span *ngIf="!isLoading">Enviar Candidatura</span>
+      </button>
+    </div>
+  </form>
+</section>

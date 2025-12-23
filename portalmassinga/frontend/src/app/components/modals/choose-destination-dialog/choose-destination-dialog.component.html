@@ -1,0 +1,33 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Bem-vindo, {{ data.userName }}!</h2>
+    <p>Para onde deseja ir?</p>
+  </div>
+
+  <div class="dialog-content">
+    <div class="options-grid">
+      <button class="option-card" (click)="goToDashboard()">
+        <div class="option-icon dashboard">
+          <mat-icon>dashboard</mat-icon>
+        </div>
+        <div class="option-content">
+          <h3>Dashboard</h3>
+          <p>Acesse o painel administrativo para gerenciar membros, projetos e muito mais.</p>
+        </div>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      </button>
+
+      <button class="option-card" (click)="goToMembersArea()">
+        <div class="option-icon members">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="option-content">
+          <h3>Área de Membros</h3>
+          <p>Acesse sua área pessoal como membro da associação.</p>
+        </div>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+

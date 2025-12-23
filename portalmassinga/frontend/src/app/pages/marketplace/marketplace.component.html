@@ -1,0 +1,267 @@
+<div class="marketplace-page">
+  <!-- Hero Section Dinâmico e Espetacular -->
+  <section class="hero-section with-slider" aria-labelledby="hero-title">
+    <div class="slider" #slider>
+      <div class="slide" [style.background-image]="'url(' + slides[currentSlide].image + ')'">
+        <div class="slide-overlay"></div>
+      </div>
+    </div>
+    <div class="hero__scrim"></div>
+    <div class="hero__scrim--bright"></div>
+    
+    <!-- Partículas Flutuantes -->
+    <div class="particles-container">
+      <div class="particle" *ngFor="let particle of particles; let i = index" 
+           [style.left.%]="particle.left"
+           [style.animation-delay.s]="particle.delay"
+           [style.animation-duration.s]="particle.duration"></div>
+    </div>
+    
+    <div class="hero-content" #heroContent>
+      <div class="hero-badge">
+        <mat-icon>store</mat-icon>
+        <span>Marketplace</span>
+      </div>
+      <h1 id="hero-title" class="hero__title" #heroTitle>
+        <span class="title-line-1">{{ slides[currentSlide].titleLine1 }}</span>
+        <span class="title-line-2">{{ slides[currentSlide].titleLine2 }}</span>
+      </h1>
+      <div class="hero-subtitle-box" #heroSubtitleBox>
+        <p class="hero-subtitle">{{ slides[currentSlide].subtitle }}</p>
+      </div>
+      <div class="hero-actions">
+        <button class="hero-btn primary" (click)="scrollToProducts()">
+          <span>Explorar Produtos</span>
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button class="hero-btn secondary" (click)="scrollToCTA()">
+          <span>Anunciar Produto</span>
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Controles do Slider -->
+    <div class="hero-dots">
+      <button 
+        *ngFor="let slide of slides; let i = index" 
+        class="hero-dot" 
+        [class.active]="currentSlide === i"
+        (click)="goToSlide(i)"
+        [attr.aria-label]="'Slide ' + (i + 1)">
+      </button>
+    </div>
+    
+    <!-- Botões de Navegação -->
+    <div class="hero-nav-arrows">
+      <button 
+        class="hero-arrow hero-arrow--prev" 
+        (click)="prevSlide()"
+        [attr.aria-label]="'Slide anterior'">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button 
+        class="hero-arrow hero-arrow--next" 
+        (click)="nextSlide()"
+        [attr.aria-label]="'Próximo slide'">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    
+    <!-- Wave Bottom -->
+    <div class="hero-wave">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Estatísticas -->
+  <section class="stats-section" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item" *ngFor="let stat of stats; let i = index" [style.--delay]="i * 0.1 + 's'">
+          <div class="stat-icon" [style.background]="stat.cor">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">{{ stat.valor }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Layout Principal com Sidebar -->
+  <div class="marketplace-layout">
+    <!-- Sidebar Vertical -->
+    <aside class="marketplace-sidebar">
+      <!-- Header do Sidebar -->
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Marketplace</h2>
+        <button class="sidebar-settings-btn" aria-label="Configurações">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+
+      <!-- Barra de Busca -->
+      <div class="sidebar-search">
+        <div class="search-icon">
+          <mat-icon>search</mat-icon>
+        </div>
+        <input 
+          type="text" 
+          class="search-input"
+          placeholder="Search Marketplace"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+        />
+        <button class="search-clear" *ngIf="searchQuery" (click)="searchQuery = ''; filterProducts()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Navegação Principal -->
+      <nav class="sidebar-nav">
+        <button class="nav-item" (click)="resetFilters()">
+          <mat-icon>storefront</mat-icon>
+          <span>Browse all</span>
+        </button>
+        <button class="nav-item">
+          <mat-icon>person</mat-icon>
+          <span>Your account</span>
+        </button>
+        <button class="nav-item nav-item--primary" (click)="scrollToCTA()">
+          <mat-icon>add</mat-icon>
+          <span>Create new listing</span>
+        </button>
+      </nav>
+
+      <!-- Seção de Localização -->
+      <div class="sidebar-location">
+        <h3 class="sidebar-section-title">Location</h3>
+        <div class="location-content">
+          <span class="location-text">{{ location }}</span>
+          <mat-icon class="location-icon">info</mat-icon>
+          <div class="location-tooltip">
+            Enter your town/city to show local results
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Categorias -->
+      <div class="sidebar-categories">
+        <h3 class="sidebar-section-title">Categories</h3>
+        <div class="categories-list">
+          <button 
+            *ngFor="let category of categories"
+            class="category-item"
+            [class.active]="selectedCategory === category.id"
+            (click)="onCategoryChange(category.id)">
+            <mat-icon>{{ category.icon }}</mat-icon>
+            <span>{{ category.label }}</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="marketplace-content">
+      <!-- Grid de Produtos -->
+      <section class="products-section" id="products">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="title-count">{{ filteredProducts.length }}</span>
+            <span class="title-text">produtos disponíveis</span>
+          </h2>
+        </div>
+
+        <div class="products-grid" *ngIf="filteredProducts.length > 0; else noResults">
+          <article 
+            *ngFor="let product of filteredProducts; let i = index" 
+            class="product-item"
+            [class.featured]="product.featured">
+            
+            <div class="product-image-wrapper">
+              <img 
+                [src]="product.image" 
+                [alt]="product.title"
+                class="product-image"
+                loading="lazy"
+                (error)="onImageError($event)"
+              />
+              <div class="product-overlay">
+                <button class="product-view-btn">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+              <div class="product-badge" *ngIf="product.featured">
+                <mat-icon>star</mat-icon>
+              </div>
+            </div>
+
+            <div class="product-content">
+              <div class="product-category-tag">
+                <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
+                <span>{{ getCategoryLabel(product.category) }}</span>
+              </div>
+              
+              <h3 class="product-name">{{ product.title }}</h3>
+              <p class="product-excerpt">{{ product.description }}</p>
+
+              <div class="product-details">
+                <div class="detail-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ product.location }}</span>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ product.seller }}</span>
+                </div>
+              </div>
+
+              <div class="product-footer">
+                <div class="product-price">
+                  {{ formatPrice(product.price) }}
+                </div>
+                <button class="product-contact-btn">
+                  <mat-icon>chat_bubble</mat-icon>
+                  <span>Contactar</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <ng-template #noResults>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <mat-icon>inventory_2</mat-icon>
+            </div>
+            <h3>Nenhum produto encontrado</h3>
+            <p>Experimente ajustar os filtros de pesquisa</p>
+            <button class="empty-action-btn" (click)="resetFilters()">
+              Limpar filtros
+            </button>
+          </div>
+        </ng-template>
+      </section>
+    </main>
+  </div>
+
+
+  <!-- CTA Section -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">Tem algo para vender?</h2>
+        <p class="cta-text">Junte-se à nossa comunidade e comece a vender hoje mesmo</p>
+        <button class="cta-button">
+          <span>Anunciar produto</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

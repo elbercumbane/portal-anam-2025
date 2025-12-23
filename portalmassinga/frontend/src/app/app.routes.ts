@@ -1,0 +1,32 @@
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./layout/shell.component').then(m => m.ShellComponent),
+    children: [
+      { path: '', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
+      { path: 'servicos', loadChildren: () => import('./pages/services/services.module').then(m => m.ServicesModule) },
+      { path: 'eventos', redirectTo: '/', pathMatch: 'full' }, // Redireciona para home (seção de eventos já está lá)
+      { path: 'historial', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
+      { path: 'documentacao', loadChildren: () => import('./pages/documentation/documentation.module').then(m => m.DocumentationModule) },
+      { path: 'projectos', loadChildren: () => import('./pages/projects/projects.module').then(m => m.ProjectsModule) },
+      // Manter rotas existentes
+      { path: 'sobre', loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent) },
+      { path: 'associar-se', loadComponent: () => import('./pages/associate/associate.component').then(m => m.AssociateComponent) },
+      { path: 'noticias', loadComponent: () => import('./pages/news/news.component').then(m => m.NewsComponent) },
+      { path: 'contato', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
+      { path: 'programas', loadComponent: () => import('./pages/programs/programs.component').then(m => m.ProgramsComponent) },
+      { path: 'parceiros', loadComponent: () => import('./pages/partners/partners.component').then(m => m.PartnersComponent) },
+      { path: 'marketplace', loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent) },
+      { path: 'simpatizantes', loadChildren: () => import('./pages/sympathizers/sympathizers.module').then(m => m.SympathizersModule) },
+      { path: 'apoio', loadChildren: () => import('./pages/supporters/supporters.module').then(m => m.SupportersModule) },
+    ],
+  },
+  // Rotas sem navbar (fora do shell)
+      { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
+      // Rotas de membros - fora do shell para não ter navbar
+      { path: 'membros', loadChildren: () => import('./pages/members/members.module').then(m => m.MembersModule) },
+  { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
+  { path: '**', redirectTo: '' },
+];

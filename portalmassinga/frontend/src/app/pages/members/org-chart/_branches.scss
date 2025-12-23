@@ -1,0 +1,153 @@
+@import 'variables';
+@import 'animations';
+
+// Nível 1 - Ramos Principais
+.tree-level {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  position: relative;
+  
+  &.level-1 {
+    margin-top: 20px;
+  }
+}
+
+.tree-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  
+  &.branch-left { transform: translateX(-20px); }
+  &.branch-right { transform: translateX(20px); }
+}
+
+.branch-line {
+  width: 4px;
+  height: 50px;
+  background: $gradient-trunk;
+  border-radius: 2px;
+  position: relative;
+  margin-bottom: 10px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: $gradient-trunk;
+    border-radius: 2px;
+  }
+  
+  .branch-glow {
+    position: absolute;
+    inset: -3px;
+    background: $gradient-gold;
+    border-radius: 4px;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.5s ease;
+  }
+}
+
+// Nós dos Ramos
+.branch-node {
+  position: relative;
+  width: 260px;
+  padding: 25px;
+  background: linear-gradient(145deg, rgba(40, 40, 40, 0.95) 0%, rgba(25, 25, 25, 0.98) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba($gold-primary, 0.25);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba($gold-primary, 0.1);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  .node-glow {
+    position: absolute;
+    inset: -2px;
+    background: $gradient-gold;
+    border-radius: 22px;
+    opacity: 0;
+    z-index: -1;
+    filter: blur(12px);
+    transition: opacity 0.4s ease;
+  }
+  
+  &:hover, &.active {
+    transform: translateY(-3px);
+    border-color: rgba($gold-primary, 0.4);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.25),
+      0 0 20px rgba($gold-primary, 0.1);
+    
+    .node-glow {
+      opacity: 0.25;
+    }
+    
+    .node-icon {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px rgba($gold-primary, 0.3);
+    }
+  }
+  
+  .node-content {
+    text-align: center;
+  }
+  
+  .node-icon {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 15px;
+    background: linear-gradient(135deg, rgba($gold-primary, 0.15) 0%, rgba($gold-dark, 0.2) 100%);
+    border: 1px solid rgba($gold-primary, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    
+    svg {
+      width: 26px;
+      height: 26px;
+      stroke: rgba($gold-light, 0.8);
+    }
+  }
+  
+  .node-tag {
+    display: inline-block;
+    padding: 5px 14px;
+    background: rgba($gold-primary, 0.15);
+    border-radius: 15px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: $gold-light;
+    margin-bottom: 10px;
+  }
+  
+  .node-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 6px;
+  }
+  
+  .node-name {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+  }
+}
+
+.tree-branch:hover .branch-glow {
+  opacity: 0.2;
+}
+

@@ -1,0 +1,115 @@
+@import 'variables';
+@import 'animations';
+
+// Hero Section - Cores iguais ao hero dos projectos
+.hero-section {
+  position: relative;
+  height: 420px;
+  background: 
+    linear-gradient(135deg, rgba(27, 67, 50, 0.9) 0%, rgba(138, 125, 101, 0.85) 100%),
+    url('/assets/FOTO 4 ANAM.jpeg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 20px;
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+  
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: $gold-primary;
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleFloat 15s infinite;
+      box-shadow: 0 0 10px rgba($gold-primary, 0.5);
+      
+      @for $i from 1 through 10 {
+        &:nth-child(#{$i}) {
+          left: random(100) * 1%;
+          top: random(100) * 1%;
+          animation-delay: $i * 1.5s;
+          animation-duration: 12s + random(8) * 1s;
+        }
+      }
+    }
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    animation: heroFadeIn 1s ease;
+  }
+  
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $gold-light;
+    }
+    
+    span {
+      color: white;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+  }
+  
+  .hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: white;
+    margin: 0 0 10px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    
+    .highlight {
+      color: $gold-light;
+      font-style: italic;
+    }
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 25px;
+    font-weight: 500;
+  }
+  
+  .hero-wave {
+    display: none;
+  }
+}
+

@@ -1,0 +1,45 @@
+@import 'variables';
+
+// Animações
+@keyframes overlayPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(100vh) rotate(0deg) scale(0);
+  }
+  10% { opacity: 0.3; transform: translateY(80vh) rotate(45deg) scale(0.8); }
+  50% { opacity: 0.4; transform: translateY(40vh) rotate(180deg) scale(1); }
+  90% { opacity: 0.3; transform: translateY(-10vh) rotate(315deg) scale(0.8); }
+}
+
+@keyframes pulseShape {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50% { transform: scale(1.1); opacity: 0.35; }
+}
+
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba($gold-primary, 0.15); }
+  50% { box-shadow: 0 0 20px rgba($gold-primary, 0.25); }
+}
+
+@keyframes trunkPulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nodeEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+

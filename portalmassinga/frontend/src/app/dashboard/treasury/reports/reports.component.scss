@@ -1,0 +1,45 @@
+@import '../../pages/_shared-styles.scss';
+
+// Tema: Tesouraria (Laranja)
+@include category-theme($color-tesouraria, $color-tesouraria-secondary);
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.file-upload-section {
+  margin-top: 20px;
+  
+  .upload-label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+  }
+  
+  .upload-btn {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba($color-tesouraria, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 6px 16px rgba($color-tesouraria, 0.4);
+      transform: translateY(-2px);
+    }
+  }
+}

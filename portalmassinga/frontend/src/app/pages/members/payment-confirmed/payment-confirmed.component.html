@@ -1,0 +1,49 @@
+<div class="confirmation-container">
+  <div class="confirmation-content">
+    <div class="success-icon-wrapper">
+      <mat-icon class="success-icon">check_circle</mat-icon>
+    </div>
+    
+    <h1>Pagamento Confirmado!</h1>
+    <p class="confirmation-message">O seu pagamento foi processado com sucesso.</p>
+    
+    <mat-card class="receipt-info-card" *ngIf="receiptData">
+      <mat-card-content>
+        <div class="receipt-info">
+          <div class="info-row">
+            <span class="info-label">Referência do Recibo:</span>
+            <span class="info-value">{{ receiptData.id }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Data de Pagamento:</span>
+            <span class="info-value">{{ receiptData.dataPagamento | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Valor Pago:</span>
+            <span class="info-value amount">{{ receiptData.valorTotal | number }} MT</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    
+    <div class="action-buttons">
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="btn-ver-recibo"
+        (click)="verRecibo()"
+        *ngIf="receiptData">
+        <mat-icon>picture_as_pdf</mat-icon>
+        <span>Ver Recibo</span>
+      </button>
+      <button 
+        mat-stroked-button 
+        routerLink="/membros/pagar-cotas"
+        class="btn-voltar">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Voltar</span>
+      </button>
+    </div>
+  </div>
+</div>
+

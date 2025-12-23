@@ -1,0 +1,365 @@
+<div class="gestao-formularios-container">
+  <div class="page-container" (click)="fecharMenus()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>settings</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>Gestão de Formulários</h1>
+            <p>Configure os cards da página inicial e gerencie as opções de cada formulário</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Container -->
+    <div class="tabs-container">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="form-tabs">
+        <!-- Tab: Home -->
+        <mat-tab label="Página Inicial">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Gerenciar Página Inicial</h2>
+              <p>Edite os textos do cabeçalho e as fotos/textos dos cards da página inicial</p>
+            </div>
+
+            <!-- Seção de Textos do Cabeçalho -->
+            <div class="header-texts-section">
+              <div class="section-header">
+                <h3>Textos do Cabeçalho</h3>
+                <div class="header-actions">
+                  <button class="btn-edit-header" *ngIf="!isHeaderEditing" (click)="iniciarEdicaoHeaderTexts()">
+                  <mat-icon>edit</mat-icon>
+                  <span>Editar Textos</span>
+                  </button>
+                  <div class="header-inline-actions" *ngIf="isHeaderEditing">
+                    <button class="btn-cancelar" type="button" (click)="cancelarEdicaoHeaderTexts()">Cancelar</button>
+                    <button class="btn-salvar" type="button"
+                            (click)="salvarHeaderTextsInline()"
+                            [disabled]="isSavingHeaderTexts">
+                      <mat-icon>save</mat-icon>
+                      <span>{{ isSavingHeaderTexts ? 'Salvando...' : 'Salvar' }}</span>
+                </button>
+              </div>
+                </div>
+              </div>
+              <div class="header-texts-editor">
+                <label for="headerTextArea">Texto do Cabeçalho:</label>
+                <textarea id="headerTextArea"
+                          name="headerText"
+                          class="form-textarea"
+                          rows="8"
+                          [(ngModel)]="headerTextValue"
+                          [readonly]="!isHeaderEditing"
+                          [class.readonly]="!isHeaderEditing"
+                          placeholder="Digite o texto completo do cabeçalho..."></textarea>
+                <small class="form-hint" *ngIf="!isHeaderEditing">
+                  Clique em "Editar Textos" para alterar o conteúdo.
+                </small>
+              </div>
+            </div>
+
+            <!-- Seção de Cards -->
+            <div class="cards-section">
+              <div class="section-header">
+                <h3>Cards dos Formulários</h3>
+              </div>
+              <div class="home-cards-grid">
+              <div class="home-card" *ngFor="let card of homeCards">
+                <div class="card-image-section">
+                  <img [src]="card.imagem" [alt]="card.titulo" (error)="onImageError($event)">
+                  <div class="image-overlay" (click)="alterarImagemHome(card)">
+                    <mat-icon>photo_camera</mat-icon>
+                    <span>Alterar Imagem</span>
+                  </div>
+                </div>
+                <div class="card-info-section">
+                  <h3>{{ card.titulo }}</h3>
+                  <p>{{ card.descricao }}</p>
+                  <div class="card-status">
+                    <span [class]="'status-badge ' + (card.ativo ? 'ativo' : 'inativo')">
+                      {{ card.ativo ? 'Ativo' : 'Inativo' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="card-actions-section">
+                  <button class="btn-edit" (click)="editarCardHome(card)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab: FAE -->
+        <mat-tab label="FAE">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Gerenciar Formulário FAE</h2>
+              <p>Adicione e gerencie os problemas disponíveis no formulário FAE</p>
+              <button class="btn-add-problema" (click)="abrirModalProblema('fae')">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Problema</span>
+              </button>
+            </div>
+
+            <div class="problemas-list">
+              <div class="problema-item" *ngFor="let problema of getProblemas('fae')">
+                <div class="problema-info">
+                  <h4>{{ problema.nome }}</h4>
+                  <p *ngIf="problema.descricao">{{ problema.descricao }}</p>
+                  <div class="problema-meta">
+                    <span class="problema-tipo">{{ problema.tipo }}</span>
+                    <span class="problema-data">{{ problema.dataCriacao | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+                <div class="problema-actions">
+                  <button class="btn-edit-small" (click)="abrirModalProblema('fae', problema)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="btn-delete" (click)="removerProblema('fae', problema.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="getProblemas('fae').length === 0">
+                <mat-icon>info</mat-icon>
+                <p>Nenhum problema cadastrado. Clique em "Adicionar Problema" para começar.</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab: Economic Agent -->
+        <mat-tab label="Agente Econômico">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Gerenciar Formulário Agente Econômico</h2>
+              <p>Adicione e gerencie os problemas disponíveis no formulário Agente Econômico</p>
+              <button class="btn-add-problema" (click)="abrirModalProblema('economic-agent')">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Problema</span>
+              </button>
+            </div>
+
+            <div class="problemas-list">
+              <div class="problema-item" *ngFor="let problema of getProblemas('economic-agent')">
+                <div class="problema-info">
+                  <h4>{{ problema.nome }}</h4>
+                  <p *ngIf="problema.descricao">{{ problema.descricao }}</p>
+                  <div class="problema-meta">
+                    <span class="problema-tipo">{{ problema.tipo }}</span>
+                    <span class="problema-data">{{ problema.dataCriacao | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+                <div class="problema-actions">
+                  <button class="btn-edit-small" (click)="abrirModalProblema('economic-agent', problema)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="btn-delete" (click)="removerProblema('economic-agent', problema.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="getProblemas('economic-agent').length === 0">
+                <mat-icon>info</mat-icon>
+                <p>Nenhum problema cadastrado. Clique em "Adicionar Problema" para começar.</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab: Training -->
+        <mat-tab label="Formação">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Gerenciar Formulário de Formação</h2>
+              <p>Adicione e gerencie os problemas disponíveis no formulário de Formação</p>
+              <button class="btn-add-problema" (click)="abrirModalProblema('training')">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Problema</span>
+              </button>
+            </div>
+
+            <div class="problemas-list">
+              <div class="problema-item" *ngFor="let problema of getProblemas('training')">
+                <div class="problema-info">
+                  <h4>{{ problema.nome }}</h4>
+                  <p *ngIf="problema.descricao">{{ problema.descricao }}</p>
+                  <div class="problema-meta">
+                    <span class="problema-tipo">{{ problema.tipo }}</span>
+                    <span class="problema-data">{{ problema.dataCriacao | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+                <div class="problema-actions">
+                  <button class="btn-edit-small" (click)="abrirModalProblema('training', problema)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="btn-delete" (click)="removerProblema('training', problema.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="getProblemas('training').length === 0">
+                <mat-icon>info</mat-icon>
+                <p>Nenhum problema cadastrado. Clique em "Adicionar Problema" para começar.</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Tab: User Evaluation -->
+        <mat-tab label="Avaliação de Utilizador">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Gerenciar Formulário de Avaliação de Utilizador</h2>
+              <p>Adicione e gerencie os problemas disponíveis no formulário de Avaliação de Utilizador</p>
+              <button class="btn-add-problema" (click)="abrirModalProblema('user-evaluation')">
+                <mat-icon>add</mat-icon>
+                <span>Adicionar Problema</span>
+              </button>
+            </div>
+
+            <div class="problemas-list">
+              <div class="problema-item" *ngFor="let problema of getProblemas('user-evaluation')">
+                <div class="problema-info">
+                  <h4>{{ problema.nome }}</h4>
+                  <p *ngIf="problema.descricao">{{ problema.descricao }}</p>
+                  <div class="problema-meta">
+                    <span class="problema-tipo">{{ problema.tipo }}</span>
+                    <span class="problema-data">{{ problema.dataCriacao | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+                <div class="problema-actions">
+                  <button class="btn-edit-small" (click)="abrirModalProblema('user-evaluation', problema)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button class="btn-delete" (click)="removerProblema('user-evaluation', problema.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="getProblemas('user-evaluation').length === 0">
+                <mat-icon>info</mat-icon>
+                <p>Nenhum problema cadastrado. Clique em "Adicionar Problema" para começar.</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+    <!-- Modal: Editar Card Home -->
+    <div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Editar Card - {{ cardEditando?.titulo }}</h2>
+          <button class="btn-fechar-modal" (click)="fecharModal()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="modal-body" *ngIf="cardEditando">
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" [(ngModel)]="cardEditando.titulo" class="form-input">
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea [(ngModel)]="cardEditando.descricao" class="form-textarea" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select [(ngModel)]="cardEditando.ativo" class="form-select">
+              <option [value]="true">Ativo</option>
+              <option [value]="false">Inativo</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+          <button class="btn-salvar" (click)="salvarCardHome()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Alterar Imagem Home -->
+    <div class="modal-overlay" *ngIf="modalImagemAberto" (click)="fecharModalImagem()">
+      <div class="modal-content modal-imagem" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Alterar Imagem - {{ cardEditando?.titulo }}</h2>
+          <button class="btn-fechar-modal" (click)="fecharModalImagem()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="image-upload-area" (click)="triggerFileInput()">
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+            <div class="upload-content">
+              <mat-icon>cloud_upload</mat-icon>
+              <p>Clique para selecionar uma imagem</p>
+              <span>Formatos suportados: JPG, PNG, GIF</span>
+            </div>
+          </div>
+          <div class="image-preview" *ngIf="imagemPreview">
+            <img [src]="imagemPreview" alt="Preview" (error)="onImageError($event)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancelar" (click)="fecharModalImagem()">Cancelar</button>
+          <button class="btn-salvar" (click)="salvarImagemHome()" [disabled]="!imagemPreview">Salvar Imagem</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Adicionar/Editar Problema -->
+    <div class="modal-overlay" *ngIf="modalProblemaAberto" (click)="fecharModalProblema()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ problemaEditando ? 'Editar' : 'Adicionar' }} Problema - {{ getFormularioNome(formularioSelecionado) }}</h2>
+          <button class="btn-fechar-modal" (click)="fecharModalProblema()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="problemaForm">
+            <div class="form-group">
+              <label>Nome do Problema *</label>
+              <input type="text" formControlName="nome" class="form-input" placeholder="Ex: Demora no atendimento">
+            </div>
+            <div class="form-group">
+              <label>Descrição (opcional)</label>
+              <textarea formControlName="descricao" class="form-textarea" rows="3" placeholder="Descrição detalhada do problema"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Tipo *</label>
+              <select formControlName="tipo" class="form-select">
+                <option value="">Selecione o tipo</option>
+                <option value="atendimento">Atendimento</option>
+                <option value="documentacao">Documentação</option>
+                <option value="resolucao">Resolução</option>
+                <option value="informacao">Informação</option>
+                <option value="tecnico">Técnico</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancelar" (click)="fecharModalProblema()">Cancelar</button>
+          <button class="btn-salvar" (click)="salvarProblema()" [disabled]="!problemaForm.valid">Salvar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

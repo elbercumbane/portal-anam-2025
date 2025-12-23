@@ -1,0 +1,115 @@
+@import 'variables';
+
+// CTA Editorial - Compacta
+.editorial-cta {
+  padding: 60px 0; // Reduzido de 120px
+  background: 
+    linear-gradient(135deg, rgba(48, 56, 68, 0.5) 0%, rgba(48, 56, 68, 0.6) 100%), // Overlay mais transparente
+    url('/assets/background-projetos.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; // Mudado de fixed para scroll
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(
+        180deg,
+        rgba(48, 56, 68, 0.15) 0%,
+        rgba(48, 56, 68, 0.25) 50%,
+        rgba(48, 56, 68, 0.35) 100%
+      ); // Overlay mais transparente para imagem mais visível
+  }
+}
+
+.cta-content {
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  
+  .cta-label {
+    display: inline-block;
+    font-size: 0.8rem; // Reduzido
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #737475; // Cinzento - verde removido
+    margin-bottom: 16px; // Reduzido
+  }
+  
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem); // Reduzido
+    font-weight: 900;
+    margin: 0 0 20px; // Reduzido
+    line-height: 1.2;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  .cta-text {
+    font-size: 1.125rem; // Reduzido
+    line-height: 1.6; // Reduzido
+    margin: 0 0 32px; // Reduzido
+    opacity: 0.95;
+  }
+  
+  .cta-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .cta-btn {
+    padding: 18px 40px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    &.primary {
+      background: white;
+      color: #737475; // Cinzento - verde removido
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        
+        svg {
+          transform: translateX(4px);
+        }
+      }
+    }
+    
+    &.secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+      
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-4px);
+      }
+    }
+  }
+}
+

@@ -1,0 +1,326 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gestão Financeira</h1>
+    <p>Gerencie pagamentos, cotas e despesas da associação</p>
+  </div>
+
+  <!-- Situação Atual da Associação -->
+  <div class="situacao-atual-section">
+    <div class="situacao-header">
+      <h2>
+        <mat-icon>assessment</mat-icon>
+        Situação Atual da Associação
+      </h2>
+      <span class="update-time">Atualizado em {{ getCurrentDate() }}</span>
+    </div>
+    
+    <div class="situacao-grid">
+      <!-- Resumo Financeiro -->
+      <div class="situacao-card resumo">
+        <div class="card-header">
+          <mat-icon>account_balance</mat-icon>
+          <h3>Resumo Financeiro</h3>
+        </div>
+        <div class="card-content">
+          <div class="info-row">
+            <span class="label">Receita Mensal Média:</span>
+            <span class="value positive">{{ formatCurrency(situacaoAtual.receitaMensalMedia) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Despesa Mensal Média:</span>
+            <span class="value negative">{{ formatCurrency(situacaoAtual.despesaMensalMedia) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Saldo Mês Anterior:</span>
+            <span class="value">{{ formatCurrency(situacaoAtual.saldoMesAnterior) }}</span>
+          </div>
+          <div class="info-row highlight">
+            <span class="label">Variação do Saldo:</span>
+            <span class="value" [ngClass]="situacaoAtual.variacaoSaldo >= 0 ? 'positive' : 'negative'">
+              {{ situacaoAtual.variacaoSaldo >= 0 ? '+' : '' }}{{ formatCurrency(situacaoAtual.variacaoSaldo) }}
+              <span class="percent">({{ situacaoAtual.percentualVariacao >= 0 ? '+' : '' }}{{ situacaoAtual.percentualVariacao.toFixed(1) }}%)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Situação das Cotas -->
+      <div class="situacao-card cotas">
+        <div class="card-header">
+          <mat-icon>payments</mat-icon>
+          <h3>Situação das Cotas</h3>
+        </div>
+        <div class="card-content">
+          <div class="info-row">
+            <span class="label">Total de Membros:</span>
+            <span class="value">{{ situacaoAtual.totalMembros }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Membros Ativos:</span>
+            <span class="value positive">{{ situacaoAtual.membrosAtivos }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Taxa de Adesão:</span>
+            <span class="value">{{ situacaoAtual.taxaAdesao }}%</span>
+          </div>
+          <div class="info-row highlight">
+            <span class="label">Cotas Pendentes:</span>
+            <span class="value negative">{{ situacaoAtual.cotasPendentes }} ({{ formatCurrency(situacaoAtual.valorCotasPendentes) }})</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Próximos Vencimentos:</span>
+            <span class="value warning">{{ situacaoAtual.proximosVencimentos }} nos próximos 7 dias</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Alertas e Notificações -->
+      <div class="situacao-card alertas" *ngIf="situacaoAtual.alertas.length > 0">
+        <div class="card-header">
+          <mat-icon>notifications_active</mat-icon>
+          <h3>Alertas Importantes</h3>
+        </div>
+        <div class="card-content">
+          <div class="alerta-item" *ngFor="let alerta of situacaoAtual.alertas">
+            <mat-icon class="alerta-icon">warning</mat-icon>
+            <span>{{ alerta }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicadores de Saúde Financeira -->
+      <div class="situacao-card indicadores">
+        <div class="card-header">
+          <mat-icon>health_and_safety</mat-icon>
+          <h3>Indicadores de Saúde</h3>
+        </div>
+        <div class="card-content">
+          <div class="indicator-item">
+            <div class="indicator-label">Liquidez</div>
+            <div class="indicator-bar">
+              <div class="indicator-fill" [style.width.%]="getLiquidezPercentual()" [ngClass]="getLiquidezClass()"></div>
+            </div>
+            <div class="indicator-value">{{ getLiquidezPercentual().toFixed(0) }}%</div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-label">Cobertura de Despesas</div>
+            <div class="indicator-bar">
+              <div class="indicator-fill" [style.width.%]="getCoberturaPercentual()" [ngClass]="getCoberturaClass()"></div>
+            </div>
+            <div class="indicator-value">{{ getCoberturaPercentual().toFixed(0) }}%</div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-label">Taxa de Inadimplência</div>
+            <div class="indicator-bar">
+              <div class="indicator-fill" [style.width.%]="getInadimplenciaPercentual()" [ngClass]="getInadimplenciaClass()"></div>
+            </div>
+            <div class="indicator-value">{{ getInadimplenciaPercentual().toFixed(1) }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="stats-grid">
+    <div class="stat-card revenue">
+      <div class="stat-icon">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ formatCurrency(totalReceitas) }}</h3>
+        <p>Total Receitas</p>
+      </div>
+    </div>
+    <div class="stat-card expense">
+      <div class="stat-icon">
+        <mat-icon>trending_down</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ formatCurrency(totalDespesas) }}</h3>
+        <p>Total Despesas</p>
+      </div>
+    </div>
+    <div class="stat-card balance">
+      <div class="stat-icon">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ formatCurrency(saldoDisponivel) }}</h3>
+        <p>Saldo Disponível</p>
+      </div>
+    </div>
+    <div class="stat-card members">
+      <div class="stat-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ membrosEmDia }}</h3>
+        <p>Membros em Dia</p>
+        <span class="stat-badge overdue">{{ membrosAtrasados }} Atrasados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Membros -->
+  <div class="top-members-section">
+    <h2>Membros com Maior Pagamento</h2>
+    <div class="top-members-grid">
+      <div class="top-member-card" *ngFor="let membro of topMembros; let i = index">
+        <div class="rank-badge">{{ i + 1 }}</div>
+        <div class="member-info">
+          <h4>{{ membro.nome }}</h4>
+          <div class="member-stats">
+            <span class="stat-item">
+              <mat-icon>attach_money</mat-icon>
+              {{ formatCurrency(membro.totalPago) }}
+            </span>
+            <span class="stat-item">
+              <mat-icon>payments</mat-icon>
+              {{ membro.pagamentos }} pagamentos
+            </span>
+            <span class="stat-item">
+              <mat-icon>calendar_today</mat-icon>
+              {{ membro.ultimoPagamento | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters-section">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input 
+        type="text" 
+        placeholder="Buscar por membro, descrição, referência..." 
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()">
+    </div>
+    <div class="filter-group">
+      <div class="filter-box">
+        <mat-icon>filter_list</mat-icon>
+        <select [(ngModel)]="tipoFilter" (change)="onFilterChange()">
+          <option value="all">Todos os Tipos</option>
+          <option value="Cota Mensal">Cota Mensal</option>
+          <option value="Cota Anual">Cota Anual</option>
+          <option value="Doação">Doação</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="filter-box">
+        <mat-icon>category</mat-icon>
+        <select [(ngModel)]="categoriaFilter" (change)="onFilterChange()">
+          <option value="all">Todas as Categorias</option>
+          <option value="Administração">Administração</option>
+          <option value="Eventos">Eventos</option>
+          <option value="Logística">Logística</option>
+          <option value="Manutenção">Manutenção</option>
+        </select>
+      </div>
+      <div class="filter-box">
+        <mat-icon>check_circle</mat-icon>
+        <select [(ngModel)]="statusFilter" (change)="onFilterChange()">
+          <option value="all">Todos os Status</option>
+          <option value="Pago">Pago</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Atrasado">Atrasado</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs para Pagamentos e Despesas -->
+  <div class="tabs-container">
+    <div class="tabs-header">
+      <button class="tab-btn active" (click)="activeTab = 'pagamentos'">
+        <mat-icon>payments</mat-icon>
+        Pagamentos ({{ filteredPagamentos.length }})
+      </button>
+      <button class="tab-btn" (click)="activeTab = 'despesas'">
+        <mat-icon>shopping_cart</mat-icon>
+        Despesas ({{ filteredDespesas.length }})
+      </button>
+    </div>
+
+    <!-- Tab Pagamentos -->
+    <div class="tab-content" *ngIf="activeTab === 'pagamentos'">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Membro</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+              <th>Método</th>
+              <th>Referência</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pagamento of filteredPagamentos" class="data-row">
+              <td>{{ pagamento.data | date:'dd/MM/yyyy' }}</td>
+              <td class="name-cell">{{ pagamento.membro }}</td>
+              <td>{{ pagamento.tipo }}</td>
+              <td class="amount-cell">{{ formatCurrency(pagamento.valor) }}</td>
+              <td>{{ pagamento.metodo }}</td>
+              <td class="ref-cell">{{ pagamento.referencia || '-' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(pagamento.status)">
+                  {{ pagamento.status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredPagamentos.length === 0">
+              <td colspan="7" class="no-data">
+                <mat-icon>info</mat-icon>
+                <p>Nenhum pagamento encontrado</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab Despesas -->
+    <div class="tab-content" *ngIf="activeTab === 'despesas'">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th>Fornecedor</th>
+              <th>Valor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let despesa of filteredDespesas" class="data-row">
+              <td>{{ despesa.data | date:'dd/MM/yyyy' }}</td>
+              <td class="name-cell">{{ despesa.descricao }}</td>
+              <td>{{ despesa.categoria }}</td>
+              <td>{{ despesa.fornecedor || '-' }}</td>
+              <td class="amount-cell expense">{{ formatCurrency(despesa.valor) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(despesa.status)">
+                  {{ despesa.status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredDespesas.length === 0">
+              <td colspan="6" class="no-data">
+                <mat-icon>info</mat-icon>
+                <p>Nenhuma despesa encontrada</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

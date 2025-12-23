@@ -1,0 +1,79 @@
+// Responsividade
+@media (max-width: 1200px) {
+  .tree-level {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .tree-branch {
+    transform: none !important;
+  }
+  
+  .branch-line::before {
+    display: none;
+  }
+  
+  .sub-branches.four-cols {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 100px 20px 40px;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
+  
+  .root-node {
+    width: 280px;
+    padding: 25px;
+  }
+  
+  .branch-node {
+    width: 240px;
+    padding: 20px;
+  }
+  
+  .leaf-node {
+    width: 160px;
+    padding: 15px 12px;
+  }
+  
+  .sub-branches {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .sub-branches.four-cols {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .root-node, .branch-node {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .leaf-node {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .hero-badge {
+    padding: 10px 20px;
+    
+    span {
+      font-size: 0.75rem;
+    }
+  }
+}
+

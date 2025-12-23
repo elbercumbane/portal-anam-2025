@@ -1,0 +1,215 @@
+<div class="membros-dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+  <div class="container">
+      <div class="header-content">
+        <div class="logo-section">
+          <h1>ANAM</h1>
+          <p>Associação de Naturais e<br>Amigos de Massinga</p>
+        </div>
+        <div class="user-section">
+          <div class="user-info">
+            <span class="welcome-text">Bem-vindo,</span>
+            <span class="user-name">{{ userName }}</span>
+          </div>
+          <button class="btn-logout" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Stats -->
+  <section class="quick-stats">
+  <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-icon">{{ stat.icon }}</div>
+          <div class="stat-content">
+            <strong>{{ stat.number }}</strong>
+            <span>{{ stat.label }}</span>
+          </div>
+        </div>
+    </div>
+  </div>
+  </section>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+  <div class="container">
+      <div class="content-grid">
+        <!-- Left Column -->
+        <div class="left-column">
+          <!-- Meu Perfil -->
+          <section class="info-section profile-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>person</mat-icon>
+                Meu Perfil
+              </h3>
+            </div>
+            <div class="profile-card" *ngIf="memberData; else loadingProfile">
+              <div class="profile-photo-section">
+                <div class="profile-photo">
+                  <img *ngIf="memberData.foto" [src]="memberData.foto" [alt]="memberData.nome">
+                  <div *ngIf="!memberData.foto" class="photo-placeholder">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                </div>
+                <div class="profile-name-section">
+                  <h4>{{ memberData.nome }}</h4>
+                  <span class="status-badge" [ngClass]="getStatusClass(memberData.status)">
+                    {{ memberData.status }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="profile-details">
+                <div class="detail-item">
+                  <mat-icon>email</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ memberData.email || '-' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <mat-icon>phone</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Celular</span>
+                    <span class="detail-value">{{ memberData.celular || '-' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item" *ngIf="memberData.profissao">
+                  <mat-icon>work</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Profissão</span>
+                    <span class="detail-value">{{ memberData.profissao }}</span>
+                  </div>
+                </div>
+                <div class="detail-item" *ngIf="memberData.cidade">
+                  <mat-icon>location_on</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Cidade</span>
+                    <span class="detail-value">{{ memberData.cidade }}</span>
+                  </div>
+                </div>
+                <div class="detail-item" *ngIf="memberData.dataNascimento">
+                  <mat-icon>cake</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Data de Nascimento</span>
+                    <span class="detail-value">{{ memberData.dataNascimento | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                </div>
+                <div class="detail-item" *ngIf="memberData.estadoCivil">
+                  <mat-icon>favorite</mat-icon>
+                  <div class="detail-content">
+                    <span class="detail-label">Estado Civil</span>
+                    <span class="detail-value">{{ getEstadoCivilLabel(memberData.estadoCivil) }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <a [routerLink]="['/membros/perfil']" class="view-full-profile">
+                <mat-icon>visibility</mat-icon>
+                Ver Perfil Completo
+              </a>
+            </div>
+            <ng-template #loadingProfile>
+              <div class="profile-loading">
+                <mat-icon>hourglass_empty</mat-icon>
+                <p>Carregando dados do perfil...</p>
+              </div>
+            </ng-template>
+          </section>
+          
+          <!-- Informações dos Membros -->
+          <section class="info-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>people</mat-icon>
+                Informações dos Membros
+              </h3>
+            </div>
+            <div class="info-cards">
+              <div class="info-card" *ngFor="let info of memberInfo">
+                <div class="info-icon">{{ info.icon }}</div>
+                <div class="info-content">
+                  <h4>{{ info.title }}</h4>
+                  <p>{{ info.description }}</p>
+                  <a [routerLink]="info.link" class="info-link">Ver mais →</a>
+                </div>
+    </div>
+  </div>
+  </section>
+  
+          <!-- Programas -->
+          <section class="info-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>event_note</mat-icon>
+                Programas em Andamento
+              </h3>
+            </div>
+            <div class="programs-list">
+              <div class="program-item" *ngFor="let program of programs">
+                <div class="program-header">
+                  <h4>{{ program.name }}</h4>
+                  <span class="program-status" [class]="program.status">{{ program.statusLabel }}</span>
+                </div>
+                <p>{{ program.description }}</p>
+                <div class="program-meta">
+                  <span><mat-icon>calendar_today</mat-icon> {{ program.date }}</span>
+                  <span><mat-icon>location_on</mat-icon> {{ program.location }}</span>
+                </div>
+    </div>
+  </div>
+</section>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Relatórios Internos -->
+          <section class="info-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>assessment</mat-icon>
+                Relatórios Internos
+              </h3>
+            </div>
+            <div class="reports-list">
+              <div class="report-item" *ngFor="let report of reports">
+                <div class="report-icon">{{ report.icon }}</div>
+                <div class="report-content">
+                  <h4>{{ report.title }}</h4>
+                  <p>{{ report.description }}</p>
+                  <div class="report-meta">
+                    <span>{{ report.date }}</span>
+                    <a [href]="report.link" class="report-link">Download</a>
+                  </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  
+          <!-- Ações Rápidas -->
+          <section class="info-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>flash_on</mat-icon>
+                Ações Rápidas
+              </h3>
+            </div>
+            <div class="quick-actions">
+              <a [routerLink]="action.link" class="action-btn" *ngFor="let action of quickActions" (click)="onActionClick(action)">
+                <mat-icon>{{ action.icon }}</mat-icon>
+                <span>{{ action.label }}</span>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

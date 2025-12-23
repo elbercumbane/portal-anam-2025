@@ -1,0 +1,282 @@
+@import 'variables';
+
+// Form Section
+.form-section {
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+  padding: 3rem 0 5rem;
+  
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+}
+
+// Intro Banner
+.intro-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: #ffffff;
+  color: #1e293b;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.2); // Verde
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.15); // Verde
+    border-color: rgba(76, 175, 80, 0.4);
+  }
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .intro-icon {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(11, 47, 65, 0.15) 100%); // Verde e Azul
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    
+    svg {
+      stroke: #4CAF50; // Verde
+    }
+  }
+  
+  &:hover .intro-icon {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25) 0%, rgba(11, 47, 65, 0.25) 100%);
+    border-color: rgba(76, 175, 80, 0.5);
+  }
+  
+  .intro-text {
+    position: relative;
+    z-index: 1;
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      color: #0F172A;
+      font-weight: 700;
+    }
+    
+    p {
+      color: #334155;
+      font-size: 0.95rem;
+      margin: 0;
+      
+      .required-mark {
+        color: #EF4444;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// Form Cards
+.membership-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba($brown-gold, 0.15);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  
+  // Efeito de brilho no hover
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(76, 175, 80, 0.08), // Verde
+      transparent
+    );
+    transition: left 0.6s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  &:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 
+      0 20px 50px rgba(76, 175, 80, 0.15), // Verde
+      0 10px 25px rgba(11, 47, 65, 0.1); // Azul
+    border-color: rgba(76, 175, 80, 0.3); // Verde
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  &.main-card {
+    border-left: 5px solid #4CAF50; // Verde
+    
+    &:hover {
+      border-left-color: rgba(76, 175, 80, 0.8);
+      box-shadow: 
+        0 20px 50px rgba(76, 175, 80, 0.2), // Verde
+        0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  &.expandable-card {
+    border-left: 5px solid rgba(11, 47, 65, 0.6); // Azul
+    
+    &:hover {
+      border-left-color: rgba(11, 47, 65, 0.9);
+    }
+    
+    &.expanded {
+      border-left-color: rgba(11, 47, 65, 0.8);
+      background: linear-gradient(135deg, rgba(11, 47, 65, 0.02) 0%, #fff 100%); // Azul suave
+    }
+  }
+  
+  &.compromisso-card {
+    border-left: 5px solid #4CAF50; // Verde
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.03) 0%, #fff 100%); // Verde suave
+    
+    &:hover {
+      border-left-color: rgba(76, 175, 80, 0.9);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.05) 0%, #fff 100%);
+    }
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+  z-index: 1;
+  
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(135deg, #fff8e1 0%, #fffef5 100%);
+      
+      .header-icon {
+        transform: scale(1.2) rotate(10deg);
+      }
+      
+      .expand-icon svg {
+        stroke: $gold-accent;
+      }
+    }
+  }
+  
+  .header-icon {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .header-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: #333;
+      margin: 0;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+  }
+  
+  &.clickable:hover .header-text h3 {
+    color: #4CAF50; // Verde
+  }
+  
+  .header-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    
+    &.required-badge {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.12) 100%); // Verde
+      color: #4CAF50; // Verde
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+    
+    &.optional-badge {
+      background: linear-gradient(135deg, rgba(11, 47, 65, 0.15) 0%, rgba(11, 47, 65, 0.1) 100%); // Azul
+      color: rgba(11, 47, 65, 0.9); // Azul
+      border: 1px solid rgba(11, 47, 65, 0.3);
+    }
+  }
+  
+  &.clickable:hover .optional-badge {
+    background: linear-gradient(135deg, rgba(11, 47, 65, 0.25) 0%, rgba(11, 47, 65, 0.2) 100%); // Azul
+    transform: scale(1.05);
+  }
+  
+  .expand-icon {
+    svg {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      stroke: rgba(11, 47, 65, 0.6); // Azul
+      
+      &.rotated {
+        transform: rotate(180deg);
+        stroke: #4CAF50; // Verde
+      }
+    }
+  }
+}
+
+.card-content {
+  padding: 1.5rem;
+  
+  &.expandable-content {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 1.5rem;
+    transition: all 0.3s ease;
+    
+    &.show {
+      max-height: 500px;
+      padding: 1.5rem;
+    }
+  }
+}
+

@@ -1,0 +1,157 @@
+<!-- Hero Section Espetacular -->
+<section class="hero-section">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-particles">
+    <div class="particle" *ngFor="let i of [1,2,3,4,5,6,7,8]"></div>
+  </div>
+  <div class="hero-content">
+    <span class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      Rede de Parceiros
+    </span>
+    <h1>Juntos Somos <span class="highlight">Mais Fortes</span></h1>
+    <p>Conheça as organizações que acreditam na nossa missão e contribuem para o desenvolvimento de Massinga</p>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- Estatísticas -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats; let i = index" [style.--delay]="i * 0.1 + 's'">
+        <div class="stat-icon" [style.background]="stat.cor">
+          <span>{{ stat.icon }}</span>
+        </div>
+        <div class="stat-info">
+          <span class="stat-number">{{ stat.valor }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filtros -->
+<section class="filters-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Nossos <span class="highlight">Parceiros</span></h2>
+      <p>Organizações comprometidas com o desenvolvimento sustentável</p>
+    </div>
+    
+    <div class="filter-tabs">
+      <button 
+        *ngFor="let t of tabs"
+        class="filter-btn"
+        [class.active]="activeTab() === t"
+        (click)="setTab(t)">
+        <span class="btn-icon">{{ getTabIcon(t) }}</span>
+        <span>{{ t }}</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Grid de Parceiros -->
+<section class="partners-grid-section">
+  <div class="container">
+    <div class="partners-grid">
+      <article 
+        class="partner-card" 
+        *ngFor="let p of filtered(); let i = index"
+        [style.--index]="i"
+        [style.--card-color]="p.cor">
+        
+        <!-- Efeito de fundo -->
+        <div class="card-glow"></div>
+        
+        <!-- Header do Card -->
+        <div class="card-header">
+          <div class="logo-wrapper" [style.background]="'linear-gradient(135deg, ' + p.cor + ' 0%, ' + adjustColor(p.cor) + ' 100%)'">
+            <!-- Ícone SVG -->
+            <svg *ngIf="p.icon === 'government'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
+            </svg>
+            <svg *ngIf="p.icon === 'business'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <svg *ngIf="p.icon === 'globe'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20M2 12h20"/>
+            </svg>
+            <svg *ngIf="p.icon === 'industry'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 20h20M4 20V10l4-2v4l4-2v4l4-2v6M22 20V8l-6 4"/>
+            </svg>
+            <svg *ngIf="p.icon === 'heart'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <svg *ngIf="p.icon === 'lightning'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            <svg *ngIf="p.icon === 'rocket'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+            </svg>
+            <svg *ngIf="p.icon === 'bank'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7h20L12 2zM4 22h16M6 22v-7M10 22v-7M14 22v-7M18 22v-7M2 10h20"/>
+            </svg>
+          </div>
+          <span class="category-badge" [style.background]="p.cor + '20'" [style.color]="p.cor">
+            {{ p.categoria }}
+          </span>
+        </div>
+        
+        <!-- Conteúdo -->
+        <div class="card-content">
+          <h3 class="partner-name">{{ p.nome }}</h3>
+          <p class="partner-desc">{{ p.descricao }}</p>
+        </div>
+        
+        <!-- Footer -->
+        <div class="card-footer">
+          <span class="since">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Parceiro desde {{ p.membroDesde }}
+          </span>
+          <a [href]="p.perfilUrl || '#'" class="view-btn" [style.background]="p.cor">
+            <span>Ver Mais</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="container">
+    <div class="cta-content">
+      <h2>Quer ser nosso <span class="highlight">Parceiro</span>?</h2>
+      <p>Junte-se à nossa rede e faça parte do desenvolvimento de Massinga</p>
+      <a routerLink="/contato" class="cta-btn">
+        <span>Entre em Contato</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>

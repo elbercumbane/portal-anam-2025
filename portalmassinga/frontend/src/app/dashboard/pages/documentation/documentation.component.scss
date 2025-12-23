@@ -1,0 +1,35 @@
+@import '../_shared-styles.scss';
+
+// Tema: Páginas (Azul)
+@include category-theme($color-paginas, #2563eb);
+
+.documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file-upload-section {
+  margin-top: 20px;
+  
+  .upload-label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+  }
+  
+  .upload-btn {
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba($color-paginas, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 6px 16px rgba($color-paginas, 0.4);
+      transform: translateY(-2px);
+    }
+  }
+}

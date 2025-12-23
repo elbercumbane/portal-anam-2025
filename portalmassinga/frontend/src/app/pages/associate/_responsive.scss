@@ -1,0 +1,19 @@
+// Responsividade
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 35vh;
+  }
+  
+  .form-section {
+    padding: 2rem 0 4rem;
+  }
+  
+  .intro-banner {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .card-content {
+    padding: 1.25rem;
+  }
+}
+

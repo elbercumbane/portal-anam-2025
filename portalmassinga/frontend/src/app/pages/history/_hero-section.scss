@@ -1,0 +1,126 @@
+@import 'variables';
+@import 'animations';
+
+// Hero Editorial - Compacto
+.historial-hero {
+  position: relative;
+  height: 50vh; // Reduzido de 100vh para 50vh
+  min-height: 400px;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background: 
+    linear-gradient(135deg, rgba(48, 56, 68, 0.25) 0%, rgba(48, 56, 68, 0.35) 100%), // Overlay reduzido para imagem mais visível
+    url('/assets/background-projetos.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll; // Mudado de fixed para scroll
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(
+        180deg,
+        rgba(48, 56, 68, 0.05) 0%,
+        rgba(48, 56, 68, 0.1) 50%,
+        rgba(48, 56, 68, 0.15) 100%
+      ); // Overlay reduzido para imagem mais visível
+    z-index: 1;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.35) 50%,
+      rgba(0, 0, 0, 0.5) 100%
+    ); // Overlay reduzido para imagem mais visível
+    z-index: 2;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 900px;
+    padding: 0 24px;
+    animation: fadeInUp 0.8s ease;
+    
+    .hero-edition {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #4CAF50;
+      border: 2px solid #4CAF50;
+      padding: 6px 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem); // Reduzido
+      font-weight: 900;
+      margin: 0 0 16px;
+      line-height: 1.1;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      letter-spacing: -1px;
+      
+      .highlight {
+        font-style: italic;
+        color: #4CAF50; // Verde ao invés de dourado
+      }
+    }
+    
+    .hero-subtitle {
+      font-size: 1.125rem; // Reduzido
+      font-weight: 300;
+      margin: 0 0 24px; // Reduzido
+      opacity: 0.95;
+      letter-spacing: 0.5px;
+    }
+    
+    .hero-meta {
+      display: flex;
+      gap: 24px; // Reduzido
+      justify-content: center;
+      flex-wrap: wrap;
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.875rem; // Reduzido
+        font-weight: 500;
+        
+        svg {
+          width: 18px; // Reduzido
+          height: 18px;
+        }
+      }
+    }
+  }
+  
+  .hero-scroll-indicator {
+    display: none; // Removido para tornar mais compacto
+  }
+}
+
+// Container Global
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+

@@ -1,0 +1,49 @@
+// Estilos da Marca/Logo - Nova Paleta
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #fff !important;
+  text-decoration: none !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  
+  .navbar.scrolled & {
+    color: $cinzento-nav !important;
+  }
+  
+  &:hover { 
+    transform: none; 
+  }
+  
+  .brand-title { 
+    font-size: 1.8rem; 
+    line-height: 1.2; 
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff !important; // Branco quando navbar transparente
+    
+    .navbar.scrolled & {
+      color: #2A3B4C !important; // Cor específica quando scrolled
+    }
+  }
+
+  .brand-subtitle { 
+    font-size: 0.65rem; 
+    font-weight: 500; 
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.9);
+    opacity: 0.95;
+    text-transform: capitalize;
+    
+    .navbar.scrolled & {
+      color: #232627 !important; // Cor específica do texto
+    }
+    
+    div {
+      white-space: nowrap;
+    }
+  }
+}
+

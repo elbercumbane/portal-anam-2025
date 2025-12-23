@@ -1,0 +1,138 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Contato</h1>
+    <p>Gerencie o conteúdo da página de contato</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Hero Section -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>image</mat-icon>
+          Hero Section
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput placeholder="Entre em Contato">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput rows="2"></textarea>
+          </mat-form-field>
+          <div class="image-upload-section">
+            <label class="upload-label">Imagem de Fundo</label>
+            <div class="image-preview-container">
+              <img src="/assets/Massinga-Beach-001-Accommodation.jpg" alt="Preview" class="image-preview">
+              <button mat-raised-button color="primary" class="upload-btn">
+                <mat-icon>cloud_upload</mat-icon>
+                Alterar Imagem
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Informações de Contato -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>contact_mail</mat-icon>
+          Informações de Contato
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <div class="contact-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email Principal</mat-label>
+              <input matInput type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefone Principal</mat-label>
+              <input matInput type="tel">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Endereço</mat-label>
+              <textarea matInput rows="3"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Horário de Funcionamento</mat-label>
+              <input matInput placeholder="Ex: Segunda a Sexta, 8h às 17h">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Redes Sociais -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>share</mat-icon>
+          Redes Sociais
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <div class="social-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Facebook</mat-label>
+              <input matInput type="url">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Instagram</mat-label>
+              <input matInput type="url">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>LinkedIn</mat-label>
+              <input matInput type="url">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Twitter/X</mat-label>
+              <input matInput type="url">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Mapa -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>map</mat-icon>
+          Localização / Mapa
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Coordenadas (Latitude, Longitude)</mat-label>
+            <input matInput placeholder="Ex: -23.5505, -46.6333">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Link do Google Maps (opcional)</mat-label>
+            <input matInput type="url">
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>preview</mat-icon>
+        Visualizar Página
+      </button>
+    </div>
+  </div>
+</div>

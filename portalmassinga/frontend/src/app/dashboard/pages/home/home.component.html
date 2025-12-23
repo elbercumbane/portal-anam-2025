@@ -1,0 +1,217 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Página Inicial</h1>
+    <p>Gerencie o conteúdo da página inicial do portal</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Hero Section - Slides -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>image</mat-icon>
+          Hero Section - Slides do Carrossel
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="slides-container">
+          <mat-expansion-panel *ngFor="let slide of [1,2,3]; let i = index" class="slide-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="slide-header">
+                  <mat-icon class="slide-icon">slideshow</mat-icon>
+                  <span>Slide {{ i + 1 }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="slide-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título do Slide</mat-label>
+                <input matInput [placeholder]="getSlidePlaceholder(i)" [(ngModel)]="slides[i].titulo" (blur)="saveData()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Subtítulo/Descrição</mat-label>
+                <textarea matInput rows="3" [placeholder]="getSlideSubtitlePlaceholder(i)" [(ngModel)]="slides[i].subtitulo" (blur)="saveData()"></textarea>
+              </mat-form-field>
+              <div class="image-upload-section">
+                <label class="upload-label">Imagem de Fundo do Slide</label>
+                <div class="image-preview-container">
+                  <img [src]="getSlideImagePreview(i)" alt="Preview" class="image-preview">
+                  <button mat-raised-button color="primary" class="upload-btn">
+                    <mat-icon>cloud_upload</mat-icon>
+                    Alterar Imagem
+                  </button>
+                </div>
+                <p class="image-hint">Recomendado: 1920x800px, formato JPG ou PNG</p>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Configurações de Natal -->
+    <mat-card class="section-card">
+      <mat-card-content>
+        <div class="christmas-config-grid">
+          <!-- Coluna 1: Efeito de Neve -->
+          <div class="config-column">
+            <div class="config-item">
+              <div class="config-header">
+                <mat-icon class="config-icon">ac_unit</mat-icon>
+                <div class="config-title-group">
+                  <h4 class="config-title">Habilitar Efeito de Neve</h4>
+                  <p class="config-description">Exibe flocos de neve caindo no hero</p>
+                </div>
+              </div>
+              <mat-slide-toggle [(ngModel)]="enableSnow" color="primary" (change)="onSnowToggleChange()" class="config-toggle"></mat-slide-toggle>
+            </div>
+          </div>
+
+          <!-- Coluna 2: Papai Noel -->
+          <div class="config-column">
+            <div class="config-item">
+              <div class="config-header">
+                <mat-icon class="config-icon">celebration</mat-icon>
+                <div class="config-title-group">
+                  <h4 class="config-title">Habilitar Papai Noel</h4>
+                  <p class="config-description">Exibe o popup do Papai Noel no hero</p>
+                </div>
+              </div>
+              <mat-slide-toggle [(ngModel)]="enableSanta" color="primary" (change)="onSantaToggleChange()" class="config-toggle"></mat-slide-toggle>
+              <mat-form-field appearance="outline" class="full-width config-message-field" *ngIf="enableSanta">
+                <mat-label>Mensagem de Natal</mat-label>
+                <input matInput placeholder="Feliz Natal e Próspero 2025 🎄" [(ngModel)]="christmasMessage" (blur)="onChristmasMessageChange()">
+                <mat-hint>Texto exibido no popup do Papai Noel</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Sobre ANAM -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Seção Sobre a ANAM
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="two-column-layout">
+          <div class="column-left">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título da Seção</mat-label>
+              <input matInput placeholder="Sobre a ANAM" [(ngModel)]="sobreAnam.titulo" (blur)="saveData()">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Texto de Introdução</mat-label>
+              <textarea matInput rows="4" placeholder="Promovemos o desenvolvimento sustentável e o bem-estar socioeconómico das comunidades do Distrito de Massinga." [(ngModel)]="sobreAnam.introducao" (blur)="saveData()"></textarea>
+            </mat-form-field>
+          </div>
+          
+          <div class="column-right">
+            <!-- Cards Circulares -->
+            <div class="cards-section">
+              <mat-expansion-panel class="card-panel">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-header">
+                      <mat-icon class="card-icon">flag</mat-icon>
+                      <span>Card 1 - Missão</span>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="card-content">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Título do Card</mat-label>
+                    <input matInput placeholder="Missão" [(ngModel)]="sobreAnam.cardMissao.titulo" (blur)="saveData()">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descrição</mat-label>
+                    <textarea matInput rows="4" placeholder="Promover o desenvolvimento sustentável e melhorar o bem-estar socioeconómico das comunidades do Distrito de Massinga, gerindo e capitalizando estrategicamente os recursos e potencial locais." [(ngModel)]="sobreAnam.cardMissao.descricao" (blur)="saveData()"></textarea>
+                  </mat-form-field>
+                </div>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel class="card-panel">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-header">
+                      <mat-icon class="card-icon">visibility</mat-icon>
+                      <span>Card 2 - Visão</span>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="card-content">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Título do Card</mat-label>
+                    <input matInput placeholder="Visão" [(ngModel)]="sobreAnam.cardVisao.titulo" (blur)="saveData()">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descrição</mat-label>
+                    <textarea matInput rows="4" placeholder="Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos." [(ngModel)]="sobreAnam.cardVisao.descricao" (blur)="saveData()"></textarea>
+                  </mat-form-field>
+                </div>
+              </mat-expansion-panel>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Nossos Valores -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>star</mat-icon>
+          Seção Nossos Valores
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título da Seção</mat-label>
+            <input matInput placeholder="Nossos Valores" [(ngModel)]="nossosValores.titulo" (blur)="saveData()">
+          </mat-form-field>
+        </div>
+        
+        <div class="valores-list">
+          <mat-expansion-panel *ngFor="let valor of nossosValores.valores; let i = index" class="valor-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="valor-header">
+                  <mat-icon class="valor-icon">check_circle</mat-icon>
+                  <span>Valor {{ i + 1 }}: {{ valor.titulo || 'Novo Valor' }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="valor-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título do Valor</mat-label>
+                <input matInput [placeholder]="getValorPlaceholder(i)" [(ngModel)]="valor.titulo" (blur)="saveData()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="4" [placeholder]="getValorDescricaoPlaceholder(i)" [(ngModel)]="valor.descricao" (blur)="saveData()"></textarea>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn" (click)="saveData()">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>preview</mat-icon>
+        Visualizar Página
+      </button>
+    </div>
+  </div>
+</div>

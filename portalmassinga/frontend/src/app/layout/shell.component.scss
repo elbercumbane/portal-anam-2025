@@ -1,0 +1,154 @@
+.app-container {
+  height: 100vh;
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.desktop-nav {
+  display: none;
+}
+
+.menu-button {
+  margin-right: 8px;
+}
+
+.app-content {
+  padding: 0; // sem padding pois navbar é sobreposta
+  max-width: none;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app-sidenav {
+  width: 280px;
+  background: linear-gradient(180deg, var(--primary-900) 0%, var(--primary-800) 100%);
+  color: white;
+  box-shadow: var(--shadow-xl);
+  
+  .mat-list-item {
+    color: var(--accent-gold);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    margin: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+    position: relative;
+    background: rgba(27, 67, 50, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent-gold);
+      border-radius: 0 2px 2px 0;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+    
+    &:hover {
+      background: var(--accent-gold);
+      color: var(--neutral-900);
+      transform: translateX(4px);
+      border-color: var(--accent-gold);
+      
+      &::before {
+        opacity: 1;
+      }
+    }
+    
+    &.active {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, #f4e4bc 100%);
+      color: var(--neutral-900);
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      
+      &::before {
+        opacity: 1;
+        background: var(--neutral-900);
+      }
+    }
+    
+    mat-icon {
+      color: var(--accent-gold);
+      margin-right: var(--space-md);
+      transition: all var(--transition-fast);
+    }
+    
+    &:hover mat-icon {
+      color: var(--neutral-900);
+      transform: scale(1.1);
+    }
+    
+    &.active mat-icon {
+      color: var(--neutral-900);
+    }
+    
+    .submenu-toggle {
+      margin-left: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+  
+  .submenu {
+    background: rgba(27, 67, 50, 0.2);
+    border-left: 3px solid var(--accent-gold);
+    margin-left: var(--space-lg);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    
+    &.show {
+      max-height: 300px;
+    }
+    
+    .mat-list-item {
+      background: rgba(27, 67, 50, 0.1);
+      margin: var(--space-xs) 0;
+      font-size: 0.9rem;
+      
+      &:hover {
+        background: var(--accent-gold);
+        color: var(--neutral-900);
+      }
+      
+      &.active {
+        background: var(--accent-gold);
+        color: var(--neutral-900);
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Footer styles moved to dedicated FooterComponent
+
+@media (min-width: 960px) {
+  .desktop-nav { display: flex; gap: 8px; }
+  .menu-button { display: none; }
+  .app-sidenav { display: none; }
+}
+
+

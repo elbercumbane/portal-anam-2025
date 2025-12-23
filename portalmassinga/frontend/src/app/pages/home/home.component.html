@@ -1,0 +1,76 @@
+<!-- Hero Section - MANTER COMO ESTÁ -->
+<section class="hero with-slider" aria-labelledby="hero-title">
+  <div class="slider" #slider>
+    <div class="slide" style="background-image: url('/assets/FOTO1 ANAM.jpeg')"></div>
+    <div class="slide" style="background-image: url('/assets/FOTO 4 ANAM.jpeg')"></div>
+    <div class="slide" style="background-image: url('/assets/FOTO 3 ANAM.jpeg')"></div>
+  </div>
+  <div class="hero__scrim hero__scrim--bright"></div>
+  
+  <!-- Efeito de Neve -->
+  <div class="snow-container">
+    <div class="snowflake" *ngFor="let flake of snowflakes; let i = index" 
+         [style.left.%]="flake.left"
+         [style.animation-delay.s]="flake.delay"
+         [style.animation-duration.s]="flake.duration"></div>
+  </div>
+  
+  <div class="hero-content hero__content" #heroContent>
+    <h1 id="hero-title" class="hero__title" #heroTitle [class.mission-vision-title]="currentSlide !== 0">
+      <span class="title-part-left" #titlePartLeft></span>
+      <span class="title-part-right" #titlePartRight></span>
+    </h1>
+    <div class="hero-subtitle-box" [class.active]="currentSlide !== 0" #heroSubtitleBox>
+      <div class="subtitle-glow"></div>
+      <p #heroSubtitle></p>
+    </div>
+    <!-- Ações removidas conforme solicitado -->
+  </div>
+  
+  <!-- Controles do Slider -->
+  <div class="hero-dots">
+    <button 
+      *ngFor="let slide of [0, 1, 2]; let i = index"
+      class="hero-dot" 
+      [class.active]="currentSlide === i"
+      (click)="goToSlide(i)"
+      [attr.aria-label]="'Slide ' + (i + 1)">
+    </button>
+  </div>
+  
+  <!-- Botões de Navegação Manual Inferiores (Setas Horizontais) -->
+  <div class="hero-nav-arrows-horizontal">
+    <button 
+      class="hero-arrow-horizontal hero-arrow-horizontal--prev" 
+      (click)="prevSlide()"
+      [attr.aria-label]="'Slide anterior'">
+      <svg width="60" height="20" viewBox="0 0 60 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="50" y1="10" x2="10" y2="10"/>
+        <line x1="10" y1="10" x2="20" y2="4"/>
+        <line x1="10" y1="10" x2="20" y2="16"/>
+      </svg>
+    </button>
+    <button 
+      class="hero-arrow-horizontal hero-arrow-horizontal--next" 
+      (click)="nextSlide()"
+      [attr.aria-label]="'Próximo slide'">
+      <svg width="60" height="20" viewBox="0 0 60 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="10" y1="10" x2="50" y2="10"/>
+        <line x1="50" y1="10" x2="40" y2="4"/>
+        <line x1="50" y1="10" x2="40" y2="16"/>
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Papai Noel Popup (Funcionalidade Separada) - Fixo no Hero -->
+  <app-santa-popup></app-santa-popup>
+</section>
+
+<!-- NOVA ESTRUTURA DA HOME -->
+<app-history-section></app-history-section>
+<app-events-section></app-events-section>
+<app-gallery></app-gallery>
+<home-parceiros></home-parceiros>
+<app-message-popup></app-message-popup>
+
+

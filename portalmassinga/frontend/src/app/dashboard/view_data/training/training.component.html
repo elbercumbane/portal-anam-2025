@@ -1,0 +1,337 @@
+  <!-- Formação Content -->
+<div (click)="fecharExportMenu()">
+    <!-- Header da Página -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="header-icon">
+            <mat-icon>school</mat-icon>
+          </div>
+          <div class="header-text">
+            <h1>Formação</h1>
+            <p>Visualização e gestão das avaliações de formação</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-total" title="Total de Avaliações">
+            <mat-icon>storage</mat-icon>
+            <span>Total: {{ formacoes.length }}</span>
+          </button>
+          <button class="btn-refresh" title="Atualizar Dados" (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="btn-filtros" title="Ocultar/Mostrar Filtros" (click)="toggleFiltros()">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button class="btn-ajuda" title="Ajuda" (click)="mostrarAjuda()">
+            <mat-icon>help</mat-icon>
+          </button>
+          <button class="btn-fechar" title="Fechar" (click)="fechar()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section" *ngIf="filtrosVisiveis" (click)="$event.stopPropagation()">
+      <div class="filters-content">
+        <h3 class="filters-title">Filtros de Pesquisa</h3>
+        <div class="filters-grid">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Nome do Curso</label>
+              <input type="text" class="filter-input" placeholder="Digite o nome do curso" (input)="filtrarPorNomeCurso()">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">NUIT</label>
+              <input type="text" class="filter-input" placeholder="Digite o NUIT" (input)="filtrarPorNUIT()">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Província</label>
+              <select class="filter-select" (change)="filtrarPorProvincia()">
+                <option value="">Todas</option>
+                <option value="maputo">Maputo</option>
+                <option value="gaza">Gaza</option>
+                <option value="inhambane">Inhambane</option>
+                <option value="sofala">Sofala</option>
+                <option value="manica">Manica</option>
+                <option value="tete">Tete</option>
+                <option value="zambezia">Zambézia</option>
+                <option value="nampula">Nampula</option>
+                <option value="niassa">Niassa</option>
+                <option value="cabo-delgado">Cabo Delgado</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Local do Curso</label>
+              <input type="text" class="filter-input" placeholder="Digite o local do curso" (input)="filtrarPorLocalCurso()">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Gênero</label>
+              <select class="filter-select" (change)="filtrarPorGenero()">
+                <option value="">Todos</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <!-- Espaço vazio para manter o layout -->
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Data Início</label>
+              <input type="date" class="filter-date" (change)="filtrarPorDataInicio()">
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Data Fim</label>
+              <input type="date" class="filter-date" (change)="filtrarPorDataFim()">
+            </div>
+            <div class="filter-group">
+              <!-- Espaço vazio para manter o layout -->
+            </div>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="btn-filtrar" (click)="aplicarFiltros()">
+            <mat-icon>filter_list</mat-icon>
+            <span>Filtrar</span>
+          </button>
+          <button class="btn-limpar" (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            <span>Limpar</span>
+          </button>
+          <div class="btn-exportar-container">
+            <button class="btn-exportar" (click)="toggleExportMenu()">
+              <mat-icon>file_download</mat-icon>
+              <span>Exportar</span>
+              <mat-icon class="dropdown-icon" [class.rotated]="exportMenuOpen">keyboard_arrow_down</mat-icon>
+            </button>
+            <div class="export-menu" *ngIf="exportMenuOpen">
+              <button class="export-option excel-option" (click)="exportarExcel()">
+                <mat-icon>table_chart</mat-icon>
+                <span>Excel</span>
+              </button>
+              <button class="export-option word-option" (click)="exportarWord()">
+                <mat-icon>description</mat-icon>
+                <span>Word</span>
+              </button>
+              <button class="export-option pdf-option" (click)="exportarPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Dados -->
+    <div class="data-table-container">
+      <div class="table-header">
+        <h3>Avaliações de Formação</h3>
+        <span class="table-count">{{ formacoes.length }} formações encontradas</span>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>NUIT</th>
+              <th>Nome do Curso</th>
+              <th>Data Início</th>
+              <th>Data Fim</th>
+              <th>Província</th>
+              <th>Local do Curso</th>
+              <th>Gênero</th>
+              <!-- Conteúdo do Curso -->
+              <th>Teórico</th>
+              <th>Distribuição</th>
+              <th>Importância</th>
+              <!-- Formador -->
+              <th>Domínio</th>
+              <th>Didática</th>
+              <th>Dinamismo</th>
+              <th>Estímulo</th>
+              <!-- Aplicação -->
+              <th>Disponibilidade</th>
+              <th>Funcionalidade</th>
+              <!-- Material Didático -->
+              <th>Textos</th>
+              <th>Atividades</th>
+              <th>Apresentação</th>
+              <th>Legislação</th>
+              <!-- Logística -->
+              <th>Instalações</th>
+              <th>Recepção</th>
+              <!-- Satisfação Final -->
+              <th>Satisfação Final</th>
+              <!-- Data de Avaliação -->
+              <th>Data de Avaliação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let formacao of formacoesPaginadas">
+              <td>{{ formacao.id }}</td>
+              <td>{{ formacao.nuit }}</td>
+              <td>{{ formacao.courseName }}</td>
+              <td>{{ formacao.startDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ formacao.endDate | date:'dd/MM/yyyy' }}</td>
+              <td>{{ formacao.province }}</td>
+              <td>{{ formacao.courseLocation }}</td>
+              <td>
+                <span class="gender-badge" [class]="getGenderClass(formacao.gender)">
+                  {{ getGenderLabel(formacao.gender) }}
+                </span>
+              </td>
+              <!-- Conteúdo do Curso -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.theoretical)">
+                  {{ getSatisfactionText(formacao.theoretical) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.distribution)">
+                  {{ getSatisfactionText(formacao.distribution) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.importance)">
+                  {{ getSatisfactionText(formacao.importance) }}
+                </span>
+              </td>
+              <!-- Formador -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.expertise)">
+                  {{ getSatisfactionText(formacao.expertise) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.teachingMethod)">
+                  {{ getSatisfactionText(formacao.teachingMethod) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.dynamism)">
+                  {{ getSatisfactionText(formacao.dynamism) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.motivation)">
+                  {{ getSatisfactionText(formacao.motivation) }}
+                </span>
+              </td>
+              <!-- Aplicação -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.availability)">
+                  {{ getSatisfactionText(formacao.availability) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.functionality)">
+                  {{ getSatisfactionText(formacao.functionality) }}
+                </span>
+              </td>
+              <!-- Material Didático -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.texts)">
+                  {{ getSatisfactionText(formacao.texts) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.activities)">
+                  {{ getSatisfactionText(formacao.activities) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.presentation)">
+                  {{ getSatisfactionText(formacao.presentation) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.legislation)">
+                  {{ getSatisfactionText(formacao.legislation) }}
+                </span>
+              </td>
+              <!-- Logística -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.facilities)">
+                  {{ getSatisfactionText(formacao.facilities) }}
+                </span>
+              </td>
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfactionClass(formacao.reception)">
+                  {{ getSatisfactionText(formacao.reception) }}
+                </span>
+              </td>
+              <!-- Satisfação Final -->
+              <td>
+                <span class="satisfaction-badge" [class]="getSatisfacaoFinalClass(formacao)">
+                  {{ calcularSatisfacaoFinal(formacao) }}
+                </span>
+              </td>
+              <!-- Data de Avaliação -->
+              <td>
+                <span>{{ formacao.createdAt | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Paginação -->
+      <div class="pagination" *ngIf="formacoes.length">
+        <div class="page-size-control">
+          <span>Mostrar</span>
+          <select [value]="itensPorPagina" (change)="alterarItensPorPagina($event)">
+            <option *ngFor="let opcao of pageSizeOptions" [value]="opcao">{{ opcao }}</option>
+          </select>
+          <span>registos</span>
+        </div>
+        <div class="page-navigation">
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === 1"
+                  (click)="irParaPrimeiraPagina()"
+                  title="Primeira página">
+            <mat-icon>first_page</mat-icon>
+          </button>
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === 1"
+                  (click)="paginaAnterior()"
+                  title="Página anterior">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+          <span class="page-info">Página {{ paginaAtual }} de {{ totalPaginas }}</span>
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === totalPaginas"
+                  (click)="proximaPagina()"
+                  title="Próxima página">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+          <button class="btn-pagination"
+                  [disabled]="paginaAtual === totalPaginas"
+                  (click)="irParaUltimaPagina()"
+                  title="Última página">
+            <mat-icon>last_page</mat-icon>
+          </button>
+        </div>
+        <div class="page-shortcuts">
+          <button class="btn-pagination"
+                  (click)="irParaInicioDaPagina()"
+                  title="Ir para o início da página">
+            <mat-icon>vertical_align_top</mat-icon>
+          </button>
+          <button class="btn-pagination"
+                  (click)="irParaFimDaPagina()"
+                  title="Ir para o final da página">
+            <mat-icon>vertical_align_bottom</mat-icon>
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

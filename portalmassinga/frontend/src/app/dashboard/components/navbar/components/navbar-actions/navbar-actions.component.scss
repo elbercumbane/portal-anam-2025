@@ -1,0 +1,137 @@
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .action-btn {
+    color: var(--ink-500, #475569);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    
+    &:hover {
+      color: #05B6D4;
+      background: linear-gradient(135deg, 
+        rgba(5, 182, 212, 0.12) 0%, 
+        rgba(139, 92, 246, 0.08) 100%);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 
+        0 4px 12px rgba(5, 182, 212, 0.2),
+        0 0 0 1px rgba(5, 182, 212, 0.15);
+    }
+    
+    &:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    &.refresh-btn {
+      &:hover {
+        animation: spin 0.6s ease-in-out;
+      }
+    }
+  }
+  
+  // Action Divider
+  .action-divider {
+    width: 2px;
+    height: 32px;
+    background: linear-gradient(to bottom, 
+      transparent 0%, 
+      rgba(5, 182, 212, 0.25) 20%,
+      rgba(139, 92, 246, 0.3) 50%,
+      rgba(5, 182, 212, 0.25) 80%,
+      transparent 100%);
+    margin: 0 0.5rem;
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1024px) {
+  .navbar-actions {
+    gap: 0.4rem;
+    
+    .action-btn {
+      width: 38px;
+      height: 38px;
+    }
+    
+    .action-divider {
+      height: 28px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-actions {
+    gap: 0.25rem;
+    
+    .action-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0.5rem;
+      
+      mat-icon {
+        font-size: 1.1rem;
+      }
+    }
+    
+    .action-divider {
+      height: 25px;
+      margin: 0 0.15rem;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar-actions {
+    .action-divider {
+      display: none; // Hide dividers on small screens
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-actions {
+    gap: 0.15rem;
+    
+    .action-btn {
+      width: 34px;
+      height: 34px;
+      padding: 0.4rem;
+      
+      mat-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .navbar-actions {
+    gap: 0.1rem;
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0.3rem;
+      
+      mat-icon {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+

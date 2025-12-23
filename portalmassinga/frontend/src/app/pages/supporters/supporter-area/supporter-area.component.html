@@ -1,0 +1,252 @@
+<!-- Secção A: Visão Geral -->
+<section class="dashboard-header">
+  <div class="container">
+    <div class="welcome-card">
+      <div class="welcome-content">
+        <h1>Olá, <span class="highlight">{{ supporterName }}</span>!</h1>
+        <p class="welcome-subtitle">Bem-vindo à tua Área do Apoiante</p>
+      </div>
+      <div class="level-badge" [style.background]="getLevelColor() + '20'" [style.border-color]="getLevelColor()">
+        <span class="level-icon">🏆</span>
+        <div>
+          <div class="level-label">Nível</div>
+          <div class="level-name">{{ supporterLevel }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-overview">
+      <div class="stat-box">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <div class="stat-label">Total Doado</div>
+          <div class="stat-value">{{ totalDonated }} MZN</div>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <div class="stat-label">Última Contribuição</div>
+          <div class="stat-value">{{ lastDonation }}</div>
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-info">
+          <div class="stat-label">Projectos Apoiados</div>
+          <div class="stat-value">{{ activeProjects.length }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secção B: Onde o Dinheiro Foi Aplicado -->
+<section class="money-usage-section">
+  <div class="container">
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Onde o Teu Dinheiro Foi Aplicado</h2>
+        <p class="card-subtitle">Actualizado trimestralmente</p>
+      </div>
+      <div class="usage-content">
+        <div class="usage-chart">
+          <svg viewBox="0 0 200 200" class="pie-chart">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="40"/>
+            <circle 
+              *ngFor="let item of moneyUsage; let i = index"
+              cx="100" 
+              cy="100" 
+              r="80" 
+              fill="none"
+              [attr.stroke]="getCategoryColor(i)"
+              stroke-width="40"
+              [attr.stroke-dasharray]="getDashArray(item.percentage)"
+              [attr.stroke-dashoffset]="getDashOffset(i)"
+              transform="rotate(-90 100 100)"
+              class="chart-segment"/>
+          </svg>
+        </div>
+        <div class="usage-legend">
+          <div class="legend-item" *ngFor="let item of moneyUsage; let i = index">
+            <div class="legend-color" [style.background]="getCategoryColor(i)"></div>
+            <div class="legend-info">
+              <div class="legend-name">{{ item.category }}</div>
+              <div class="legend-details">
+                <span>{{ item.percentage }}%</span>
+                <span>{{ item.amount }} MZN</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secção C: Projectos Activos Financiados -->
+<section class="projects-section">
+  <div class="container">
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Projectos Activos Financiados pelo Teu Apoio</h2>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card" *ngFor="let project of activeProjects">
+          <div class="project-header">
+            <h3>{{ project.name }}</h3>
+            <div class="progress-badge">{{ project.progress }}%</div>
+          </div>
+          <p class="project-description">{{ project.description }}</p>
+          <div class="project-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="project.progress"></div>
+            </div>
+          </div>
+          <div class="project-impact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>{{ project.impact }} pessoas beneficiadas</span>
+          </div>
+          <div class="project-actions">
+            <button class="btn-secondary" (click)="viewReport(project.reportUrl)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              Ver Relatório PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secção D: Histórico de Doações -->
+<section class="donations-section">
+  <div class="container">
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Histórico de Doações</h2>
+      </div>
+      <div class="donations-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Valor</th>
+              <th>Tipo</th>
+              <th>Recibo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let donation of donationHistory">
+              <td>{{ donation.date }}</td>
+              <td class="amount-cell">{{ donation.amount }} MZN</td>
+              <td>
+                <span class="type-badge" [class.unique]="donation.type === 'unique'" [class.monthly]="donation.type === 'monthly'">
+                  {{ donation.type === 'unique' ? 'Única' : 'Mensal' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-download" (click)="downloadReceipt(donation.receipt)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secção E: Notícias Exclusivas -->
+<section class="news-section">
+  <div class="container">
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Notícias Exclusivas para Apoiantes</h2>
+        <p class="card-subtitle">Actualizações internas que não aparecem no site público</p>
+      </div>
+      <div class="news-list">
+        <div class="news-item" *ngFor="let news of exclusiveNews">
+          <div class="news-icon" [attr.data-type]="news.type">
+            <span *ngIf="news.type === 'projecto'">🎯</span>
+            <span *ngIf="news.type === 'relatorio'">📊</span>
+            <span *ngIf="news.type === 'evento'">🎉</span>
+          </div>
+          <div class="news-content">
+            <div class="news-date">{{ news.date }}</div>
+            <h3>{{ news.title }}</h3>
+            <p>{{ news.excerpt }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secção F: Aumentar Apoio -->
+<section class="increase-support-section">
+  <div class="container">
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Aumentar o Teu Apoio</h2>
+        <p class="card-subtitle">Queres fazer ainda mais diferença? Aumenta a tua contribuição.</p>
+      </div>
+      
+      <div class="increase-options">
+        <button class="increase-option-card" (click)="toggleIncreaseForm()">
+          <div class="option-icon">📈</div>
+          <h3>Aumentar Contribuição Mensal</h3>
+          <p>Altera o valor da tua contribuição mensal recorrente</p>
+        </button>
+        
+        <button class="increase-option-card" (click)="makeExtraDonation()">
+          <div class="option-icon">➕</div>
+          <h3>Fazer Contribuição Extra</h3>
+          <p>Faz uma doação adicional além da tua contribuição regular</p>
+        </button>
+      </div>
+
+      <!-- Formulário de Aumento -->
+      <div class="increase-form-container" *ngIf="showIncreaseForm">
+        <form [formGroup]="increaseForm" (ngSubmit)="onSubmitIncrease()" class="increase-form">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Novo Valor Mensal <span class="required">*</span></label>
+              <input type="number" formControlName="newAmount" placeholder="Ex: 200" min="1">
+            </div>
+            <div class="form-field">
+              <label>Frequência <span class="required">*</span></label>
+              <select formControlName="frequency">
+                <option value="monthly">Mensal</option>
+                <option value="unique">Única</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="toggleIncreaseForm()">Cancelar</button>
+            <button type="submit" class="btn-submit" [disabled]="increaseForm.invalid">
+              Confirmar Aumento
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+

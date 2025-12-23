@@ -1,0 +1,580 @@
+/* ============================================
+   FOOTER MODERNO E ELEGANTE - ANAM
+   ============================================ */
+
+// Cores elegantes - Azul escuro com dourado quente
+$navy-dark: #0F172A;
+$navy-medium: #1E293B;
+$navy-light: #334155;
+$gold-warm: #C9A227;
+$gold-light: #D4AF37;
+$gold-bronze: #B8860B;
+
+.footer {
+  background: linear-gradient(135deg, $navy-dark 0%, $navy-medium 50%, $navy-light 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+  
+  // Padrão de fundo animado
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba($gold-warm, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba($gold-light, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  
+  // Grade de pontos decorativos
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba($gold-warm, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+}
+
+// Partículas flutuantes
+.footer-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba($gold-warm, 0.6);
+    border-radius: 50%;
+    animation: floatParticle 15s infinite ease-in-out;
+    
+    &:nth-child(1) {
+      left: 10%;
+      top: 20%;
+      animation-delay: -2s;
+      animation-duration: 14s;
+      width: 5px;
+      height: 5px;
+      opacity: 0.4;
+    }
+    
+    &:nth-child(2) {
+      left: 30%;
+      top: 60%;
+      animation-delay: -4s;
+      animation-duration: 16s;
+      width: 7px;
+      height: 7px;
+      opacity: 0.5;
+    }
+    
+    &:nth-child(3) {
+      left: 55%;
+      top: 15%;
+      animation-delay: -6s;
+      animation-duration: 13s;
+      width: 4px;
+      height: 4px;
+      opacity: 0.6;
+    }
+    
+    &:nth-child(4) {
+      left: 75%;
+      top: 45%;
+      animation-delay: -8s;
+      animation-duration: 18s;
+      width: 6px;
+      height: 6px;
+      opacity: 0.35;
+    }
+    
+    &:nth-child(5) {
+      left: 85%;
+      top: 70%;
+      animation-delay: -10s;
+      animation-duration: 15s;
+      width: 8px;
+      height: 8px;
+      opacity: 0.45;
+    }
+    
+    &:nth-child(6) {
+      left: 45%;
+      top: 80%;
+      animation-delay: -12s;
+      animation-duration: 17s;
+      width: 5px;
+      height: 5px;
+      opacity: 0.55;
+    }
+  }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) scale(1.2);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-10px) scale(0.8);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(-30px) translateX(5px) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+// Container
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+// ============ MAIN CONTENT ============
+.footer-main {
+  padding: 60px 0 40px;
+  position: relative;
+  z-index: 2;
+  
+  .footer-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    gap: 50px;
+    align-items: start;
+    
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 35px;
+      text-align: center;
+    }
+  }
+}
+
+// ============ BRAND SECTION ============
+.footer-brand {
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    
+    @media (max-width: 600px) {
+      justify-content: center;
+    }
+    
+    svg {
+      width: 48px;
+      height: 48px;
+      color: $gold-warm;
+      filter: drop-shadow(0 2px 8px rgba($gold-warm, 0.4));
+      transition: all 0.4s ease;
+      
+      &:hover {
+        transform: rotate(10deg) scale(1.1);
+        filter: drop-shadow(0 4px 15px rgba($gold-light, 0.6));
+      }
+    }
+    
+    .brand-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .brand-tagline {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  
+  .brand-description {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 300px;
+    
+    @media (max-width: 600px) {
+      max-width: 100%;
+    }
+  }
+}
+
+// ============ LINKS SECTION ============
+.footer-links {
+  h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $gold-warm;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 30px;
+      height: 3px;
+      background: linear-gradient(90deg, $gold-warm, transparent);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      
+      @media (max-width: 600px) {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  
+  &:hover h4::after {
+    width: 50px;
+  }
+  
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 400;
+      transition: all 0.3s ease;
+      position: relative;
+      display: inline-block;
+      padding-left: 0;
+      
+      &::before {
+        content: '→';
+        position: absolute;
+        left: -20px;
+        opacity: 0;
+        color: $gold-warm;
+        transition: all 0.3s ease;
+        
+        @media (max-width: 600px) {
+          display: none;
+        }
+      }
+      
+      &:hover {
+        color: $gold-light;
+        padding-left: 20px;
+        text-shadow: 0 0 10px rgba($gold-warm, 0.3);
+        
+        &::before {
+          opacity: 1;
+          left: 0;
+        }
+      }
+    }
+  }
+}
+
+// ============ CONTACT SECTION ============
+.footer-contact {
+  h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $gold-warm;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 30px;
+      height: 3px;
+      background: linear-gradient(90deg, $gold-warm, transparent);
+      border-radius: 2px;
+      
+      @media (max-width: 600px) {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+  
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    
+    @media (max-width: 600px) {
+      align-items: center;
+    }
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    background: rgba($gold-warm, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba($gold-warm, 0.15);
+    transition: all 0.3s ease;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      color: $gold-warm;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover:not(.location) {
+      background: rgba($gold-warm, 0.15);
+      border-color: rgba($gold-warm, 0.4);
+      transform: translateX(5px);
+      color: $gold-light;
+      
+      svg {
+        transform: scale(1.15);
+        color: $gold-light;
+      }
+    }
+    
+    &.location {
+      cursor: default;
+    }
+  }
+}
+
+// ============ BOTTOM SECTION ============
+.footer-bottom {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 24px 0;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  
+  .footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+}
+
+// ============ SOCIAL LINKS ============
+.social-links {
+  display: flex;
+  gap: 12px;
+  
+  .social-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      
+      svg {
+        transform: scale(1.1);
+      }
+    }
+    
+    // Cores específicas de cada rede
+    &.facebook:hover {
+      background: #1877F2;
+      border-color: #1877F2;
+    }
+    
+    &.instagram:hover {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      border-color: #dc2743;
+    }
+    
+    &.whatsapp:hover {
+      background: #25D366;
+      border-color: #25D366;
+    }
+    
+    &.youtube:hover {
+      background: #FF0000;
+      border-color: #FF0000;
+    }
+  }
+}
+
+// ============ COPYRIGHT ============
+.copyright {
+  text-align: center;
+  
+  p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 6px;
+    
+    strong {
+      color: $gold-warm;
+      font-weight: 700;
+    }
+  }
+  
+  .made-with {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    
+    .heart {
+      color: $gold-warm;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+// ============ SCROLL TO TOP ============
+.scroll-top {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $gold-bronze, $gold-warm);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba($gold-warm, 0.3);
+  
+  svg {
+    width: 22px;
+    height: 22px;
+    color: $navy-dark;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba($gold-warm, 0.5);
+    background: linear-gradient(135deg, $gold-warm, $gold-light);
+    
+    svg {
+      transform: translateY(-3px);
+      animation: bounceUp 0.6s ease infinite;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px) scale(0.98);
+  }
+}
+
+@keyframes bounceUp {
+  0%, 100% { transform: translateY(-3px); }
+  50% { transform: translateY(-8px); }
+}
+
+// ============ RESPONSIVIDADE ============
+@media (max-width: 480px) {
+  .footer-main {
+    padding: 40px 0 30px;
+  }
+  
+  .footer-brand {
+    .brand-logo {
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .brand-name {
+        font-size: 1.8rem;
+      }
+    }
+  }
+  
+  .footer-bottom {
+    padding: 20px 0;
+  }
+  
+  .social-links {
+    gap: 10px;
+    
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  
+  .scroll-top {
+    width: 40px;
+    height: 40px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

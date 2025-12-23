@@ -1,0 +1,102 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Indicadores - Desempenho</h1>
+    <p>Gerencie os indicadores de desempenho</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Hero Section -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>image</mat-icon>
+          Hero Section
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput placeholder="Indicadores de Desempenho">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput rows="3" placeholder="Descrição sobre indicadores de desempenho"></textarea>
+          </mat-form-field>
+          <div class="image-upload-section">
+            <label class="upload-label">Imagem de Fundo</label>
+            <div class="image-preview-container">
+              <img src="/assets/membros-background.jpg" alt="Preview" class="image-preview">
+              <button mat-raised-button color="primary" class="upload-btn">
+                <mat-icon>cloud_upload</mat-icon>
+                Alterar Imagem
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Métricas de Desempenho -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>trending_up</mat-icon>
+          Métricas de Desempenho
+        </mat-card-title>
+        <button mat-icon-button color="primary" class="add-btn">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="metrics-list">
+          <mat-expansion-panel *ngFor="let metric of [1,2,3,4]; let i = index">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Métrica {{ i + 1 }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="form-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nome da Métrica</mat-label>
+                <input matInput placeholder="Ex: Taxa de Conclusão de Projetos">
+              </mat-form-field>
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Valor Atual</mat-label>
+                  <input matInput type="number" placeholder="0">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Meta</mat-label>
+                  <input matInput type="number" placeholder="0">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Unidade</mat-label>
+                  <input matInput placeholder="Ex: %">
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="3"></textarea>
+              </mat-form-field>
+              <button mat-button color="warn" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+                Remover Métrica
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>preview</mat-icon>
+        Visualizar Página
+      </button>
+    </div>
+  </div>
+</div>

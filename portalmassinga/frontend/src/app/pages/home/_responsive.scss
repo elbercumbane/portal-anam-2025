@@ -1,0 +1,42 @@
+// Responsividade
+@media (max-width: 640px) {
+  .hero__scrim {
+    background:
+      radial-gradient(900px 420px at 50% 65%, rgba(0,0,0,.35), transparent 55%),
+      linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 78%),
+      linear-gradient(0deg, rgba(0,0,0,.25), rgba(0,0,0,.25));
+  }
+  
+  .hero-dots {
+    bottom: 20px;
+    gap: 10px;
+    
+    .hero-dot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .futuro-section {
+    margin-top: 2rem;
+    padding: 2rem 0;
+    border-radius: 16px;
+  }
+  
+  .futuro-content {
+    padding: 0 1rem;
+  }
+  
+  .futuro-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .futuro-item {
+    padding: 1.5rem 1rem;
+  }
+}
+

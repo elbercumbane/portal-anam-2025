@@ -1,0 +1,70 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║     🚀 DEPLOY AUTOMÁTICO NO VERCEL - INÍCIO RÁPIDO          ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 PRIMEIRA VEZ - SETUP COMPLETO AUTOMÁTICO
+═══════════════════════════════════════════════════════════════
+
+Execute um destes arquivos (duplo clique):
+
+   ✅ SETUP-AUTOMATICO.bat          (Windows - mais fácil)
+   ✅ setup-completo-auto.ps1       (PowerShell)
+
+Este script faz TUDO automaticamente:
+   ✓ Instala Vercel CLI se necessário
+   ✓ Faz login no Vercel
+   ✓ Instala dependências
+   ✓ Faz deploy do backend
+   ✓ Faz deploy do frontend
+   ✓ Mostra próximos passos
+
+═══════════════════════════════════════════════════════════════
+
+🔄 DEPLOY RÁPIDO (Após primeira configuração)
+═══════════════════════════════════════════════════════════════
+
+Execute um destes arquivos:
+
+   ✅ DEPLOY-RAPIDO.bat             (Windows - mais fácil)
+   ✅ deploy-auto.ps1               (PowerShell)
+
+═══════════════════════════════════════════════════════════════
+
+⚙️ CONFIGURAR VARIÁVEIS DE AMBIENTE
+═══════════════════════════════════════════════════════════════
+
+Após o primeiro deploy, configure as variáveis:
+
+   Execute: configurar-variaveis.ps1
+
+Ou configure manualmente no dashboard:
+   https://vercel.com/dashboard
+
+Variáveis necessárias estão em: env.example.txt
+
+═══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTAÇÃO COMPLETA
+═══════════════════════════════════════════════════════════════
+
+   📖 INICIO-RAPIDO.md      - Guia rápido
+   📖 README.md              - Visão geral completa
+   📖 CONFIGURACAO.md        - Configuração detalhada
+   📖 ARQUIVOS-CONFIG.md     - Onde estão os arquivos
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE
+═══════════════════════════════════════════════════════════════
+
+1. Primeira vez: Use SETUP-AUTOMATICO.bat
+2. Configure variáveis após primeiro deploy
+3. Para produção: Use DEPLOY-RAPIDO.bat e escolha opção 2
+
+═══════════════════════════════════════════════════════════════
+
+✅ TUDO PRONTO PARA USAR!
+
+

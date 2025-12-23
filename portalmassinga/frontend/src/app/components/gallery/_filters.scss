@@ -1,0 +1,91 @@
+@import 'variables';
+
+// Filtros de Categoria
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 60px;
+  padding: 0 20px;
+  
+  .filtro-btn {
+    position: relative;
+    background: white;
+    border: 2px solid #e5e5e5;
+    border-radius: 50px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #666;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #8A7D65 0%, #7A6D55 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .filtro-icon {
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+    
+    .filtro-text {
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    
+    .filtro-count {
+      position: relative;
+      z-index: 1;
+      background: rgba(138, 125, 101, 0.1);
+      color: #8A7D65;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 50px;
+      min-width: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    &:hover {
+      border-color: #8A7D65;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(138, 125, 101, 0.15);
+      
+      .filtro-icon {
+        transform: scale(1.1);
+      }
+    }
+    
+    &.active {
+      border-color: #8A7D65;
+      color: white;
+      box-shadow: 0 8px 20px rgba(138, 125, 101, 0.25);
+      
+      &::before {
+        opacity: 1;
+      }
+      
+      .filtro-count {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+  }
+}
+

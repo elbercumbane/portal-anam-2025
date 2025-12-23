@@ -1,0 +1,141 @@
+<!-- Navigation Menu -->
+<mat-nav-list class="nav-list">
+  <!-- Dashboard Item -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item"
+       [class.active]="activeItem === 'dashboard'"
+       (click)="onNavigationClick(getDefaultNavigationItems()[0])">
+      <mat-icon class="nav-icon">dashboard</mat-icon>
+      <span class="nav-text">Dashboard</span>
+    </a>
+  </div>
+  
+  <mat-divider class="nav-divider"></mat-divider>
+  
+  <!-- Categoria: Tesouraria -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="tesourariaExpanded || activeItem === 'tesouraria-gestao' || activeItem === 'tesouraria-relatorios'"
+       (click)="toggleTesouraria()">
+      <mat-icon class="nav-icon">account_balance_wallet</mat-icon>
+      <span class="nav-text">Tesouraria</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="tesourariaExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Tesouraria -->
+  <div class="submenu-container" [class.expanded]="tesourariaExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getTesourariaItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Categoria: Área de Membros -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="membrosExpanded || activeItem === 'membros-home' || activeItem === 'membros-gestao' || activeItem === 'membros-organograma'"
+       (click)="toggleMembros()">
+      <mat-icon class="nav-icon">people</mat-icon>
+      <span class="nav-text">Área de Membros</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="membrosExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Membros -->
+  <div class="submenu-container" [class.expanded]="membrosExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getMembrosItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Categoria: Páginas -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="paginasExpanded || activeItem === 'home' || activeItem === 'documentacao' || activeItem === 'servicos' || activeItem === 'eventos' || activeItem === 'historial' || activeItem === 'galeria' || activeItem === 'parceiros' || activeItem === 'programas' || activeItem === 'noticias' || activeItem === 'associar' || activeItem === 'contato'"
+       (click)="togglePaginas()">
+      <mat-icon class="nav-icon">pages</mat-icon>
+      <span class="nav-text">Páginas</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="paginasExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Páginas -->
+  <div class="submenu-container" [class.expanded]="paginasExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getPaginasItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Categoria: Projectos -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="projectosExpanded || activeItem === 'projectos-ativos' || activeItem === 'projectos-realizados' || activeItem === 'candidaturas'"
+       (click)="toggleProjectos()">
+      <mat-icon class="nav-icon">folder</mat-icon>
+      <span class="nav-text">Projectos</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="projectosExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Projectos -->
+  <div class="submenu-container" [class.expanded]="projectosExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getProjectosItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Categoria: Indicadores -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="indicadoresExpanded || activeItem === 'indicadores-geral' || activeItem === 'indicadores-desempenho' || activeItem === 'indicadores-satisfacao' || activeItem === 'indicadores-metricas'"
+       (click)="toggleIndicadores()">
+      <mat-icon class="nav-icon">insights</mat-icon>
+      <span class="nav-text">Indicadores</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="indicadoresExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Indicadores -->
+  <div class="submenu-container" [class.expanded]="indicadoresExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getIndicadoresItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
+  <mat-divider class="nav-divider"></mat-divider>
+  
+  <!-- Logout -->
+  <div class="nav-item-wrapper">
+    <a routerLink="/login" 
+       class="nav-item logout">
+      <mat-icon class="nav-icon">logout</mat-icon>
+      <span class="nav-text">Sair</span>
+    </a>
+  </div>
+</mat-nav-list>
+

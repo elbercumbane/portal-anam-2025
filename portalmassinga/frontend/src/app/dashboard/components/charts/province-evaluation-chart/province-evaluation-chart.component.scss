@@ -1,0 +1,122 @@
+:host {
+  display: block;
+  margin-top: 1.5rem;
+}
+
+.province-eval-card {
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1f2937;
+
+      mat-icon {
+        color: #2563eb;
+      }
+    }
+
+    mat-card-subtitle {
+      color: #6b7280;
+    }
+  }
+
+  mat-card-content {
+    padding: 1.5rem;
+  }
+}
+
+.charts-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.chart-panel {
+  flex: 1 1 400px;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem;
+  min-width: 0;
+  overflow-x: auto;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+
+    mat-icon {
+      font-size: 1.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    min-width: 1100px;
+  }
+}
+
+.bar {
+  rx: 10px;
+  transition: opacity 0.2s ease;
+
+  &.atendimento {
+    fill: #2563eb;
+  }
+
+  &.formacao {
+    fill: #14b8a6;
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.province-label {
+  font-size: 10px;
+  fill: #6b7280;
+  font-family: 'Roboto', sans-serif;
+  text-anchor: middle;
+}
+
+.value-label {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+
+  &.atendimento {
+    fill: #1d4ed8;
+  }
+
+  &.formacao {
+    fill: #0f766e;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 0;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: #9ca3af;
+  }
+}
+

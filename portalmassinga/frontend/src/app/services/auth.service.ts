@@ -1,0 +1,176 @@
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { Usuario, STORAGE_KEYS } from './auth.data';
+import { buscarMembroPorEmail, buscarMembroPorNome, atualizarDadosMembro } from './member-data.helper';
+import { ApiClientService } from './api-client.service';
+
+// Re-exportar User para compatibilidade
+export type User = Usuario;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private currentUserSubject = new BehaviorSubject<Usuario | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(
+    private router: Router,
+    private apiClient: ApiClientService
+  ) {
+    // Verificar se há usuário salvo no localStorage
+    const usuarioSalvo = localStorage.getItem(STORAGE_KEYS.USUARIO_ATUAL);
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
+    
+    if (usuarioSalvo && token) {
+      this.currentUserSubject.next(JSON.parse(usuarioSalvo));
+      // Verificar se o token ainda é válido
+      this.validateToken();
+    }
+  }
+
+  login(email: string, password: string): Observable<{ success: boolean; message?: string; user?: Usuario }> {
+    return this.apiClient.login(email.trim().toLowerCase(), password).pipe(
+      map((response: any) => {
+        if (response.success && response.token && response.user) {
+          // Salvar token
+          localStorage.setItem(STORAGE_KEYS.TOKEN_AUTH, response.token);
+          
+          // Criar objeto Usuario
+          const usuario: Usuario = {
+            email: response.user.email,
+            nome: response.user.nome || response.user.full_name,
+            role: response.user.role || 'membro',
+            memberId: response.user.memberId || response.user.member_id
+          };
+          
+          // Salvar usuário
+          localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
+          this.currentUserSubject.next(usuario);
+          
+          // Tentar buscar dados completos do membro (não bloqueia o login)
+          if (usuario.memberId) {
+            this.loadMemberData(usuario.memberId);
+          }
+          
+          return { success: true, user: usuario };
+        } else {
+          return { 
+            success: false, 
+            message: response.message || 'Erro ao fazer login' 
+          };
+        }
+      }),
+      catchError((error) => {
+        let errorMessage = 'Erro ao conectar com o servidor';
+        
+        if (error.error) {
+          if (error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.error.errors && Array.isArray(error.error.errors)) {
+            errorMessage = error.error.errors.map((e: any) => e.msg || e.message).join(', ');
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        return throwError(() => ({ success: false, message: errorMessage }));
+      })
+    );
+  }
+
+  private validateToken(): void {
+    this.apiClient.getCurrentUser().subscribe({
+      next: (response: any) => {
+        if (response.success && response.user) {
+          const usuario: Usuario = {
+            email: response.user.email,
+            nome: response.user.nome || response.user.full_name,
+            role: response.user.role || 'membro',
+            memberId: response.user.memberId || response.user.member_id
+          };
+          this.currentUserSubject.next(usuario);
+          localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
+        }
+      },
+      error: () => {
+        // Token inválido, fazer logout
+        this.logout();
+      }
+    });
+  }
+
+  private loadMemberData(memberId: string): void {
+    this.apiClient.getMemberById(memberId).subscribe({
+      next: (response: any) => {
+        if (response.success && response.data) {
+          localStorage.setItem(STORAGE_KEYS.DADOS_MEMBRO, JSON.stringify(response.data));
+        }
+      },
+      error: (error) => {
+        console.warn('Erro ao carregar dados do membro:', error);
+      }
+    });
+  }
+
+  // Obter dados completos do membro logado
+  getCurrentMemberData(): any | null {
+    // Primeiro tentar buscar do currentMemberData
+    const armazenado = localStorage.getItem(STORAGE_KEYS.DADOS_MEMBRO);
+    if (armazenado) {
+      try {
+        return JSON.parse(armazenado);
+      } catch (erro) {
+        console.error('Erro ao parsear currentMemberData:', erro);
+      }
+    }
+    
+    // Tentar buscar pelo email do usuário atual
+    const usuario = this.getCurrentUser();
+    if (usuario?.email) {
+      const dadosMembro = buscarMembroPorEmail(usuario.email);
+      if (dadosMembro) {
+        localStorage.setItem(STORAGE_KEYS.DADOS_MEMBRO, JSON.stringify(dadosMembro));
+        return dadosMembro;
+      }
+    }
+    
+    // Fallback: tentar buscar pelo nome
+    if (usuario?.nome) {
+      const dadosMembro = buscarMembroPorNome(usuario.nome);
+      if (dadosMembro) {
+        localStorage.setItem(STORAGE_KEYS.DADOS_MEMBRO, JSON.stringify(dadosMembro));
+        return dadosMembro;
+      }
+    }
+    
+    return null;
+  }
+
+  // Atualizar dados do membro
+  updateMemberData(dadosMembro: any): void {
+    atualizarDadosMembro(dadosMembro);
+  }
+
+  logout(): void {
+    localStorage.removeItem(STORAGE_KEYS.USUARIO_ATUAL);
+    localStorage.removeItem(STORAGE_KEYS.TOKEN_AUTH);
+    localStorage.removeItem(STORAGE_KEYS.DADOS_MEMBRO);
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
+  }
+
+  isAuthenticated(): boolean {
+    return this.currentUserSubject.value !== null;
+  }
+
+  getCurrentUser(): Usuario | null {
+    return this.currentUserSubject.value;
+  }
+}

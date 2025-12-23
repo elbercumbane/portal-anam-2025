@@ -1,0 +1,324 @@
+@import 'variables';
+@import 'animations';
+
+.hero {
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg, 
+      rgba(76, 175, 80, 0.6) 0%, 
+      rgba(76, 175, 80, 0.4) 50%,
+      rgba(26, 26, 26, 0.7) 100%
+    );
+    z-index: 1;
+  }
+
+  // Overlay moderno com gradiente - Nova Paleta
+  &__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(76, 175, 80, 0.3) 30%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  &__scrim--bright{
+    position: absolute; 
+    inset: 0; 
+    pointer-events: none;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 248, 231, 0.15) 0%,
+      transparent 30%,
+      rgba(76, 175, 80, 0.1) 70%,
+      transparent 100%
+    );
+    z-index: 3;
+  }
+}
+
+.hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 4;
+  color: white;
+  padding: var(--space-3xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  
+  h1 {
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 400 !important; // Sem bold
+    margin-bottom: var(--space-lg);
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  p {
+    font-family: var(--font-primary);
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    font-weight: 300;
+    font-style: italic;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xl);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.95) !important;
+    max-width: 700px;
+    line-height: 1.7;
+    animation: fadeInUp 1s ease-out 0.3s both;
+    position: relative;
+    padding: var(--space-md) var(--space-lg);
+  }
+}
+
+// nova estética do título
+.hero__content {
+  width: min(92vw, 1100px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding-inline: 1rem;
+  
+  // Layout especial para Missão e Visão
+  &:has(.mission-vision-title) {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    align-items: flex-start;
+    justify-items: start;
+    padding-left: 15%;
+    padding-right: 5%;
+    
+    @media (max-width: 768px) {
+      padding-left: 10%;
+      padding-right: 3%;
+    }
+    
+    @media (max-width: 480px) {
+      padding-left: 8%;
+      padding-right: 3%;
+    }
+  }
+}
+
+.hero__title {
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 400 !important; // Sem bold
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  font-size: clamp(2rem, 4.2vw + 1rem, 4.5rem);
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: all 0.6s ease;
+  
+  // Estilo especial para títulos de Missão e Visão
+  &.mission-vision-title {
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: clamp(1.75rem, 3vw, 2.2rem) !important; // Fonte h3
+    font-weight: 400 !important; // Sem bold
+    letter-spacing: 0.01em !important;
+    background: linear-gradient(135deg, #ffffff 0%, #D4AF37 30%, #FFD700 50%, #4CAF50 70%, #ffffff 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    margin-bottom: 20px !important;
+    text-align: left !important;
+    width: 100%;
+    position: relative;
+    animation: titleGlow 3s ease-in-out infinite;
+    
+    .title-part-left,
+    .title-part-right {
+      display: inline;
+      white-space: normal;
+    }
+  }
+}
+
+// Caixa estilizada para texto de Missão/Visão
+.hero-subtitle-box {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+  text-align: left;
+  
+  &.active {
+    opacity: 1;
+    transform: translateY(0);
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    
+    p {
+      background: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      position: relative;
+      overflow: visible;
+      
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+    
+    .subtitle-glow {
+      display: none;
+    }
+  }
+  
+  .subtitle-glow {
+    display: none;
+  }
+  
+  p {
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: clamp(1.75rem, 4vw, 2.5rem) !important; // Fonte h3
+    font-weight: 500 !important;
+    font-style: normal !important;
+    line-height: 1.5 !important; // Ajustado para 3 linhas
+    color: #ffffff !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 1;
+    margin: 0 !important;
+    transition: all 0.5s ease;
+    max-width: 85%; // Limita a largura para forçar 3 linhas
+    width: 85%;
+    
+    @media (max-width: 768px) {
+      font-size: clamp(1.5rem, 4.5vw, 2rem) !important;
+      max-width: 90%;
+      width: 90%;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: clamp(1.3rem, 5vw, 1.8rem) !important;
+      max-width: 95%;
+      width: 95%;
+    }
+  }
+}
+
+// Subtítulo simples (primeiro slide - Bem-vindo)
+.hero-content > p:not(.hero-subtitle-box p) {
+  display: block !important;
+  font-family: var(--font-primary);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 300;
+  font-style: italic;
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-xl);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.95) !important;
+  max-width: 700px;
+  line-height: 1.7;
+  animation: fadeInUp 1s ease-out 0.3s both;
+  position: relative;
+  padding: var(--space-md) var(--space-lg);
+}
+
+// Efeito de Neve - Apenas no Hero, saindo do navbar
+.snow-container {
+  position: absolute;
+  top: 0; // Começar do topo (navbar)
+  left: 0;
+  width: 100%;
+  height: 100%; // Apenas dentro do hero
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3; // Acima dos overlays, abaixo do conteúdo
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px; // Começar acima (do navbar)
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: snowfall linear infinite;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  
+  &:nth-child(3n) {
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.6);
+  }
+  
+  &:nth-child(5n) {
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.9);
+  }
+  
+  &:nth-child(7n) {
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 20px)) translateX(50px) rotate(360deg); // Parar logo após o final do hero
+    opacity: 0;
+  }
+}
+

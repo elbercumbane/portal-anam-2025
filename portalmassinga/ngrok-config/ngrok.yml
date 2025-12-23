@@ -1,0 +1,16 @@
+version: "2"
+authtoken: 36jv7t41bcX3qnT2fn7JLw2H5jY_5LpmQcTexvHwVFNoEZq7v
+tunnels:
+  frontend:
+    addr: 4201
+    proto: http
+    request_header:
+      add:
+        - "ngrok-skip-browser-warning: true"
+  backend:
+    addr: 3000
+    proto: http
+    request_header:
+      add:
+        - "ngrok-skip-browser-warning: true"
+

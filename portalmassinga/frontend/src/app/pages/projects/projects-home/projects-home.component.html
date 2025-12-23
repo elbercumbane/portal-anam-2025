@@ -1,0 +1,114 @@
+<!-- Hero Editorial -->
+<section class="projectos-hero">
+  <video #heroVideo class="hero-video" autoplay muted playsinline>
+    <source src="/assets/video/farm.mov" type="video/quicktime">
+    <source src="/assets/video/farm.mov" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Transformando <span class="highlight">Vidas</span>
+    </h1>
+    <p class="hero-subtitle">Projectos que fazem a diferença na comunidade de Massinga</p>
+    <div class="hero-meta">
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+          <path d="M2 17l10 5 10-5"></path>
+          <path d="M2 12l10 5 10-5"></path>
+        </svg>
+        Desenvolvimento Sustentável
+      </span>
+      <span class="meta-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        Massinga, Moçambique
+      </span>
+    </div>
+    <div class="hero-tabs">
+      <nav class="tabs-nav">
+        <a routerLink="/projectos/ativos" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: false}"
+           class="tab-link"
+           (click)="navigateTo('ativos', $event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>Projectos em Execução</span>
+        </a>
+        <a routerLink="/projectos/realizados" 
+           routerLinkActive="active" 
+           class="tab-link"
+           (click)="navigateTo('realizados', $event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Projectos Realizados</span>
+        </a>
+        <a routerLink="/projectos/candidaturas" 
+           routerLinkActive="active" 
+           class="tab-link"
+           (click)="navigateTo('candidaturas', $event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Projectos a serem realizados</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <polyline points="19 12 12 19 5 12"></polyline>
+    </svg>
+  </div>
+</section>
+
+<!-- Conteúdo dos Projectos -->
+<section class="projectos-container">
+  <div class="container">
+    <div class="projectos-content">
+  <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>
+
+<!-- CTA - Torne-se Membro -->
+<section class="cta-projectos">
+  <div class="cta-overlay"></div>
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">
+        Faça Parte da <span class="highlight">Transformação de Massinga</span>
+      </h2>
+      <p class="cta-description">
+        Cada projecto nasce do compromisso colectivo dos filhos de Massinga. 
+        Ao tornar-se membro, você constrói esperança para as futuras gerações.
+      </p>
+      <a routerLink="/associar-se" class="cta-button">
+        <span>Torne-se Membro</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<button class="scroll-top-btn" [class.at-top]="isAtTop" (click)="handleScrollButton()" aria-label="Navegação scroll">
+  <svg *ngIf="!isAtTop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+  <svg *ngIf="isAtTop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="6 9 12 15 18 9"></polyline>
+  </svg>
+</button>
+

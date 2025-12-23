@@ -1,0 +1,95 @@
+@import 'variables';
+
+// Animações
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px) scale(1.1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-20px) scale(0.9);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(-40px) translateX(10px) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Badge flutuando suavemente
+@keyframes floatBadge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+// Ícone rotacionando e pulsando
+@keyframes rotatePulse {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(10deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1);
+  }
+  75% {
+    transform: rotate(-10deg) scale(1.1);
+  }
+}
+
+// Texto com brilho pulsante
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Texto dourado com shimmer
+@keyframes shimmerGold {
+  0%, 100% {
+    color: $gold-accent;
+    text-shadow: 0 0 20px rgba($gold-accent, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    color: $gold-shine;
+    text-shadow: 0 0 40px rgba($gold-accent, 0.6), 0 0 80px rgba($gold-shine, 0.3);
+    transform: scale(1.02);
+  }
+}
+
+// Parágrafo flutuando sutilmente
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+

@@ -1,0 +1,11 @@
+.container {
+  padding: 40px 0;
+  
+  h1 {
+    color: var(--ink-900);
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+}
+

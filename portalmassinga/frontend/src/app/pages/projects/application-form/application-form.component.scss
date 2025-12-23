@@ -1,0 +1,22 @@
+// Arquivo principal do Formulário de Candidatura
+// Importa todos os módulos organizados
+
+@import 'variables';
+@import 'animations';
+@import 'background-effects';
+@import 'hero-section';
+@import 'info-cards';
+@import 'progress-steps';
+@import 'forms';
+@import 'upload';
+@import 'terms';
+@import 'navigation';
+@import 'responsive';
+
+// Página Principal
+.candidatura-page {
+  min-height: 100vh;
+  background: #fafafa;
+  position: relative;
+  overflow-x: hidden;
+}

@@ -1,0 +1,214 @@
+@import 'variables';
+@import 'animations';
+
+// Timeline Estilo Revista - Compacta
+.timeline-section {
+  padding: 60px 0; // Reduzido de 120px
+  background: #ffffff; // Branco
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 50px; // Reduzido de 80px
+  
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 16px;
+    
+    .highlight {
+      color: #4CAF50; // Verde
+      font-style: italic;
+    }
+  }
+  
+  .section-subtitle {
+    font-size: 1.25rem;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.timeline-magazine {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Artigo Estilo Revista - Compacto
+.milestone-article {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px; // Reduzido de 60px
+  margin-bottom: 60px; // Reduzido de 120px
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  
+  @for $i from 0 through 10 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.2}s;
+    }
+  }
+  
+  &.reverse {
+    direction: rtl;
+    
+    .article-content {
+      direction: ltr;
+    }
+    
+    .article-image {
+      direction: ltr;
+    }
+  }
+  
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 80px;
+    
+    &.reverse {
+      direction: ltr;
+    }
+  }
+}
+
+.article-image {
+  position: relative;
+  height: 350px; // Reduzido de 500px
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); // Reduzido
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 24px;
+    
+    .categoria-tag {
+      background: rgba(255, 255, 255, 0.95);
+      color: #1a1a1a;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+  
+  .ano-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: #4CAF50; // Verde
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem; // Reduzido
+    font-weight: 900;
+    padding: 12px 20px; // Reduzido
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); // Reduzido
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.article-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  .content-wrapper {
+    .article-year {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; // Reduzido de 5rem
+      font-weight: 900;
+      color: rgba(76, 175, 80, 0.1); // Verde
+      line-height: 1;
+      margin-bottom: -15px; // Reduzido
+      display: block;
+    }
+    
+    .article-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem); // Reduzido
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0 0 12px; // Reduzido
+      line-height: 1.3;
+    }
+    
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px; // Reduzido
+      margin-bottom: 16px; // Reduzido
+      font-size: 0.8rem; // Reduzido
+      color: #666;
+      
+      .meta-tag {
+        background: rgba(76, 175, 80, 0.1); // Verde
+        color: #4CAF50; // Verde
+        padding: 4px 10px; // Reduzido
+        border-radius: 50px;
+        font-weight: 600;
+      }
+      
+      .meta-divider {
+        color: #ccc;
+      }
+      
+      .meta-reading {
+        font-weight: 500;
+      }
+    }
+    
+    .article-text {
+      font-size: 1rem; // Reduzido
+      line-height: 1.7; // Reduzido
+      color: #444;
+      margin: 0 0 24px; // Reduzido
+    }
+    
+    .article-quote {
+      border-left: 4px solid #4CAF50; // Verde
+      padding-left: 20px; // Reduzido
+      margin-top: 24px; // Reduzido
+      position: relative;
+      
+      .quote-icon {
+        position: absolute;
+        top: -8px;
+        left: -12px;
+        width: 28px; // Reduzido
+        height: 28px;
+        color: #4CAF50; // Verde
+        opacity: 0.3;
+      }
+      
+      p {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.125rem; // Reduzido
+        font-style: italic;
+        color: #4CAF50; // Verde
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,22 @@
+<!-- Quick Actions Card -->
+<mat-card class="content-card quick-actions">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>flash_on</mat-icon>
+      Ações Rápidas
+    </mat-card-title>
+    <mat-card-subtitle>Acesso direto aos formulários</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="actions-grid">
+      <button mat-raised-button 
+              *ngFor="let action of quickActions"
+              [color]="getActionColor(action)"
+              [routerLink]="action.route"
+              class="action-button">
+        <mat-icon>{{ action.icon }}</mat-icon>
+        <span>{{ action.title }}</span>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

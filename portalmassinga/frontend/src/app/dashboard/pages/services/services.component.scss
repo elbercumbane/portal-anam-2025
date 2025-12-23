@@ -1,0 +1,72 @@
+@import '../_shared-styles.scss';
+
+// Tema: Páginas (Azul)
+@include category-theme($color-paginas, #2563eb);
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-item {
+  padding: 20px;
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: $color-paginas;
+    box-shadow: 0 4px 12px rgba($color-paginas, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.services-list,
+.testimonials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.add-btn {
+  margin-left: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba($color-paginas, 0.3);
+  
+  &:hover {
+    box-shadow: 0 6px 16px rgba($color-paginas, 0.4);
+  }
+}
+
+.delete-btn {
+  margin-top: 12px;
+  border-radius: 8px;
+}
+
+.indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+  
+  .indicator-item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: $color-paginas;
+      box-shadow: 0 4px 12px rgba($color-paginas, 0.1);
+    }
+  }
+}

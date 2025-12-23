@@ -1,0 +1,326 @@
+<!-- Hero Section -->
+<section class="payment-hero" aria-labelledby="payment-title">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 id="payment-title">Pagamento e Consulta de Cotas</h1>
+    <p class="lead">Efetue o pagamento das suas cotas ou consulte os seus recibos de forma rápida e segura.</p>
+    <div class="hero-actions">
+      <button 
+        mat-raised-button 
+        class="hero-btn hero-btn-primary"
+        [class.active]="router.url.includes('/pagar-cotas')"
+        routerLink="/membros/pagar-cotas">
+        <mat-icon>payment</mat-icon>
+        <span>Pagar Cotas</span>
+      </button>
+      <button 
+        mat-raised-button 
+        class="hero-btn hero-btn-secondary"
+        [class.active]="router.url.includes('/consultar-recibos')"
+        routerLink="/membros/consultar-recibos">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Consultar Recibos</span>
+      </button>
+    </div>
+  </div>
+  <div class="hero-benefits">
+    <button 
+      mat-stroked-button 
+      class="benefits-btn"
+      (click)="abrirDialogBeneficios()">
+      <mat-icon>info</mat-icon>
+      <span>Benefícios</span>
+    </button>
+  </div>
+</section>
+
+<!-- Conteúdo Principal -->
+<div class="pagar-cotas-container">
+  <!-- Efeitos de fundo animados -->
+  <div class="background-effects">
+    <div class="animated-overlay"></div>
+    <div class="floating-particles">
+      <div class="particle" *ngFor="let i of particles"></div>
+    </div>
+    <div class="decorative-elements">
+      <div class="element element-1"></div>
+      <div class="element element-2"></div>
+      <div class="element element-3"></div>
+    </div>
+  </div>
+  
+  <div class="content-section">
+  <div class="content-wrapper">
+        <!-- Buscar Membro -->
+    <mat-card class="section-card">
+      <mat-card-header>
+            <mat-card-title>Buscar Membro</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="memberForm" class="member-search-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Número de Membro</mat-label>
+                <input 
+                  matInput 
+                  type="text"
+                  formControlName="numeroMembro"
+                  placeholder="Digite o número do membro"
+                  (keyup.enter)="buscarMembro()">
+                <mat-icon matPrefix>badge</mat-icon>
+                <mat-error *ngIf="memberForm.get('numeroMembro')?.hasError('required')">
+                  Número de membro é obrigatório
+                </mat-error>
+                <mat-error *ngIf="memberForm.get('numeroMembro')?.hasError('pattern')">
+                  Digite apenas números
+                </mat-error>
+              </mat-form-field>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="button"
+                (click)="buscarMembro()"
+                [disabled]="memberForm.invalid || memberLoading">
+                <mat-icon>search</mat-icon>
+                <span>Buscar</span>
+                <mat-spinner *ngIf="memberLoading" diameter="20" class="inline-spinner"></mat-spinner>
+              </button>
+            </form>
+
+            <!-- Informações do Membro -->
+            <div *ngIf="member && !memberLoading" class="member-info">
+              <mat-divider></mat-divider>
+              <div class="member-details">
+                <h3>{{ member.nome }}</h3>
+                <p><strong>Número:</strong> {{ member.numero }}</p>
+                <p><strong>Email:</strong> {{ member.email }}</p>
+                <p><strong>Telefone:</strong> {{ member.telefone }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Seleção de Tipo de Pagamento -->
+        <mat-card class="section-card" *ngIf="member">
+          <mat-card-header>
+            <mat-card-title>Selecionar Tipo de Pagamento</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+            <div class="payment-type-selector">
+              <div 
+                class="payment-type-card"
+                [class.selected]="tipoPagamento === 'mensal'"
+                (click)="selecionarTipoPagamento('mensal')">
+                <div class="type-icon-wrapper">
+                  <mat-icon class="type-icon">calendar_month</mat-icon>
+                  <div class="radio-indicator" [class.checked]="tipoPagamento === 'mensal'">
+                    <div class="radio-dot"></div>
+                  </div>
+                </div>
+                <div class="type-content">
+                  <h4>Pagamento Mensal</h4>
+                  <p>Escolha os meses que deseja pagar</p>
+                  <div class="type-badge" *ngIf="tipoPagamento === 'mensal'">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>Selecionado</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div 
+                class="payment-type-card"
+                [class.selected]="tipoPagamento === 'anual'"
+                (click)="selecionarTipoPagamento('anual')">
+                <div class="type-icon-wrapper">
+                  <mat-icon class="type-icon">calendar_today</mat-icon>
+                  <div class="radio-indicator" [class.checked]="tipoPagamento === 'anual'">
+                    <div class="radio-dot"></div>
+                  </div>
+                </div>
+                <div class="type-content">
+                  <h4>Pagamento Anual</h4>
+                  <p>Pague todos os 12 meses de uma vez</p>
+                  <div class="type-badge" *ngIf="tipoPagamento === 'anual'">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>Selecionado</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seleção de Meses (apenas para mensal) -->
+            <div *ngIf="tipoPagamento === 'mensal'" class="meses-section">
+              <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+              <div class="meses-header">
+              <h4>Selecionar Meses</h4>
+                <div class="meses-counter" *ngIf="quantidadeMeses > 0">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>{{ quantidadeMeses }} mês{{ quantidadeMeses > 1 ? 'es' : '' }} selecionado{{ quantidadeMeses > 1 ? 's' : '' }}</span>
+                </div>
+              </div>
+              <div class="meses-grid-modern">
+                <div 
+                  *ngFor="let mes of meses; let i = index" 
+                  class="mes-card-modern"
+            [class.selected]="mes.selected"
+                  [style.animation-delay]="i * 0.05 + 's'"
+            (click)="toggleMes(mes.value)">
+                  <div class="mes-checkbox-wrapper">
+                    <div class="custom-checkbox" [class.checked]="mes.selected">
+                      <mat-icon *ngIf="mes.selected" class="check-icon">check</mat-icon>
+                    </div>
+                  </div>
+                  <div class="mes-content">
+                    <span class="mes-label-modern">{{ mes.label }}</span>
+                    <span class="mes-value">{{ valorCota | number }} MT</span>
+                  </div>
+                  <div class="mes-glow" *ngIf="mes.selected"></div>
+                </div>
+          </div>
+        </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Seleção de Meses (quando não há tipo de pagamento selecionado) -->
+        <mat-card class="section-card" *ngIf="!member">
+          <mat-card-header>
+            <mat-card-title>Selecionar Meses</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="info-message">Por favor, busque um membro primeiro para continuar.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Resumo e Método de Pagamento -->
+    <mat-card class="section-card" *ngIf="quantidadeMeses > 0">
+      <mat-card-header>
+        <mat-card-title>Resumo e Pagamento</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Resumo -->
+        <div class="resumo-compacto">
+              <div class="resumo-item">
+                <span class="label">Tipo:</span>
+                <span class="value">{{ tipoPagamento === 'anual' ? 'Anual' : 'Mensal' }}</span>
+              </div>
+          <div class="resumo-item">
+            <span class="label">Meses:</span>
+            <span class="value">{{ mesesSelecionadosLabels }}</span>
+          </div>
+          <div class="resumo-item">
+            <span class="label">Quantidade:</span>
+            <span class="value">{{ quantidadeMeses }} mês{{ quantidadeMeses > 1 ? 'es' : '' }}</span>
+          </div>
+          <div class="resumo-item calculo">
+            <span class="label">Cálculo:</span>
+                <span class="value calculo-verde">
+                  <span *ngIf="tipoPagamento === 'anual'">
+                    {{ valorCota | number }} MT × 12 meses = {{ (valorCota * 12) | number }} MT
+                  </span>
+                  <span *ngIf="tipoPagamento === 'mensal'">
+                    {{ quantidadeMeses }} × {{ valorCota | number }} MT = {{ valorTotal | number }} MT
+                  </span>
+                </span>
+          </div>
+          <div class="resumo-item total">
+                <span class="label">Total a Pagar:</span>
+            <span class="value">{{ valorTotal | number }} MT</span>
+          </div>
+        </div>
+
+        <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+
+        <!-- Método de Pagamento -->
+        <form [formGroup]="paymentForm" class="payment-form">
+              <h4>Selecionar Carteira Móvel</h4>
+              <div class="payment-methods-icons">
+            <div 
+                class="payment-icon-wrapper"
+              [class.selected]="metodoPagamento === 'mpesa'"
+              (click)="selecionarMetodoPagamento('mpesa')">
+                  <img 
+                    src="https://images.seeklogo.com/logo-png/62/2/m-pesa-logo-png_seeklogo-622552.png" 
+                    alt="M-Pesa" 
+                    class="payment-icon mpesa-icon">
+            </div>
+
+            <div 
+                  class="payment-icon-wrapper"
+              [class.selected]="metodoPagamento === 'emola'"
+              (click)="selecionarMetodoPagamento('emola')">
+                  <img 
+                    src="/assets/emola.webp" 
+                    alt="E-Mola" 
+                    class="payment-icon emola-icon">
+            </div>
+
+            <div 
+                  class="payment-icon-wrapper"
+              [class.selected]="metodoPagamento === 'visa'"
+              (click)="selecionarMetodoPagamento('visa')">
+                  <i class="fab fa-cc-visa payment-icon visa-icon"></i>
+            </div>
+          </div>
+
+          <div class="form-field-wrapper" *ngIf="metodoPagamento && metodoPagamento !== 'visa'">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de Telefone</mat-label>
+              <span matPrefix class="phone-prefix">+258</span>
+              <input 
+                matInput 
+                type="tel"
+                formControlName="telefone"
+                [placeholder]="metodoPagamento === 'mpesa' ? '84 123 4567' : '87 123 4567'"
+                maxlength="9"
+                (input)="onTelefoneInput($event)">
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('required')">
+                Número de telefone é obrigatório
+              </mat-error>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('pattern')">
+                Digite um número válido (9 dígitos)
+              </mat-error>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('invalidMpesa')">
+                M-Pesa aceita apenas números começando com 84 ou 85
+              </mat-error>
+              <mat-error *ngIf="paymentForm.get('telefone')?.hasError('invalidEmola')">
+                E-Mola aceita apenas números começando com 87 ou 86
+              </mat-error>
+            </mat-form-field>
+            <div class="phone-info" *ngIf="showMpesaInfo || showEmolaInfo">
+              <mat-icon>check_circle</mat-icon>
+              <span *ngIf="showMpesaInfo">
+                Número M-Pesa válido. Continue digitando...
+              </span>
+              <span *ngIf="showEmolaInfo">
+                Número E-Mola válido. Continue digitando...
+              </span>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+        <!-- Botão de Confirmar Operação -->
+        <div class="action-buttons" *ngIf="member && quantidadeMeses > 0 && metodoPagamento">
+      <button 
+        mat-raised-button 
+        color="primary" 
+            class="btn-confirmar"
+            [disabled]="paymentForm.invalid"
+        (click)="processarPagamento()">
+            <mat-icon>check_circle</mat-icon>
+            <span>Confirmar Operação</span>
+      </button>
+      <button 
+        mat-stroked-button 
+        routerLink="/membros"
+        class="btn-cancelar">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Voltar</span>
+      </button>
+        </div>
+
+    </div>
+  </div>
+</div>
+

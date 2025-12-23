@@ -1,0 +1,48 @@
+@import 'variables';
+
+// Estilos base do Navbar - Nova Paleta
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  border-bottom: none;
+  color: #fff !important;
+  z-index: $navbar-z-index;
+  transition: $navbar-transition;
+  padding: $navbar-padding;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: translateY(0);
+  
+  &.scrolled {
+    background: $navbar-bg-scrolled;
+    border-bottom: 1px solid $navbar-border-scrolled;
+    box-shadow: $navbar-shadow-scrolled;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: $cinzento-nav !important;
+  }
+
+  &.hidden {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+}
+
+// Override do Angular Material
+.navbar.mat-toolbar {
+  background-color: transparent !important;
+  color: #fff !important;
+  
+  &.scrolled {
+    background-color: $navbar-bg-scrolled !important;
+    color: $cinzento-nav !important;
+  }
+}
+

@@ -1,0 +1,20 @@
+@import '../../pages/_shared-styles.scss';
+
+// Tema: Tesouraria (Laranja)
+@include category-theme($color-tesouraria, $color-tesouraria-secondary);
+
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}

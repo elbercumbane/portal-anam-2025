@@ -1,0 +1,118 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Indicadores - Visão Geral</h1>
+    <p>Gerencie os indicadores gerais da associação</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Hero Section -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>image</mat-icon>
+          Hero Section
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput placeholder="Indicadores">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput rows="3" placeholder="Descrição sobre os indicadores"></textarea>
+          </mat-form-field>
+          <div class="image-upload-section">
+            <label class="upload-label">Imagem de Fundo</label>
+            <div class="image-preview-container">
+              <img src="/assets/membros-background.jpg" alt="Preview" class="image-preview">
+              <button mat-raised-button color="primary" class="upload-btn">
+                <mat-icon>cloud_upload</mat-icon>
+                Alterar Imagem
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Indicadores Principais -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>dashboard</mat-icon>
+          Indicadores Principais
+        </mat-card-title>
+        <button mat-icon-button color="primary" class="add-btn">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="indicators-grid">
+          <div class="indicator-item" *ngFor="let indicator of [1,2,3,4]; let i = index">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Valor</mat-label>
+              <input matInput placeholder="Ex: 150+">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Label</mat-label>
+              <input matInput placeholder="Ex: Projetos Realizados">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descrição (opcional)</mat-label>
+              <textarea matInput rows="2"></textarea>
+            </mat-form-field>
+            <div class="image-upload-section">
+              <label class="upload-label">Ícone (opcional)</label>
+              <div class="image-preview-container">
+                <img src="/assets/emola.png" alt="Preview" class="image-preview">
+                <button mat-raised-button color="primary" class="upload-btn">
+                  <mat-icon>cloud_upload</mat-icon>
+                  Alterar Ícone
+                </button>
+              </div>
+            </div>
+            <button mat-button color="warn" class="delete-btn">
+              <mat-icon>delete</mat-icon>
+              Remover Indicador
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Gráficos e Visualizações -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>bar_chart</mat-icon>
+          Gráficos e Visualizações
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título da Seção</mat-label>
+            <input matInput placeholder="Análise Visual">
+          </mat-form-field>
+          <mat-checkbox>Exibir gráfico de projetos</mat-checkbox>
+          <mat-checkbox>Exibir gráfico de membros</mat-checkbox>
+          <mat-checkbox>Exibir gráfico financeiro</mat-checkbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>preview</mat-icon>
+        Visualizar Página
+      </button>
+    </div>
+  </div>
+</div>

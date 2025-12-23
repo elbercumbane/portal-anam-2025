@@ -1,0 +1,100 @@
+@import 'variables';
+
+// Dropdown Submenu
+.dropdown {
+  position: relative;
+  display: inline-block;
+  
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-direction: row;
+    
+    .dropdown-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+      order: 2;
+      margin-left: 0.25rem;
+    }
+  }
+  
+  &:hover .dropdown-icon {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #FFFFFF; // Branco sólido
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    min-width: 200px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      color: #232627; // Cor do texto do navbar
+      text-decoration: none;
+      border: none;
+      background: transparent;
+      text-align: left;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: rgba(76, 175, 80, 0.1); // Verde claro suave
+        color: #4CAF50; // Verde
+      }
+      
+      &:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+      
+      &:last-child {
+        border-radius: 0 0 8px 8px;
+      }
+      
+      // Estilo de destaque para "Login"
+      &.login-item {
+        background: rgba(76, 175, 80, 0.08);
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        color: #232627;
+        
+        &:hover {
+          background: rgba(76, 175, 80, 0.15);
+          color: #4CAF50;
+        }
+      }
+      
+      // Estilo de destaque para "Torne-se Membro"
+      &.highlight {
+        font-weight: 600;
+        color: #232627;
+        
+        &:hover {
+          background: rgba(76, 175, 80, 0.1);
+          color: #4CAF50;
+        }
+      }
+    }
+  }
+}
+

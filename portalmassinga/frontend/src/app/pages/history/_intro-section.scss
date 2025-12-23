@@ -1,0 +1,63 @@
+@import 'variables';
+
+// Introdução Editorial - Compacta
+.intro-section {
+  padding: 60px 0; // Reduzido de 100px
+  background: white;
+}
+
+.intro-content {
+  max-width: 900px;
+  margin: 0 auto;
+  
+  .intro-label {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #4CAF50; // Verde
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #4CAF50; // Verde
+  }
+  
+  .intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem); // Reduzido
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 24px; // Reduzido
+    line-height: 1.3;
+    
+    .highlight {
+      color: #4CAF50; // Verde
+      font-style: italic;
+    }
+  }
+  
+  .intro-text {
+    font-size: 1rem; // Reduzido
+    line-height: 1.7; // Reduzido
+    color: #444;
+    
+    p {
+      margin: 0 0 16px; // Reduzido
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    
+    .dropcap::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem; // Reduzido
+      font-weight: 900;
+      line-height: 1;
+      float: left;
+      margin: 0 8px 0 0;
+      color: #4CAF50; // Verde
+    }
+  }
+}
+

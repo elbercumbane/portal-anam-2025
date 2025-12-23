@@ -1,0 +1,70 @@
+<mat-card class="chart-card chart-card-wide">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>{{ icon }}</mat-icon>
+      {{ title }}
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="subtitle">{{ subtitle }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="chart-container-large" *ngIf="hasData; else emptyMonthly">
+      <div class="multi-line-chart">
+        <svg viewBox="0 0 700 300" class="multi-line-svg">
+          <defs>
+            <pattern id="multiGrid" width="58.33" height="30" patternUnits="userSpaceOnUse">
+              <path d="M 58.33 0 L 0 0 0 30" fill="none" stroke="#E5E7EB" stroke-width="1" />
+            </pattern>
+          </defs>
+          <rect x="40" y="20" width="600" height="240" fill="url(#multiGrid)"></rect>
+
+          <line x1="40" y1="20" x2="40" y2="260" stroke="#E5E7EB" stroke-width="1"></line>
+          <line x1="40" y1="260" x2="640" y2="260" stroke="#E5E7EB" stroke-width="1"></line>
+
+          <path *ngFor="let serie of series"
+                [attr.d]="getMonthlyPath(serie.key)"
+                fill="none"
+                [attr.stroke]="serie.color"
+                stroke-width="3"
+                class="line-path">
+          </path>
+
+          <ng-container *ngFor="let serie of series">
+            <ng-container *ngFor="let value of (monthlyFormData?.[serie.key] || []); let i = index">
+              <circle *ngIf="value !== undefined && value !== null"
+                      [attr.cx]="getPointX(i)"
+                      [attr.cy]="getPointY(value)"
+                      r="4"
+                      [attr.fill]="serie.color"
+                      class="data-point">
+              </circle>
+            </ng-container>
+          </ng-container>
+
+          <g *ngFor="let monthData of performanceData; let i = index">
+            <text [attr.x]="getPointX(i)" y="280" text-anchor="middle" class="axis-label">{{ monthData.month }}</text>
+          </g>
+
+          <text x="25" y="25" text-anchor="middle" class="axis-label">100</text>
+          <text x="25" y="65" text-anchor="middle" class="axis-label">80</text>
+          <text x="25" y="105" text-anchor="middle" class="axis-label">60</text>
+          <text x="25" y="145" text-anchor="middle" class="axis-label">40</text>
+          <text x="25" y="185" text-anchor="middle" class="axis-label">20</text>
+          <text x="25" y="260" text-anchor="middle" class="axis-label">0</text>
+        </svg>
+
+        <div class="multi-line-legend">
+          <div class="legend-item" *ngFor="let serie of series">
+            <div class="legend-color" [style.background-color]="serie.color"></div>
+            <span>{{ serie.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyMonthly>
+      <div class="empty-state">Sem dados mensais disponíveis</div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
+

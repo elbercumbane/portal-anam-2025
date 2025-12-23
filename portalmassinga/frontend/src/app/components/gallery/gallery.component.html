@@ -1,0 +1,143 @@
+<!-- Seção Galeria Moderna -->
+<section class="galeria-section" id="galeria" #galeriaSection>
+  <div class="container">
+    <!-- Header da Galeria -->
+    <div class="galeria-header">
+      <h1 class="galeria-title">
+        <span class="title-part-1">Galeria</span>
+      </h1>
+      
+      <div class="evento-info" *ngIf="getEventoAtual()">
+        <h2 class="evento-titulo">{{ getEventoAtual()?.titulo || '' }}</h2>
+        <div class="evento-detalhes">
+          <p class="evento-descricao">{{ getEventoAtual()?.descricao || '' }}</p>
+        </div>
+        <span class="evento-data">{{ getEventoAtual()?.data || '' }}</span>
+      </div>
+      
+      <!-- Indicadores de Paginação -->
+      <div class="pagination-dots">
+        <span 
+          *ngFor="let dot of paginationDots; let i = index"
+          class="dot"
+          [class.active]="i === currentPage"
+          (click)="goToPage(i)">
+        </span>
+      </div>
+    </div>
+
+    <!-- Grid Irregular de Imagens -->
+    <div class="galeria-grid" [ngClass]="getLayoutClass()">
+      <div 
+        class="galeria-item" 
+        *ngFor="let item of galeriaFiltrada; let i = index; trackBy: trackByFotoIndex"
+        [ngClass]="getItemClass(i, item)"
+        (click)="abrirEvento(getEventoAtual())"
+        [style.animation-delay.ms]="i * 100">
+          <img 
+            [src]="item.fotoAtual.src" 
+            [alt]="item.fotoAtual.alt"
+          class="galeria-image">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal do Evento -->
+<div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ eventoSelecionado?.titulo }}</h2>
+      <button class="close-btn" (click)="fecharModal()">×</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="evento-details">
+        <div class="evento-info">
+          <div class="info-item">
+            <span class="label">Data:</span>
+            <span class="value">{{ eventoSelecionado?.data }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Local:</span>
+            <span class="value">{{ eventoSelecionado?.local }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Categoria:</span>
+            <span class="value">{{ eventoSelecionado?.categoria }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Participantes:</span>
+            <span class="value">{{ eventoSelecionado?.participantes }} pessoas</span>
+          </div>
+        </div>
+        
+        <div class="evento-descricao">
+          <p>{{ eventoSelecionado?.descricao }}</p>
+        </div>
+      </div>
+      
+      <div class="fotos-container">
+        <div class="foto-principal">
+          <img [src]="eventoSelecionado?.fotos[fotoAtual]?.src" 
+               [alt]="eventoSelecionado?.fotos[fotoAtual]?.alt"
+               class="foto-slider">
+          
+          <div class="foto-navigation">
+            <button class="nav-btn prev" (click)="fotoAnterior()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="nav-btn next" (click)="proximaFoto()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Indicadores de progresso -->
+          <div class="foto-indicators">
+            <div 
+              *ngFor="let foto of eventoSelecionado?.fotos; let i = index"
+              class="indicator"
+              [class.active]="i === fotoAtual"
+              (click)="selecionarFoto(i)">
+              <div class="indicator-progress" *ngIf="i === fotoAtual"></div>
+            </div>
+          </div>
+          
+          <div class="foto-counter">
+            <svg class="counter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            {{ fotoAtual + 1 }} / {{ eventoSelecionado?.fotos.length }}
+          </div>
+          
+          <div class="foto-descricao">
+            <svg class="desc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            {{ eventoSelecionado?.fotos[fotoAtual]?.alt }}
+          </div>
+        </div>
+        
+        <div class="fotos-thumbnails">
+          <div class="thumbnail" 
+               *ngFor="let foto of eventoSelecionado?.fotos; let i = index"
+               [class.active]="i === fotoAtual"
+               (click)="selecionarFoto(i)">
+            <img [src]="foto.src" [alt]="foto.alt">
+            <div class="thumbnail-descricao">
+              {{ foto.alt }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+@import 'variables';
+
+// Filtros
+.filters-section {
+  background: #f8f9fa;
+  padding: 60px 0 40px;
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      
+      .highlight {
+        color: $brown-vibrant;
+      }
+    }
+    
+    p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.filter-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  background: white;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+  
+  &:hover {
+    border-color: $brown-vibrant;
+    color: $brown-vibrant;
+    transform: translateY(-2px);
+  }
+  
+  &.active {
+    background: linear-gradient(135deg, $brown-vibrant 0%, darken($brown-vibrant, 10%) 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 8px 25px rgba($brown-vibrant, 0.35);
+  }
+}
+

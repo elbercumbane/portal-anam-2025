@@ -1,0 +1,150 @@
+<mat-toolbar class="navbar" [class.scrolled]="scrolled" [class.hidden]="isHidden">
+  <div class="brand">
+    <div class="brand-title">ANAM</div>
+  </div>
+  
+  <nav class="desktop-nav">
+    <a mat-button routerLink="/" class="nav-link">Início</a>
+    
+    <!-- Submenu Páginas -->
+    <div class="dropdown" (mouseenter)="showPaginasSubmenu = true" (mouseleave)="showPaginasSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">Páginas</a>
+      <div class="dropdown-menu" [class.show]="showPaginasSubmenu">
+        <a mat-button routerLink="/documentacao" class="dropdown-item">Documentação</a>
+        <a mat-button routerLink="/servicos" class="dropdown-item">Serviços</a>
+        <a mat-button (click)="scrollToSection('eventos')" class="dropdown-item">Eventos</a>
+        <a mat-button routerLink="/historial" class="dropdown-item">Historial</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Projectos -->
+    <div class="dropdown" (mouseenter)="showProjectosSubmenu = true" (mouseleave)="showProjectosSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">Projectos</a>
+      <div class="dropdown-menu" [class.show]="showProjectosSubmenu">
+        <a mat-button routerLink="/projectos/ativos" class="dropdown-item">Projectos em Execução</a>
+        <a mat-button routerLink="/projectos/realizados" class="dropdown-item">Projectos Realizados</a>
+        <a mat-button routerLink="/projectos/candidaturas" class="dropdown-item">Projectos a serem realizados</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Área de Membros -->
+    <div class="dropdown" (mouseenter)="showMembrosSubmenu = true" (mouseleave)="showMembrosSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">Área de Membros</a>
+      <div class="dropdown-menu" [class.show]="showMembrosSubmenu">
+        <a mat-button routerLink="/associar-se" class="dropdown-item highlight">Torne-se Membro</a>
+        <a mat-button routerLink="/membros" class="dropdown-item">Área de Membros</a>
+        <a mat-button routerLink="/membros/organograma" class="dropdown-item">Organograma</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Apoio/Apoiante -->
+    <div class="dropdown" (mouseenter)="showApoioSubmenu = true" (mouseleave)="showApoioSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">Apoio</a>
+      <div class="dropdown-menu" [class.show]="showApoioSubmenu">
+        <a mat-button routerLink="/apoio/porque-apoiar" class="dropdown-item">Porquê Apoiar?</a>
+        <a mat-button routerLink="/apoio/torne-se-apoiante" class="dropdown-item highlight">Torne-se Apoiante</a>
+        <a mat-button routerLink="/apoio/area-apoiante" class="dropdown-item">Área do Apoiante</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Simpatizantes -->
+    <div class="dropdown" (mouseenter)="showSimpatizantesSubmenu = true" (mouseleave)="showSimpatizantesSubmenu = false">
+      <a mat-button class="nav-link dropdown-toggle">Simpatizantes</a>
+      <div class="dropdown-menu" [class.show]="showSimpatizantesSubmenu">
+        <a mat-button routerLink="/simpatizantes/porque-tornar-se" class="dropdown-item">Porque se Tornar Simpatizante</a>
+        <a mat-button routerLink="/simpatizantes/torne-se-simpatizante" class="dropdown-item highlight">Torne-se Simpatizante</a>
+        <a mat-button routerLink="/simpatizantes/area-simpatizante" class="dropdown-item">Área de Simpatizante</a>
+      </div>
+    </div>
+    
+    <!-- Marketplace Link -->
+    <a mat-button routerLink="/marketplace" class="nav-link">Marketplace</a>
+  </nav>
+  
+  <button mat-icon-button class="mobile-menu-trigger" aria-label="Menu" (click)="toggleMobileMenu()">
+    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="5" r="1.8"></circle>
+      <circle cx="12" cy="12" r="1.8"></circle>
+      <circle cx="12" cy="19" r="1.8"></circle>
+    </svg>
+  </button>
+  
+  <div class="nav-actions">
+    <div class="search-container">
+      <button mat-icon-button class="search-icon" aria-label="Pesquisar" (click)="toggleSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+      <div class="search-bar" [class.active]="showSearchBar">
+        <input 
+          type="text" 
+          placeholder="Pesquisar..." 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          class="search-input"
+        />
+        <button mat-icon-button class="search-close" (click)="closeSearch()" aria-label="Fechar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <button mat-icon-button routerLink="/login" class="login-icon" aria-label="Login" title="Login">
+      <mat-icon>person</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<div class="mobile-menu" [class.open]="showMobileMenu">
+  <div class="mobile-menu-header">
+    <div class="brand-title">ANAM</div>
+    <button mat-icon-button aria-label="Fechar menu" (click)="closeMobileMenu()">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18.3 5.7a1 1 0 0 0-1.4-1.4L12 9.17 7.1 4.3a1 1 0 1 0-1.4 1.4L10.83 12l-5.13 5.1a1 1 0 1 0 1.4 1.4L12 14.83l4.9 4.97a1 1 0 0 0 1.4-1.4L13.17 12l5.13-5.1Z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="mobile-menu-body">
+    <a mat-button routerLink="/" (click)="closeMobileMenu()">Início</a>
+    
+    <div class="mobile-section">
+      <div class="mobile-section-title">Páginas</div>
+      <a mat-button routerLink="/documentacao" (click)="closeMobileMenu()">Documentação</a>
+      <a mat-button routerLink="/servicos" (click)="closeMobileMenu()">Serviços</a>
+      <a mat-button (click)="scrollToSection('eventos'); closeMobileMenu()">Eventos</a>
+      <a mat-button routerLink="/historial" (click)="closeMobileMenu()">Historial</a>
+    </div>
+
+    <div class="mobile-section">
+      <div class="mobile-section-title">Projectos</div>
+      <a mat-button routerLink="/projectos/ativos" (click)="closeMobileMenu()">Execução</a>
+      <a mat-button routerLink="/projectos/realizados" (click)="closeMobileMenu()">Realizados</a>
+      <a mat-button routerLink="/projectos/candidaturas" (click)="closeMobileMenu()">A realizar</a>
+    </div>
+
+    <div class="mobile-section">
+      <div class="mobile-section-title">Área de Membros</div>
+      <a mat-button routerLink="/associar-se" (click)="closeMobileMenu()">Torne-se Membro</a>
+      <a mat-button routerLink="/membros" (click)="closeMobileMenu()">Área de Membros</a>
+      <a mat-button routerLink="/membros/organograma" (click)="closeMobileMenu()">Organograma</a>
+    </div>
+
+    <div class="mobile-section">
+      <div class="mobile-section-title">Apoio</div>
+      <a mat-button routerLink="/apoio/porque-apoiar" (click)="closeMobileMenu()">Porquê Apoiar</a>
+      <a mat-button routerLink="/apoio/torne-se-apoiante" (click)="closeMobileMenu()">Torne-se Apoiante</a>
+      <a mat-button routerLink="/apoio/area-apoiante" (click)="closeMobileMenu()">Área do Apoiante</a>
+    </div>
+
+    <div class="mobile-section">
+      <div class="mobile-section-title">Simpatizantes</div>
+      <a mat-button routerLink="/simpatizantes/porque-tornar-se" (click)="closeMobileMenu()">Por que tornar-se</a>
+      <a mat-button routerLink="/simpatizantes/torne-se-simpatizante" (click)="closeMobileMenu()">Torne-se Simpatizante</a>
+      <a mat-button routerLink="/simpatizantes/area-simpatizante" (click)="closeMobileMenu()">Área do Simpatizante</a>
+    </div>
+
+    <a mat-button routerLink="/marketplace" (click)="closeMobileMenu()">Marketplace</a>
+
+    <a mat-button routerLink="/login" (click)="closeMobileMenu()">Login</a>
+  </div>
+</div>
+
+

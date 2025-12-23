@@ -1,0 +1,93 @@
+:root{
+  --blue-600:#2563EB; 
+  --ink-900:#0F172A; 
+  --ink-600:#334155;
+  --ink-500:#475569;
+  --brown-text:#8A7D65;
+}
+
+.footer-simple {
+  background: linear-gradient(135deg, #1B4332 0%, #2D5A47 50%, #40916C 100%);
+  color: white;
+  padding: 40px 0 20px;
+}
+
+/* Container agora é global - removido regra local */
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 2fr 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.footer-brand {
+  h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #f4e4bc;
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+.footer-info {
+  .contact-info {
+    p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+  
+        .legal-link {
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          font-size: 0.85rem;
+          transition: color 0.6s ease;
+          
+          &:hover {
+            color: #f4e4bc;
+          }
+        }
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  text-align: center;
+  
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    margin: 0;
+  }
+}

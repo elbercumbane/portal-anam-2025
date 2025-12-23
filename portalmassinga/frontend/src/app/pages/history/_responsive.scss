@@ -1,0 +1,47 @@
+// Responsividade
+@media (max-width: 768px) {
+  .historial-hero {
+    height: 70vh;
+    background-attachment: scroll;
+  }
+  
+  .intro-section,
+  .timeline-section,
+  .magazine-gallery,
+  .testimonials-section {
+    padding: 60px 0;
+  }
+  
+  .stats-highlight {
+    padding: 60px 0;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  
+  .stat-item {
+    .stat-icon {
+      font-size: 3rem;
+    }
+    
+    .stat-valor {
+      font-size: 2.5rem;
+    }
+  }
+  
+  .article-image {
+    height: 350px;
+  }
+  
+  .intro-text .dropcap::first-letter {
+    font-size: 4rem;
+  }
+  
+  .editorial-cta {
+    padding: 80px 0;
+    background-attachment: scroll;
+  }
+}
+

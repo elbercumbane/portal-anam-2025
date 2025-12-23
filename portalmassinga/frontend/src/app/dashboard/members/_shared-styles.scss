@@ -1,0 +1,5 @@
+@import '../../pages/_shared-styles.scss';
+
+// Tema: Membros (Roxo)
+@include category-theme($color-membros, #7c3aed);
+

@@ -1,0 +1,27 @@
+@import '../../pages/_shared-styles.scss';
+
+// Tema: Indicadores (Rosa)
+@include category-theme($color-indicadores, $color-indicadores-secondary);
+
+.metrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.charts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 24px;
+}

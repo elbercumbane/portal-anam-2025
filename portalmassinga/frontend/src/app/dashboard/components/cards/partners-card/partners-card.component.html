@@ -1,0 +1,37 @@
+<div class="modern-card partners-modern-card" (click)="onCardClick()">
+  <div class="card-glow"></div>
+  <div class="card-background-pattern"></div>
+  <div class="card-content-wrapper">
+    <div class="card-header-modern">
+      <div class="icon-wrapper">
+        <mat-icon>handshake</mat-icon>
+      </div>
+      <div class="header-text">
+        <h3>Parceiros</h3>
+        <span class="card-subtitle">Organizações parceiras</span>
+      </div>
+    </div>
+    <div class="main-stat">
+      <span class="big-number">{{ partners?.length || 0 }}</span>
+      <div class="stat-change positive">
+        <mat-icon>business</mat-icon>
+        <span>{{ getActivePartners() }} ativos</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-item">
+        <span class="footer-label">Ativos</span>
+        <span class="footer-value">{{ getActivePartners() }}</span>
+      </div>
+      <div class="footer-item">
+        <span class="footer-label">Inativos</span>
+        <span class="footer-value">{{ getInactivePartners() }}</span>
+      </div>
+      <div class="footer-item">
+        <span class="footer-label">Total</span>
+        <span class="footer-value">{{ partners?.length || 0 }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+

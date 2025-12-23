@@ -1,0 +1,160 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="8.5" cy="7" r="4"></circle>
+        <path d="M20 8v6M23 11h-6"></path>
+      </svg>
+      <span>Área de Simpatizante</span>
+    </div>
+    <h1 class="hero-title">
+      Bem-vindo à <span class="highlight">Área de Simpatizante</span>
+    </h1>
+    <p class="hero-subtitle">
+      Acompanhe informações, programas, actividades e protocolos da associação.
+    </p>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- Seção: Programas -->
+<section class="programs-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Programas da <span class="highlight-text">Associação</span></h2>
+      <p class="section-description">
+        Conheça os programas em que a ANAM está envolvida e como você pode participar.
+      </p>
+    </div>
+
+    <div class="programs-grid">
+      <div class="program-card" *ngFor="let program of programs">
+        <div class="program-icon">{{ program.icon }}</div>
+        <div class="program-status" [class.active]="program.status === 'Ativo'">
+          {{ program.status }}
+        </div>
+        <h3>{{ program.title }}</h3>
+        <p>{{ program.description }}</p>
+        <button class="program-btn">Saber Mais</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: Actividades -->
+<section class="activities-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Actividades <span class="highlight-text">Disponíveis</span></h2>
+      <p class="section-description">
+        Participe em actividades exclusivas para simpatizantes.
+      </p>
+    </div>
+
+    <div class="activities-grid">
+      <div class="activity-card" *ngFor="let activity of activities" [class.unavailable]="!activity.available">
+        <div class="activity-badge" [attr.data-type]="activity.type">
+          <mat-icon>{{ activity.type === 'evento' ? 'celebration' : activity.type === 'visita' ? 'location_on' : 'menu_book' }}</mat-icon>
+        </div>
+        <div class="activity-content">
+          <div class="activity-date">{{ activity.date }}</div>
+          <h3>{{ activity.title }}</h3>
+          <p>{{ activity.description }}</p>
+          <button class="activity-btn" [disabled]="!activity.available">
+            {{ activity.available ? 'Participar' : 'Em breve' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: Documentos e Protocolos -->
+<section class="documents-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Documentos e <span class="highlight-text">Protocolos</span></h2>
+      <p class="section-description">
+        Acesso a documentos importantes, protocolos e relatórios da associação.
+      </p>
+    </div>
+
+    <div class="documents-grid">
+      <div class="document-card" *ngFor="let doc of documents">
+        <div class="document-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        </div>
+        <div class="document-content">
+          <div class="document-type">{{ doc.type }}</div>
+          <h3>{{ doc.title }}</h3>
+          <p>{{ doc.description }}</p>
+          <button class="document-btn" *ngIf="doc.download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Descarregar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Seção: Informações -->
+<section class="info-section">
+  <div class="container">
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+        </div>
+        <h3>Newsletter</h3>
+        <p>Receba atualizações regulares sobre os projectos e actividades da associação.</p>
+        <button class="info-btn">Subscrever</button>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </div>
+        <h3>Comunidade</h3>
+        <p>Conecte-se com outros simpatizantes e membros da associação.</p>
+        <button class="info-btn">Participar</button>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <h3>Evoluir para Membro</h3>
+        <p>Interessado em tornar-se membro oficial? Saiba como evoluir.</p>
+        <button class="info-btn">Saber Mais</button>
+      </div>
+    </div>
+  </div>
+</section>
+

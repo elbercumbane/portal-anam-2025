@@ -1,0 +1,581 @@
+// ========================================
+// PROJECTOS ACTIVOS - DESIGN ESPETACULAR
+// ========================================
+
+// Variáveis
+$green-dark: #1B4332;
+$green-medium: #2D6A4F;
+$gold-primary: #D4AF37;
+$gold-dark: #B8860B;
+$brown-warm: #8A7D65;
+$brown-light: #A68B5B;
+
+// ============ INTRO DA SECÇÃO ============
+.ativos-page {
+  padding: 20px 0 40px;
+}
+
+.section-intro {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: fadeInUp 0.6s ease;
+  
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgba($green-dark, 0.1) 0%, rgba($green-medium, 0.1) 100%);
+    border: 1px solid rgba($green-dark, 0.2);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      stroke: $green-medium;
+    }
+    
+    span {
+      color: $green-dark;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+  }
+  
+  .intro-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin: 0 0 15px;
+    
+    .gold {
+      color: $gold-primary;
+    }
+  }
+  
+  .intro-text {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+// ============ SHOWCASE GRID ============
+.projectos-showcase {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+// ============ CARD DO PROJECTO ============
+.projecto-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.08),
+    0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  opacity: 0;
+  animation: cardEntrance 0.6s ease forwards;
+  
+  @for $i from 0 through 5 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.15}s;
+    }
+  }
+  
+  &:hover {
+    transform: translateY(-12px);
+    box-shadow: 
+      0 25px 60px rgba(0, 0, 0, 0.15),
+      0 10px 25px rgba(0, 0, 0, 0.1);
+    
+    .card-visual {
+      .visual-gradient {
+        opacity: 0.85;
+      }
+      
+      .visual-icon svg {
+        transform: scale(1.15) rotate(5deg);
+      }
+    }
+    
+    .card-decoration {
+      transform: scale(1.5);
+      opacity: 0.15;
+    }
+    
+    .btn-primary {
+      transform: translateX(5px);
+    }
+  }
+  
+  .card-decoration {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba($gold-primary, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    pointer-events: none;
+  }
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ VISUAL DO CARD ============
+.card-visual {
+  position: relative;
+  height: 140px;
+  background: linear-gradient(135deg, #f5f4f0 0%, #ebe9e4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  
+  .visual-gradient {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 30% 30%, rgba(138, 125, 101, 0.08) 0%, transparent 50%);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+  }
+  
+  .visual-icon {
+    position: relative;
+    z-index: 2;
+    width: 70px;
+    height: 70px;
+    background: white;
+    border: 1px solid rgba(138, 125, 101, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    
+    svg {
+      width: 32px;
+      height: 32px;
+      stroke: $brown-warm;
+      transition: transform 0.4s ease;
+    }
+  }
+  
+  .status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(138, 125, 101, 0.9);
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    
+    .pulse {
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+// ============ CORPO DO CARD ============
+.card-body {
+  padding: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.projecto-titulo {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.projecto-descricao {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.7;
+  margin: 0 0 25px;
+}
+
+// ============ SECÇÃO DE PROGRESSO ============
+.progress-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba($green-dark, 0.03) 0%, rgba($brown-warm, 0.05) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba($brown-warm, 0.1);
+}
+
+.progress-circle {
+  position: relative;
+  width: 75px;
+  height: 75px;
+  flex-shrink: 0;
+  
+  svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  
+  .progress-bg {
+    fill: none;
+    stroke: rgba($brown-warm, 0.15);
+    stroke-width: 8;
+  }
+  
+  .progress-bar {
+    fill: none;
+    stroke: url(#progressGradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke: $gold-primary;
+    transition: stroke-dasharray 1s ease;
+  }
+  
+  .progress-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+    .number {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: $green-dark;
+      line-height: 1;
+    }
+    
+    .percent {
+      font-size: 0.7rem;
+      color: $brown-warm;
+      font-weight: 700;
+    }
+  }
+}
+
+.progress-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #666;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $brown-warm;
+      flex-shrink: 0;
+    }
+    
+    &.highlight {
+      font-weight: 700;
+      color: $green-dark;
+      font-size: 1.05rem;
+      
+      svg {
+        stroke: $gold-primary;
+      }
+    }
+  }
+}
+
+// ============ KPIs ============
+.kpis-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.kpi-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .kpi-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 8px;
+    background: rgba(138, 125, 101, 0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $brown-warm;
+    }
+  }
+  
+  .kpi-value {
+    display: block;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2px;
+  }
+  
+  .kpi-label {
+    font-size: 0.65rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+}
+
+// ============ PARCEIROS ============
+.parceiros-section {
+  margin-bottom: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba($brown-warm, 0.1);
+  
+  .parceiros-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  
+  .parceiros-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .parceiro-tag {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba($brown-warm, 0.08) 0%, rgba($brown-light, 0.12) 100%);
+    border: 1px solid rgba($brown-warm, 0.15);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $brown-warm;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(135deg, rgba($gold-primary, 0.15) 0%, rgba($gold-dark, 0.2) 100%);
+      border-color: rgba($gold-primary, 0.3);
+      color: $gold-dark;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// ============ ACÇÕES ============
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-outline {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: transparent;
+  border: 2px solid rgba($brown-warm, 0.25);
+  border-radius: 12px;
+  color: $brown-warm;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  &:hover {
+    background: rgba($brown-warm, 0.08);
+    border-color: $brown-warm;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-primary {
+  flex: 1.5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid rgba(138, 125, 101, 0.3);
+  border-radius: 8px;
+  color: $brown-warm;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  
+  svg {
+    width: 16px;
+    height: 16px;
+    stroke: $brown-warm;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    background: rgba(138, 125, 101, 0.08);
+    border-color: rgba(138, 125, 101, 0.5);
+    
+    svg {
+      transform: translateX(4px);
+    }
+  }
+}
+
+// ============ ANIMAÇÕES ============
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============ RESPONSIVO ============
+@media (max-width: 640px) {
+  .section-intro {
+    margin-bottom: 35px;
+    
+    .intro-title {
+      font-size: 1.8rem;
+    }
+  }
+  
+  .card-visual {
+    height: 150px;
+  }
+  
+  .card-body {
+    padding: 22px;
+  }
+  
+  .projecto-titulo {
+    font-size: 1.2rem;
+  }
+  
+  .progress-section {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .progress-circle {
+    margin: 0 auto;
+  }
+  
+  .progress-info {
+    align-items: center;
+  }
+  
+  .kpis-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .kpi-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    padding: 15px;
+    
+    .kpi-icon {
+      margin: 0;
+    }
+  }
+  
+  .card-actions {
+    flex-direction: column;
+  }
+}

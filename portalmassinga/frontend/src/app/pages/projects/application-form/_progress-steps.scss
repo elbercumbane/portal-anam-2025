@@ -1,0 +1,134 @@
+@import 'variables';
+@import 'animations';
+
+// Progress Steps
+.progress-steps {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  max-width: 200px;
+  cursor: pointer;
+  
+  &:hover:not(.active):not(.completed) {
+    .step-circle {
+      transform: scale(1.08);
+      border-color: rgba($gold-primary, 0.5);
+      box-shadow: 0 8px 25px rgba($gold-primary, 0.2);
+      
+      .step-number {
+        color: $gold-primary;
+      }
+    }
+    
+    .step-label {
+      color: $gold-dark;
+    }
+  }
+  
+  .step-circle {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #94a3b8;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+    .step-number {
+      transition: color 0.3s ease;
+    }
+    
+    svg {
+      width: 24px;
+      height: 24px;
+      stroke: white;
+    }
+  }
+  
+  .step-label {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .step-connector {
+    position: absolute;
+    top: 27px;
+    left: calc(50% + 35px);
+    width: calc(100% - 70px);
+    height: 3px;
+    background: #e2e8f0;
+    z-index: 1;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, $green-medium, $gold-primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+  }
+  
+  &.active {
+    .step-circle {
+      background: linear-gradient(135deg, $green-dark 0%, $green-medium 100%);
+      border-color: $green-medium;
+      color: white;
+      transform: scale(1.15);
+      box-shadow: 
+        0 8px 25px rgba($green-dark, 0.35),
+        0 0 0 6px rgba($green-medium, 0.15);
+      animation: pulseActive 2s ease-in-out infinite;
+    }
+    
+    .step-label {
+      color: $green-dark;
+      font-weight: 700;
+    }
+  }
+  
+  &.completed {
+    .step-circle {
+      background: linear-gradient(135deg, $gold-primary 0%, $gold-dark 100%);
+      border-color: $gold-primary;
+      box-shadow: 0 6px 20px rgba($gold-primary, 0.3);
+      
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 30px rgba($gold-primary, 0.4);
+      }
+    }
+    
+    .step-label {
+      color: $gold-dark;
+    }
+    
+    .step-connector::after {
+      transform: scaleX(1);
+    }
+  }
+}
+

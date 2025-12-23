@@ -1,0 +1,76 @@
+<div class="popup" *ngIf="showPopup" #popup>
+  <!-- Estado de sucesso -->
+  <div *ngIf="mensagemEnviada" class="success-state">
+    <div class="popup-header">
+      <h4>Mensagem Enviada!</h4>
+      <button class="close-btn" (click)="fecharPopup()" aria-label="Fechar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="success-content">
+      <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <p class="success-message">
+        Obrigado pela sua mensagem, <strong>{{ nome }}</strong>!<br>
+        A sua sugestão foi registada com sucesso.
+      </p>
+      <button class="btn btn-secondary" (click)="fecharPopup()">
+        Fechar
+      </button>
+    </div>
+  </div>
+
+  <!-- Estado do formulário -->
+  <div *ngIf="!mensagemEnviada">
+    <div class="popup-header">
+      <h4>Escreva uma mensagem</h4>
+      <button class="close-btn" (click)="fecharPopup()" aria-label="Fechar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <form (ngSubmit)="enviarMensagem()" class="popup-form">
+      <div class="form-group">
+        <input 
+          type="text" 
+          [(ngModel)]="nome"
+          name="nome"
+          placeholder="Seu nome"
+          class="form-input"
+          required
+        >
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="email" 
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Seu email"
+          class="form-input"
+          required
+        >
+      </div>
+      
+      <div class="form-group">
+        <textarea 
+          [(ngModel)]="mensagem"
+          name="mensagem"
+          placeholder="Digite sua mensagem aqui..."
+          class="popup-textarea"
+          rows="3"
+          maxlength="500"
+          required>
+        </textarea>
+      </div>
+      
+      <div class="actions">
+        <button type="submit" class="btn" [disabled]="!isFormValid()">
+          Enviar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

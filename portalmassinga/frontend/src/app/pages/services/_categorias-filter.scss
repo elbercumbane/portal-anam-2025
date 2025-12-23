@@ -1,0 +1,68 @@
+@import 'variables';
+@import 'animations';
+
+// Filtro de Categorias
+.categorias-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  animation: fadeIn 0.6s ease;
+}
+
+.categoria-btn {
+  padding: 12px 24px;
+  background: white;
+  border: 2px solid rgba(138, 125, 101, 0.2);
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  
+  &:hover {
+    border-color: $brown-warm;
+    color: $brown-warm;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(138, 125, 101, 0.15);
+  }
+  
+  &.active {
+    background: linear-gradient(135deg, $brown-warm 0%, $brown-dark 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 6px 20px rgba(138, 125, 101, 0.3);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(138, 125, 101, 0.4);
+    }
+  }
+}
+
+// Mensagem quando não há serviços
+.no-servicos {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 1.1rem;
+  animation: fadeIn 0.4s ease;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .categorias-filter {
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  
+  .categoria-btn {
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+}
+
+

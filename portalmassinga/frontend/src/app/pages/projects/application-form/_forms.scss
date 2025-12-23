@@ -1,0 +1,281 @@
+@import 'variables';
+@import 'animations';
+
+// Form Section
+.form-section {
+  position: relative;
+  z-index: 1;
+  padding: 60px 20px 80px;
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
+
+// Botão Voltar
+.btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid rgba(138, 125, 101, 0.25);
+  border-radius: 8px;
+  color: #6B5B47;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: #6B5B47;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    background: rgba(138, 125, 101, 0.08);
+    border-color: rgba(138, 125, 101, 0.4);
+    
+    svg {
+      transform: translateX(-4px);
+    }
+  }
+}
+
+// Form Card
+.form-card {
+  background: white;
+  border-radius: 28px;
+  padding: 50px;
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.1),
+    0 10px 25px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+      0 35px 80px rgba(0, 0, 0, 0.15),
+      0 15px 35px rgba(0, 0, 0, 0.08);
+    border-color: rgba($gold-primary, 0.15);
+    
+    .card-glow {
+      width: 80%;
+      height: 5px;
+      box-shadow: 0 0 30px rgba($gold-primary, 0.5);
+    }
+  }
+  
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(90deg, $green-medium, $gold-primary, $green-medium);
+    border-radius: 0 0 10px 10px;
+    transition: all 0.5s ease;
+  }
+}
+
+// Form Step
+.form-step {
+  animation: stepFadeIn 0.5s ease;
+}
+
+// Step Header
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 25px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid #f1f5f9;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba($green-dark, 0.02) 0%, rgba($gold-primary, 0.03) 100%);
+  transition: all 0.4s ease;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba($green-dark, 0.05) 0%, rgba($gold-primary, 0.08) 100%);
+    transform: translateX(5px);
+    border-color: rgba($gold-primary, 0.2);
+    
+    .step-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 10px 30px rgba($green-dark, 0.2);
+    }
+    
+    .step-info h2 {
+      color: $green-dark;
+    }
+  }
+  
+  .step-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba($green-dark, 0.1) 0%, rgba($green-medium, 0.15) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    svg {
+      width: 35px;
+      height: 35px;
+      stroke: $green-medium;
+      transition: all 0.3s ease;
+    }
+    
+    &.success {
+      background: linear-gradient(135deg, rgba($gold-primary, 0.15) 0%, rgba($gold-dark, 0.2) 100%);
+      
+      svg {
+        stroke: $gold-primary;
+      }
+    }
+  }
+  
+  .step-info {
+    h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0 0 5px;
+      transition: color 0.3s ease;
+    }
+    
+    p {
+      color: #666;
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Form Grid
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+// Form Group
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+  padding: 15px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba($green-medium, 0.02) 0%, rgba($gold-primary, 0.03) 100%);
+    
+    label {
+      color: $green-dark;
+      
+      svg {
+        stroke: $gold-primary;
+        transform: scale(1.15);
+      }
+    }
+    
+    input, select, textarea {
+      border-color: rgba($gold-primary, 0.3);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: $brown-warm;
+      transition: all 0.3s ease;
+    }
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e8ecf0;
+    border-radius: 14px;
+    font-size: 1rem;
+    background: #fafbfc;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #1a1a1a;
+    
+    &::placeholder {
+      color: #a0aec0;
+      transition: color 0.3s ease;
+    }
+    
+    &:hover {
+      border-color: #cbd5e0;
+      background: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      
+      &::placeholder {
+        color: #718096;
+      }
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $green-medium;
+      background: white;
+      transform: translateY(-2px);
+      box-shadow: 
+        0 0 0 4px rgba($green-medium, 0.15),
+        0 8px 25px rgba(0, 0, 0, 0.1);
+      
+      &::placeholder {
+        opacity: 0.5;
+      }
+    }
+  }
+  
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238A7D65' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 50px;
+    
+    &:hover {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+}
+

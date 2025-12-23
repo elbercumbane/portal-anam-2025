@@ -1,0 +1,82 @@
+<section class="programas-section" #programasSection>
+  <div class="container">
+    <div class="header">
+      <h1>Programas da Associação</h1>
+      <p class="intro-text">
+        Conheça os nossos programas em curso e futuros. Cada programa é desenvolvido para atender às necessidades específicas da nossa comunidade, 
+        promovendo o desenvolvimento sustentável e a melhoria da qualidade de vida em Massinga.
+      </p>
+    </div>
+
+    <div class="programas-grid">
+      <div class="programa-card" *ngFor="let programa of programas">
+        <div class="programa-header">
+          <h3>{{ programa.titulo }}</h3>
+          <span class="status" [ngClass]="getStatusClass(programa.status)">
+            {{ programa.status }}
+          </span>
+        </div>
+        
+        <div class="programa-content">
+          <p class="descricao">{{ programa.descricao }}</p>
+          
+          <div class="objetivos">
+            <h4>Objetivos:</h4>
+            <ul>
+              <li *ngFor="let objetivo of programa.objetivos">{{ objetivo }}</li>
+            </ul>
+          </div>
+          
+          <div class="programa-details">
+            <div class="detail-item">
+              <mat-icon>schedule</mat-icon>
+              <span><strong>Duração:</strong> {{ programa.duracao }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <mat-icon>people</mat-icon>
+              <span><strong>Participantes:</strong> {{ programa.participantes }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <mat-icon>attach_money</mat-icon>
+              <span><strong>Orçamento:</strong> {{ programa.orcamento }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <mat-icon>person</mat-icon>
+              <span><strong>Responsável:</strong> {{ programa.responsavel }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <mat-icon>event</mat-icon>
+              <span><strong>Período:</strong> {{ programa.dataInicio }} - {{ programa.dataFim }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="programa-actions" *ngIf="programa.status === 'Ativo'">
+          <button mat-raised-button color="primary" (click)="participarPrograma(programa)">
+            <mat-icon>person_add</mat-icon>
+            Participar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Interessado em participar?</h2>
+      <p>Se tem interesse em participar de algum programa ou tem sugestões para novos projetos, entre em contacto connosco.</p>
+      <div class="cta-actions">
+        <button mat-raised-button color="primary" routerLink="/contacto">
+          <mat-icon>contact_mail</mat-icon>
+          Contactar-nos
+        </button>
+        <button mat-stroked-button color="primary" routerLink="/">
+          <mat-icon>home</mat-icon>
+          Voltar ao Início
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+@import '../_shared-styles.scss';
+
+// Tema: Páginas (Azul)
+@include category-theme($color-paginas, #2563eb);
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}

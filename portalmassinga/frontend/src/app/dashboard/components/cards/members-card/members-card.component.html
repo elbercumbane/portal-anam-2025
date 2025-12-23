@@ -1,0 +1,33 @@
+<div class="modern-card members-modern-card" (click)="onCardClick()">
+  <div class="card-glow"></div>
+  <div class="card-background-pattern"></div>
+  <div class="card-content-wrapper">
+    <div class="card-header-modern">
+      <div class="icon-wrapper">
+        <mat-icon>groups</mat-icon>
+      </div>
+      <div class="header-text">
+        <h3>Membros</h3>
+        <span class="card-subtitle">Total de associados</span>
+      </div>
+    </div>
+    <div class="main-stat">
+      <span class="big-number">{{ stats?.totalMembros || 0 }}</span>
+      <div class="stat-change positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+{{ stats?.novosEsteMes || 0 }} este mês</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-item">
+        <span class="footer-label">Ativos</span>
+        <span class="footer-value">{{ stats?.membrosAtivos || 0 }}</span>
+      </div>
+      <div class="footer-item">
+        <span class="footer-label">Crescimento</span>
+        <span class="footer-value">{{ stats?.crescimento || 0 }}%</span>
+      </div>
+    </div>
+  </div>
+</div>
+

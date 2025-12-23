@@ -1,0 +1,113 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Documentação</h1>
+    <p>Gerencie o conteúdo da página de documentação</p>
+  </div>
+
+  <div class="page-content">
+    <!-- Hero Section -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>image</mat-icon>
+          Hero Section
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput placeholder="Documentação">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descrição</mat-label>
+            <textarea matInput rows="2" placeholder="Aceda aos estatutos, regulamentos, relatórios e outros documentos oficiais"></textarea>
+          </mat-form-field>
+          <div class="image-upload-section">
+            <label class="upload-label">Imagem de Fundo</label>
+            <div class="image-preview-container">
+              <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80" alt="Preview" class="image-preview">
+              <button mat-raised-button color="primary" class="upload-btn">
+                <mat-icon>cloud_upload</mat-icon>
+                Alterar Imagem
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Documentos -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>folder</mat-icon>
+          Documentos
+        </mat-card-title>
+        <button mat-icon-button color="primary" class="add-btn">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="documents-list">
+          <mat-expansion-panel *ngFor="let doc of [1,2,3]; let i = index">
+            <mat-expansion-panel-header>
+              <mat-panel-title>Documento {{ i + 1 }}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="form-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ícone (emoji)</mat-label>
+                <input matInput placeholder="📄">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título</mat-label>
+                <input matInput>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="3"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Tipo</mat-label>
+                <mat-select>
+                  <mat-option value="estatutos">Estatutos</mat-option>
+                  <mat-option value="regulamentos">Regulamentos</mat-option>
+                  <mat-option value="relatorios">Relatórios</mat-option>
+                  <mat-option value="planos">Planos</mat-option>
+                  <mat-option value="politicas">Políticas</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="file-upload-section">
+                <label class="upload-label">Arquivo PDF</label>
+                <button mat-raised-button color="primary" class="upload-btn">
+                  <mat-icon>attach_file</mat-icon>
+                  Upload Documento
+                </button>
+              </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tamanho</mat-label>
+                <input matInput placeholder="Ex: 2.5 MB">
+              </mat-form-field>
+              <button mat-button color="warn" class="delete-btn">
+                <mat-icon>delete</mat-icon>
+                Remover Documento
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Salvar Alterações
+      </button>
+      <button mat-stroked-button>
+        <mat-icon>preview</mat-icon>
+        Visualizar Página
+      </button>
+    </div>
+  </div>
+</div>

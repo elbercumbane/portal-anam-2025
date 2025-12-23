@@ -1,0 +1,142 @@
+@import 'variables';
+
+// Navegação Desktop - Nova Paleta
+.desktop-nav {
+  display: none;
+  gap: 0.5rem;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  .nav-link {
+    color: #fff !important;
+    background: transparent !important;
+    text-decoration: none !important;
+    position: relative !important;
+    border: none !important;
+    outline: none !important;
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    transition: all var(--transition-normal);
+    margin: 0 0.25rem;
+    
+    .navbar.scrolled & {
+      color: #232627 !important; // Cor específica do texto
+    }
+    
+    // Item ativo/selecionado
+    &.active { 
+      background: rgba(255, 255, 255, 0.18) !important; 
+      color: #fff !important; 
+      font-weight: 600; 
+      
+      .navbar.scrolled & {
+        background: rgba(35, 38, 39, 0.1) !important;
+        color: #232627 !important;
+      }
+    }
+    
+    // Hover suave
+    &:hover:not(.active) { 
+      background: rgba(255, 255, 255, 0.12) !important; 
+      color: #fff !important; 
+      
+      .navbar.scrolled & {
+        background: rgba(35, 38, 39, 0.08) !important;
+        color: #232627 !important;
+      }
+    }
+    
+    // Link Simpatizantes - Cores do Sistema
+    &.sympathizers-link {
+      background: linear-gradient(135deg, rgba(5, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
+      border: 1px solid rgba(5, 182, 212, 0.3) !important;
+      font-weight: 600 !important;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(5, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+        transition: left 0.3s ease;
+      }
+      
+      &:hover::before {
+        left: 0;
+      }
+      
+      // Estado normal (navbar transparente)
+      color: #fff !important;
+      text-shadow: 0 0 10px rgba(5, 182, 212, 0.3);
+      
+      // Estado scrolled (navbar branco)
+      .navbar.scrolled & {
+        background: linear-gradient(135deg, rgba(5, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+        border-color: rgba(5, 182, 212, 0.4) !important;
+        color: #05B6D4 !important;
+        text-shadow: none;
+      }
+      
+      // Hover state
+      &:hover {
+        background: linear-gradient(135deg, rgba(5, 182, 212, 0.25) 0%, rgba(139, 92, 246, 0.25) 100%) !important;
+        border-color: rgba(5, 182, 212, 0.5) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 182, 212, 0.3);
+        
+        .navbar.scrolled & {
+          background: linear-gradient(135deg, rgba(5, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
+          border-color: rgba(5, 182, 212, 0.6) !important;
+          color: #0891B2 !important;
+          box-shadow: 0 4px 12px rgba(5, 182, 212, 0.2);
+        }
+      }
+      
+      // Active state
+      &.active {
+        background: linear-gradient(135deg, rgba(5, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%) !important;
+        border-color: rgba(5, 182, 212, 0.6) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(5, 182, 212, 0.4);
+        
+        .navbar.scrolled & {
+          background: linear-gradient(135deg, rgba(5, 182, 212, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%) !important;
+          border-color: rgba(5, 182, 212, 0.7) !important;
+          color: #0891B2 !important;
+        }
+      }
+    }
+    
+  }
+}
+
+// Botão de Menu (Mobile)
+.menu-button {
+  margin-right: var(--space-md);
+  color: var(--ink-600) !important;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    transform: scale(1.1);
+    background: var(--primary-soft);
+    color: var(--primary) !important;
+  }
+  
+  mat-icon {
+    color: var(--ink-600) !important;
+  }
+  
+  &:hover mat-icon {
+    color: var(--primary) !important;
+  }
+}
+

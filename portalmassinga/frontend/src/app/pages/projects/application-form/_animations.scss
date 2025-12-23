@@ -1,0 +1,59 @@
+@import 'variables';
+
+// Animações
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes deadlinePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(#EF4444, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(#EF4444, 0);
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% { opacity: 0; transform: translateY(100px) scale(0); }
+  10% { opacity: 0.8; transform: translateY(50px) scale(1); }
+  90% { opacity: 0.8; transform: translateY(-50px) scale(1); }
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseActive {
+  0%, 100% {
+    box-shadow: 
+      0 8px 25px rgba($green-dark, 0.35),
+      0 0 0 6px rgba($green-medium, 0.15);
+  }
+  50% {
+    box-shadow: 
+      0 8px 25px rgba($green-dark, 0.35),
+      0 0 0 12px rgba($green-medium, 0.08);
+  }
+}
+
+@keyframes stepFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes checkPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+

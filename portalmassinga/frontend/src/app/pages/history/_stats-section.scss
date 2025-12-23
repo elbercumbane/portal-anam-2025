@@ -1,0 +1,65 @@
+@import 'variables';
+@import 'animations';
+
+// Estatísticas em Destaque - Compacta
+.stats-highlight {
+  padding: 50px 0; // Reduzido de 80px
+  background: #ffffff; // Branco - verde removido
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 30% 50%, rgba(115, 116, 117, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 70% 30%, rgba(115, 116, 117, 0.03) 0%, transparent 50%);
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); // Reduzido minmax
+  gap: 30px; // Reduzido
+  position: relative;
+  z-index: 1;
+}
+
+.stat-item {
+  text-align: center;
+  color: #1a1a1a; // Preto - verde removido
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  
+  @for $i from 0 through 10 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.15}s;
+    }
+  }
+  
+  .stat-icon {
+    font-size: 3rem; // Reduzido
+    margin-bottom: 12px; // Reduzido
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+  }
+  
+  .stat-valor {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; // Reduzido
+    font-weight: 900;
+    margin: 0 0 6px; // Reduzido
+    line-height: 1;
+    color: #1a1a1a;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem; // Reduzido
+    font-weight: 500;
+    margin: 0;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+}
+

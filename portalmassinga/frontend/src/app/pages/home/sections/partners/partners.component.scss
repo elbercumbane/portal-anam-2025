@@ -1,0 +1,235 @@
+// ========================================
+// PARCEIROS - CARROSSEL FLUIDO E ELEGANTE
+// ========================================
+
+$verde: #4CAF50;
+$verde-escuro: rgba(76, 175, 80, 0.8);
+
+.partners-section {
+  background: linear-gradient(180deg, #ffffff 0%, #fff 50%, #ffffff 100%); // Branco
+  padding: 60px 0 70px;
+  overflow: hidden;
+  position: relative;
+}
+
+// Header da seção
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 24px;
+}
+
+.title {
+  color: #0F172A;
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 12px;
+  
+  .highlight {
+    color: $verde;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, $verde, $verde-escuro);
+      border-radius: 2px;
+    }
+  }
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+// Container do Marquee - FULL WIDTH E CENTRALIZADO
+.marquee-container {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(248,248,248,1) 0%, #fff 50%, rgba(248,248,248,1) 100%);
+  padding: 40px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Gradiente de fade nas bordas - MAIS SUAVE
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  
+  &::before {
+    left: 0;
+    background: linear-gradient(90deg, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,255,255,0.7) 40%,
+      rgba(255,255,255,0) 100%
+    );
+  }
+  
+  &::after {
+    right: 0;
+    background: linear-gradient(270deg, 
+      rgba(255,255,255,1) 0%, 
+      rgba(255,255,255,0.7) 40%,
+      rgba(255,255,255,0) 100%
+    );
+  }
+}
+
+// Track do Marquee - ANIMAÇÃO ULTRA SUAVE
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: scroll 35s linear infinite;
+  will-change: transform;
+  
+  &:hover {
+    animation-play-state: running;
+    animation-duration: 50s; // Desacelera suavemente
+  }
+}
+
+// Conteúdo do Marquee - ZERO GAPS
+.marquee-content {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 0; // Elimina qualquer espaço
+  line-height: 0;
+  white-space: nowrap;
+}
+
+// Imagem dos parceiros - MAIOR
+.partners-image {
+  height: 160px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  opacity: 0.95;
+  transition: opacity 0.5s ease, filter 0.5s ease;
+  
+  .marquee-track:hover & {
+    opacity: 1;
+    filter: brightness(1.03);
+  }
+}
+
+// Animação SUAVE E CONTÍNUA
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Botão Ver Todos
+.view-all {
+  text-align: center;
+  margin-top: 40px;
+  padding: 0 24px;
+}
+
+.btn-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, $verde 0%, $verde-escuro 100%);
+  color: white;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.35);
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(76, 175, 80, 0.45);
+    text-decoration: none;
+    
+    svg {
+      transform: translateX(5px);
+    }
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .partners-section {
+    padding: 40px 0 50px;
+  }
+  
+  .section-header {
+    margin-bottom: 30px;
+  }
+  
+  .marquee-container {
+    padding: 30px 0;
+    
+    &::before,
+    &::after {
+      width: 60px;
+    }
+  }
+  
+  .partners-image {
+    height: 120px;
+  }
+  
+  .marquee-track {
+    animation-duration: 25s;
+  }
+  
+  .btn-view-all {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .partners-image {
+    height: 90px;
+  }
+  
+  .marquee-track {
+    animation-duration: 18s;
+  }
+  
+  .marquee-container {
+    padding: 25px 0;
+    
+    &::before,
+    &::after {
+      width: 30px;
+    }
+  }
+}

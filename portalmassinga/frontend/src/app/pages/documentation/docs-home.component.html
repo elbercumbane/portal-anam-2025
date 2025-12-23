@@ -1,0 +1,227 @@
+<!-- Página de Documentação - Design Espetacular -->
+<div class="docs-universe">
+  <!-- Background Animado -->
+  <div class="cosmic-background">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
+  </div>
+
+  <!-- Hero Section - Estilo Projectos Activos -->
+  <section class="docs-hero-simple">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-badge"><mat-icon>menu_book</mat-icon> Centro Documental</span>
+      <h1>Biblioteca <span class="highlight">Digital</span></h1>
+      <p class="lead">Aceda aos estatutos, regulamentos, relatórios e outros documentos oficiais da ANAM. Tudo organizado num só lugar.</p>
+    </div>
+  </section>
+
+  <!-- Navegação por Categorias -->
+  <section class="category-nav">
+    <div class="nav-container">
+      <div class="nav-header">
+        <h2>Explorar por Categoria</h2>
+        <p>Selecione uma categoria para filtrar os documentos</p>
+      </div>
+      
+      <div class="category-grid">
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Todos'"
+          (click)="filtrar('Todos')">
+          <div class="card-glow"></div>
+          <div class="card-icon">🌟</div>
+          <span class="card-label">Todos</span>
+          <span class="card-count">{{ documentos.length }}</span>
+        </button>
+        
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Estatutos'"
+          (click)="filtrar('Estatutos')">
+          <div class="card-glow"></div>
+          <div class="card-icon">📘</div>
+          <span class="card-label">Estatutos</span>
+          <span class="card-count">{{ getCount('Estatutos') }}</span>
+        </button>
+        
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Regulamentos'"
+          (click)="filtrar('Regulamentos')">
+          <div class="card-glow"></div>
+          <div class="card-icon">📗</div>
+          <span class="card-label">Regulamentos</span>
+          <span class="card-count">{{ getCount('Regulamentos') }}</span>
+        </button>
+        
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Relatórios'"
+          (click)="filtrar('Relatórios')">
+          <div class="card-glow"></div>
+          <mat-icon class="card-icon">description</mat-icon>
+          <span class="card-label">Relatórios</span>
+          <span class="card-count">{{ getCount('Relatórios') }}</span>
+        </button>
+        
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Planos'"
+          (click)="filtrar('Planos')">
+          <div class="card-glow"></div>
+          <mat-icon class="card-icon">book</mat-icon>
+          <span class="card-label">Planos</span>
+          <span class="card-count">{{ getCount('Planos') }}</span>
+        </button>
+        
+        <button 
+          class="category-card"
+          [class.active]="filtroAtivo === 'Políticas'"
+          (click)="filtrar('Políticas')">
+          <div class="card-glow"></div>
+          <mat-icon class="card-icon">lock</mat-icon>
+          <span class="card-label">Políticas</span>
+          <span class="card-count">{{ getCount('Políticas') }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentos Grid -->
+  <section class="documents-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="header-content">
+          <h2>
+            <span class="highlight">{{ filtroAtivo }}</span>
+            <span *ngIf="filtroAtivo !== 'Todos'"> Disponíveis</span>
+            <span *ngIf="filtroAtivo === 'Todos'"> os Documentos</span>
+          </h2>
+          <p>{{ documentosFiltrados.length }} documento(s) encontrado(s)</p>
+        </div>
+      </div>
+
+      <!-- Grid de Documentos -->
+      <div class="documents-grid" *ngIf="documentosFiltrados.length > 0">
+        <article 
+          class="document-card"
+          *ngFor="let doc of documentosFiltrados; let i = index"
+          [attr.data-index]="i"
+          [class]="'card-type-' + doc.tipo.toLowerCase()">
+          
+          <!-- Decoração de fundo animada -->
+          <div class="card-bg-pattern">
+            <div class="pattern-circle circle-1"></div>
+            <div class="pattern-circle circle-2"></div>
+            <div class="pattern-line"></div>
+          </div>
+          
+          <!-- Barra lateral decorativa -->
+          <div class="card-accent-bar"></div>
+          
+          <!-- Conteúdo Principal -->
+          <div class="card-inner">
+            <!-- Header com ícone flutuante -->
+            <div class="card-header">
+              <div class="icon-container">
+                <div class="icon-glow"></div>
+                <div class="icon-ring-outer"></div>
+                <div class="icon-ring-inner"></div>
+                <div class="icon-glass">
+                  <div class="icon-shine"></div>
+                  <mat-icon class="doc-icon">{{ doc.icon }}</mat-icon>
+                </div>
+                <div class="icon-reflection"></div>
+              </div>
+              <div class="header-info">
+                <span class="type-label">{{ doc.tipo }}</span>
+                <span class="size-label">{{ doc.tamanho }}</span>
+              </div>
+            </div>
+            
+            <!-- Corpo -->
+            <div class="card-body">
+              <h3 class="doc-title">{{ doc.titulo }}</h3>
+              <p class="doc-description">{{ doc.descricao }}</p>
+            </div>
+            
+            <!-- Footer com ações -->
+            <div class="card-footer">
+              <div class="format-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14,2 14,8 20,8"/>
+                </svg>
+                <span>PDF</span>
+              </div>
+              
+              <div class="action-buttons">
+                <a class="btn-icon" [href]="doc.url || '#'" target="_blank" rel="noopener" title="Visualizar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </a>
+                <a class="btn-primary" [href]="doc.url || '#'" download>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7,10 12,15 17,10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  <span>Baixar</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="documentosFiltrados.length === 0">
+        <div class="empty-illustration">
+          <div class="empty-folder">
+            <div class="folder-back"></div>
+            <div class="folder-front"></div>
+            <div class="folder-papers"></div>
+          </div>
+        </div>
+        <h3>Nenhum documento encontrado</h3>
+        <p>Não há documentos disponíveis nesta categoria.</p>
+        <button class="btn-reset" (click)="filtrar('Todos')">
+          Ver todos os documentos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <div class="cta-content">
+        <div class="cta-icon">📩</div>
+        <h2>Precisa de um documento específico?</h2>
+        <p>Entre em contacto connosco e teremos todo o prazer em ajudar.</p>
+        <a routerLink="/contato" class="cta-button">
+          <span>Contactar-nos</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12,5 19,12 12,19"/>
+          </svg>
+        </a>
+      </div>
+      <div class="cta-decoration">
+        <div class="deco-ring ring-1"></div>
+        <div class="deco-ring ring-2"></div>
+        <div class="deco-ring ring-3"></div>
+      </div>
+    </div>
+  </section>
+</div>

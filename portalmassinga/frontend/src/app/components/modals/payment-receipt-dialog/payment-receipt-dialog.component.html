@@ -1,0 +1,108 @@
+<div class="dialog-container receipt-dialog">
+  <div class="receipt-print">
+    <!-- Cabeçalho da Associação -->
+    <div class="receipt-association-header">
+      <div class="association-logo">
+        <h1>ANAM</h1>
+        <p class="association-name">Associação de Naturais e Amigos de Massinga</p>
+      </div>
+      <div class="receipt-title-section">
+        <h2>Recibo de Pagamento</h2>
+        <div class="receipt-id-print">Referência: {{ data.id }}</div>
+      </div>
+    </div>
+    
+    <div class="receipt-body-print">
+      <!-- Informações da Associação -->
+      <div class="receipt-section association-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Endereço:</span>
+            <span class="info-value">Av. Principal, Massinga, Inhambane, Moçambique</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Telefone:</span>
+            <span class="info-value">+258 84 000 0000</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value">geral&#64;anam.org</span>
+          </div>
+        </div>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <!-- Dados do Membro -->
+      <div class="receipt-section">
+        <h3>Dados do Membro</h3>
+        <div class="member-details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Nome:</span>
+            <span class="detail-value">{{ data.nomeMembro }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Número de Membro:</span>
+            <span class="detail-value">{{ data.numeroMembro }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Detalhes do Pagamento -->
+      <div class="receipt-section">
+        <h3>Detalhes do Pagamento</h3>
+        <div class="payment-details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Data:</span>
+            <span class="detail-value">{{ data.dataPagamento | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Hora:</span>
+            <span class="detail-value">{{ data.dataPagamento | date:'HH:mm' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Meses Pagos:</span>
+            <span class="detail-value">{{ data.meses.join(', ') }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Método de Pagamento:</span>
+            <span class="detail-value">{{ data.metodoPagamento }}</span>
+          </div>
+          <div class="detail-item" *ngIf="data.numeroTelefone">
+            <span class="detail-label">Número de Telefone:</span>
+            <span class="detail-value">{{ data.numeroTelefone }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Total -->
+      <div class="receipt-section total-section">
+        <div class="total-row">
+          <span class="total-label-print">Total Pago:</span>
+          <span class="total-value-print">{{ data.valorTotal | number }} MT</span>
+        </div>
+      </div>
+      
+      <!-- Rodapé do Recibo -->
+      <div class="receipt-footer">
+        <div class="status-badge" [class.pago]="data.status === 'pago'">
+          <span class="status-text">{{ data.status === 'pago' ? 'PAGO' : 'PENDENTE' }}</span>
+        </div>
+        <p class="receipt-note">Este é um recibo gerado automaticamente. Guarde-o para seus registos.</p>
+        <p class="receipt-date">Emitido em {{ data.dataPagamento | date:'dd/MM/yyyy às HH:mm' }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="onPrint()">
+      <mat-icon>print</mat-icon>
+      <span>Imprimir</span>
+    </button>
+    <button mat-raised-button color="primary" (click)="onClose()">
+      <mat-icon>check</mat-icon>
+      <span>Concluído</span>
+    </button>
+  </div>
+</div>
+
