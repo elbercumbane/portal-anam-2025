@@ -1,6 +1,6 @@
 @import 'variables';
 
-// Dropdown Submenu
+// Dropdown Submenu - Design Aprimorado
 .dropdown {
   position: relative;
   display: inline-block;
@@ -8,67 +8,154 @@
   .dropdown-toggle {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-direction: row;
+    
+    span {
+      flex: 1;
+    }
     
     .dropdown-icon {
       font-size: 18px;
-      transition: transform 0.3s ease;
-      order: 2;
-      margin-left: 0.25rem;
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-left: 0.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
   
+  &.active .dropdown-icon,
   &:hover .dropdown-icon {
     transform: rotate(180deg);
   }
   
   .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 0;
-    background: #FFFFFF; // Branco sólido
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    min-width: 200px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    min-width: 220px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transform: translateY(-8px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.5rem 0;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 20px;
+      width: 12px;
+      height: 12px;
+      background: #FFFFFF;
+      border-left: 1px solid rgba(0, 0, 0, 0.08);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      transform: rotate(45deg);
+    }
     
     &.show {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      
+      .dropdown-item {
+        animation: slideInDropdown 0.3s ease-out forwards;
+        opacity: 0;
+        
+        @for $i from 1 through 10 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.03}s;
+          }
+        }
+      }
+    }
+    
+    @keyframes slideInDropdown {
+      from {
+        opacity: 0;
+        transform: translateX(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
     
     .dropdown-item {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
       width: 100%;
-      padding: 0.75rem 1rem;
-      color: #232627; // Cor do texto do navbar
+      padding: 0.75rem 1.25rem;
+      color: #232627;
       text-decoration: none;
       border: none;
       background: transparent;
       text-align: left;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      
+      // Garantir alinhamento à esquerda
+      mat-button,
+      button {
+        text-align: left !important;
+        justify-content: flex-start !important;
+      }
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 0;
+        background: linear-gradient(180deg, #4CAF50, #05B6D4);
+        border-radius: 0 2px 2px 0;
+        transition: height 0.2s ease;
+      }
       
       &:hover {
-        background: rgba(76, 175, 80, 0.1); // Verde claro suave
-        color: #4CAF50; // Verde
+        background: rgba(76, 175, 80, 0.08);
+        color: #4CAF50;
+        padding-left: 1.5rem;
+        
+        &::before {
+          height: 60%;
+        }
+      }
+      
+      &.active {
+        background: rgba(76, 175, 80, 0.12);
+        color: #4CAF50;
+        font-weight: 600;
+        padding-left: 1.5rem;
+        
+        &::before {
+          height: 70%;
+          background: #4CAF50;
+        }
       }
       
       &:first-child {
-        border-radius: 8px 8px 0 0;
+        border-radius: 12px 12px 0 0;
       }
       
       &:last-child {
-        border-radius: 0 0 8px 8px;
+        border-radius: 0 0 12px 12px;
       }
       
       // Estilo de destaque para "Login"
@@ -88,6 +175,7 @@
       &.highlight {
         font-weight: 600;
         color: #232627;
+        position: relative;
         
         &:hover {
           background: rgba(76, 175, 80, 0.1);

@@ -1,10 +1,14 @@
 @import 'variables';
 @import 'animations';
 
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$cream: #FAF8F5;
+
 // Serviços Grid
 .servicos-section {
   padding: 100px 0;
-  background: white;
+  background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);
   position: relative;
   
   &::after {
@@ -21,21 +25,40 @@
 
 .servicos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 60px;
+  
+  &.servicos-grid-section:last-of-type {
+    margin-bottom: 0;
+  }
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 35px;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
 }
 
 .servico-card {
   background: white;
-  padding: 40px;
+  padding: 40px 35px;
   border-radius: 24px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 2px solid #f0f0f0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   animation: fadeInUp 0.8s ease forwards;
   position: relative;
   overflow: hidden;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
   
   &::before {
     content: '';
@@ -44,7 +67,7 @@
     left: 0;
     width: 4px;
     height: 0;
-    background: linear-gradient(180deg, #8A7D65 0%, #D4AF37 100%);
+    background: linear-gradient(180deg, $primary-green 0%, $green-medium 100%);
     transition: height 0.4s ease;
   }
   
@@ -56,50 +79,91 @@
   
   &:hover {
     transform: translateY(-12px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    border-color: rgba(138, 125, 101, 0.3);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18), 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba($primary-green, 0.4);
+    border-width: 2px;
     
     &::before {
       height: 100%;
+      width: 5px;
     }
     
     .servico-icon-wrapper {
-      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
   }
 }
 
 .servico-icon-wrapper {
-  width: 90px;
-  height: 90px;
+  width: 75px;
+  height: 75px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 24px;
-  margin-bottom: 28px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  margin: 0 auto 24px;
+  transition: all 0.3s ease;
+      background: rgba(44, 103, 76, 0.06);
+      border: 1px solid rgba(44, 103, 76, 0.12);
   
   .servico-icon {
-    font-size: 3rem;
-    animation: iconFloat 3s ease-in-out infinite;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748B;
+    transition: transform 0.3s ease;
+    
+    svg {
+      width: 60%;
+      height: 60%;
+      stroke-width: 2;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+}
+
+.servico-card:hover .servico-icon-wrapper {
+    background: rgba(44, 103, 76, 0.1);
+    border-color: rgba(44, 103, 76, 0.2);
+  
+  .servico-icon {
+    transform: scale(1.15);
+    color: #475569;
   }
 }
 
 .servico-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  
   .servico-titulo {
     font-family: 'Playfair Display', serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0 0 12px;
+    line-height: 1.3;
   }
   
   .servico-descricao {
     font-size: 0.95rem;
     line-height: 1.6;
-    color: #666;
-    margin: 0 0 24px;
+    color: #555;
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+  
+  .servico-subtitulo {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: $primary-green;
+    margin: 0 0 20px;
+    font-style: italic;
+    font-weight: 400;
   }
 }
 
@@ -107,50 +171,60 @@
   list-style: none;
   padding: 0;
   margin: 0 0 24px;
+  flex: 1;
   
   li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     margin-bottom: 10px;
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     color: #555;
+    line-height: 1.5;
     
     .check-icon {
       width: 16px;
       height: 16px;
       flex-shrink: 0;
-      stroke: #8A7D65;
+      stroke: $primary-green;
+      margin-top: 2px;
+    }
+    
+    span {
+      flex: 1;
     }
   }
 }
 
 .servico-btn {
   width: 100%;
-  padding: 12px 20px;
-  border: 1px solid rgba(138, 125, 101, 0.25);
-  border-radius: 8px;
+  padding: 14px 24px;
+  border: 2px solid rgba($primary-green, 0.3);
+  border-radius: 12px;
   background: transparent;
-  color: #6B5B47;
+  color: $primary-green;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+  margin-top: auto;
   
   .btn-arrow {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     transition: transform 0.3s ease;
-    stroke: #6B5B47;
+    stroke: $primary-green;
   }
   
   &:hover {
-    background: rgba(138, 125, 101, 0.08);
-    border-color: rgba(138, 125, 101, 0.4);
+    background: rgba($primary-green, 0.1);
+    border-color: rgba($primary-green, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($primary-green, 0.2);
     
     .btn-arrow {
       transform: translateX(4px);

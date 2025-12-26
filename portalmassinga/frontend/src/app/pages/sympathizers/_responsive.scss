@@ -1,0 +1,191 @@
+// ========================================
+// RESPONSIVIDADE - SIMPATIZANTES
+// ========================================
+
+// Mobile
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 70vh;
+    background-attachment: scroll;
+    
+    .hero-content {
+      padding: 2rem 1.5rem;
+      
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .hero-ctas {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+        
+        .hero-cta {
+          width: 100%;
+          padding: 1rem 2rem;
+        }
+      }
+    }
+  }
+  
+  .meaning-section,
+  .benefits-section,
+  .impact-section,
+  .quick-form-section,
+  .events-section,
+  .how-to-support-section,
+  .faq-section,
+  .final-cta-section {
+    padding: 4rem 0;
+  }
+  
+  .meaning-grid,
+  .benefits-grid,
+  .stats-grid,
+  .stories-grid,
+  .events-grid,
+  .support-methods {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .meaning-card,
+  .benefit-card,
+  .support-card {
+    padding: 2rem;
+  }
+  
+  .stat-card {
+    padding: 2rem 1.5rem;
+    
+    .stat-number {
+      font-size: 2.5rem;
+    }
+    
+    .stat-icon {
+      font-size: 2.5rem;
+    }
+  }
+  
+  .quick-form-section .form-card {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    
+    .form-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+      padding-bottom: 1.5rem;
+      
+      .form-icon {
+        width: 60px;
+        height: 60px;
+        
+        svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+  }
+  
+  .quick-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .final-cta-section {
+    .cta-content {
+      padding: 0 1rem;
+      
+      .cta-icon {
+        width: 80px;
+        height: 80px;
+        
+        svg {
+          width: 40px;
+          height: 40px;
+        }
+      }
+      
+      h2 {
+        font-size: 1.75rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.75rem;
+      
+      .cta-button {
+        width: 100%;
+        padding: 1rem 2rem;
+      }
+    }
+  }
+  
+  .section-header {
+    margin-bottom: 2.5rem;
+    
+    h2 {
+      font-size: 1.75rem;
+    }
+    
+    .section-description {
+      font-size: 1rem;
+    }
+  }
+  
+  .story-card {
+    padding: 2rem;
+    
+    .story-avatar {
+      font-size: 3rem;
+    }
+  }
+  
+  .event-card {
+    padding: 2rem;
+    
+    .event-badge {
+      width: 50px;
+      height: 50px;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Tablet
+@media (min-width: 769px) and (max-width: 1024px) {
+  .meaning-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .support-methods {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

@@ -1,0 +1,112 @@
+// ========================================
+// CTA SECTION
+// ========================================
+
+@import 'variables';
+
+.cta-section {
+  position: relative;
+  z-index: 1;
+  padding: 60px 24px 100px;
+  
+  .cta-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, $primary-green 0%, $green-medium 100%);
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba($primary-green, 0.3);
+  }
+  
+  .cta-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    
+    .cta-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    }
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: $white;
+      margin: 0 0 12px;
+    }
+    
+    p {
+      font-size: 1rem;
+      color: rgba($white, 0.85);
+      margin: 0 0 32px;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: $white;
+      color: $primary-green;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      @include smooth-transition;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      
+      &:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        
+        svg {
+          transform: translateX(4px);
+        }
+      }
+      
+      svg {
+        @include smooth-transition;
+      }
+    }
+  }
+  
+  .cta-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    
+    .deco-ring {
+      position: absolute;
+      border: 2px solid rgba($white, 0.1);
+      border-radius: 50%;
+      
+      &.ring-1 {
+        width: 300px;
+        height: 300px;
+        top: -150px;
+        right: -100px;
+      }
+      
+      &.ring-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -80px;
+        left: -50px;
+      }
+      
+      &.ring-3 {
+        width: 150px;
+        height: 150px;
+        top: 50%;
+        left: 20%;
+        transform: translateY(-50%);
+        border-style: dashed;
+      }
+    }
+  }
+}
+

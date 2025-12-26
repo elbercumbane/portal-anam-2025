@@ -1,0 +1,168 @@
+@import 'variables';
+@import 'animations';
+
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$cream: #FAF8F5;
+
+// Seção de Depoimentos
+.depoimentos-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba($green-medium, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba($primary-green, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+.depoimentos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  position: relative;
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+.depoimento-card {
+  background: white;
+  padding: 35px 30px;
+  border-radius: 20px;
+    border: 2px solid rgba($primary-green, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+  position: relative;
+  
+  @for $i from 0 through 10 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.15}s;
+    }
+  }
+  
+  &::before {
+    content: '"';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: rgba($primary-green, 0.1);
+    line-height: 1;
+    font-weight: 700;
+  }
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+      border-color: rgba($primary-green, 0.3);
+  }
+  
+  .depoimento-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .depoimento-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+      background: linear-gradient(135deg, $primary-green 0%, $green-medium 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba($primary-green, 0.3);
+    
+    span {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .depoimento-info {
+    flex: 1;
+    
+    .depoimento-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0 0 4px;
+      line-height: 1.2;
+    }
+    
+    .depoimento-cargo {
+      font-size: 0.875rem;
+      color: $primary-green;
+      margin: 0 0 2px;
+      font-weight: 600;
+    }
+    
+    .depoimento-negocio {
+      font-size: 0.8rem;
+      color: #999;
+      margin: 0;
+      font-style: italic;
+    }
+  }
+  
+  .depoimento-avaliacao {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 4px;
+    
+    .star {
+      font-size: 1.2rem;
+      color: #ddd;
+      transition: color 0.2s ease;
+      
+      &.active {
+        color: #F4D03F;
+      }
+    }
+  }
+  
+  .depoimento-texto {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+    margin: 0;
+    font-style: italic;
+    position: relative;
+    padding-left: 20px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, $primary-green 0%, $green-medium 100%);
+      border-radius: 2px;
+    }
+  }
+}
+

@@ -15,6 +15,15 @@
   .compromisso-icon {
     font-size: 3rem;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      width: 3rem;
+      height: 3rem;
+      stroke: #4CAF50; // Verde
+    }
   }
   
   .compromisso-text {

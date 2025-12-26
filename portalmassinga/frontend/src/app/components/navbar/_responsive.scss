@@ -11,7 +11,7 @@
   }
   
   .mobile-menu-trigger {
-    display: none;
+    display: none !important;
   }
   
   .mobile-menu {
@@ -35,6 +35,11 @@
   .navbar.scrolled & {
     color: #232627;
   }
+  
+  // Garantir que desapareça em telas grandes
+  @media (min-width: $desktop-breakpoint) {
+    display: none !important;
+  }
 }
 
 .mobile-menu {
@@ -42,12 +47,12 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 80vw;
-  max-width: 360px;
-  background: #ffffff;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.2);
+  width: 85vw;
+  max-width: 380px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15), -2px 0 8px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
-  transition: transform 0.25s ease;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1500;
   display: flex;
   flex-direction: column;
@@ -60,48 +65,119 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background: #ffffff;
     
     .brand-title {
-      font-weight: 700;
-      color: #232627;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: #1a1a1a;
+      font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      letter-spacing: -0.5px;
     }
     
     .icon {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       fill: #232627;
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: rotate(90deg);
+      }
     }
   }
   
   .mobile-menu-body {
-    padding: 1rem 1.25rem;
+    padding: 1.5rem 0;
     overflow-y: auto;
+    flex: 1;
     
-    a {
+    .mobile-nav-link {
       display: block;
       text-align: left;
       width: 100%;
       color: #232627;
-      margin-bottom: 0.35rem;
+      padding: 0.85rem 1.5rem;
+      margin: 0.15rem 0;
+      font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      border-left: 3px solid transparent;
+      
+      &:hover {
+        background: rgba(76, 175, 80, 0.08);
+        color: #4CAF50;
+        border-left-color: #4CAF50;
+        padding-left: 1.75rem;
+      }
+      
+      &.active {
+        background: rgba(76, 175, 80, 0.12);
+        color: #4CAF50;
+        font-weight: 600;
+        border-left-color: #4CAF50;
+        padding-left: 1.75rem;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          right: 1.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 6px;
+          height: 6px;
+          background: #4CAF50;
+          border-radius: 50%;
+        }
+      }
+      
+      &.highlight {
+        font-weight: 600;
+        color: #1a1a1a;
+        
+        &:hover,
+        &.active {
+          background: rgba(76, 175, 80, 0.15);
+        }
+      }
+      
+      &.login-link {
+        margin-top: 0.5rem;
+        background: rgba(76, 175, 80, 0.1);
+        font-weight: 600;
+        border-left-color: #4CAF50;
+        
+        &:hover,
+        &.active {
+          background: rgba(76, 175, 80, 0.2);
+        }
+      }
+    }
+    
+    .mobile-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.08), transparent);
+      margin: 1rem 1.5rem;
     }
     
     .mobile-section {
-      margin: 0.75rem 0;
+      margin: 0.5rem 0;
       
       .mobile-section-title {
         font-weight: 700;
-        color: #232627;
-        margin-bottom: 0.25rem;
-      }
-      
-      a {
-        padding-left: 0.25rem;
-        color: #4b5563;
+        font-size: 0.75rem;
+        color: #666666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
     }
-    
   }
 }
 

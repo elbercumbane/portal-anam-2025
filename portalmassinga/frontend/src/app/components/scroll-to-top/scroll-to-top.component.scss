@@ -1,0 +1,79 @@
+// ============ BOTÃO FLUTUANTE SCROLL TO TOP ============
+
+.scroll-to-top-btn {
+  position: fixed;
+  right: 50px;
+  bottom: 40px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  pointer-events: none;
+  
+  svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  
+  &:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 12px 32px rgba(76, 175, 80, 0.6);
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+    
+    svg {
+      transform: translateY(-2px);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-3px) scale(0.98);
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .scroll-to-top-btn {
+    right: 30px;
+    bottom: 30px;
+    width: 50px;
+    height: 50px;
+    
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-to-top-btn {
+    right: 24px;
+    bottom: 24px;
+    width: 48px;
+    height: 48px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+

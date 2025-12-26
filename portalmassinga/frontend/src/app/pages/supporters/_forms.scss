@@ -1,0 +1,393 @@
+// ========================================
+// FORMULÁRIOS - APOIO
+// ========================================
+
+@import './variables';
+
+// Intro Section
+.intro-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .intro-content {
+    text-align: center;
+    
+    .intro-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(11, 47, 65, 0.15) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(76, 175, 80, 0.3);
+      
+      svg {
+        width: 40px;
+        height: 40px;
+        stroke: $green-primary;
+      }
+    }
+    
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+    
+    .intro-text {
+      font-size: 1.15rem;
+      color: $ink-400;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Form Section
+.form-section {
+  padding: 2rem 0 5rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .form-card {
+    background: $white;
+    padding: 3rem;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-large;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+  }
+  
+  .supporter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      label {
+        font-weight: 600;
+        color: $ink-600;
+        font-size: 0.95rem;
+        
+        .required {
+          color: $error-red;
+        }
+      }
+      
+      input, select {
+        padding: 0.875rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: $border-radius-medium;
+        font-size: 1rem;
+        @include smooth-transition;
+        font-family: inherit;
+        
+        &:focus {
+          outline: none;
+          border-color: $green-primary;
+          box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+        }
+        
+        &.error {
+          border-color: $error-red;
+        }
+      }
+      
+      .field-error {
+        color: $error-red;
+        font-size: 0.85rem;
+      }
+    }
+    
+    .frequency-options {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .frequency-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e5e7eb;
+      border-radius: $border-radius-medium;
+      cursor: pointer;
+      @include smooth-transition;
+      flex: 1;
+      min-width: 200px;
+      
+      input[type="radio"] {
+        display: none;
+        
+        &:checked + .radio-custom {
+          background: $green-primary;
+          border-color: $green-primary;
+          
+          &::after {
+            opacity: 1;
+          }
+        }
+      }
+      
+      .radio-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 50%;
+        position: relative;
+        @include smooth-transition;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 10px;
+          height: 10px;
+          background: $white;
+          border-radius: 50%;
+          opacity: 0;
+          @include smooth-transition;
+        }
+      }
+      
+      .radio-label {
+        font-weight: 500;
+        color: $ink-600;
+      }
+      
+      &:hover {
+        border-color: rgba(76, 175, 80, 0.3);
+        background: rgba(76, 175, 80, 0.05);
+      }
+    }
+    
+    .contribution-summary {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+      padding: 1.5rem;
+      border-radius: $border-radius-large;
+      border: 2px solid rgba(76, 175, 80, 0.2);
+      margin-top: 1rem;
+      
+      .summary-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: $green-primary;
+        font-weight: 600;
+        
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+      
+      .summary-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        
+        .summary-item {
+          display: flex;
+          justify-content: space-between;
+          color: $ink-400;
+          
+          strong {
+            color: $ink-900;
+            font-size: 1.1rem;
+          }
+        }
+        
+        .summary-total {
+          display: flex;
+          justify-content: space-between;
+          padding-top: 1rem;
+          border-top: 2px solid rgba(76, 175, 80, 0.2);
+          font-size: 1.1rem;
+          
+          strong {
+            color: $green-primary;
+            font-size: 1.5rem;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    
+    .submit-button {
+      padding: 1.25rem 2rem;
+      background: linear-gradient(135deg, $green-primary 0%, darken($green-primary, 10%) 100%);
+      color: $white;
+      border: none;
+      border-radius: $border-radius-medium;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      @include smooth-transition;
+      margin-top: 1rem;
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+      
+      svg {
+        width: 24px;
+        height: 24px;
+        
+        &.spinner {
+          animation: spin 2s linear infinite;
+        }
+      }
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px rgba(76, 175, 80, 0.5);
+      }
+      
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Success Modal
+.success-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s ease;
+  
+  .success-content {
+    background: $white;
+    padding: 3rem;
+    border-radius: $border-radius-xl;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: $shadow-xl;
+    animation: slideUp 0.3s ease;
+    
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(11, 47, 65, 0.15) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid $green-primary;
+      
+      svg {
+        width: 50px;
+        height: 50px;
+        stroke: $green-primary;
+      }
+    }
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      color: $ink-400;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      
+      strong {
+        color: $green-primary;
+      }
+    }
+    
+    ul {
+      text-align: left;
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+      
+      li {
+        padding: 0.5rem 0;
+        color: $ink-600;
+      }
+    }
+    
+    .redirect-message {
+      color: $green-primary;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Responsivo
+@media (max-width: $mobile) {
+  .form-card {
+    padding: 2rem !important;
+  }
+  
+  .frequency-options {
+    flex-direction: column;
+  }
+  
+  .frequency-option {
+    min-width: 100% !important;
+  }
+}
+

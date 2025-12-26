@@ -2,13 +2,38 @@
 <section class="servicos-hero" aria-labelledby="servicos-title">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <span class="hero-badge">Nossos Serviços</span>
     <h1 id="servicos-title">
-      Impulsionamos o Seu <span class="highlight">Crescimento</span>
+      Impulsionamos o <span class="highlight">Crescimento</span> de Massinga
     </h1>
     <p class="hero-description">
-      Unidos para transformar Massinga através de iniciativas que fortalecem a nossa comunidade e promovem o desenvolvimento local.
+      Fortalecemos pequenos negócios através de formação prática, mentoria e acesso a recursos. Apoiamos jovens empreendedores, comércio local e iniciativas de agro-negócio de pequena e média escala.
     </p>
+    <p class="hero-support-text">
+      Actuamos directamente no distrito de Massinga, promovendo o crescimento económico local através de soluções adaptadas à realidade da comunidade.
+    </p>
+  </div>
+  <div class="hero-badge-bottom-right">
+    <span>Nossos Serviços</span>
+  </div>
+</section>
+
+<!-- Para quem é a ANAM -->
+<section class="quem-apoiamos-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Quem <span class="highlight">Apoiamos</span></h2>
+      <p class="section-subtitle">
+        Os nossos programas são dirigidos a pessoas e iniciativas que movimentam a economia local de Massinga.
+      </p>
+    </div>
+    
+    <div class="quem-apoiamos-grid">
+      <div class="quem-apoiamos-card" *ngFor="let publico of publicosAlvo; let i = index" [attr.data-index]="i">
+        <div class="publico-icon" [innerHTML]="getIconSvg(publico.iconType)"></div>
+        <h3 class="publico-titulo">{{ publico.titulo }}</h3>
+        <p class="publico-descricao">{{ publico.descricao }}</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -17,33 +42,61 @@
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Nossos <span class="highlight">Serviços</span></h2>
-      <p class="section-subtitle">Juntos pelo desenvolvimento sustentável do distrito de Massinga</p>
+      <p class="section-subtitle">Soluções práticas adaptadas à realidade local de Massinga</p>
+      <p class="section-note">
+        Dirigidos a jovens empreendedores, comércio local, agro-negócio e associações comunitárias do distrito de Massinga
+      </p>
     </div>
     
-    <!-- Filtro de Categorias -->
-    <div class="categorias-filter">
-      <button 
-        *ngFor="let categoria of categorias" 
-        class="categoria-btn"
-        [class.active]="categoriaAtiva === categoria.id"
-        (click)="filtrarPorCategoria(categoria.id)">
-        {{ categoria.nome }}
-      </button>
-    </div>
-    
-    <div class="servicos-grid">
-      <article class="servico-card" *ngFor="let servico of servicos; let i = index" [attr.data-index]="i">
+    <!-- Primeira Seção de Serviços -->
+    <div class="servicos-grid servicos-grid-section">
+      <article class="servico-card" *ngFor="let servico of servicosSecao1; let i = index" [attr.data-index]="i">
         <!-- Ícone com Background Colorido -->
         <div class="servico-icon-wrapper" [style.background]="'linear-gradient(135deg, ' + servico.cor + '15 0%, ' + servico.cor + '08 100%)'">
-          <span class="servico-icon">
-            {{ servico.icon }}
-          </span>
+          <div class="servico-icon" [innerHTML]="getIconSvg(servico.iconType)"></div>
+        </div>
+    
+        <!-- Conteúdo -->
+        <div class="servico-content">
+          <h3 class="servico-titulo">{{ servico.titulo }}</h3>
+          <p class="servico-descricao">{{ servico.descricao }}</p>
+          <p class="servico-subtitulo" *ngIf="servico.subtitulo">{{ servico.subtitulo }}</p>
+          
+          <!-- Lista de Benefícios -->
+          <ul class="beneficios-list">
+            <li *ngFor="let beneficio of servico.beneficios">
+              <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>{{ beneficio }}</span>
+            </li>
+          </ul>
+          
+          <!-- Botão -->
+          <button class="servico-btn">
+            <span>Saber Mais</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+      </button>
+        </div>
+      </article>
+    </div>
+    
+    <!-- Segunda Seção de Serviços -->
+    <div class="servicos-grid servicos-grid-section">
+      <article class="servico-card" *ngFor="let servico of servicosSecao2; let i = index" [attr.data-index]="i + 3">
+        <!-- Ícone com Background Colorido -->
+        <div class="servico-icon-wrapper" [style.background]="'linear-gradient(135deg, ' + servico.cor + '15 0%, ' + servico.cor + '08 100%)'">
+          <div class="servico-icon" [innerHTML]="getIconSvg(servico.iconType)"></div>
         </div>
         
         <!-- Conteúdo -->
         <div class="servico-content">
           <h3 class="servico-titulo">{{ servico.titulo }}</h3>
           <p class="servico-descricao">{{ servico.descricao }}</p>
+          <p class="servico-subtitulo" *ngIf="servico.subtitulo">{{ servico.subtitulo }}</p>
           
           <!-- Lista de Benefícios -->
           <ul class="beneficios-list">
@@ -67,19 +120,15 @@
       </article>
     </div>
     
-    <!-- Mensagem quando não há serviços -->
-    <div class="no-servicos" *ngIf="servicos.length === 0">
-      <p>Nenhum serviço encontrado nesta categoria.</p>
-    </div>
   </div>
 </section>
 
-<!-- Gráfico de Progresso / Timeline -->
+<!-- Como Funcionamos -->
 <section class="progresso-section">
   <div class="container">
     <div class="section-header">
       <h2 class="section-title">Como <span class="highlight">Funcionamos</span></h2>
-      <p class="section-subtitle">Um processo simples e eficaz</p>
+      <p class="section-subtitle">Um método claro e eficaz para o desenvolvimento local</p>
     </div>
     
     <div class="timeline">
@@ -88,8 +137,8 @@
           <span class="step-number">1</span>
         </div>
         <div class="timeline-content">
-          <h3>União da Comunidade</h3>
-          <p>Conectamos naturais de Massinga e amigos da comunidade em torno de objectivos comuns de desenvolvimento</p>
+          <h3>Escuta da Comunidade</h3>
+          <p>Identificamos as necessidades reais através do diálogo directo com empreendedores e pequenos negócios de Massinga</p>
         </div>
       </div>
       
@@ -98,8 +147,8 @@
           <span class="step-number">2</span>
         </div>
         <div class="timeline-content">
-          <h3>Identificação de Prioridades</h3>
-          <p>Identificamos as áreas prioritárias para investimento no distrito de Massinga</p>
+          <h3>Definição de Prioridades Locais</h3>
+          <p>Estabelecemos prioridades baseadas nas necessidades identificadas, focando em soluções práticas e aplicáveis</p>
         </div>
       </div>
       
@@ -108,8 +157,8 @@
           <span class="step-number">3</span>
         </div>
         <div class="timeline-content">
-          <h3>Implementação de Projectos</h3>
-          <p>Executamos projectos de desenvolvimento sustentável que beneficiam as comunidades de Massinga</p>
+          <h3>Implementação no Terreno</h3>
+          <p>Executamos programas de formação, mentoria e apoio directamente no distrito, adaptados à realidade local</p>
         </div>
       </div>
       
@@ -118,34 +167,8 @@
           <span class="step-number">4</span>
         </div>
         <div class="timeline-content">
-          <h3>Impacto Duradouro</h3>
-          <p>Garantimos resultados sustentáveis que transformam a vida dos habitantes do distrito de Massinga</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Casos de Sucesso -->
-<section class="casos-sucesso-section">
-  <div class="container">
-    <div class="section-header">
-      <h2 class="section-title">Histórias Reais, <span class="highlight">Resultados Concretos</span></h2>
-      <p class="section-subtitle">Veja como a ANAM tem transformado negócios</p>
-    </div>
-    
-    <div class="casos-grid">
-      <div class="caso-card" *ngFor="let caso of casosSucesso; let i = index" [attr.data-index]="i">
-        <div class="caso-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-          </svg>
-        </div>
-        <h3 class="caso-titulo">{{ caso.titulo }}</h3>
-        <p class="caso-testemunho">"{{ caso.testemunho }}"</p>
-        <div class="caso-autor">
-          <span class="autor-nome">— {{ caso.autor }},</span>
-          <span class="autor-negocio">{{ caso.negocio }}</span>
+          <h3>Avaliação de Impacto</h3>
+          <p>Acompanhamos os resultados e ajustamos continuamente para garantir que os programas geram impacto real</p>
         </div>
       </div>
     </div>
@@ -156,8 +179,8 @@
 <section class="impacto-section">
   <div class="container">
     <div class="section-header">
-      <h2 class="section-title">Resultados que <span class="highlight">Contam</span></h2>
-      <p class="section-subtitle">O nosso impacto em números</p>
+      <h2 class="section-title">Impacto Gerado em <span class="highlight">Massinga</span></h2>
+      <p class="section-subtitle">Resultados concretos (2022–2024)</p>
     </div>
     
     <div class="impacto-grid">
@@ -169,19 +192,58 @@
   </div>
 </section>
 
+<!-- Depoimentos -->
+<section class="depoimentos-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">O Que Dizem os <span class="highlight">Nossos Empreendedores</span></h2>
+      <p class="section-subtitle">Histórias reais de transformação e crescimento</p>
+    </div>
+    
+    <div class="depoimentos-grid">
+      <article class="depoimento-card" *ngFor="let depoimento of depoimentos; let i = index" [attr.data-index]="i">
+        <div class="depoimento-header">
+          <div class="depoimento-avatar">
+            <span>{{ depoimento.nome.charAt(0) }}</span>
+          </div>
+          <div class="depoimento-info">
+            <h3 class="depoimento-nome">{{ depoimento.nome }}</h3>
+            <p class="depoimento-cargo">{{ depoimento.cargo }}</p>
+            <p class="depoimento-negocio">{{ depoimento.negocio }}</p>
+          </div>
+        </div>
+        
+        <div class="depoimento-avaliacao">
+          <span *ngFor="let star of [1,2,3,4,5]" class="star" [class.active]="star <= depoimento.avaliacao">★</span>
+        </div>
+        
+        <blockquote class="depoimento-texto">
+          "{{ depoimento.texto }}"
+        </blockquote>
+      </article>
+    </div>
+  </div>
+</section>
+
 <!-- CTA Final -->
 <section class="cta-section">
-  <div class="container">
+  <div class="cta-container">
     <div class="cta-content">
+      <div class="cta-icon">🚀</div>
       <h2>Pronto para Impulsionar o Seu Negócio?</h2>
       <p>Junte-se a centenas de filhos de Massinga que já estão a construir o futuro do nosso distrito</p>
-      <button class="cta-btn">
+      <a routerLink="/associar" class="cta-button">
         <span>Tornar-se Membro</span>
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12,5 19,12 12,19"/>
         </svg>
-      </button>
+      </a>
+    </div>
+    <div class="cta-decoration">
+      <div class="deco-ring ring-1"></div>
+      <div class="deco-ring ring-2"></div>
+      <div class="deco-ring ring-3"></div>
     </div>
   </div>
 </section>

@@ -1,0 +1,99 @@
+// ============ SEÇÃO MISSÃO E VISÃO ============
+
+@import 'variables';
+@import 'mixins';
+
+.mission-visions-column {
+  @include flex-column($spacing-md);
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.mission-header {
+  width: 100%;
+  @include flex-column($spacing-md);
+  
+  .section-main-title {
+    @include section-title;
+    
+    .highlight-word {
+      color: $green-primary;
+      position: relative;
+      display: inline-block;
+      border: 2px solid $green-primary;
+      border-radius: 50%;
+      padding: 4px 12px;
+      margin: 0 4px;
+      line-height: 1.2;
+    }
+  }
+  
+  .mission-intro {
+    @include body-text;
+    max-width: 95%;
+    
+    @include mobile {
+      font-size: 0.95rem;
+      max-width: 100%;
+      line-height: 1.65;
+    }
+  }
+}
+
+.mission-item {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+  
+  .mission-icon {
+    @include icon-container($icon-size);
+    
+    svg {
+      @include icon-svg($icon-svg-size);
+    }
+  }
+  
+  .mission-content {
+    flex: 1;
+    
+    h3 {
+      color: $gray-900;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      font-family: $font-sans;
+    }
+    
+    p {
+      @include body-text;
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+  }
+  
+  @include mobile {
+    gap: $spacing-xs;
+    
+    .mission-icon {
+      @include icon-container($icon-size-mobile);
+      
+      svg {
+        @include icon-svg($icon-svg-size-mobile);
+      }
+    }
+    
+    .mission-content {
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+      
+      p {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+

@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { NavbarComponent } from '../components/navbar/navbar.component';
 import { FooterComponent } from '../components/footer/footer.component';
+import { ScrollToTopComponent } from '../components/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-shell',
@@ -22,6 +23,7 @@ import { FooterComponent } from '../components/footer/footer.component';
     MatButtonModule,
     NavbarComponent,
     FooterComponent,
+    ScrollToTopComponent,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',

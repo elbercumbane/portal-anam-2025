@@ -1,0 +1,446 @@
+// ========================================
+// SEÇÕES - APOIO
+// ========================================
+
+@import './variables';
+
+// Container padrão
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+// Section Header (reutilizável)
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: $green-primary;
+    margin-bottom: 1rem;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: $ink-900;
+    margin-bottom: 1rem;
+    
+    .highlight-text {
+      background: linear-gradient(135deg, $green-primary 0%, $blue-primary 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+  
+  .section-description {
+    font-size: 1.1rem;
+    color: $ink-400;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+// Secção: A Causa
+.cause-section {
+  padding: 5rem 0;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .problem-card {
+    background: $white;
+    padding: 2rem;
+    border-radius: $border-radius-xl;
+    text-align: center;
+    box-shadow: $shadow-medium;
+    border-left: 4px solid $error-red;
+    @include smooth-transition;
+    
+    @include card-hover;
+    
+    .problem-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 0.75rem;
+    }
+    
+    p {
+      color: $ink-400;
+      line-height: 1.7;
+      margin: 0;
+    }
+  }
+  
+  .affected-people {
+    background: $white;
+    padding: 3rem;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-medium;
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .people-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    
+    .people-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      
+      .people-icon {
+        font-size: 2.5rem;
+        flex-shrink: 0;
+      }
+      
+      strong {
+        display: block;
+        color: $ink-900;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        color: $ink-400;
+        margin: 0;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+// Secção: Impacto
+.impact-section {
+  padding: 5rem 0;
+  background: $white;
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+    padding: 3rem 2rem;
+    border-radius: $border-radius-xl;
+    text-align: center;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+    @include smooth-transition;
+    
+    &:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: $shadow-xl;
+      border-color: rgba(76, 175, 80, 0.5);
+    }
+    
+    .stat-icon-large {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: $green-primary;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .stat-label {
+      color: $ink-400;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Secção: Histórias
+.stories-section {
+  padding: 5rem 0;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  .story-card-large {
+    background: $white;
+    padding: 2.5rem;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-medium;
+    border-left: 4px solid $green-primary;
+    display: flex;
+    gap: 2rem;
+    @include smooth-transition;
+    
+    @include card-hover;
+    
+    .story-image {
+      font-size: 5rem;
+      flex-shrink: 0;
+    }
+    
+    .story-content {
+      flex: 1;
+      
+      .story-meta {
+        margin-bottom: 1rem;
+        
+        strong {
+          display: block;
+          color: $ink-900;
+          font-size: 1.3rem;
+          margin-bottom: 0.25rem;
+        }
+        
+        span {
+          color: $ink-400;
+          font-size: 0.9rem;
+        }
+      }
+      
+      .story-text {
+        color: $ink-600;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+        font-style: italic;
+      }
+      
+      .story-project {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $green-primary;
+        font-weight: 600;
+        
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Secção: Níveis de Apoio
+.support-levels-section {
+  padding: 5rem 0;
+  background: $white;
+  
+  .support-levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .support-level-card {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+    padding: 2.5rem;
+    border-radius: $border-radius-xl;
+    text-align: center;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+    @include smooth-transition;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: $shadow-xl;
+      border-color: rgba(76, 175, 80, 0.5);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(11, 47, 65, 0.15) 100%);
+    }
+    
+    .level-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .level-amount {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: $green-primary;
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .level-frequency {
+      color: $ink-400;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .level-benefit {
+      color: $ink-600;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+  }
+}
+
+// Secção: Prova Social
+.social-proof-section {
+  padding: 5rem 0;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+  
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .testimonial-card {
+    background: $white;
+    padding: 2rem;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-medium;
+    border-left: 4px solid $green-primary;
+    
+    .testimonial-avatar {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    
+    .testimonial-content {
+      .testimonial-quote {
+        color: $ink-600;
+        font-style: italic;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+        font-size: 1.05rem;
+      }
+      
+      .testimonial-author {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        
+        strong {
+          color: $ink-900;
+          font-size: 1.1rem;
+        }
+        
+        span {
+          color: $ink-400;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Secção: CTA Final
+.final-cta-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+  
+  .cta-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-size: 1.2rem;
+      color: $ink-400;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    
+    .cta-button-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem 4rem;
+      background: linear-gradient(135deg, $green-primary 0%, darken($green-primary, 10%) 100%);
+      color: $white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      @include smooth-transition;
+      box-shadow: 0 4px 25px rgba(76, 175, 80, 0.5);
+      
+      svg {
+        width: 24px;
+        height: 24px;
+        @include smooth-transition;
+      }
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 35px rgba(76, 175, 80, 0.6);
+        
+        svg {
+          transform: translateX(5px);
+        }
+      }
+    }
+  }
+}
+
+// Responsivo
+@media (max-width: $mobile) {
+  .problem-grid,
+  .stats-grid,
+  .stories-grid,
+  .support-levels-grid,
+  .testimonials-grid,
+  .people-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .story-card-large {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+

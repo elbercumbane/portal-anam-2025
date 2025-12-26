@@ -1,6 +1,6 @@
 @import 'variables';
 
-// Navegação Desktop - Nova Paleta
+// Navegação Desktop - Design Moderno Aprimorado
 .desktop-nav {
   display: none;
   gap: 0.5rem;
@@ -16,13 +16,14 @@
     position: relative !important;
     border: none !important;
     outline: none !important;
-    font-family: var(--font-primary);
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-weight: 500;
-    font-size: 0.95rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    transition: all var(--transition-normal);
-    margin: 0 0.25rem;
+    font-size: 0.925rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0 0.2rem;
+    letter-spacing: 0.015em;
     
     .navbar.scrolled & {
       color: #232627 !important; // Cor específica do texto
@@ -30,24 +31,48 @@
     
     // Item ativo/selecionado
     &.active { 
-      background: rgba(255, 255, 255, 0.18) !important; 
+      background: rgba(255, 255, 255, 0.25) !important; 
       color: #fff !important; 
-      font-weight: 600; 
+      font-weight: 600;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        height: 2.5px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+        border-radius: 2px;
+        box-shadow: 0 1px 4px rgba(255, 255, 255, 0.3);
+      }
       
       .navbar.scrolled & {
-        background: rgba(35, 38, 39, 0.1) !important;
-        color: #232627 !important;
+        background: rgba(76, 175, 80, 0.15) !important;
+        color: #4CAF50 !important;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+        
+        &::after {
+          background: linear-gradient(90deg, transparent, #4CAF50, transparent);
+          box-shadow: 0 1px 4px rgba(76, 175, 80, 0.4);
+        }
       }
     }
     
     // Hover suave
     &:hover:not(.active) { 
-      background: rgba(255, 255, 255, 0.12) !important; 
+      background: rgba(255, 255, 255, 0.15) !important; 
       color: #fff !important; 
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       
       .navbar.scrolled & {
-        background: rgba(35, 38, 39, 0.08) !important;
+        background: rgba(35, 38, 39, 0.1) !important;
         color: #232627 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
     }
     

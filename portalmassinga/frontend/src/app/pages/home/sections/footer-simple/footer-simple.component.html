@@ -12,6 +12,68 @@
           <p><mat-icon>email</mat-icon> geral&#64;anam.org</p>
         </div>
       </div>
+
+      <!-- Formulário de Mensagem -->
+      <div class="footer-message-form">
+        <h4>Escreva uma mensagem</h4>
+        
+        <!-- Estado de sucesso -->
+        <div *ngIf="mensagemEnviada" class="message-success-state">
+          <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <p class="success-message">
+            Obrigado pela sua mensagem, <strong>{{ nome }}</strong>!<br>
+            A sua sugestão foi registada com sucesso.
+          </p>
+          <button class="btn btn-secondary" (click)="resetarFormulario()">
+            Enviar outra mensagem
+          </button>
+        </div>
+
+        <!-- Estado do formulário -->
+        <form *ngIf="!mensagemEnviada" (ngSubmit)="enviarMensagem()" class="message-form">
+          <div class="form-group">
+            <input 
+              type="text" 
+              [(ngModel)]="nome"
+              name="nome"
+              placeholder="Seu nome"
+              class="form-input"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <input 
+              type="email" 
+              [(ngModel)]="email"
+              name="email"
+              placeholder="Seu email"
+              class="form-input"
+              required
+            >
+          </div>
+          
+          <div class="form-group">
+            <textarea 
+              [(ngModel)]="mensagem"
+              name="mensagem"
+              placeholder="Digite sua mensagem aqui..."
+              class="form-textarea"
+              rows="3"
+              maxlength="500"
+              required>
+            </textarea>
+          </div>
+          
+          <div class="actions">
+            <button type="submit" class="btn" [disabled]="!isFormValid()">
+              Enviar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
     
     <div class="footer-bottom">

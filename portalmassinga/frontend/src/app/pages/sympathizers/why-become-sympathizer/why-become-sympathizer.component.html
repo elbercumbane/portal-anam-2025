@@ -1,26 +1,25 @@
 <!-- Hero Section -->
 <section class="hero-section">
   <div class="hero-overlay"></div>
+  <div class="hero-particles">
+    <div class="particle" *ngFor="let i of particles"></div>
+  </div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-      </svg>
-      <span>Faça a Diferença</span>
-    </div>
     <h1 class="hero-title">
       Porque se tornar <span class="highlight">Simpatizante</span>?
     </h1>
     <p class="hero-subtitle">
-      Descubra o que significa ser simpatizante, os benefícios e como você pode fazer parte da transformação de Massinga.
+      Apoie a transformação de Massinga sem compromissos. <strong>Gratuito, flexível e com impacto real.</strong>
     </p>
-    <button class="hero-cta primary" (click)="scrollToForm()">
-      <span>Tornar-me Simpatizante</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
-    </button>
+    <div class="hero-ctas">
+      <button class="hero-cta primary" (click)="scrollToForm()">
+        <span>Tornar-me Simpatizante</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
   </div>
   <div class="hero-wave">
     <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -32,158 +31,203 @@
 <!-- Seção: O que significa ser simpatizante -->
 <section class="meaning-section">
   <div class="container">
-    <div class="section-header">
-      <div class="section-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-        </svg>
-        <span>Entenda</span>
+    <div class="meaning-wave-card">
+      <div class="wave-card-header">
+        <h2>O que é ser <span class="highlight-text">Simpatizante</span>?</h2>
       </div>
-      <h2>O que significa ser <span class="highlight-text">Simpatizante</span>?</h2>
-      <p class="section-description">
-        Ser simpatizante é escolher fazer parte de algo maior, é acreditar que juntos podemos transformar vidas e comunidades.
-      </p>
-    </div>
-
-    <div class="meaning-grid">
-      <div class="meaning-card">
-        <div class="meaning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        <h3>Gratuito e Flexível</h3>
-        <p>Não paga quotas. Contribui quando e como quiser, sem compromissos formais ou obrigações rígidas.</p>
-      </div>
-
-      <div class="meaning-card">
-        <div class="meaning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </div>
-        <h3>Updates Exclusivos</h3>
-        <p>Recebe newsletters mensais com histórias, impactos e atualizações sobre os projectos da associação.</p>
-      </div>
-
-      <div class="meaning-card">
-        <div class="meaning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <h3>Participação em Actividades</h3>
-        <p>Pode participar em algumas iniciativas abertas da associação, eventos e visitas a projectos.</p>
-      </div>
-
-      <div class="meaning-card">
-        <div class="meaning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="1" x2="12" y2="23"></line>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-        </div>
-        <h3>Doações Voluntárias</h3>
-        <p>Pode doar quando quiser, qualquer valor, para projectos específicos ou operação geral.</p>
-      </div>
-
-      <div class="meaning-card">
-        <div class="meaning-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-        </div>
-        <h3>Evolução para Membro</h3>
-        <p>Pode evoluir para membro quando desejar, mantendo todos os benefícios já adquiridos.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Seção: Benefícios -->
-<section class="benefits-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Benefícios de ser <span class="highlight-text">Simpatizante</span></h2>
-      <p class="section-description">
-        Ao apoiar a ANAM, fazes parte de uma comunidade que transforma vidas e constrói o futuro.
-      </p>
-    </div>
-
-    <div class="benefits-grid">
-      <div class="benefit-card" *ngFor="let benefit of benefits">
-        <div class="benefit-icon-large">{{ benefit.icon }}</div>
-        <h3>{{ benefit.title }}</h3>
-        <p>{{ benefit.desc }}</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Seção: Impacto -->
-<section class="impact-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>O <span class="highlight-text">Impacto</span> da Associação</h2>
-      <p class="section-description">
-        Números que falam por si só e histórias que inspiram.
-      </p>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let stat of impactStats">
-        <div class="stat-icon">{{ stat.icon }}</div>
-        <div class="stat-number">{{ stat.number }}</div>
-        <div class="stat-label">{{ stat.label }}</div>
-      </div>
-    </div>
-
-    <div class="stories-section">
-      <h3 class="stories-title">Depoimentos de Simpatizantes</h3>
-      <div class="stories-grid">
-        <div class="story-card" *ngFor="let story of stories">
-          <div class="story-avatar">{{ story.image }}</div>
-          <div class="story-content">
-            <div class="story-quote">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609v5.609c-2.837 0-4.655 2.869-4.655 6.646v5.745h7.655v-5.745h-7.655zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609v5.609c-2.837 0-4.655 2.869-4.655 6.646v5.745h7.655v-5.745h-7.655z"/>
-              </svg>
-              <p>"{{ story.quote }}"</p>
+      
+      <div class="wave-card-body">
+        <div class="wave-card-left">
+          <div class="wave-card-definition">
+            <p>
+              Ser <strong>Simpatizante</strong> é apoiar a transformação de Massinga de forma <strong>gratuita e flexível</strong>, 
+              sem compromissos formais ou obrigações. É uma forma de estar conectado à missão da ANAM, recebendo informações 
+              sobre os projectos e tendo a liberdade de participar e contribuir quando desejar.
+            </p>
+          </div>
+          
+          <div class="wave-card-footer">
+            <div class="footer-info-grid">
+              <div class="footer-info-item">
+                <div class="footer-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+                <div class="footer-info-text">
+                  <h4>Registo Rápido</h4>
+                  <p>Processo simples e rápido. Apenas alguns minutos para começar.</p>
+                </div>
+              </div>
+              
+              <div class="footer-info-item">
+                <div class="footer-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+                <div class="footer-info-text">
+                  <h4>Sem Compromissos</h4>
+                  <p>Pode cancelar a qualquer momento, sem custos ou penalizações.</p>
+                </div>
+              </div>
+              
+              <div class="footer-info-item">
+                <div class="footer-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </div>
+                <div class="footer-info-text">
+                  <h4>Suporte Dedicado</h4>
+                  <p>Equipa disponível para esclarecer dúvidas e ajudar quando precisar.</p>
+                </div>
+              </div>
             </div>
-            <div class="story-author">
-              <strong>{{ story.name }}</strong>
-              <span>{{ story.role }}</span>
+          </div>
+        </div>
+        
+        <div class="wave-card-right">
+          <h3 class="benefits-title">O que recebe ao tornar-se simpatizante da ANAM:</h3>
+          <div class="benefits-grid">
+            <div class="meaning-item" *ngFor="let benefit of benefits">
+              <div class="meaning-icon-large">
+                <!-- Newsletter -->
+                <svg *ngIf="benefit.iconName === 'mail'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <!-- Eventos -->
+                <svg *ngIf="benefit.iconName === 'ticket'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"></path>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                <!-- Transparência -->
+                <svg *ngIf="benefit.iconName === 'chart'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <!-- Formações -->
+                <svg *ngIf="benefit.iconName === 'graduation'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                </svg>
+                <!-- Comunidade -->
+                <svg *ngIf="benefit.iconName === 'users'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <!-- Evolua -->
+                <svg *ngIf="benefit.iconName === 'rocket'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                  <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                  <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                  <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                </svg>
+              </div>
+              <div class="meaning-text">
+                <h3>{{ benefit.title }}</h3>
+                <p>{{ benefit.desc }}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      
+      <div class="wave-decoration">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z" fill="currentColor"></path>
+        </svg>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CTA Final -->
-<section class="final-cta-section">
+<!-- Seção: Formulário de Registo -->
+<section class="registration-form-section" id="registration-form">
   <div class="container">
-    <div class="cta-content">
-      <h2>Pronto para fazer a diferença?</h2>
-      <p>
-        Junte-se aos nossos simpatizantes e ajude a transformar vidas em Massinga.
-      </p>
-      <button class="cta-button" (click)="scrollToForm()">
-        <span>Tornar-se Simpatizante</span>
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <path d="M20 8v6M23 11h-6"></path>
+          </svg>
+        </div>
+        <div class="form-header-text">
+          <h2>Torne-se <span class="highlight-text">Simpatizante</span></h2>
+          <p>Preencha o formulário abaixo e comece a fazer a diferença</p>
+        </div>
+      </div>
+
+      <!-- Mensagem de sucesso -->
+      <div class="success-message" *ngIf="formSubmitted">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
         </svg>
-      </button>
+        <div>
+          <h3>Obrigado! És agora simpatizante oficial.</h3>
+          <p>Receberás as próximas novidades por email.</p>
+        </div>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="sympathizer-form" *ngIf="!formSubmitted">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nome Completo <span class="required">*</span></label>
+            <input type="text" formControlName="nome" placeholder="O teu nome completo">
+            <span class="field-error" *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched">
+              Campo obrigatório
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label>Email <span class="required">*</span></label>
+            <input type="email" formControlName="email" placeholder="teu@email.com">
+            <span class="field-error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+              Email inválido
+            </span>
+          </div>
+          <div class="form-field">
+            <label>Telefone <span class="required">*</span></label>
+            <input type="tel" formControlName="telefone" placeholder="+258 84 XXX XXXX">
+            <span class="field-error" *ngIf="form.get('telefone')?.invalid && form.get('telefone')?.touched">
+              Campo obrigatório
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field full-width">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="consentimento">
+              <span>Aceito receber comunicações da ANAM (newsletters, eventos, atualizações) <span class="required">*</span></span>
+            </label>
+            <span class="field-error" *ngIf="form.get('consentimento')?.invalid && form.get('consentimento')?.touched">
+              É necessário aceitar receber comunicações
+            </span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="form.invalid">
+          <span>Tornar-me Simpatizante</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </form>
     </div>
   </div>
 </section>
+
 

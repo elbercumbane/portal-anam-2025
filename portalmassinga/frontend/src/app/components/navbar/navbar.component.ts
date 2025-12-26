@@ -1,14 +1,13 @@
 import { Component, EventEmitter, HostBinding, HostListener, Input, Output, ViewEncapsulation } from '@angular/core';
-import { RouterLink, Router, ActivatedRoute } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router, ActivatedRoute } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, MatToolbarModule, MatButtonModule, MatIconModule, FormsModule],
+  imports: [RouterLink, RouterLinkActive, MatToolbarModule, MatButtonModule, MatIconModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -26,8 +25,6 @@ export class NavbarComponent {
   showMembrosSubmenu = false;
   showApoioSubmenu = false;
   showSimpatizantesSubmenu = false;
-  showSearchBar = false;
-  searchQuery = '';
   isHidden = false;
   private hideTimeout: any;
 
@@ -35,29 +32,6 @@ export class NavbarComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-
-  toggleSearch(): void {
-    this.showSearchBar = !this.showSearchBar;
-    if (this.showSearchBar) {
-      setTimeout(() => {
-        const input = document.querySelector('.search-input') as HTMLInputElement;
-        if (input) input.focus();
-      }, 100);
-    }
-  }
-
-  closeSearch(): void {
-    this.showSearchBar = false;
-    this.searchQuery = '';
-  }
-
-  onSearch(): void {
-    if (this.searchQuery.trim()) {
-      console.log('Pesquisando por:', this.searchQuery);
-      // Aqui você pode implementar a lógica de pesquisa
-      // Por exemplo: this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
-    }
-  }
 
   toggleMenu(): void {
     this.menuToggle.emit();

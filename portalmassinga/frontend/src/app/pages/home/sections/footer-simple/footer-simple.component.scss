@@ -9,7 +9,8 @@
 .footer-simple {
   background: linear-gradient(135deg, #1B4332 0%, #2D5A47 50%, #40916C 100%);
   color: white;
-  padding: 40px 0 20px;
+  padding: 120px 0 80px;
+  min-height: auto;
 }
 
 /* Container agora é global - removido regra local */
@@ -17,27 +18,37 @@
 .footer-content {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: 4rem;
+  margin-bottom: 4rem;
+  min-height: auto;
   
   @media (min-width: 768px) {
     grid-template-columns: 2fr 1fr 1fr;
     align-items: start;
+    gap: 5rem;
+    min-height: 400px;
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: 2fr 1fr 1.5fr;
+    min-height: 450px;
   }
 }
 
 .footer-brand {
   h3 {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     font-weight: 800;
     color: #f4e4bc;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
   }
   
   p {
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
+    font-size: 1.15rem;
     margin: 0;
+    line-height: 1.6;
   }
 }
 
@@ -45,14 +56,20 @@
   .contact-info {
     p {
       color: rgba(255, 255, 255, 0.9);
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       
       &:last-child {
         margin-bottom: 0;
+      }
+      
+      mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
   }
@@ -80,14 +97,189 @@
         }
 }
 
+.footer-message-form {
+  width: 100%;
+  min-height: 300px;
+  
+  h4 {
+    color: #f4e4bc;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+.message-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input,
+.form-textarea {
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: #f4e4bc;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(244, 228, 188, 0.1);
+  }
+}
+
+.form-textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn {
+  background: #f4e4bc;
+  color: #1B4332;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  
+  &:hover:not(:disabled) {
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(244, 228, 188, 0.3);
+  }
+  
+  &:disabled {
+    background: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+  }
+  
+  &.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.message-success-state {
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.success-icon {
+  font-size: 48px;
+  color: #f4e4bc;
+}
+
+.success-message {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  line-height: 1.6;
+  
+  strong {
+    color: #f4e4bc;
+    font-weight: 600;
+        }
+}
+
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 1rem;
+  padding-top: 3rem;
   text-align: center;
   
   p {
     color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin: 0;
+    line-height: 1.6;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .footer-simple {
+    padding: 80px 0 60px;
+  }
+  
+  .footer-content {
+    gap: 3rem;
+    margin-bottom: 3rem;
+    min-height: auto;
+  }
+  
+  .footer-message-form {
+    min-height: auto;
+  }
+  
+  .footer-brand {
+    h3 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .footer-info {
+    .contact-info {
+      p {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+      }
+    }
+  }
+  
+  .footer-message-form {
+    h4 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .footer-bottom {
+    padding-top: 1.5rem;
+    
+    p {
+      font-size: 0.95rem;
+    }
   }
 }

@@ -1,0 +1,264 @@
+// ========================================
+// HERO SECTION - SIMPATIZANTES
+// ========================================
+
+.hero-section {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    linear-gradient(135deg, rgba(11, 47, 65, 0.5) 0%, rgba(11, 47, 65, 0.6) 100%),
+    url('/assets/FOTO 4 ANAM.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  overflow: hidden;
+  animation: heroFadeIn 1s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 80% 20%, rgba(5, 182, 212, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    animation: gradientShift 8s ease infinite;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(11, 47, 65, 0.2) 0%,
+      rgba(11, 47, 65, 0.4) 50%,
+      rgba(11, 47, 65, 0.35) 100%
+    );
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeInUp 1s ease;
+    
+    @media (min-width: 768px) {
+      padding: 3rem 2rem;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #93c5fd;
+      border: 2px solid #93c5fd;
+      padding: 0.625rem 1.75rem;
+      border-radius: 50px;
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 4px 20px rgba(147, 197, 253, 0.2);
+      animation: badgePulse 2s ease infinite;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 30px rgba(147, 197, 253, 0.3);
+      }
+      
+      svg {
+        width: 16px;
+        height: 16px;
+        stroke: #93c5fd;
+        animation: iconRotate 3s ease infinite;
+      }
+    }
+    
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+      letter-spacing: -1px;
+      line-height: 1.1;
+      color: white;
+      
+      .highlight {
+        color: #DAB04F;
+        text-shadow: 0 0 20px rgba(218, 176, 79, 0.6);
+      }
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 300;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      letter-spacing: 0.5px;
+      line-height: 1.6;
+      color: white;
+    }
+    
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 2.5rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        svg {
+          width: 20px;
+          height: 20px;
+          transition: transform 0.3s ease;
+        }
+        
+        &.primary {
+          background: linear-gradient(135deg, $green-success 0%, darken($green-success, 8%) 100%);
+          color: white;
+          box-shadow: 0 4px 25px rgba(16, 185, 129, 0.5);
+          position: relative;
+          overflow: hidden;
+          
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+          }
+          
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 35px rgba(16, 185, 129, 0.6);
+            
+            &::before {
+              left: 100%;
+            }
+            
+            svg {
+              transform: translateX(5px);
+            }
+          }
+        }
+        
+        &.secondary {
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+          }
+        }
+      }
+    }
+  }
+  
+  .hero-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+    
+    svg {
+      display: block;
+      width: 100%;
+      height: 100px;
+      
+      path {
+        fill: #f8f9fa;
+      }
+    }
+  }
+}
+
+// Container padrão
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 2vw, 32px);
+}
+
+// Section Header padrão
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: $cyan-primary;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1.25rem;
+    background: rgba(5, 182, 212, 0.1);
+    border-radius: 50px;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+      stroke: $cyan-primary;
+    }
+  }
+  
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: $ink-900;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+    
+    .highlight-text {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+  
+  .section-description {
+    font-size: 1.125rem;
+    color: $ink-600;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+}
+

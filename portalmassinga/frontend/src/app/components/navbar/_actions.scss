@@ -1,8 +1,8 @@
-// Ações do Navbar (Login, etc)
+// Ações do Navbar (Login, etc) - Design Moderno
 .nav-actions {
   display: none;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   
   .dashboard-link {
     color: #fff !important;
@@ -11,11 +11,12 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.9rem;
     font-weight: 500;
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     
     .navbar.scrolled & {
       color: #232627 !important;
@@ -28,55 +29,59 @@
     }
     
     &:hover {
-      background: rgba(255, 255, 255, 0.15) !important;
+      background: rgba(255, 255, 255, 0.18) !important;
+      transform: translateY(-1px);
       
       .navbar.scrolled & {
-        background: rgba(35, 38, 39, 0.08) !important;
+        background: rgba(35, 38, 39, 0.1) !important;
       }
     }
   }
   
-  .login-icon {
+  .login-text {
     color: #fff !important;
-    background: transparent !important;
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(255, 255, 255, 0.15) !important;
+    text-decoration: none !important;
+    padding: 0.7rem 1.6rem;
+    border-radius: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.925rem;
+    font-weight: 600;
+    font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(15px) scale(0.95);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    letter-spacing: 0.025em;
     
     .navbar.scrolled & {
-      color: #232627 !important;
-      border-color: rgba(35, 38, 39, 0.2) !important;
-    }
-    
-    mat-icon {
-      color: #fff !important;
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      .navbar.scrolled & {
-        color: #232627 !important;
-      }
+      color: #1a1a1a !important;
+      background: rgba(26, 26, 26, 0.1) !important;
+      border-color: rgba(26, 26, 26, 0.2) !important;
     }
     
     &:hover {
-      background: rgba(255, 255, 255, 0.15) !important;
-      border-color: rgba(255, 255, 255, 0.6) !important;
-      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.3) !important;
+      transform: translateY(-2px) scale(1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.5) !important;
       
       .navbar.scrolled & {
-        background: rgba(35, 38, 39, 0.08) !important;
-        border-color: rgba(35, 38, 39, 0.3) !important;
+        background: rgba(76, 175, 80, 0.15) !important;
+        border-color: rgba(76, 175, 80, 0.4) !important;
+        color: #4CAF50 !important;
+        box-shadow: 0 6px 16px rgba(76, 175, 80, 0.25);
       }
     }
   }
+}
+
+// Mostrar login apenas no hover do navbar
+.navbar:hover .nav-actions .login-text {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0) scale(1);
 }
 

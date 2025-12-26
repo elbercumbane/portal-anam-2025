@@ -1,44 +1,75 @@
-// Estilos da Marca/Logo - Nova Paleta
+// Estilos da Marca/Logo - Design Moderno
 .brand {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   color: #fff !important;
   text-decoration: none !important;
-  font-family: var(--font-display);
+  font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 700;
-  transition: all var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 10;
   
   .navbar.scrolled & {
     color: $cinzento-nav !important;
   }
   
   &:hover { 
-    transform: none; 
+    transform: translateY(-1px);
+    .brand-title {
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
   }
   
   .brand-title { 
-    font-size: 1.8rem; 
-    line-height: 1.2; 
+    font-size: 2.25rem; 
+    line-height: 1.1; 
     font-weight: 800;
-    letter-spacing: 0.5px;
-    color: #ffffff !important; // Branco quando navbar transparente
+    letter-spacing: -0.8px;
+    color: #ffffff !important;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     
     .navbar.scrolled & {
-      color: #2A3B4C !important; // Cor específica quando scrolled
+      color: #1a1a1a !important;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4CAF50, #DAB04F, #05B6D4);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+    
+    &:hover::after {
+      width: 100%;
     }
   }
 
   .brand-subtitle { 
-    font-size: 0.65rem; 
+    font-size: 0.7rem; 
     font-weight: 500; 
     line-height: 1.3;
-    color: rgba(255, 255, 255, 0.9);
-    opacity: 0.95;
-    text-transform: capitalize;
+    color: rgba(255, 255, 255, 0.85);
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
     
     .navbar.scrolled & {
-      color: #232627 !important; // Cor específica do texto
+      color: #666666 !important;
     }
     
     div {

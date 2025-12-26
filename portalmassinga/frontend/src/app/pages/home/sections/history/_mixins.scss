@@ -1,0 +1,82 @@
+// ============ MIXINS ============
+
+// Título principal da seção
+@mixin section-title {
+  color: $gray-900;
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px 0;
+  font-family: $font-serif;
+}
+
+// Título secundário
+@mixin subtitle-style {
+  color: $gray-900;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2vw, 1.875rem);
+  letter-spacing: -0.01em;
+  font-family: $font-sans;
+}
+
+// Texto do corpo
+@mixin body-text {
+  color: $gray-600;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+  font-weight: 400;
+  font-family: $font-sans;
+}
+
+// Card com hover
+@mixin card-hover {
+  transition: $transition-default;
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+// Container de ícone
+@mixin icon-container($size: $icon-size) {
+  width: $size;
+  height: $size;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Estilo de SVG do ícone
+@mixin icon-svg($size: $icon-svg-size) {
+  width: $size;
+  height: $size;
+  stroke: #60a5fa;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+// Responsivo mobile
+@mixin mobile {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+// Responsivo tablet
+@mixin tablet {
+  @media (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+// Flexbox column
+@mixin flex-column($gap: $spacing-md) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+

@@ -1,0 +1,101 @@
+// ============ ESTILOS LEGADOS ============
+
+@import 'variables';
+
+.historial { 
+  padding: 56px 0; 
+  background: $white;
+  text-align: center; 
+}
+
+.historial h2 { 
+  color: $green-primary;
+  font-weight: 800; 
+  font-size: clamp(1.6rem, 1.5vw + 1rem, 2.2rem); 
+  margin-bottom: 1rem;
+}
+
+.historial .lead { 
+  color: $gray-900;
+  max-width: 80ch; 
+  margin: 10px auto 28px; 
+  line-height: 1.6;
+}
+
+.balao p, 
+.balao li { 
+  color: var(--brown-light); 
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-width: 220px;
+}
+
+.bullets li { 
+  position: relative; 
+  padding-left: 20px; 
+  margin: 0.4rem 0; 
+  color: $gray-500;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.bullets li::before { 
+  content: "•"; 
+  position: absolute; 
+  left: 0; 
+  top: 0; 
+  color: #007bff;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.pill { 
+  background: transparent; 
+  border-radius: 16px; 
+  padding: 18px 20px; 
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 15px;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  max-width: 220px;
+}
+
+.pill h4 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+}
+
+.pill ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pill li {
+  position: relative;
+  padding-left: 18px;
+  margin: 0.35rem 0;
+  color: $gray-500;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.pill li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+

@@ -1,0 +1,64 @@
+// ========================================
+// VARIÁVEIS - APOIO
+// ========================================
+
+// Cores principais
+$green-primary: #4CAF50;
+$blue-primary: rgba(11, 47, 65, 0.9);
+$gold-accent: #FFD700;
+
+// Cores de texto
+$ink-900: #0F172A;
+$ink-700: #1E293B;
+$ink-600: #334155;
+$ink-500: #475569;
+$ink-400: #64748B;
+$white: #FFFFFF;
+
+// Cores de estado
+$error-red: #EF4444;
+$success-green: #10B981;
+$warning-orange: #F59E0B;
+
+// Breakpoints
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1200px;
+
+// Transições
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Bordas
+$border-radius-small: 8px;
+$border-radius-medium: 12px;
+$border-radius-large: 16px;
+$border-radius-xl: 20px;
+$border-radius-xxl: 24px;
+
+// Sombras
+$shadow-small: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.08);
+$shadow-large: 0 8px 30px rgba(0, 0, 0, 0.15);
+$shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.2);
+
+// Mixins
+@mixin glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin smooth-transition($duration: 0.4s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@mixin card-hover {
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-large;
+  }
+}
+

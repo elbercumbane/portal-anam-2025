@@ -3,11 +3,9 @@
 // ========================================
 
 // Variáveis
+$primary-green: #2C674C;
+$green-medium: #2C674C;
 $green-dark: #1B4332;
-$green-medium: #2D6A4F;
-$gold-primary: #D4AF37;
-$gold-dark: #B8860B;
-$brown-warm: #8A7D65;
 $blue-accent: #3B82F6;
 $purple-accent: #8B5CF6;
 $orange-accent: #F59E0B;
@@ -56,7 +54,7 @@ $pink-accent: #EC4899;
     margin: 0 0 15px;
     
     .gold {
-      color: $gold-primary;
+      color: $primary-green;
     }
   }
   
@@ -119,7 +117,7 @@ $pink-accent: #EC4899;
     right: -50px;
     width: 150px;
     height: 150px;
-    background: radial-gradient(circle, rgba($gold-primary, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba($primary-green, 0.15) 0%, transparent 70%);
     border-radius: 50%;
     transition: all 0.5s ease;
     pointer-events: none;
@@ -156,9 +154,9 @@ $pink-accent: #EC4899;
   .area-badge {
     padding: 8px 18px;
     background: white;
-    border: 1px solid rgba($brown-warm, 0.2);
+    border: 1px solid rgba($primary-green, 0.2);
     border-radius: 50px;
-    color: $brown-warm;
+    color: $primary-green;
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -173,7 +171,7 @@ $pink-accent: #EC4899;
       width: 24px;
       height: 24px;
       margin-bottom: 5px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
     }
     
     .valor {
@@ -181,7 +179,7 @@ $pink-accent: #EC4899;
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 1.6rem;
       font-weight: 800;
-      color: $brown-warm;
+      color: $primary-green;
     }
     
     .label {
@@ -229,14 +227,14 @@ $pink-accent: #EC4899;
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background: rgba($brown-warm, 0.04);
+  background: rgba($primary-green, 0.04);
   border-radius: 12px;
-  border: 1px solid rgba($brown-warm, 0.08);
+  border: 1px solid rgba($primary-green, 0.08);
   transition: all 0.3s ease;
   
   &:hover {
-    background: rgba($brown-warm, 0.08);
-    border-color: rgba($brown-warm, 0.15);
+    background: rgba($primary-green, 0.08);
+    border-color: rgba($primary-green, 0.15);
   }
   
   &.deadline {
@@ -259,7 +257,7 @@ $pink-accent: #EC4899;
   .info-icon {
     width: 36px;
     height: 36px;
-    background: rgba($brown-warm, 0.1);
+    background: rgba($primary-green, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -269,7 +267,7 @@ $pink-accent: #EC4899;
     svg {
       width: 18px;
       height: 18px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
     }
   }
   
@@ -314,7 +312,7 @@ $pink-accent: #EC4899;
     svg {
       width: 18px;
       height: 18px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
     }
   }
   
@@ -336,7 +334,7 @@ $pink-accent: #EC4899;
     padding: 10px 14px;
     background: #fafafa;
     border-radius: 10px;
-    border-left: 3px solid rgba($brown-warm, 0.4);
+    border-left: 3px solid rgba($primary-green, 0.4);
     transition: all 0.2s ease;
     
     &:hover {
@@ -347,7 +345,7 @@ $pink-accent: #EC4899;
     svg {
       width: 16px;
       height: 16px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
       flex-shrink: 0;
     }
   }
@@ -371,7 +369,7 @@ $pink-accent: #EC4899;
     svg {
       width: 18px;
       height: 18px;
-      stroke: $gold-primary;
+      stroke: $primary-green;
     }
   }
   
@@ -383,18 +381,18 @@ $pink-accent: #EC4899;
   
   .beneficio-tag {
     padding: 8px 16px;
-    background: linear-gradient(135deg, rgba($gold-primary, 0.1) 0%, rgba($gold-dark, 0.15) 100%);
-    border: 1px solid rgba($gold-primary, 0.25);
+    background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($green-dark, 0.15) 100%);
+    border: 1px solid rgba($primary-green, 0.25);
     border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: $gold-dark;
+    color: $green-dark;
     transition: all 0.3s ease;
     
     &:hover {
-      background: linear-gradient(135deg, rgba($gold-primary, 0.2) 0%, rgba($gold-dark, 0.25) 100%);
+      background: linear-gradient(135deg, rgba($primary-green, 0.2) 0%, rgba($green-dark, 0.25) 100%);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba($gold-primary, 0.2);
+      box-shadow: 0 4px 12px rgba($primary-green, 0.2);
     }
   }
 }
@@ -408,9 +406,9 @@ $pink-accent: #EC4899;
   gap: 10px;
   padding: 14px 24px;
   background: transparent;
-  border: 1px solid rgba($brown-warm, 0.3);
+  border: 1px solid rgba($primary-green, 0.3);
   border-radius: 10px;
-  color: $brown-warm;
+  color: $primary-green;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -421,13 +419,13 @@ $pink-accent: #EC4899;
   svg {
     width: 18px;
     height: 18px;
-    stroke: $brown-warm;
+    stroke: $primary-green;
     transition: transform 0.3s ease;
   }
   
   &:hover {
-    background: rgba($brown-warm, 0.08);
-    border-color: rgba($brown-warm, 0.5);
+    background: rgba($primary-green, 0.08);
+    border-color: rgba($primary-green, 0.5);
     
     svg {
       transform: translateX(5px);

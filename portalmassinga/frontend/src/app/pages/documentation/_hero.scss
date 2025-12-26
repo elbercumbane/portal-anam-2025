@@ -1,0 +1,239 @@
+// ========================================
+// HERO SECTION
+// ========================================
+
+@import 'variables';
+
+.docs-hero {
+  position: relative;
+  min-height: 85vh;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1;
+  padding: 120px 24px 80px;
+  
+  background: 
+    linear-gradient(135deg, rgba(27, 67, 50, 0.4) 0%, rgba(64, 145, 108, 0.35) 50%, rgba(138, 125, 101, 0.3) 100%),
+    url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    
+    .hero-gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.3;
+      animation: heroOrbFloat 20s ease-in-out infinite;
+      
+      &.orb-1 {
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(212, 168, 83, 0.4) 0%, transparent 70%);
+        top: -300px;
+        right: -200px;
+        animation-delay: 0s;
+      }
+      
+      &.orb-2 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(64, 145, 108, 0.35) 0%, transparent 70%);
+        bottom: -150px;
+        left: -150px;
+        animation-delay: -7s;
+      }
+      
+      &.orb-3 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(212, 168, 83, 0.25) 0%, transparent 70%);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: -14s;
+      }
+    }
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.3) 100%);
+    z-index: 1;
+  }
+  
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 40px 40px;
+    opacity: 0.4;
+    z-index: 2;
+    pointer-events: none;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 1000px;
+    width: 100%;
+    animation: heroFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 6.5rem);
+      font-weight: 900;
+      margin: 0 0 32px;
+      line-height: 1.1;
+      text-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+      letter-spacing: -2px;
+      animation: fadeInUp 1s ease 0.2s both;
+      
+      .title-line {
+        display: inline;
+        animation: titleSlideIn 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+        
+        &:first-child {
+          animation-delay: 0.3s;
+          margin-right: 0.3em;
+        }
+        
+        &:last-child {
+          animation-delay: 0.5s;
+        }
+      }
+      
+      .highlight {
+        font-style: italic;
+        color: $gold;
+        background: linear-gradient(135deg, $gold 0%, #F4D03F 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: none;
+        position: relative;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 8px;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, transparent, $gold, transparent);
+          opacity: 0.6;
+          animation: underlineExpand 1s ease 0.8s both;
+        }
+      }
+    }
+    
+    .hero-lead {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      line-height: 1.8;
+      margin: 0 0 48px;
+      opacity: 0.95;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 1s ease 0.6s both;
+      
+      .lead-accent {
+        color: rgba($gold, 0.95);
+        font-weight: 400;
+      }
+    }
+    
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      padding: 32px 48px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 1s ease 0.8s both;
+      max-width: 600px;
+      margin: 0 auto;
+      
+      .stat-item {
+        text-align: center;
+        flex: 1;
+        
+        .stat-number {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: 700;
+          color: $gold;
+          line-height: 1;
+          margin-bottom: 8px;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: rgba(255, 255, 255, 0.85);
+          opacity: 0.9;
+        }
+      }
+      
+      .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      }
+    }
+  }
+  
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 3;
+    animation: fadeIn 1s ease 1s both;
+    
+    .scroll-line {
+      width: 2px;
+      height: 40px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    
+    mat-icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      animation: bounceDown 2s ease-in-out infinite;
+    }
+  }
+}
+

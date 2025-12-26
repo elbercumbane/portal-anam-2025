@@ -1,10 +1,14 @@
 @import 'variables';
 @import 'animations';
 
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$cream: #FAF8F5;
+
 // Timeline / Progresso
 .progresso-section {
-  padding: 100px 0;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+  padding: 80px 0;
+  background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);
   position: relative;
   
   &::before {
@@ -14,65 +18,79 @@
     left: 0;
     right: 0;
     height: 300px;
-    background: 
-      radial-gradient(circle at 50% 100%, rgba(138, 125, 101, 0.05) 0%, transparent 70%);
+      background: 
+      radial-gradient(circle at 50% 100%, rgba($green-medium, 0.08) 0%, transparent 70%);
     pointer-events: none;
   }
 }
 
 .timeline {
-  max-width: 900px;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
   position: relative;
+  margin-top: 60px;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
   
   &::before {
     content: '';
     position: absolute;
-    left: 40px;
     top: 40px;
-    bottom: 40px;
-    width: 3px;
-    background: linear-gradient(180deg, #8A7D65 0%, #D4AF37 100%);
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary-green 0%, $green-medium 100%);
+    z-index: 0;
     
-    @media (max-width: 768px) {
-      left: 30px;
+    @media (max-width: 1024px) {
+      display: none;
     }
   }
 }
 
 .timeline-item {
   display: flex;
-  gap: 32px;
-  margin-bottom: 48px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   position: relative;
   opacity: 0;
-  animation: fadeInLeft 0.8s ease forwards;
+  animation: fadeInUp 0.8s ease forwards;
   
   @for $i from 1 through 4 {
     &[data-step="#{$i}"] {
-      animation-delay: #{($i - 1) * 0.2}s;
+      animation-delay: #{($i - 1) * 0.15}s;
     }
   }
   
   .timeline-marker {
-    flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #8A7D65 0%, #D4AF37 100%);
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, $primary-green 0%, $green-medium 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 
-      0 8px 20px rgba(138, 125, 101, 0.3),
-      0 0 0 8px rgba(138, 125, 101, 0.1);
+      box-shadow: 
+      0 8px 20px rgba($primary-green, 0.3),
+      0 0 0 8px rgba($primary-green, 0.1);
     position: relative;
     z-index: 2;
     transition: all 0.3s ease;
+    margin-bottom: 24px;
     
     .step-number {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: white;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -82,39 +100,42 @@
   .timeline-content {
     flex: 1;
     background: white;
-    padding: 28px 32px;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(138, 125, 101, 0.1);
+    padding: 24px 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      border: 2px solid rgba($primary-green, 0.1);
     transition: all 0.3s ease;
+    width: 100%;
     
     h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #1a1a1a;
-      margin: 0 0 12px;
+      margin: 0 0 10px;
+      line-height: 1.3;
     }
     
     p {
-      font-size: 1rem;
+      font-size: 0.9rem;
       color: #666;
       margin: 0;
-      line-height: 1.7;
+      line-height: 1.6;
     }
   }
   
   &:hover {
     .timeline-marker {
-      transform: scale(1.1) rotate(5deg);
+      transform: scale(1.15) translateY(-5px);
       box-shadow: 
         0 12px 30px rgba(138, 125, 101, 0.4),
         0 0 0 12px rgba(138, 125, 101, 0.15);
     }
     
     .timeline-content {
-      transform: translateX(8px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      border-color: rgba($primary-green, 0.3);
     }
   }
 }

@@ -154,80 +154,23 @@ export class GalleryComponent implements OnInit, OnDestroy {
   // Filtros
   categoriaAtiva = 'Todos';
   categorias: string[] = [];
-  galeriaFiltrada: any[] = [];
 
-  // Paginação - 5 páginas, cada uma mostra um evento diferente
-  paginationDots: number[] = [0, 1, 2, 3, 4];
-  currentPage = 0;
-  eventosPorPagina: any[] = [];
-
-  // Slider automático da galeria principal
+  // Slider automático do modal
   private slideInterval: any;
   private readonly SLIDE_DURATION = 8000; // 8 segundos
 
   ngOnInit() {
     this.initScrollAnimations();
     this.extrairCategorias();
-    this.prepararEventosPorPagina();
-    this.iniciarSlideAutomaticoGaleria();
   }
 
   ngOnDestroy() {
     this.pararSlideAutomatico();
-    this.pararSlideAutomaticoGaleria();
   }
 
-  prepararEventosPorPagina(): void {
-    // Seleciona os primeiros 5 eventos, um por página
-    this.eventosPorPagina = this.galeria.slice(0, 5);
-    this.atualizarGaleriaFiltrada();
-  }
-
-  atualizarGaleriaFiltrada(): void {
-    // Fade out suave antes de atualizar
-    const gridElement = document.querySelector('.galeria-grid');
-    const headerElement = document.querySelector('.galeria-header');
-    
-    if (gridElement && headerElement) {
-      (gridElement as HTMLElement).style.opacity = '0';
-      (headerElement as HTMLElement).style.opacity = '0';
-      
-      setTimeout(() => {
-        // Mostra as fotos do evento da página atual
-        const eventoAtual = this.eventosPorPagina[this.currentPage];
-        if (eventoAtual) {
-          // Limita a 9 fotos para o grid (ou menos se não houver 9)
-          const fotosParaMostrar = eventoAtual.fotos.slice(0, 9);
-          // Cria itens individuais para cada foto do evento
-          this.galeriaFiltrada = fotosParaMostrar.map((foto: any, index: number) => ({
-            ...eventoAtual,
-            fotoAtual: foto,
-            fotoIndex: index
-          }));
-        }
-        
-        // Fade in suave após atualizar
-        setTimeout(() => {
-          (gridElement as HTMLElement).style.opacity = '1';
-          (headerElement as HTMLElement).style.opacity = '1';
-        }, 50);
-      }, 500); // Meio segundo para fade out
-    } else {
-      // Fallback se os elementos não existirem ainda
-      const eventoAtual = this.eventosPorPagina[this.currentPage];
-      if (eventoAtual) {
-        const fotosParaMostrar = eventoAtual.fotos.slice(0, 9);
-        this.galeriaFiltrada = fotosParaMostrar.map((foto: any, index: number) => ({
-          ...eventoAtual,
-          fotoAtual: foto,
-          fotoIndex: index
-        }));
-      }
-    }
-  }
-
-  getEventoAtual(): any {
-    return this.eventosPorPagina[this.currentPage];
+  // Retorna apenas os primeiros 4 eventos para preview
+  getEventosPreview(): any[] {
+    return this.galeria.slice(0, 4);
   }
 
   extrairCategorias(): void {
@@ -239,23 +182,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
     return evento ? evento.id : index;
   }
 
-  trackByFotoIndex(index: number, item: any): any {
-    return item ? `${item.id}-${item.fotoIndex}` : index;
-  }
-
-  getItemClass(index: number, item: any): string {
-    // Cada foto tem uma posição fixa no grid baseada no seu índice
-    const position = (index % 9) + 1;
-    return `item-${position}`;
-  }
-
   filtrarCategoria(categoria: string): void {
     this.categoriaAtiva = categoria;
-    if (categoria === 'Todos') {
-      this.galeriaFiltrada = [...this.galeria];
-    } else {
-      this.galeriaFiltrada = this.galeria.filter(e => e.categoria === categoria);
-    }
+    // Implementar filtro se necessário
   }
 
   getCategoriaIcon(categoria: string): string {
@@ -271,42 +200,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
   getCategoriCount(categoria: string): number {
     return this.galeria.filter(e => e.categoria === categoria).length;
-  }
-
-  goToPage(page: number): void {
-    this.currentPage = page;
-    this.atualizarGaleriaFiltrada();
-    this.reiniciarSlideAutomaticoGaleria();
-  }
-
-  proximaPagina(): void {
-    this.currentPage = (this.currentPage + 1) % this.paginationDots.length;
-    this.atualizarGaleriaFiltrada();
-  }
-
-  // Slide automático da galeria principal
-  private iniciarSlideAutomaticoGaleria(): void {
-    this.pararSlideAutomaticoGaleria();
-    this.slideInterval = setInterval(() => {
-      this.proximaPagina();
-    }, this.SLIDE_DURATION);
-  }
-
-  private pararSlideAutomaticoGaleria(): void {
-    if (this.slideInterval) {
-      clearInterval(this.slideInterval);
-      this.slideInterval = null;
-    }
-  }
-
-  private reiniciarSlideAutomaticoGaleria(): void {
-    this.pararSlideAutomaticoGaleria();
-    this.iniciarSlideAutomaticoGaleria();
-  }
-
-  // Retorna uma classe de layout diferente para cada página
-  getLayoutClass(): string {
-    return `layout-${this.currentPage + 1}`;
   }
 
   private initScrollAnimations() {
@@ -333,7 +226,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
             ease: "power3.out"
           });
           
-          // Animar os cards em cascata
+          // Animar os cards de eventos em cascata
           const cards = this.galeriaSection.nativeElement.querySelectorAll('.evento-card');
           if (cards.length > 0) {
             gsap.set(cards, { opacity: 0, y: 40 });
@@ -341,7 +234,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
               opacity: 1,
               y: 0,
               duration: 0.8,
-              stagger: 0.1,
+              stagger: 0.15,
               ease: "power2.out",
               delay: 0.3
             });
@@ -350,7 +243,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.1 });
     
     observer.observe(this.galeriaSection.nativeElement);
   }

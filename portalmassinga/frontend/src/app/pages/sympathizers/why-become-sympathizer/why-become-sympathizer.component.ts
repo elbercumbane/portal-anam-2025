@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-why-become-sympathizer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './why-become-sympathizer.component.html',
   styleUrl: './why-become-sympathizer.component.scss'
 })
-export class WhyBecomeSympathizerComponent {
+export class WhyBecomeSympathizerComponent implements OnInit {
+  // Array para partículas do hero
+  particles = Array.from({ length: 8 }, (_, i) => i + 1);
+  
+  form!: FormGroup;
+  formSubmitted = false;
+
   impactStats = [
     { number: '+1.200', label: 'Jovens Beneficiados em 2024', icon: '👥' },
     { number: '50K+', label: 'MZN Arrecadados', icon: '💰' },
@@ -21,60 +28,83 @@ export class WhyBecomeSympathizerComponent {
     {
       name: 'Maria João',
       role: 'Simpatizante desde 2022',
-      quote: 'Juntei-me como simpatizante porque acredito na transformação de Massinga. Ver os projectos transformando vidas é a maior recompensa. Não pago quotas, mas contribuo quando posso e participo nos eventos.',
+      quote: 'Acredito na transformação de Massinga. Ver os projectos transformando vidas é a maior recompensa. Gratuito e flexível.',
       image: '👩'
     },
     {
       name: 'Carlos Mendes',
       role: 'Empresário e Simpatizante',
-      quote: 'Como simpatizante, encontrei uma forma concreta de retribuir à terra que me formou. Recebo updates exclusivos e posso participar em actividades abertas. É gratuito e flexível.',
+      quote: 'Encontrei uma forma concreta de retribuir à terra que me formou. Recebo updates e participo em actividades. Sem compromissos.',
       image: '👨'
     },
     {
       name: 'Ana Silva',
       role: 'Simpatizante desde 2021',
-      quote: 'Não sou natural de Massinga, mas me apaixonei pela causa. Ser simpatizante me conecta com uma comunidade incrível. Posso evoluir para membro quando quiser.',
+      quote: 'Não sou natural de Massinga, mas me apaixonei pela causa. Ser simpatizante me conecta com uma comunidade incrível.',
       image: '👩‍🦰'
     }
   ];
 
   benefits = [
     { 
-      icon: '📧', 
+      iconName: 'mail', 
       title: 'Newsletter Mensal', 
-      desc: 'Receba updates exclusivos com histórias e impacto dos projectos' 
+      desc: 'Updates exclusivos sobre projectos e impacto' 
     },
     { 
-      icon: '🎫', 
-      title: 'Acesso Antecipado', 
-      desc: 'Acesso antecipado a eventos e campanhas da associação' 
+      iconName: 'ticket', 
+      title: 'Acesso a Eventos', 
+      desc: 'Participação em eventos e actividades abertas' 
     },
     { 
-      icon: 'visibility', 
-      title: 'Participação em Actividades', 
-      desc: 'Participe em actividades abertas da associação' 
+      iconName: 'chart', 
+      title: 'Transparência Total', 
+      desc: 'Acesso a relatórios públicos e resultados' 
     },
     { 
-      icon: '📊', 
-      title: 'Relatórios Públicos', 
-      desc: 'Acesso a relatórios públicos e transparência da associação' 
+      iconName: 'graduation', 
+      title: 'Formações', 
+      desc: 'Convites para webinars e formações exclusivas' 
     },
     { 
-      icon: '🎓', 
-      title: 'Webinars e Formações', 
-      desc: 'Convite para Webinars, cursos e formações exclusivas' 
+      iconName: 'users', 
+      title: 'Comunidade', 
+      desc: 'Faça parte de uma rede de apoiadores' 
     },
     { 
-      icon: '🚀', 
-      title: 'Evolução para Membro', 
-      desc: 'Possibilidade de se tornar Membro ou Voluntário quando quiser' 
+      iconName: 'rocket', 
+      title: 'Evolua quando Quiser', 
+      desc: 'Torne-se membro quando desejar' 
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      nome: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      telefone: ['', [Validators.required]],
+      consentimento: [false, [Validators.requiredTrue]]
+    });
+  }
 
   scrollToForm(): void {
-    this.router.navigate(['/simpatizantes/torne-se-simpatizante']);
+    const formElement = document.getElementById('registration-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      // Aqui você pode adicionar a lógica para enviar os dados
+      console.log('Form submitted:', this.form.value);
+      this.formSubmitted = true;
+      this.form.reset();
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 }
 

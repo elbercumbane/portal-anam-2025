@@ -1,0 +1,72 @@
+// ============ SEÇÃO DE VALORES ============
+
+@import 'variables';
+@import 'mixins';
+
+.values-column {
+  @include flex-column;
+}
+
+.values-section-title {
+  @include subtitle-style;
+  margin: 0 0 $spacing-md 0;
+}
+
+.values-list {
+  @include flex-column($spacing-md);
+  
+  @include mobile {
+    gap: 28px;
+  }
+}
+
+.value-item {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: flex-start;
+  padding: 24px;
+  background: $white;
+  border-radius: 16px;
+  box-shadow: $shadow-sm;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  @include card-hover;
+  
+  @include mobile {
+    padding: $spacing-sm;
+    gap: $spacing-xs;
+    border-radius: 14px;
+  }
+}
+
+.value-icon {
+  @include icon-container($icon-size);
+  background: transparent;
+  border-radius: 0;
+  
+  svg {
+    @include icon-svg($icon-svg-size);
+  }
+}
+
+.value-content {
+  flex: 1;
+  
+  h4 {
+    color: $gray-900;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    font-family: $font-sans;
+  }
+  
+  p {
+    @include body-text;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+}
+

@@ -6,39 +6,41 @@
       <h1 class="galeria-title">
         <span class="title-part-1">Galeria</span>
       </h1>
-      
-      <div class="evento-info" *ngIf="getEventoAtual()">
-        <h2 class="evento-titulo">{{ getEventoAtual()?.titulo || '' }}</h2>
-        <div class="evento-detalhes">
-          <p class="evento-descricao">{{ getEventoAtual()?.descricao || '' }}</p>
-        </div>
-        <span class="evento-data">{{ getEventoAtual()?.data || '' }}</span>
-      </div>
-      
-      <!-- Indicadores de Paginação -->
-      <div class="pagination-dots">
-        <span 
-          *ngFor="let dot of paginationDots; let i = index"
-          class="dot"
-          [class.active]="i === currentPage"
-          (click)="goToPage(i)">
-        </span>
-      </div>
     </div>
 
-    <!-- Grid Irregular de Imagens -->
-    <div class="galeria-grid" [ngClass]="getLayoutClass()">
-      <div 
-        class="galeria-item" 
-        *ngFor="let item of galeriaFiltrada; let i = index; trackBy: trackByFotoIndex"
-        [ngClass]="getItemClass(i, item)"
-        (click)="abrirEvento(getEventoAtual())"
+    <!-- Lista de Eventos - 4 eventos com foto e título -->
+    <div class="eventos-container">
+      <article 
+        class="evento-card" 
+        *ngFor="let evento of getEventosPreview(); let i = index; trackBy: trackByEventoId"
+        (click)="abrirEvento(evento)"
         [style.animation-delay.ms]="i * 100">
+        
+        <!-- Foto do Evento -->
+        <div class="evento-foto-container">
           <img 
-            [src]="item.fotoAtual.src" 
-            [alt]="item.fotoAtual.alt"
-          class="galeria-image">
-      </div>
+            [src]="evento.fotos[0]?.src" 
+            [alt]="evento.titulo"
+            class="evento-foto"
+            loading="lazy">
+          <div class="evento-overlay">
+            <div class="evento-badge">
+              <span class="evento-categoria">{{ evento.categoria }}</span>
+            </div>
+            <div class="evento-conteudo">
+              <h2 class="evento-titulo">{{ evento.titulo }}</h2>
+              <span class="evento-data">{{ evento.data }}</span>
+            </div>
+            <div class="evento-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+              <span>{{ evento.fotos.length }} fotos</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -47,36 +49,14 @@
 <div class="modal-overlay" *ngIf="modalAberto" (click)="fecharModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ eventoSelecionado?.titulo }}</h2>
+      <div class="modal-header-content">
+        <h2>{{ eventoSelecionado?.titulo }}</h2>
+        <span class="modal-data">{{ eventoSelecionado?.data }}</span>
+      </div>
       <button class="close-btn" (click)="fecharModal()">×</button>
     </div>
     
     <div class="modal-body">
-      <div class="evento-details">
-        <div class="evento-info">
-          <div class="info-item">
-            <span class="label">Data:</span>
-            <span class="value">{{ eventoSelecionado?.data }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Local:</span>
-            <span class="value">{{ eventoSelecionado?.local }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Categoria:</span>
-            <span class="value">{{ eventoSelecionado?.categoria }}</span>
-          </div>
-          <div class="info-item">
-            <span class="label">Participantes:</span>
-            <span class="value">{{ eventoSelecionado?.participantes }} pessoas</span>
-          </div>
-        </div>
-        
-        <div class="evento-descricao">
-          <p>{{ eventoSelecionado?.descricao }}</p>
-        </div>
-      </div>
-      
       <div class="fotos-container">
         <div class="foto-principal">
           <img [src]="eventoSelecionado?.fotos[fotoAtual]?.src" 

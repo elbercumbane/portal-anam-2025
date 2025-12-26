@@ -1,70 +1,119 @@
-@import 'variables';
-@import 'animations';
+// ========================================
+// CTA SECTION
+// ========================================
 
-// CTA Final - Verde
-.cta-section {
-  padding: 100px 0;
-  background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-  }
+@import 'variables';
+
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$white: #FFFFFF;
+
+// Mixins
+@mixin smooth-transition($duration: 0.4s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.cta-content {
-  text-align: center;
-  color: white;
+.cta-section {
   position: relative;
   z-index: 1;
-  animation: fadeIn 0.8s ease;
+  padding: 60px 24px 100px;
   
-  h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800;
-    margin: 0 0 16px;
+  .cta-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, $primary-green 0%, $green-medium 100%);
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba($primary-green, 0.3);
   }
   
-  p {
-    font-size: 1.125rem;
-    margin: 0 0 32px;
-    opacity: 0.9;
-  }
-  
-  .cta-btn {
-    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
-    color: #1B4332;
-    padding: 18px 40px;
-    border: none;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+  .cta-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
     
-    .btn-icon {
-      width: 20px;
-      height: 20px;
-      transition: transform 0.3s ease;
+    .cta-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
     }
     
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: $white;
+      margin: 0 0 12px;
+    }
+    
+    p {
+      font-size: 1rem;
+      color: rgba($white, 0.85);
+      margin: 0 0 32px;
+    }
+    
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: $white;
+      color: $primary-green;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      @include smooth-transition;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       
-      .btn-icon {
-        transform: translateX(4px);
+      &:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        
+        svg {
+          transform: translateX(4px);
+        }
+      }
+      
+      svg {
+        @include smooth-transition;
+      }
+    }
+  }
+  
+  .cta-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    
+    .deco-ring {
+      position: absolute;
+      border: 2px solid rgba($white, 0.1);
+      border-radius: 50%;
+      
+      &.ring-1 {
+        width: 300px;
+        height: 300px;
+        top: -150px;
+        right: -100px;
+      }
+      
+      &.ring-2 {
+        width: 200px;
+        height: 200px;
+        bottom: -80px;
+        left: -50px;
+      }
+      
+      &.ring-3 {
+        width: 150px;
+        height: 150px;
+        top: 50%;
+        left: 20%;
+        transform: translateY(-50%);
+        border-style: dashed;
       }
     }
   }

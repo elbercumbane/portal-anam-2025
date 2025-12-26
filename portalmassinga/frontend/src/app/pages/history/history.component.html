@@ -60,19 +60,6 @@
   </div>
 </section>
 
-<!-- Estatísticas em Destaque -->
-<section class="stats-highlight">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-item" *ngFor="let stat of estatisticas; let i = index" [attr.data-index]="i">
-        <div class="stat-icon">{{ stat.icon }}</div>
-        <h3 class="stat-valor">{{ stat.valor }}</h3>
-        <p class="stat-label">{{ stat.label }}</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- Timeline Editorial -->
 <section class="timeline-section">
   <div class="container">
@@ -251,28 +238,34 @@
   </div>
 </section>
 
-<!-- Call to Action Editorial -->
-<section class="editorial-cta">
-  <div class="container">
+<!-- CTA Final -->
+<section class="cta-section">
+  <div class="cta-container">
     <div class="cta-content">
-      <span class="cta-label">Faça Parte da História</span>
-      <h2 class="cta-title">Construa o Futuro Conosco</h2>
-      <p class="cta-text">
-        Cada capítulo da nossa história foi escrito por pessoas como você. 
-        Junte-se a nós e seja parte desta jornada transformadora.
-      </p>
-      <div class="cta-actions">
-        <button class="cta-btn primary">
+      <div class="cta-icon">🚀</div>
+      <h2>Pronto para Impulsionar o Seu Negócio?</h2>
+      <p>Junte-se a centenas de filhos de Massinga que já estão a construir o futuro do nosso distrito</p>
+      <div class="cta-buttons">
+        <a routerLink="/associar" class="cta-button">
           <span>Tornar-se Membro</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12,5 19,12 12,19"/>
           </svg>
-        </button>
-        <button class="cta-btn secondary">
-          <span>Saber Mais</span>
-        </button>
+        </a>
+        <a routerLink="/simpatizantes/porque-tornar-se" class="cta-button cta-button-secondary">
+          <span>Tornar-se Simpatizante</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12,5 19,12 12,19"/>
+          </svg>
+        </a>
       </div>
+    </div>
+    <div class="cta-decoration">
+      <div class="deco-ring ring-1"></div>
+      <div class="deco-ring ring-2"></div>
+      <div class="deco-ring ring-3"></div>
     </div>
   </div>
 </section>

@@ -20,19 +20,34 @@ export class HomeSliderAnimations {
   // Configurar animações iniciais do texto
   configurarAnimacoesIniciais(refs: SliderRefs): void {
     const textoInicial = SLIDE_TEXTOS[0].titulo;
-    refs.heroSubtitle.nativeElement.textContent = SLIDE_TEXTOS[0].subtitulo;
+    refs.heroSubtitle.nativeElement.innerHTML = SLIDE_TEXTOS[0].subtitulo;
 
     // Dividir o título em duas partes (apenas para o primeiro slide)
-    const palavras = textoInicial.split(' ');
-    const meioIndice = Math.floor(palavras.length / 2);
-    const parteEsquerda = palavras.slice(0, meioIndice).join(' ');
-    const parteDireita = palavras.slice(meioIndice).join(' ');
+    // Dividir preservando HTML
+    const palavrasComHTML = textoInicial.split(/(?=<span)|(?<=<\/span>)\s+/);
+    const palavrasLimpos = textoInicial.replace(/<[^>]*>/g, '').split(' ');
+    const meioIndice = Math.floor(palavrasLimpos.length / 2);
     
-    refs.titlePartLeft.nativeElement.textContent = parteEsquerda;
-    refs.titlePartRight.nativeElement.textContent = parteDireita;
+    // Encontrar onde dividir no texto HTML original
+    let contadorPalavras = 0;
+    let indiceDivisao = 0;
+    for (let i = 0; i < textoInicial.length; i++) {
+      if (textoInicial[i] === ' ' && !textoInicial.substring(Math.max(0, i-10), i).includes('<span')) {
+        contadorPalavras++;
+        if (contadorPalavras === meioIndice) {
+          indiceDivisao = i;
+          break;
+        }
+      }
+    }
+    
+    const parteEsquerdaHTML = textoInicial.substring(0, indiceDivisao).trim();
+    const parteDireitaHTML = textoInicial.substring(indiceDivisao).trim();
+    
+    refs.titlePartLeft.nativeElement.innerHTML = parteEsquerdaHTML;
+    refs.titlePartRight.nativeElement.innerHTML = parteDireitaHTML;
 
-    // Animação inicial do conteúdo
-    gsap.set(refs.heroContent.nativeElement, { opacity: 0 });
+    // Animação inicial do conteúdo - apenas textos, sem animar o heroContent
     gsap.set(refs.titlePartLeft.nativeElement, { x: -200, opacity: 0 });
     gsap.set(refs.titlePartRight.nativeElement, { x: 200, opacity: 0 });
     gsap.set(refs.heroSubtitleBox.nativeElement, { y: 30, opacity: 0, scale: 0.95 });
@@ -40,11 +55,10 @@ export class HomeSliderAnimations {
       gsap.set(refs.heroButton.nativeElement, { y: 30, opacity: 0 });
     }
 
-    // Timeline principal
+    // Timeline principal - removida animação de opacidade do heroContent
     const tl = gsap.timeline();
     
-    tl.to(refs.heroContent.nativeElement, { opacity: 1, duration: 0.5 })
-      .to(refs.titlePartLeft.nativeElement, { 
+    tl.to(refs.titlePartLeft.nativeElement, { 
         x: 0, opacity: 1, duration: 1.2, ease: "power3.out" 
       }, "-=0.3")
       .to(refs.titlePartRight.nativeElement, { 
@@ -141,20 +155,38 @@ export class HomeSliderAnimations {
     tl.call(() => {
       const textoTitulo = textoAtual.titulo;
       if (slideAtual === 0) {
-        const palavras = textoTitulo.split(' ');
-        const meioIndice = Math.floor(palavras.length / 2);
-        refs.titlePartLeft.nativeElement.textContent = palavras.slice(0, meioIndice).join(' ');
-        refs.titlePartRight.nativeElement.textContent = palavras.slice(meioIndice).join(' ');
+        // Dividir preservando HTML
+        const palavrasLimpos = textoTitulo.replace(/<[^>]*>/g, '').split(' ');
+        const meioIndice = Math.floor(palavrasLimpos.length / 2);
+        
+        // Encontrar onde dividir no texto HTML original
+        let contadorPalavras = 0;
+        let indiceDivisao = 0;
+        for (let i = 0; i < textoTitulo.length; i++) {
+          if (textoTitulo[i] === ' ' && !textoTitulo.substring(Math.max(0, i-10), i).includes('<span')) {
+            contadorPalavras++;
+            if (contadorPalavras === meioIndice) {
+              indiceDivisao = i;
+              break;
+            }
+          }
+        }
+        
+        const parteEsquerdaHTML = textoTitulo.substring(0, indiceDivisao).trim();
+        const parteDireitaHTML = textoTitulo.substring(indiceDivisao).trim();
+        
+        refs.titlePartLeft.nativeElement.innerHTML = parteEsquerdaHTML;
+        refs.titlePartRight.nativeElement.innerHTML = parteDireitaHTML;
         refs.heroTitle.nativeElement.textContent = '';
         gsap.set(refs.titlePartLeft.nativeElement, { opacity: 0, x: -200, display: 'block', visibility: 'visible' });
         gsap.set(refs.titlePartRight.nativeElement, { opacity: 0, x: 200, display: 'block', visibility: 'visible' });
       } else {
-        refs.heroTitle.nativeElement.textContent = textoTitulo;
+        refs.heroTitle.nativeElement.innerHTML = textoTitulo;
         refs.titlePartLeft.nativeElement.textContent = '';
         refs.titlePartRight.nativeElement.textContent = '';
         gsap.set(refs.heroTitle.nativeElement, { opacity: 0, y: 30, scale: 0.95, display: 'block', visibility: 'visible' });
       }
-      refs.heroSubtitle.nativeElement.textContent = textoAtual.subtitulo;
+      refs.heroSubtitle.nativeElement.innerHTML = textoAtual.subtitulo;
       gsap.set(refs.heroSubtitleBox.nativeElement, { 
         opacity: 0, y: slideAtual === 0 ? 30 : 40, scale: slideAtual === 0 ? 1 : 0.95, display: 'block', visibility: 'visible' 
       });
@@ -162,7 +194,7 @@ export class HomeSliderAnimations {
   }
 
   private animarEntradaTexto(tl: gsap.core.Timeline, refs: SliderRefs, slideAtual: number, temTextoMissaoVisao: boolean): void {
-    tl.set(refs.heroContent.nativeElement, { opacity: 1 }, "-=0.5");
+    // Removida animação de opacidade do heroContent para evitar flash branco
     
     if (slideAtual === 0) {
       gsap.set([refs.titlePartLeft.nativeElement, refs.titlePartRight.nativeElement], { display: 'block', visibility: 'visible' });

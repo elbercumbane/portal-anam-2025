@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 interface Milestone {
   ano: string;
@@ -17,7 +18,7 @@ interface Galeria {
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })
@@ -72,13 +73,6 @@ export class HistoryComponent implements OnInit, OnDestroy, AfterViewInit {
       imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80',
       categoria: 'Atualidade'
     }
-  ];
-
-  estatisticas = [
-    { valor: '6+', label: 'Anos de História', icon: '📅' }, // Atualizado: início em 2020
-    { valor: '250+', label: 'Membros Ativos', icon: '👥' },
-    { valor: '50+', label: 'Projetos Realizados', icon: '🎯' },
-    { valor: '5000+', label: 'Vidas Impactadas', icon: 'favorite' }
   ];
 
   galerias: Galeria[] = [

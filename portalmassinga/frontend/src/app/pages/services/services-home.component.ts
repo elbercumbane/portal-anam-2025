@@ -1,31 +1,35 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ServiceCardComponent } from './sections/service-card.component';
 
 interface Servico {
-  icon: string;
+  iconType: string;
   titulo: string;
   descricao: string;
+  subtitulo: string;
   beneficios: string[];
   cor: string;
-  categoria: string;
 }
 
-interface Categoria {
-  id: string;
-  nome: string;
-}
-
-interface CasoSucesso {
+interface PublicoAlvo {
+  iconType: 'rocket' | 'store' | 'agriculture' | 'community';
   titulo: string;
-  testemunho: string;
-  autor: string;
-  negocio: string;
+  descricao: string;
 }
 
 interface Indicador {
   valor: string;
   descricao: string;
+}
+
+interface Depoimento {
+  nome: string;
+  cargo: string;
+  negocio: string;
+  imagem?: string;
+  texto: string;
+  avaliacao: number;
 }
 
 @Component({
@@ -36,274 +40,235 @@ interface Indicador {
 })
 export class ServicesHomeComponent implements OnInit, OnDestroy {
 
-  // Categorias para filtro
-  categorias: Categoria[] = [
-    { id: 'formacao', nome: 'Formação & Desenvolvimento' },
-    { id: 'conexao', nome: 'Conexão & Parcerias' },
-    { id: 'consultoria', nome: 'Consultoria & Apoio Técnico' },
-    { id: 'recursos', nome: 'Vantagens & Recursos' }
-  ];
+  constructor(private sanitizer: DomSanitizer) {}
 
-  categoriaAtiva: string = 'formacao';
-
-  // Serviços com categorias (4 por categoria)
-  todosServicos: Servico[] = [
-    // ========== FORMAÇÃO & DESENVOLVIMENTO ==========
+  // Públicos-alvo da ANAM
+  publicosAlvo: PublicoAlvo[] = [
     {
-      icon: '🎓',
-      titulo: 'Capacitação Empresarial',
-      descricao: 'Programas de formação especializados para desenvolvimento de competências',
-      beneficios: [
-        'Gestão financeira',
-        'Marketing digital',
-        'Liderança',
-        'Transformação digital'
-      ],
-      cor: '#2563EB',
-      categoria: 'formacao'
+      iconType: 'rocket',
+      titulo: 'Jovens Empreendedores',
+      descricao: 'Em fase de ideia ou início de actividade'
     },
     {
-      icon: 'build',
+      iconType: 'store',
+      titulo: 'Comércio Local',
+      descricao: 'Lojas, mercados e serviços locais'
+    },
+    {
+      iconType: 'agriculture',
+      titulo: 'Agro-Negócio',
+      descricao: 'Iniciativas de pequena e média escala'
+    },
+    {
+      iconType: 'community',
+      titulo: 'Associações Comunitárias',
+      descricao: 'Iniciativas comunitárias organizadas'
+    }
+  ];
+  
+  // Método para obter o SVG do ícone
+  getIconSvg(iconType: string): SafeHtml {
+    const icons: { [key: string]: string } = {
+      // Ícones para Quem Apoiamos
+      rocket: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+      </svg>`,
+      store: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path>
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+        <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path>
+        <path d="M2 7h20"></path>
+        <path d="M22 7v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7"></path>
+      </svg>`,
+      agriculture: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v20"></path>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        <path d="M8 12h8"></path>
+        <path d="M6 8h12"></path>
+        <path d="M6 16h12"></path>
+        <circle cx="12" cy="4" r="1"></circle>
+        <circle cx="12" cy="20" r="1"></circle>
+      </svg>`,
+      community: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>`,
+      // Ícones para Serviços
+      book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        <path d="M8 7h8"></path>
+        <path d="M8 11h8"></path>
+        <path d="M8 15h6"></path>
+      </svg>`,
+      tools: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+      </svg>`,
+      handshake: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 12h2a2 2 0 1 0 0-4h-3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1"></path>
+        <path d="M13 12h-1a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h3a2 2 0 1 0 0-4h-2"></path>
+        <path d="M5 15h14"></path>
+        <path d="M5 9h14"></path>
+      </svg>`,
+      check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>`,
+      money: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"></line>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>`,
+      network: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>`
+    };
+    const svg = icons[iconType] || '';
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
+  }
+
+  // Serviços principais (6 serviços - 2 seções de 3)
+  servicosPrincipais: Servico[] = [
+    {
+      iconType: 'book',
+      titulo: 'Formação Empresarial Aplicada',
+      descricao: 'Formação prática adaptada à realidade local',
+      subtitulo: 'Aprendizagem rápida com aplicação imediata',
+      beneficios: [
+        'Gestão financeira básica para pequenos negócios',
+        'Marketing digital acessível',
+        'Planeamento simples de negócios',
+        'Introdução à transformação digital'
+      ],
+      cor: '#2C674C'
+    },
+    {
+      iconType: 'tools',
       titulo: 'Workshops Práticos',
-      descricao: 'Sessões práticas e intensivas para aprendizagem rápida de novas competências',
+      descricao: 'Aprendizagem rápida com aplicação imediata',
+      subtitulo: 'Sessões práticas focadas em resultados',
       beneficios: [
-        'Vendas e negociação',
+        'Vendas no comércio local',
         'Atendimento ao cliente',
-        'Gestão de equipas',
-        'Produtividade'
+        'Gestão de pequenas equipas',
+        'Produtividade e organização'
       ],
-      cor: '#0891B2',
-      categoria: 'formacao'
+      cor: '#2C674C'
     },
     {
-      icon: 'explore',
-      titulo: 'Mentoria Executiva',
-      descricao: 'Acompanhamento personalizado por empresários experientes',
+      iconType: 'handshake',
+      titulo: 'Mentoria e Acompanhamento',
+      descricao: 'Apoio contínuo para crescer com segurança',
+      subtitulo: 'Mentores com experiência prática',
       beneficios: [
-        'Mentores certificados',
-        'Sessões individuais',
-        'Plano de desenvolvimento',
-        'Acompanhamento contínuo'
+        'Sessões individuais e em grupo',
+        'Definição de metas realistas',
+        'Acompanhamento no terreno',
+        'Suporte personalizado para cada negócio'
       ],
-      cor: '#4F46E5',
-      categoria: 'formacao'
+      cor: '#2C674C'
     },
     {
-      icon: 'verified',
-      titulo: 'Certificações Profissionais',
-      descricao: 'Programas de certificação reconhecidos pelo mercado',
+      iconType: 'check',
+      titulo: 'Certificação e Reconhecimento',
+      descricao: 'Valorização do percurso do empreendedor',
+      subtitulo: 'Certificados reconhecidos',
       beneficios: [
-        'Certificados válidos',
         'Parcerias institucionais',
-        'Reconhecimento nacional',
-        'Actualização profissional'
+        'Actualização profissional',
+        'Validação de competências',
+        'Reconhecimento no mercado local'
       ],
-      cor: '#7C3AED',
-      categoria: 'formacao'
+      cor: '#2C674C'
     },
-
-    // ========== CONEXÃO & PARCERIAS ==========
     {
-      icon: 'handshake',
+      iconType: 'money',
+      titulo: 'Acesso a Financiamento',
+      descricao: 'Facilitamos o acesso a recursos financeiros para o seu negócio',
+      subtitulo: 'Conectamos empreendedores a oportunidades de financiamento',
+      beneficios: [
+        'Orientações para candidaturas a fundos',
+        'Apoio na elaboração de propostas',
+        'Conexão com instituições financeiras',
+        'Acompanhamento no processo de financiamento'
+      ],
+      cor: '#2C674C'
+    },
+    {
+      iconType: 'network',
       titulo: 'Networking e Parcerias',
-      descricao: 'Conecte-se com outros empresários e crie oportunidades de negócio',
+      descricao: 'Conecte-se com outros empreendedores e crie oportunidades',
+      subtitulo: 'Rede de contactos e parcerias estratégicas',
       beneficios: [
-        'Eventos mensais',
-        'B2B matching',
-        'Feiras e exposições',
-        'Mentoria entre associados'
+        'Eventos de networking mensais',
+        'Feiras e exposições locais',
+        'Parcerias entre membros',
+        'Acesso a fornecedores e clientes'
       ],
-      cor: '#059669',
-      categoria: 'conexao'
-    },
-    {
-      icon: 'event',
-      titulo: 'Eventos de Negócios',
-      descricao: 'Conferências, seminários e encontros empresariais exclusivos',
-      beneficios: [
-        'Conferências anuais',
-        'Pequenos-almoços empresariais',
-        'Painéis de discussão',
-        'Encontros temáticos'
-      ],
-      cor: '#10B981',
-      categoria: 'conexao'
-    },
-    {
-      icon: 'flight',
-      titulo: 'Missões Empresariais',
-      descricao: 'Viagens de negócios para explorar novos mercados e parcerias',
-      beneficios: [
-        'Visitas a empresas',
-        'Feiras internacionais',
-        'Contactos comerciais',
-        'Estudos de mercado'
-      ],
-      cor: '#14B8A6',
-      categoria: 'conexao'
-    },
-    {
-      icon: 'account_balance',
-      titulo: 'Clube de Investidores',
-      descricao: 'Rede de investidores para apoiar projectos promissores',
-      beneficios: [
-        'Pitch sessions',
-        'Acesso a capital',
-        'Mentoria de investidores',
-        'Due diligence'
-      ],
-      cor: '#047857',
-      categoria: 'conexao'
-    },
-
-    // ========== CONSULTORIA & APOIO TÉCNICO ==========
-    {
-      icon: 'business_center',
-      titulo: 'Consultoria Especializada',
-      descricao: 'Apoio técnico personalizado para resolver desafios específicos do seu negócio',
-      beneficios: [
-        'Otimização de processos',
-        'Planeamento estratégico',
-        'Acesso a financiamento',
-        'Compliance'
-      ],
-      cor: '#EA580C',
-      categoria: 'consultoria'
-    },
-    {
-      icon: 'gavel',
-      titulo: 'Apoio Jurídico',
-      descricao: 'Assessoria legal para proteger e fazer crescer o seu negócio',
-      beneficios: [
-        'Contratos comerciais',
-        'Registo de empresas',
-        'Propriedade intelectual',
-        'Resolução de conflitos'
-      ],
-      cor: '#DC2626',
-      categoria: 'consultoria'
-    },
-    {
-      icon: 'bar_chart',
-      titulo: 'Assessoria Contabilística',
-      descricao: 'Serviços de contabilidade e gestão financeira para PMEs',
-      beneficios: [
-        'Contabilidade organizada',
-        'Declarações fiscais',
-        'Relatórios financeiros',
-        'Planeamento fiscal'
-      ],
-      cor: '#F59E0B',
-      categoria: 'consultoria'
-    },
-    {
-      icon: 'assignment',
-      titulo: 'Gestão de Projectos',
-      descricao: 'Apoio na elaboração e gestão de projectos de investimento',
-      beneficios: [
-        'Elaboração de projectos',
-        'Candidaturas a fundos',
-        'Gestão e monitoria',
-        'Relatórios de progresso'
-      ],
-      cor: '#D97706',
-      categoria: 'consultoria'
-    },
-
-    // ========== VANTAGENS & RECURSOS ==========
-    {
-      icon: 'menu_book',
-      titulo: 'Acesso a Recursos',
-      descricao: 'Ferramentas, plataformas e benefícios exclusivos para membros',
-      beneficios: [
-        'Base de fornecedores',
-        'Biblioteca digital',
-        'Coworking',
-        'Benefícios e programas'
-      ],
-      cor: '#8B5CF6',
-      categoria: 'recursos'
-    },
-    {
-      icon: 'local_offer',
-      titulo: 'Descontos Exclusivos',
-      descricao: 'Parcerias com empresas para descontos especiais aos membros',
-      beneficios: [
-        'Serviços bancários',
-        'Seguros empresariais',
-        'Software e tecnologia',
-        'Viagens e alojamento'
-      ],
-      cor: '#A855F7',
-      categoria: 'recursos'
-    },
-    {
-      icon: 'business',
-      titulo: 'Espaços de Trabalho',
-      descricao: 'Acesso a espaços de coworking e salas de reunião',
-      beneficios: [
-        'Coworking gratuito',
-        'Salas de reunião',
-        'Espaços para eventos',
-        'Endereço comercial'
-      ],
-      cor: '#6366F1',
-      categoria: 'recursos'
-    },
-    {
-      icon: 'computer',
-      titulo: 'Ferramentas Digitais',
-      descricao: 'Acesso a plataformas e software para gestão do negócio',
-      beneficios: [
-        'CRM para membros',
-        'Facturação electrónica',
-        'Gestão de stocks',
-        'Marketing automation'
-      ],
-      cor: '#7C3AED',
-      categoria: 'recursos'
+      cor: '#2C674C'
     }
   ];
+  
+  // Dividir serviços em 2 grupos de 3
+  get servicosSecao1(): Servico[] {
+    return this.servicosPrincipais.slice(0, 3);
+  }
+  
+  get servicosSecao2(): Servico[] {
+    return this.servicosPrincipais.slice(3, 6);
+  }
 
-  // Serviços filtrados (inicialmente todos)
-  servicos: Servico[] = [];
-
-  // Casos de Sucesso
-  casosSucesso: CasoSucesso[] = [
-    {
-      titulo: 'Acesso a Financiamento Mudou Meu Negócio',
-      testemunho: 'Com apoio da ANAM, consegui um financiamento de 50.000MT e expandi minha loja.',
-      autor: 'Maria João',
-      negocio: 'Comércio Local'
-    },
-    {
-      titulo: 'Da Formação à Aplicação Prática',
-      testemunho: 'A formação em marketing digital aumentou minhas vendas online em 60% em 3 meses.',
-      autor: 'Carlos Muchanga',
-      negocio: 'Agro-Negócio'
-    }
-  ];
-
-  // Indicadores de Impacto
+  // Indicadores de Impacto (2022–2024)
   indicadores: Indicador[] = [
-    { valor: '150+', descricao: 'Negócios Apoiados' },
-    { valor: '50+', descricao: 'Financiamentos Concretizados' },
-    { valor: '300+', descricao: 'Empreendedores Formados' },
-    { valor: '95%', descricao: 'Satisfação dos Membros' }
+    { valor: '300+', descricao: 'Jovens e Empreendedores Formados' },
+    { valor: '150+', descricao: 'Pequenos Negócios Apoiados' },
+    { valor: '50+', descricao: 'Iniciativas Financiadas' },
+    { valor: '95%', descricao: 'Satisfação' }
+  ];
+  
+  // Depoimentos
+  depoimentos: Depoimento[] = [
+    {
+      nome: 'Maria João',
+      cargo: 'Empreendedora',
+      negocio: 'Comércio Local',
+      texto: 'A formação em gestão financeira da ANAM transformou completamente o meu negócio. Agora consigo controlar melhor as minhas finanças e o negócio está a crescer de forma sustentável.',
+      avaliacao: 5
+    },
+    {
+      nome: 'Carlos Muchanga',
+      cargo: 'Agricultor',
+      negocio: 'Agro-Negócio',
+      texto: 'O apoio da ANAM foi fundamental para conseguir financiamento para expandir a minha produção. A mentoria ajudou-me a estruturar melhor o negócio e hoje tenho mais clientes.',
+      avaliacao: 5
+    },
+    {
+      nome: 'Ana Silva',
+      cargo: 'Jovem Empreendedora',
+      negocio: 'Serviços Digitais',
+      texto: 'Os workshops práticos da ANAM deram-me as ferramentas necessárias para começar o meu negócio online. A rede de contactos que construí através da associação foi essencial.',
+      avaliacao: 5
+    },
+    {
+      nome: 'João Pedro',
+      cargo: 'Comerciante',
+      negocio: 'Comércio Local',
+      texto: 'A certificação que obtive através da ANAM deu-me mais credibilidade junto dos meus clientes. O reconhecimento no mercado local aumentou significativamente.',
+      avaliacao: 5
+    }
   ];
   
   ngOnInit() {
     document.body.classList.add('navbar-solid');
-    // Iniciar com a categoria Formação & Desenvolvimento
-    this.filtrarPorCategoria('formacao');
   }
 
   ngOnDestroy() {
     document.body.classList.remove('navbar-solid');
-  }
-
-  filtrarPorCategoria(categoriaId: string): void {
-    this.categoriaAtiva = categoriaId;
-    this.servicos = this.todosServicos.filter(s => s.categoria === categoriaId);
   }
 }

@@ -1,0 +1,59 @@
+// ============ MIXINS PARA CLIP-PATH ============
+
+// Mixin para clip-path da onda (desktop)
+@mixin wave-clip-path-desktop {
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% 100%, 
+    50% 100%, 
+    calc(50% - 20px) calc(100% - 10px),
+    calc(50% - 40px) calc(100% - 25px),
+    calc(50% - 60px) calc(100% - 45px),
+    calc(50% - 80px) calc(100% - 65px),
+    calc(50% - 100px) calc(100% - 80px),
+    calc(50% - 120px) calc(100% - 90px),
+    calc(50% - 140px) calc(100% - 95px),
+    calc(50% - 160px) calc(100% - 98px),
+    calc(50% - 180px) calc(100% - 100px),
+    0 calc(100% - 95px)
+  );
+}
+
+// Mixin para clip-path da onda (tablet)
+@mixin wave-clip-path-tablet {
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% 100%, 
+    50% 100%, 
+    calc(50% - 18px) calc(100% - 8px),
+    calc(50% - 36px) calc(100% - 20px),
+    calc(50% - 54px) calc(100% - 38px),
+    calc(50% - 72px) calc(100% - 55px),
+    calc(50% - 90px) calc(100% - 68px),
+    calc(50% - 108px) calc(100% - 78px),
+    calc(50% - 126px) calc(100% - 85px),
+    calc(50% - 144px) calc(100% - 90px),
+    0 calc(100% - 88px)
+  );
+}
+
+// Mixin para clip-path da onda (mobile)
+@mixin wave-clip-path-mobile {
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% 100%, 
+    50% 100%, 
+    calc(50% - 16px) calc(100% - 6px),
+    calc(50% - 32px) calc(100% - 15px),
+    calc(50% - 48px) calc(100% - 30px),
+    calc(50% - 64px) calc(100% - 45px),
+    calc(50% - 80px) calc(100% - 58px),
+    calc(50% - 96px) calc(100% - 68px),
+    calc(50% - 112px) calc(100% - 75px),
+    0 calc(100% - 78px)
+  );
+}
+

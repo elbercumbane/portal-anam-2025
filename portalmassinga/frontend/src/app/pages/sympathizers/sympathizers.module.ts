@@ -7,10 +7,6 @@ const routes: Routes = [
     loadComponent: () => import('./why-become-sympathizer/why-become-sympathizer.component').then(m => m.WhyBecomeSympathizerComponent) 
   },
   { 
-    path: 'torne-se-simpatizante', 
-    loadComponent: () => import('./become-sympathizer/become-sympathizer.component').then(m => m.BecomeSympathizerComponent) 
-  },
-  { 
     path: 'area-simpatizante', 
     loadComponent: () => import('./sympathizer-area/sympathizer-area.component').then(m => m.SympathizerAreaComponent) 
   },

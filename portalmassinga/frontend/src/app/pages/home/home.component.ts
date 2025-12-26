@@ -11,9 +11,8 @@ import { HistorySectionComponent } from './sections/history/history.component';
 import { EventsSectionComponent } from './sections/events/events.component';
 import { GalleryComponent } from '../../components/gallery/gallery.component';
 import { PartnersSectionComponent } from './sections/partners/partners.component';
-import { FooterSimpleComponent } from './sections/footer-simple/footer-simple.component';
-import { MessagePopupComponent } from './sections/message-popup/message-popup.component';
 import { SantaPopupComponent } from './sections/santa-popup/santa-popup.component';
+import { ScrollToTopComponent } from '../../components/scroll-to-top/scroll-to-top.component';
 
 // Importar arquivos de animação e dados separados
 import { SLIDER_CONFIG } from './home.data';
@@ -30,9 +29,8 @@ import { inicializarAnimacoesHistoria, inicializarAnimacoesQuemSomos } from './h
     EventsSectionComponent, 
     GalleryComponent, 
     PartnersSectionComponent,
-    FooterSimpleComponent,
-    MessagePopupComponent,
-    SantaPopupComponent
+    SantaPopupComponent,
+    ScrollToTopComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

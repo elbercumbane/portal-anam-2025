@@ -1,0 +1,34 @@
+// ========================================
+// VARIÁVEIS E MIXINS
+// ========================================
+
+// Cores
+$primary-green: #1B4332;
+$green-medium: #40916C;
+$brown-warm: #8A7D65;
+$brown-dark: #6B5B47;
+$gold: #D4A853;
+$cream: #FAF8F5;
+$white: #FFFFFF;
+
+// Cores por tipo de documento
+$type-colors: (
+  'estatutos': #10B981,
+  'regulamentos': #34D399,
+  'relatórios': #059669,
+  'planos': #14B8A6,
+  'políticas': #047857
+);
+
+// Mixins
+@mixin glass-effect {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@mixin smooth-transition($duration: 0.4s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
+}
+

@@ -1,10 +1,14 @@
 @import 'variables';
 @import 'animations';
 
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$cream: #FAF8F5;
+
 // Impacto em Números - Simples
 .impacto-section {
   padding: 50px 0;
-  background: #fafafa;
+  background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);
   position: relative;
   
   .section-header {
@@ -48,7 +52,7 @@
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    border-color: rgba(138, 125, 101, 0.2);
+    border-color: rgba($primary-green, 0.2);
   }
   
   .impacto-valor {
@@ -56,7 +60,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     font-weight: 800;
-    color: $brown-warm;
+    color: $primary-green;
     margin-bottom: 4px;
     line-height: 1;
   }

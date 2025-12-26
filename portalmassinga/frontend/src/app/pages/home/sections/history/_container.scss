@@ -1,0 +1,42 @@
+// ============ CONTAINER PRINCIPAL ============
+
+@import 'variables';
+@import 'functions';
+@import 'mixins';
+
+.mission-values-vision-wrapper {
+  margin-top: $spacing-lg;
+  padding-bottom: $spacing-lg;
+}
+
+.mission-values-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-lg 50px $spacing-xl 50px;
+  background: $background-card;
+  border-radius: 0;
+  box-shadow: $shadow-md;
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+  @include wave-clip-path-desktop;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: 50px;
+    padding: 50px 40px 70px 40px;
+    min-height: 500px;
+    @include wave-clip-path-tablet;
+  }
+
+  @include mobile {
+    padding: 40px 30px 60px 30px;
+    gap: 40px;
+    min-height: 450px;
+    @include wave-clip-path-mobile;
+  }
+}
+

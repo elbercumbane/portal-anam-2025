@@ -7,7 +7,7 @@ $verde-escuro: rgba(76, 175, 80, 0.8);
 
 .partners-section {
   background: linear-gradient(180deg, #ffffff 0%, #fff 50%, #ffffff 100%); // Branco
-  padding: 60px 0 70px;
+  padding: 15px 0 35px;
   overflow: hidden;
   position: relative;
 }
@@ -15,7 +15,7 @@ $verde-escuro: rgba(76, 175, 80, 0.8);
 // Header da seção
 .section-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   padding: 0 24px;
 }
 
@@ -147,7 +147,7 @@ $verde-escuro: rgba(76, 175, 80, 0.8);
 // Botão Ver Todos
 .view-all {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 20px;
   padding: 0 24px;
 }
 
@@ -185,15 +185,15 @@ $verde-escuro: rgba(76, 175, 80, 0.8);
 // Responsividade
 @media (max-width: 768px) {
   .partners-section {
-    padding: 40px 0 50px;
+    padding: 15px 0 30px;
   }
   
   .section-header {
-    margin-bottom: 30px;
+    margin-bottom: 18px;
   }
   
   .marquee-container {
-    padding: 30px 0;
+    padding: 20px 0;
     
     &::before,
     &::after {

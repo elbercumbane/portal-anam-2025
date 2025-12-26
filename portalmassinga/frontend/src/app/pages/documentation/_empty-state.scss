@@ -1,0 +1,111 @@
+// ========================================
+// EMPTY STATE
+// ========================================
+
+@import 'variables';
+
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+  animation: fadeIn 0.5s ease;
+  
+  .empty-illustration {
+    margin-bottom: 32px;
+    
+    .empty-folder {
+      position: relative;
+      width: 120px;
+      height: 100px;
+      margin: 0 auto;
+      
+      .folder-back {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 70px;
+        background: linear-gradient(135deg, #E8E4DC 0%, #D8D4CC 100%);
+        border-radius: 0 12px 12px 12px;
+      }
+      
+      .folder-front {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        background: linear-gradient(135deg, #F5F3EF 0%, #E8E4DC 100%);
+        border-radius: 0 8px 8px 8px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: -15px;
+          left: 0;
+          width: 50px;
+          height: 15px;
+          background: #F5F3EF;
+          border-radius: 8px 8px 0 0;
+        }
+      }
+      
+      .folder-papers {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 40px;
+        background: $white;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        
+        &::before, &::after {
+          content: '';
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 40px;
+          height: 3px;
+          background: #E0DCD4;
+          border-radius: 2px;
+        }
+        
+        &::before { top: 10px; }
+        &::after { top: 20px; width: 30px; }
+      }
+    }
+  }
+  
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 12px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #888;
+    margin: 0 0 24px;
+  }
+  
+  .btn-reset {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, $primary-green 0%, $green-medium 100%);
+    color: $white;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    @include smooth-transition;
+    box-shadow: 0 4px 20px rgba($primary-green, 0.3);
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba($primary-green, 0.4);
+    }
+  }
+}
+

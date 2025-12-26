@@ -1,0 +1,101 @@
+@import 'variables';
+@import 'animations';
+
+$primary-green: #2C674C;
+$green-medium: #2C674C;
+$cream: #FAF8F5;
+
+// Seção Quem Apoiamos
+.quem-apoiamos-section {
+  padding: 80px 0;
+  background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba($green-medium, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba($primary-green, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  .quem-apoiamos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+    position: relative;
+    z-index: 1;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+  
+  .quem-apoiamos-card {
+    background: #FFFFFF;
+    padding: 35px 25px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba($primary-green, 0.1);
+    animation: fadeInUp 0.6s ease;
+    
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      border-color: rgba($primary-green, 0.3);
+    }
+    
+    .publico-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $primary-green;
+      background: linear-gradient(135deg, rgba($primary-green, 0.1) 0%, rgba($green-medium, 0.05) 100%);
+      border-radius: 20px;
+      padding: 16px;
+      transition: all 0.3s ease;
+      
+      svg {
+        width: 100%;
+        height: 100%;
+        stroke-width: 2;
+        display: block;
+      }
+    }
+    
+    &:hover .publico-icon {
+      animation: iconZoom 1.5s ease-in-out infinite;
+      background: linear-gradient(135deg, rgba($primary-green, 0.15) 0%, rgba($green-medium, 0.1) 100%);
+      color: $green-medium;
+    }
+    
+    .publico-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin: 0 0 12px;
+      line-height: 1.3;
+    }
+    
+    .publico-descricao {
+      font-size: 1rem;
+      color: #64748B;
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+}
+

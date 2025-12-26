@@ -3,12 +3,10 @@
 // ========================================
 
 // Variáveis
+$primary-green: #2C674C;
+$green-medium: #2C674C;
 $green-dark: #1B4332;
-$green-medium: #2D6A4F;
 $green-success: #10B981;
-$gold-primary: #D4AF37;
-$gold-dark: #B8860B;
-$brown-warm: #8A7D65;
 
 // ============ INTRO DA SECÇÃO ============
 .realizados-page {
@@ -53,7 +51,7 @@ $brown-warm: #8A7D65;
     margin: 0 0 15px;
     
     .gold {
-      color: $gold-primary;
+      color: $primary-green;
     }
   }
   
@@ -90,14 +88,14 @@ $brown-warm: #8A7D65;
   }
   
   &.highlight {
-    background: rgba(138, 125, 101, 0.06);
-    border-color: rgba(138, 125, 101, 0.15);
+    background: rgba($primary-green, 0.06);
+    border-color: rgba($primary-green, 0.15);
     
     .stat-icon {
-      background: rgba(138, 125, 101, 0.12);
+      background: rgba($primary-green, 0.12);
       
       svg {
-        stroke: $brown-warm;
+        stroke: $primary-green;
       }
     }
   }
@@ -105,7 +103,7 @@ $brown-warm: #8A7D65;
   .stat-icon {
     width: 45px;
     height: 45px;
-    background: rgba(138, 125, 101, 0.08);
+    background: rgba($primary-green, 0.08);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -114,7 +112,7 @@ $brown-warm: #8A7D65;
     svg {
       width: 22px;
       height: 22px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
     }
   }
   
@@ -185,7 +183,7 @@ $brown-warm: #8A7D65;
     left: 12px;
     width: 36px;
     height: 36px;
-    background: rgba(138, 125, 101, 0.9);
+    background: rgba($primary-green, 0.9);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -228,7 +226,7 @@ $brown-warm: #8A7D65;
     position: absolute;
     inset: 0;
     background: 
-      radial-gradient(circle at 20% 80%, rgba(138, 125, 101, 0.05) 0%, transparent 40%);
+      radial-gradient(circle at 20% 80%, rgba($primary-green, 0.05) 0%, transparent 40%);
   }
   
   .visual-icon {
@@ -237,7 +235,7 @@ $brown-warm: #8A7D65;
     width: 65px;
     height: 65px;
     background: white;
-    border: 1px solid rgba(138, 125, 101, 0.15);
+    border: 1px solid rgba($primary-green, 0.15);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -247,7 +245,7 @@ $brown-warm: #8A7D65;
     svg {
       width: 30px;
       height: 30px;
-      stroke: $brown-warm;
+      stroke: $primary-green;
       transition: transform 0.4s ease;
     }
   }
@@ -261,11 +259,11 @@ $brown-warm: #8A7D65;
     gap: 4px;
     padding: 5px 12px;
     background: white;
-    border: 1px solid rgba(138, 125, 101, 0.15);
+    border: 1px solid rgba($primary-green, 0.15);
     border-radius: 50px;
     font-size: 0.7rem;
     font-weight: 600;
-    color: $brown-warm;
+    color: $primary-green;
     
     span {
       font-family: 'Playfair Display', Georgia, serif;
@@ -302,7 +300,7 @@ $brown-warm: #8A7D65;
   justify-content: space-between;
   margin-bottom: 20px;
   padding: 15px;
-  background: rgba($brown-warm, 0.04);
+  background: rgba($primary-green, 0.04);
   border-radius: 12px;
 }
 
@@ -315,9 +313,9 @@ $brown-warm: #8A7D65;
     width: 32px;
     height: 32px;
     padding: 6px;
-    background: rgba($brown-warm, 0.1);
+    background: rgba($primary-green, 0.1);
     border-radius: 50%;
-    stroke: $brown-warm;
+    stroke: $primary-green;
   }
   
   &.success svg {
@@ -353,7 +351,7 @@ $brown-warm: #8A7D65;
   .connector-line {
     flex: 1;
     height: 2px;
-    background: linear-gradient(90deg, rgba($brown-warm, 0.2) 0%, rgba($green-success, 0.3) 100%);
+    background: linear-gradient(90deg, rgba($primary-green, 0.2) 0%, rgba($green-success, 0.3) 100%);
     border-radius: 1px;
   }
   
@@ -379,7 +377,7 @@ $brown-warm: #8A7D65;
   svg {
     width: 28px;
     height: 28px;
-    stroke: $brown-warm;
+    stroke: $primary-green;
     flex-shrink: 0;
   }
   
@@ -442,20 +440,20 @@ $brown-warm: #8A7D65;
   flex-wrap: wrap;
   gap: 8px;
   padding-top: 15px;
-  border-top: 1px solid rgba($brown-warm, 0.1);
+  border-top: 1px solid rgba($primary-green, 0.1);
   
   .parceiro {
     padding: 6px 14px;
-    background: rgba($brown-warm, 0.08);
+    background: rgba($primary-green, 0.08);
     border-radius: 50px;
     font-size: 0.8rem;
     font-weight: 600;
-    color: $brown-warm;
+    color: $primary-green;
     transition: all 0.2s ease;
     
     &:hover {
-      background: rgba($gold-primary, 0.12);
-      color: $gold-dark;
+      background: rgba($primary-green, 0.12);
+      color: $green-dark;
     }
   }
 }
