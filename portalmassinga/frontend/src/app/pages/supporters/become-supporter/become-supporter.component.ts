@@ -15,21 +15,6 @@ export class BecomeSupporterComponent implements OnInit {
   showSuccess = false;
   isLoading = false;
 
-  contributionAmounts = [
-    { value: 50, label: '50 MZN' },
-    { value: 100, label: '100 MZN' },
-    { value: 150, label: '150 MZN' },
-    { value: 300, label: '300 MZN' },
-    { value: 500, label: '500 MZN' },
-    { value: 1000, label: '1000 MZN' },
-    { value: 'custom', label: 'Outro valor' }
-  ];
-
-  frequencies = [
-    { value: 'unique', label: 'Contribuição Única' },
-    { value: 'monthly', label: 'Mensal' }
-  ];
-
   constructor(
     private fb: FormBuilder,
     private router: Router
@@ -39,22 +24,30 @@ export class BecomeSupporterComponent implements OnInit {
     this.supporterForm = this.fb.group({
       nome: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      telefone: [''],
-      valor: ['', [Validators.required]],
-      valorCustom: [''],
-      frequencia: ['monthly', [Validators.required]]
+      contacto: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      tipoApoio: ['', [Validators.required]],
+      descricao: ['', [Validators.required]],
+      anonimato: ['', [Validators.required]]
     });
+  }
 
-    // Mostrar campo custom quando "Outro valor" for selecionado
-    this.supporterForm.get('valor')?.valueChanges.subscribe(value => {
-      if (value === 'custom') {
-        this.supporterForm.get('valorCustom')?.setValidators([Validators.required, Validators.min(1)]);
-      } else {
-        this.supporterForm.get('valorCustom')?.clearValidators();
-        this.supporterForm.get('valorCustom')?.setValue('');
-      }
-      this.supporterForm.get('valorCustom')?.updateValueAndValidity();
-    });
+  onContactoKeyPress(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Permitir apenas números (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  onContactoPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    // Remover todos os caracteres não numéricos
+    const numbersOnly = pastedText.replace(/\D/g, '');
+    const contactoControl = this.supporterForm.get('contacto');
+    if (contactoControl) {
+      contactoControl.setValue(numbersOnly);
+    }
   }
 
   onSubmit(): void {
@@ -62,10 +55,7 @@ export class BecomeSupporterComponent implements OnInit {
       this.isLoading = true;
       
       const formData = {
-        ...this.supporterForm.value,
-        valorFinal: this.supporterForm.value.valor === 'custom' 
-          ? this.supporterForm.value.valorCustom 
-          : this.supporterForm.value.valor
+        ...this.supporterForm.value
       };
 
       console.log('📤 Dados do apoiante:', formData);
@@ -78,11 +68,6 @@ export class BecomeSupporterComponent implements OnInit {
         // Simular criação de conta e envio de email
         console.log('✅ Conta de apoiante criada');
         console.log('📧 Email enviado com recibo e link de login');
-        
-        // Após 5 segundos, redirecionar para área do apoiante
-        setTimeout(() => {
-          this.router.navigate(['/apoio/area-apoiante']);
-        }, 5000);
       }, 2000);
     } else {
       // Marcar todos os campos como touched para mostrar erros
@@ -92,12 +77,13 @@ export class BecomeSupporterComponent implements OnInit {
     }
   }
 
-  getSelectedAmount(): number {
-    const valor = this.supporterForm.get('valor')?.value;
-    if (valor === 'custom') {
-      return this.supporterForm.get('valorCustom')?.value || 0;
-    }
-    return valor || 0;
+  goToSupporterArea(): void {
+    this.router.navigate(['/apoio/area-apoiante']);
   }
+
+  closeSuccessModal(): void {
+    this.showSuccess = false;
+  }
+
 }
 

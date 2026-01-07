@@ -1,0 +1,215 @@
+<div class="marketplace2-page">
+  <!-- Header Fixo -->
+  <header class="marketplace-header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="sidebar-toggle" (click)="toggleSidebar()" [attr.aria-label]="sidebarOpen ? 'Fechar menu' : 'Abrir menu'">
+          <mat-icon>{{ sidebarOpen ? 'menu_open' : 'menu' }}</mat-icon>
+        </button>
+        <div class="header-title">
+          <h1>Marketplace ANAM</h1>
+          <span class="header-subtitle">Comércio Local Sustentável</span>
+        </div>
+      </div>
+      
+      <div class="header-search">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input 
+          type="text" 
+          class="search-input"
+          placeholder="Buscar produtos, vendedores..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+        />
+        <button class="search-clear" *ngIf="searchQuery" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <button class="action-btn" (click)="clearFilters()" *ngIf="activeFilters > 0" [matBadge]="activeFilters" [matBadgeHidden]="activeFilters === 0">
+          <mat-icon>filter_alt_off</mat-icon>
+          <span>Limpar</span>
+        </button>
+        <button class="action-btn primary">
+          <mat-icon>add</mat-icon>
+          <span>Anunciar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout Principal -->
+  <div class="marketplace-layout" [class.sidebar-closed]="!sidebarOpen">
+    <!-- Sidebar de Navegação -->
+    <aside class="marketplace-sidebar" [class.open]="sidebarOpen">
+      <div class="sidebar-content">
+        <!-- Seção de Categorias -->
+        <nav class="sidebar-nav">
+          <h2 class="nav-title">Categorias</h2>
+          <div class="nav-list">
+            <button 
+              *ngFor="let category of categories"
+              class="nav-item"
+              [class.active]="selectedCategory === category.id"
+              (click)="onCategorySelect(category.id)">
+              <mat-icon [style.color]="getCategoryColor(category.id)">{{ category.icon }}</mat-icon>
+              <span>{{ category.label }}</span>
+              <span class="nav-count" *ngIf="category.id !== 'todos'">
+                {{ getCategoryProductCount(category.id) }}
+              </span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Seção de Ordenação -->
+        <div class="sidebar-sort">
+          <h3 class="sort-title">Ordenar por</h3>
+          <div class="sort-options">
+            <button 
+              class="sort-option"
+              [class.active]="sortBy === 'recent'"
+              (click)="onSortChange('recent')">
+              <mat-icon>schedule</mat-icon>
+              <span>Mais recentes</span>
+            </button>
+            <button 
+              class="sort-option"
+              [class.active]="sortBy === 'price-low'"
+              (click)="onSortChange('price-low')">
+              <mat-icon>arrow_upward</mat-icon>
+              <span>Menor preço</span>
+            </button>
+            <button 
+              class="sort-option"
+              [class.active]="sortBy === 'price-high'"
+              (click)="onSortChange('price-high')">
+              <mat-icon>arrow_downward</mat-icon>
+              <span>Maior preço</span>
+            </button>
+            <button 
+              class="sort-option"
+              [class.active]="sortBy === 'name'"
+              (click)="onSortChange('name')">
+              <mat-icon>sort_by_alpha</mat-icon>
+              <span>Nome A-Z</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Informações -->
+        <div class="sidebar-info">
+          <div class="info-card">
+            <mat-icon>info</mat-icon>
+            <div class="info-content">
+              <p><strong>Total de produtos:</strong></p>
+              <p class="info-value">{{ totalProducts }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="marketplace-main">
+      <!-- Barra de Resultados -->
+      <div class="results-bar">
+        <div class="results-info">
+          <span class="results-count">{{ getProductCountText() }}</span>
+          <span class="results-category" *ngIf="selectedCategory !== 'todos'">
+            em <strong>{{ getCategoryLabel(selectedCategory) }}</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Grid de Produtos -->
+      <section class="products-section">
+        <div class="products-grid" *ngIf="filteredProducts.length > 0; else noResults">
+          <article 
+            *ngFor="let product of filteredProducts; trackBy: trackByProductId" 
+            class="product-card"
+            [class.featured]="product.featured">
+            
+            <!-- Imagem do Produto -->
+            <div class="product-image-container">
+              <img 
+                [src]="product.image" 
+                [alt]="product.title"
+                class="product-image"
+                loading="lazy"
+                (error)="onImageError($event)"
+              />
+              <div class="product-overlay">
+                <button class="overlay-btn" (click)="viewProduct(product)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Ver detalhes</span>
+                </button>
+              </div>
+              <div class="product-badges">
+                <span class="badge featured" *ngIf="product.featured">
+                  <mat-icon>star</mat-icon>
+                  <span>Destaque</span>
+                </span>
+                <span class="badge category" [style.background-color]="getCategoryColor(product.category)">
+                  <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
+                </span>
+              </div>
+            </div>
+
+            <!-- Conteúdo do Card -->
+            <div class="product-content">
+              <div class="product-header">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">{{ formatPrice(product.price) }}</div>
+              </div>
+              
+              <p class="product-description">{{ product.description }}</p>
+
+              <div class="product-meta">
+                <div class="meta-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ product.location }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ product.seller }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ formatDate(product.datePosted) }}</span>
+                </div>
+              </div>
+
+              <div class="product-actions">
+                <button class="btn-secondary" (click)="contactSeller(product)">
+                  <mat-icon>chat_bubble</mat-icon>
+                  <span>Contactar</span>
+                </button>
+                <button class="btn-primary" (click)="viewProduct(product)">
+                  <mat-icon>shopping_cart</mat-icon>
+                  <span>Ver mais</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Estado Vazio -->
+        <ng-template #noResults>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <mat-icon>inventory_2</mat-icon>
+            </div>
+            <h3>Nenhum produto encontrado</h3>
+            <p>Tente ajustar os filtros ou buscar por outros termos</p>
+            <button class="empty-action-btn" (click)="clearFilters()">
+              <mat-icon>refresh</mat-icon>
+              <span>Limpar filtros</span>
+            </button>
+          </div>
+        </ng-template>
+      </section>
+    </main>
+  </div>
+</div>
+

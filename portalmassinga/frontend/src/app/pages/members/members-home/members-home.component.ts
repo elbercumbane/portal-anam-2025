@@ -49,6 +49,7 @@ interface Member {
 export class MembersHomeComponent implements OnInit {
   userName = '';
   memberData: Member | null = null;
+  activeTab: string = 'overview';
 
   stats = [
     { icon: '👥', number: '150+', label: 'Membros Activos' },
@@ -163,9 +164,11 @@ export class MembersHomeComponent implements OnInit {
       setTimeout(() => {
         this.loadMemberData();
       }, 100);
-    } else {
-      this.router.navigate(['/login']);
     }
+    // Redirecionamento removido - não redireciona para login
+    // } else {
+    //   this.router.navigate(['/login']);
+    // }
   }
   
   loadMemberData(): void {
@@ -251,5 +254,13 @@ export class MembersHomeComponent implements OnInit {
     if (action.link === '/membros/perfil' && !this.memberData) {
       this.loadMemberData();
     }
+  }
+
+  switchTab(tabName: string): void {
+    this.activeTab = tabName;
+  }
+
+  isTabActive(tabName: string): boolean {
+    return this.activeTab === tabName;
   }
 }

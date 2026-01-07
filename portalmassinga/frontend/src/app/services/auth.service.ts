@@ -159,7 +159,7 @@ export class AuthService {
     localStorage.removeItem(STORAGE_KEYS.TOKEN_AUTH);
     localStorage.removeItem(STORAGE_KEYS.DADOS_MEMBRO);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    // Redirecionamento removido - não redireciona para login
   }
 
   getToken(): string | null {

@@ -93,13 +93,14 @@
         }
       }
       
-      input, select {
+      input, select, textarea {
         padding: 0.875rem 1rem;
         border: 2px solid #e5e7eb;
         border-radius: $border-radius-medium;
         font-size: 1rem;
         @include smooth-transition;
         font-family: inherit;
+        resize: vertical;
         
         &:focus {
           outline: none;
@@ -110,6 +111,11 @@
         &.error {
           border-color: $error-red;
         }
+      }
+      
+      textarea {
+        min-height: 120px;
+        line-height: 1.6;
       }
       
       .field-error {
@@ -346,11 +352,52 @@
       }
     }
     
-    .redirect-message {
-      color: $green-primary;
+    .area-message {
+      color: $ink-700;
       font-weight: 600;
       margin-top: 1.5rem;
-      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    
+    .success-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      
+      .btn-success {
+        padding: 0.875rem 2.5rem;
+        border: none;
+        border-radius: $border-radius-medium;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        @include smooth-transition;
+        min-width: 120px;
+        
+        &.btn-yes {
+          background: linear-gradient(135deg, $green-primary 0%, darken($green-primary, 10%) 100%);
+          color: $white;
+          box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+          
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+          }
+        }
+        
+        &.btn-no {
+          background: $white;
+          color: $ink-600;
+          border: 2px solid #e5e7eb;
+          
+          &:hover {
+            background: #f8f9fa;
+            border-color: $ink-400;
+          }
+        }
+      }
     }
   }
 }

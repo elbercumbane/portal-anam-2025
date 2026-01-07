@@ -8,16 +8,15 @@ import { OrgChartComponent } from './org-chart/org-chart.component';
 import { RegisterComponent } from './register/register.component';
 import { PayQuotasComponent } from './pay-quotas/pay-quotas.component';
 import { ViewReceiptsComponent } from './view-receipts/view-receipts.component';
-import { authGuard } from '../../guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: MembersHomeComponent, canActivate: [authGuard] },
+  { path: '', component: MembersHomeComponent },
   { path: 'organograma', component: OrgChartComponent }, // Página pública
-  { path: 'cadastro', component: RegisterComponent, canActivate: [authGuard] },
-  { path: 'pagar-cotas', component: PayQuotasComponent, canActivate: [authGuard] },
-  { path: 'consultar-recibos', component: ViewReceiptsComponent, canActivate: [authGuard] },
-  { path: 'perfil', loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent), canActivate: [authGuard] },
-  { path: 'pagamento-confirmado', loadComponent: () => import('./payment-confirmed/payment-confirmed.component').then(m => m.PaymentConfirmedComponent), canActivate: [authGuard] }
+  { path: 'cadastro', component: RegisterComponent },
+  { path: 'pagar-cotas', component: PayQuotasComponent },
+  { path: 'consultar-recibos', component: ViewReceiptsComponent },
+  { path: 'perfil', loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent) },
+  { path: 'pagamento-confirmado', loadComponent: () => import('./payment-confirmed/payment-confirmed.component').then(m => m.PaymentConfirmedComponent) }
 ];
 
 @NgModule({

@@ -823,8 +823,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     localStorage.removeItem('userProvince');
     localStorage.removeItem('userRole');
     
-    // Redirecionar para login
-    this.router.navigate(['/login']);
+    // Redirecionamento removido - não redireciona para login
+    // this.router.navigate(['/login']);
   }
 
   updateGreeting(): void {

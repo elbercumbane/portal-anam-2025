@@ -2,219 +2,114 @@
 <section class="hero-section">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-      </svg>
-      <span>Faça a Diferença</span>
-    </div>
     <h1 class="hero-title">
-      Com apenas <span class="highlight">50 MZN por mês</span>,<br>
-      podes mudar uma vida.
+      O teu apoio à <span class="highlight">Associação</span><br>
+      transforma vidas e constrói o futuro.
     </h1>
     <p class="hero-subtitle">
-      Descobre porque o teu apoio é essencial para transformar Massinga e construir um futuro melhor para todos.
+      Descobre como o teu apoio é essencial para transformar Massinga e construir um futuro melhor para todos.
     </p>
     <button class="hero-cta" (click)="scrollToSupport()">
-      <span>Quero Apoiar Agora</span>
+      <span>Apoiar Agora</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <line x1="5" y1="12" x2="19" y2="12"></line>
         <polyline points="12 5 19 12 12 19"></polyline>
       </svg>
     </button>
   </div>
-  <div class="hero-wave">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-      <path d="M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z"></path>
-    </svg>
+</section>
+
+<!-- Secção B: Por que Apoiar -->
+<section id="porque-apoiar" class="why-support-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Por que <span class="highlight-text">Apoiar</span> a ANAM?</h2>
+      <p class="section-description">
+        Acreditamos que a <strong>transparência</strong> é a base da confiança. Quando apoias a ANAM, sabes exactamente onde e como o teu contributo está a fazer a diferença.
+      </p>
+    </div>
+    
+    <div class="why-support-content">
+      <div class="why-support-grid">
+        <div class="why-support-card">
+          <div class="why-icon" [innerHTML]="getIconSvg('search', '#4CAF50')"></div>
+          <h3>Transparência Total</h3>
+          <p>Acompanha em tempo real como o teu apoio está a transformar vidas. Relatórios detalhados, resultados mensuráveis e impacto visível em cada projecto.</p>
+        </div>
+        <div class="why-support-card">
+          <div class="why-icon heart-icon" [innerHTML]="getIconSvg('heart', '#EF4444')"></div>
+          <h3>Impacto Real</h3>
+          <p>Cada contribuição, seja em tempo, conhecimento ou recursos, gera transformações concretas na vida de pessoas reais em Massinga.</p>
+        </div>
+        <div class="why-support-card">
+          <div class="why-icon" [innerHTML]="getIconSvg('handshake', '#0B2F41')"></div>
+          <h3>Comunidade Forte</h3>
+          <p>Faz parte de uma rede de pessoas comprometidas com o desenvolvimento sustentável e o crescimento da nossa comunidade.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- Secção B: A Causa Explicada -->
-<section id="causa" class="cause-section">
+<!-- Secção C: Formas de Apoio -->
+<section id="formas-apoiar" class="support-ways-section">
   <div class="container">
     <div class="section-header">
-      <div class="section-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-          <circle cx="12" cy="10" r="3"></circle>
-        </svg>
-        <span>A Causa</span>
-      </div>
-      <h2>O Problema que <span class="highlight-text">Combatemos</span></h2>
+      <h2>Como Podes <span class="highlight-text">Apoiar</span></h2>
       <p class="section-description">
-        Massinga enfrenta desafios reais que afectam milhares de pessoas todos os dias.
+        O teu apoio não é apenas monetário. Existem várias formas de contribuir para a transformação de Massinga.
       </p>
     </div>
 
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="problem-icon">📊</div>
-        <h3>47% dos jovens</h3>
-        <p>desta região não têm acesso à formação digital básica</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon">🌾</div>
-        <h3>60% das famílias</h3>
-        <p>dependem de agricultura de subsistência sem técnicas modernas</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon">🎓</div>
-        <h3>35% das crianças</h3>
-        <p>abandonam a escola antes de completar o ensino básico</p>
-      </div>
-      <div class="problem-card">
-        <div class="problem-icon">💼</div>
-        <h3>Desemprego juvenil</h3>
-        <p>atinge 42% entre jovens de 18-25 anos na região</p>
-      </div>
-    </div>
-
-    <div class="affected-people">
-      <h3>Quem é Afectado?</h3>
-      <div class="people-list">
-        <div class="people-item">
-          <mat-icon class="people-icon">family_restroom</mat-icon>
-          <div>
-            <strong>Famílias Rurais</strong>
-            <p>Sem acesso a recursos e oportunidades de desenvolvimento</p>
-          </div>
-        </div>
-        <div class="people-item">
-          <span class="people-icon">🎓</span>
-          <div>
-            <strong>Jovens</strong>
-            <p>Sem acesso à educação de qualidade e formação profissional</p>
-          </div>
-        </div>
-        <div class="people-item">
-          <span class="people-icon">👵</span>
-          <div>
-            <strong>Idosos</strong>
-            <p>Sem apoio adequado e cuidados de saúde básicos</p>
-          </div>
-        </div>
-        <div class="people-item">
-          <span class="people-icon">👩‍💼</span>
-          <div>
-            <strong>Mulheres</strong>
-            <p>Sem oportunidades económicas e de empoderamento</p>
-          </div>
-        </div>
+    <div class="support-ways-grid">
+      <div class="support-way-card" *ngFor="let way of supportWays; let i = index">
+        <div class="way-icon" [innerHTML]="getIconSvg(way.iconType, getIconColor(i))"></div>
+        <h3>{{ way.title }}</h3>
+        <p>{{ way.description }}</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Secção C: O Impacto -->
-<section id="impacto" class="impact-section">
+<!-- Secção D: Níveis de Apoio -->
+<section id="niveis-apoiar" class="support-levels-section">
   <div class="container">
     <div class="section-header">
-      <h2>O <span class="highlight-text">Impacto</span> da ANAM</h2>
+      <h2>Níveis de <span class="highlight-text">Apoio</span></h2>
       <p class="section-description">
-        Números que mostram a diferença que estamos a fazer juntos.
-      </p>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card" *ngFor="let stat of impactStats">
-        <div class="stat-icon-large">{{ stat.icon }}</div>
-        <div class="stat-number">{{ stat.number }}</div>
-        <div class="stat-label">{{ stat.label }}</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Secção D: Histórias Reais -->
-<section id="historias" class="stories-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Histórias <span class="highlight-text">Reais</span></h2>
-      <p class="section-description">
-        Pessoas reais cujas vidas foram transformadas pelo apoio da ANAM.
-      </p>
-    </div>
-
-    <div class="stories-grid">
-      <div class="story-card-large" *ngFor="let story of stories">
-        <div class="story-image">{{ story.image }}</div>
-        <div class="story-content">
-          <div class="story-meta">
-            <strong>{{ story.name }}</strong>
-            <span>{{ story.age }} anos • {{ story.location }}</span>
-          </div>
-          <p class="story-text">"{{ story.story }}"</p>
-          <div class="story-project">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-              <path d="M2 17l10 5 10-5"></path>
-              <path d="M2 12l10 5 10-5"></path>
-            </svg>
-            <span>{{ story.project }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Secção E: Como Cada Apoio Ajuda -->
-<section id="como-ajuda" class="support-levels-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Como Cada <span class="highlight-text">Apoio</span> Ajuda</h2>
-      <p class="section-description">
-        Veja o impacto concreto do teu apoio mensal.
+        A ANAM reconhece e honra os seus apoiantes através de diferentes níveis, cada um com benefícios exclusivos e reconhecimento especial.
       </p>
     </div>
 
     <div class="support-levels-grid">
-      <div class="support-level-card" *ngFor="let level of supportLevels">
-        <div class="level-icon">{{ level.icon }}</div>
-        <div class="level-amount">{{ level.amount }}</div>
-        <div class="level-frequency">/ {{ level.frequency }}</div>
-        <div class="level-benefit">{{ level.benefit }}</div>
+      <div class="support-level-card" *ngFor="let level of supportLevels" [class]="'level-' + level.levelClass">
+        <div class="medal-icon-large" [innerHTML]="getMedalIcon(level.levelClass)"></div>
+        <h3>{{ level.name }}</h3>
+        <p class="level-description">{{ level.description }}</p>
+        <ul class="level-benefits">
+          <li *ngFor="let benefit of level.benefits">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            {{ benefit }}
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Secção F: Prova Social -->
-<section id="prova-social" class="social-proof-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Quem <span class="highlight-text">Confia</span> na ANAM</h2>
-    </div>
-
-    <!-- Depoimentos -->
-    <div class="testimonials-grid">
-      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
-        <div class="testimonial-avatar">{{ testimonial.image }}</div>
-        <div class="testimonial-content">
-          <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
-          <div class="testimonial-author">
-            <strong>{{ testimonial.name }}</strong>
-            <span>{{ testimonial.role }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- Secção G: CTA Forte -->
+<!-- Secção E: CTA -->
 <section class="final-cta-section">
   <div class="container">
     <div class="cta-content">
-      <h2>Estás Pronto para Fazer a Diferença?</h2>
+      <h2>Junta-te a Nós</h2>
       <p>
-        Junta-te a centenas de apoiantes que já estão a transformar vidas em Massinga. 
-        O teu apoio, por menor que seja, faz parte de uma transformação maior.
+        O teu apoio, seja qual for a forma, faz a diferença em Massinga. 
+        Junta-te à nossa missão de transformar vidas e construir um futuro melhor.
       </p>
       <button class="cta-button-large" (click)="scrollToSupport()">
-        <span>Quero Apoiar Agora</span>
+        <span>Apoiar Agora</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>

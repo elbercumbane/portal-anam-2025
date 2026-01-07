@@ -18,7 +18,7 @@ export const routes: Routes = [
       { path: 'contato', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
       { path: 'programas', loadComponent: () => import('./pages/programs/programs.component').then(m => m.ProgramsComponent) },
       { path: 'parceiros', loadComponent: () => import('./pages/partners/partners.component').then(m => m.PartnersComponent) },
-      { path: 'marketplace', loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent) },
+      { path: 'marketplace', loadComponent: () => import('./pages/marktplace2/marketplace2.component').then(m => m.Marketplace2Component) },
       { path: 'simpatizantes', loadChildren: () => import('./pages/sympathizers/sympathizers.module').then(m => m.SympathizersModule) },
       { path: 'apoio', loadChildren: () => import('./pages/supporters/supporters.module').then(m => m.SupportersModule) },
     ],

@@ -36,68 +36,77 @@
 // Nós Folha
 .leaf-node {
   position: relative;
-  width: 180px;
-  padding: 18px 15px;
-  background: linear-gradient(145deg, rgba(50, 50, 50, 0.9) 0%, rgba(35, 35, 35, 0.95) 100%);
-  border-radius: 16px;
-  border: 1px solid rgba($gold-primary, 0.2);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  width: 190px;
+  padding: 24px 18px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E8F5F0 100%);
+  border-radius: 20px;
+  border: 2.5px solid rgba($green-medium, 0.45);
+  box-shadow: 
+    0 12px 40px rgba(45,106,79,0.18),
+    0 4px 12px rgba(15,23,42,0.12),
+    inset 0 1px 2px rgba(255,255,255,0.6);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
   
   .leaf-glow {
     position: absolute;
     inset: -2px;
-    border-radius: 18px;
+    border-radius: 22px;
     opacity: 0;
     z-index: -1;
-    filter: blur(10px);
-    transition: opacity 0.4s ease;
+    filter: blur(14px);
+    transition: opacity 0.28s ease;
   }
   
   &:hover, &.active {
-    transform: translateY(-3px);
-    border-color: rgba($gold-primary, 0.35);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px) scale(1.04);
+    border-color: rgba($green-light, 0.65);
+    box-shadow: 
+      0 24px 56px rgba(45,106,79,0.22),
+      0 6px 16px rgba(15,23,42,0.14),
+      inset 0 1px 2px rgba(255,255,255,0.8);
     
     .leaf-glow {
-      opacity: 0.2;
+      opacity: 0.4;
     }
   }
   
   // Cores suaves para cada folha (tons mais neutros)
   &.leaf-eventos {
-    .leaf-glow { background: rgba(#8A7D65, 0.3); }
-    .leaf-icon { background: rgba(#8A7D65, 0.1); border-color: rgba(#8A7D65, 0.25); }
-    .leaf-icon svg { stroke: #8A7D65; }
-    &:hover { border-color: rgba(#8A7D65, 0.4); }
+    background: linear-gradient(135deg, #FFF9F0 0%, #F5E8DC 100%);
+    .leaf-glow { background: rgba(#8A7D65, 0.26); }
+    .leaf-icon { background: linear-gradient(135deg, rgba(#8A7D65, 0.22) 0%, rgba(#8A7D65, 0.14) 100%); border-color: rgba(#8A7D65, 0.35); }
+    .leaf-icon svg { stroke: #5A4D45; }
+    &:hover { border-color: rgba(#8A7D65, 0.55); }
   }
   
   &.leaf-projectos {
-    .leaf-glow { background: rgba(#6B8E6B, 0.3); }
-    .leaf-icon { background: rgba(#6B8E6B, 0.1); border-color: rgba(#6B8E6B, 0.25); }
-    .leaf-icon svg { stroke: #6B8E6B; }
-    &:hover { border-color: rgba(#6B8E6B, 0.4); }
+    background: linear-gradient(135deg, #F0FBF8 0%, #E0F5F0 100%);
+    .leaf-glow { background: rgba($green-light, 0.26); }
+    .leaf-icon { background: linear-gradient(135deg, rgba($green-light, 0.24) 0%, rgba($green-light, 0.16) 100%); border-color: rgba($green-medium, 0.35); }
+    .leaf-icon svg { stroke: $green-dark; }
+    &:hover { border-color: rgba($green-medium, 0.55); }
   }
   
   &.leaf-comunicacao {
-    .leaf-glow { background: rgba(#7A8A9A, 0.3); }
-    .leaf-icon { background: rgba(#7A8A9A, 0.1); border-color: rgba(#7A8A9A, 0.25); }
-    .leaf-icon svg { stroke: #7A8A9A; }
-    &:hover { border-color: rgba(#7A8A9A, 0.4); }
+    background: linear-gradient(135deg, #F5F8FB 0%, #E8F1F8 100%);
+    .leaf-glow { background: rgba(100,116,139, 0.22); }
+    .leaf-icon { background: linear-gradient(135deg, rgba(100,116,139, 0.2) 0%, rgba(100,116,139, 0.12) 100%); border-color: rgba(100,116,139, 0.32); }
+    .leaf-icon svg { stroke: #475569; }
+    &:hover { border-color: rgba(100,116,139, 0.50); }
   }
   
   &.leaf-inovacao {
-    .leaf-glow { background: rgba(#8B7D8B, 0.3); }
-    .leaf-icon { background: rgba(#8B7D8B, 0.1); border-color: rgba(#8B7D8B, 0.25); }
-    .leaf-icon svg { stroke: #8B7D8B; }
-    &:hover { border-color: rgba(#8B7D8B, 0.4); }
+    background: linear-gradient(135deg, #FAF5FF 0%, #F3E8FF 100%);
+    .leaf-glow { background: rgba(139,92,246, 0.22); }
+    .leaf-icon { background: linear-gradient(135deg, rgba(139,92,246, 0.2) 0%, rgba(139,92,246, 0.12) 100%); border-color: rgba(139,92,246, 0.32); }
+    .leaf-icon svg { stroke: #7C3AED; }
+    &:hover { border-color: rgba(139,92,246, 0.50); }
   }
   
-  // Folhas douradas padrão
+  // Folhas padrão
   &:not(.leaf-eventos):not(.leaf-projectos):not(.leaf-comunicacao):not(.leaf-inovacao) {
-    .leaf-glow { background: rgba($gold-primary, 0.2); }
-    &:hover { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
+    .leaf-glow { background: rgba($green-light, 0.24); }
   }
   
   .leaf-content {
@@ -105,48 +114,60 @@
   }
   
   .leaf-icon {
-    width: 42px;
-    height: 42px;
-    margin: 0 auto 10px;
-    background: rgba($gold-primary, 0.15);
-    border: 1px solid rgba($gold-primary, 0.3);
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+    background: linear-gradient(135deg, rgba($green-light, 0.24) 0%, rgba($green-light, 0.14) 100%);
+    border: 2px solid rgba($green-medium, 0.32);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba($green-light, 0.18);
     
     svg {
-      width: 20px;
-      height: 20px;
-      stroke: $gold-light;
+      width: 25px;
+      height: 25px;
+      stroke: $green-dark;
+      stroke-width: 1.8;
     }
+  }
+  
+  &:hover .leaf-icon {
+    transform: scale(1.18);
+    background: linear-gradient(135deg, rgba($green-light, 0.32) 0%, rgba($green-light, 0.22) 100%);
+    border-color: rgba($green-medium, 0.48);
+    box-shadow: 0 8px 22px rgba($green-light, 0.28);
   }
   
   .leaf-tag {
     display: inline-block;
-    padding: 4px 10px;
-    background: rgba($gold-primary, 0.12);
-    border-radius: 10px;
-    font-size: 0.65rem;
+    padding: 6px 13px;
+    background: linear-gradient(135deg, rgba($green-light, 0.2) 0%, rgba($green-light, 0.12) 100%);
+    border: 1.2px solid rgba($green-medium, 0.28);
+    border-radius: 14px;
+    font-size: 0.61rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: $gold-light;
-    margin-bottom: 8px;
+    letter-spacing: 1.3px;
+    color: $green-dark;
+    margin-bottom: 10px;
   }
   
   h4 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: white;
-    margin: 0 0 4px;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0b1220;
+    margin: 0 0 2px;
+    letter-spacing: -0.2px;
   }
   
   p {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.84rem;
+    color: #475569;
     margin: 0;
+    font-weight: 500;
   }
 }
 

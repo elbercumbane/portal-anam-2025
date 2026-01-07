@@ -1,0 +1,22 @@
+// ============================================
+// MARKETPLACE2 - ARQUIVO PRINCIPAL
+// ============================================
+
+@import '../../../styles.scss';
+
+// Importar módulos organizados
+@import 'variables';
+@import 'header';
+@import 'sidebar';
+@import 'main-content';
+@import 'responsive';
+@import 'animations';
+
+// ============ PÁGINA BASE ============
+.marketplace2-page {
+  min-height: 100vh;
+  background: $main-bg;
+  position: relative;
+  overflow-x: hidden;
+}
+

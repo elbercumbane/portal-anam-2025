@@ -32,11 +32,11 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Verificar autenticação
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    // Verificação de autenticação removida - acesso permitido
+    // if (!this.authService.isAuthenticated()) {
+    //   this.router.navigate(['/login']);
+    //   return;
+    // }
 
     // Carregar dados do membro
     this.loadMemberDataFromStorage();

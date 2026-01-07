@@ -110,7 +110,7 @@ export class NavbarUserProfileComponent implements OnInit {
     localStorage.removeItem('userFullName');
     localStorage.removeItem('userName');
     
-    // Redirecionar para login
-    this.router.navigate(['/login']);
+    // Redirecionamento removido - não redireciona para login
+    // this.router.navigate(['/login']);
   }
 }
