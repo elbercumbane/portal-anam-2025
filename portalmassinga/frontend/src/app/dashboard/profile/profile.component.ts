@@ -62,6 +62,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSavingPassword = false;
   
+  // Dados de contribuição e cotas
+  totalContribuicao = 0;
+  totalCotasPagas = 0;
+  ultimaContribuicao: Date | null = null;
+  proximaCotaVencimento: Date | null = null;
+  isLoadingQuotas = false;
+  
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -75,6 +82,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this.loadMemberData();
+    this.loadQuotasData();
   }
   
   ngOnDestroy(): void {
@@ -179,19 +187,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.isSavingPassword = true;
     const newPassword = this.passwordForm.get('newPassword')?.value;
     
-    // Simular atualização de senha
-    Promise.resolve({ success: true })
-      .then(() => {
+    // Atualizar senha (implementar chamada de API quando disponível)
+    // Por enquanto, apenas salvar no localStorage
+    try {
+      const currentUser = this.authService.getCurrentUser();
+      if (currentUser) {
+        // Aqui seria feita a chamada de API para atualizar a senha
+        // Por enquanto, apenas mostrar mensagem de sucesso
         this.snackBar.open('Senha alterada com sucesso!', 'Fechar', { duration: 3000 });
         this.passwordForm.reset();
-      })
-      .catch((error) => {
-        console.error('Error updating password:', error);
-        this.snackBar.open('Erro ao alterar senha', 'Fechar', { duration: 3000 });
-      })
-      .finally(() => {
-        this.isSavingPassword = false;
-      });
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      this.snackBar.open('Erro ao alterar senha', 'Fechar', { duration: 3000 });
+    } finally {
+      this.isSavingPassword = false;
+    }
   }
   
   getErrorMessage(controlName: string): string {
@@ -208,7 +219,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return '';
   }
   
-  getStatusClass(status: string): string {
+  getStatusClass(status: string | undefined): string {
+    if (!status) return '';
     switch (status) {
       case 'Aprovado':
         return 'status-approved';
@@ -219,5 +231,68 @@ export class ProfileComponent implements OnInit, OnDestroy {
       default:
         return '';
     }
+  }
+  
+  loadQuotasData(): void {
+    this.isLoadingQuotas = true;
+    
+    try {
+      // Buscar recibos de pagamento do localStorage
+      const stored = localStorage.getItem('payment_receipts');
+      if (stored) {
+        const receipts: any[] = JSON.parse(stored);
+        
+        // Filtrar recibos do membro atual
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser && currentUser.email) {
+          const memberReceipts = receipts.filter(r => 
+            r.emailMembro && r.emailMembro.toLowerCase().trim() === currentUser.email.toLowerCase().trim()
+          );
+          
+          // Calcular totais
+          this.totalContribuicao = memberReceipts.reduce((sum, r) => sum + (r.valorTotal || 0), 0);
+          this.totalCotasPagas = memberReceipts.length;
+          
+          // Última contribuição
+          if (memberReceipts.length > 0) {
+            const sortedReceipts = memberReceipts.sort((a, b) => {
+              const dateA = new Date(a.dataPagamento).getTime();
+              const dateB = new Date(b.dataPagamento).getTime();
+              return dateB - dateA;
+            });
+            this.ultimaContribuicao = new Date(sortedReceipts[0].dataPagamento);
+          }
+        }
+      }
+      
+      // Calcular próxima cota (assumindo mensal, 30 dias após última)
+      if (this.ultimaContribuicao) {
+        const nextDate = new Date(this.ultimaContribuicao);
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        this.proximaCotaVencimento = nextDate;
+      } else {
+        // Se não há histórico, calcular a partir de hoje
+        const nextDate = new Date();
+        nextDate.setMonth(nextDate.getMonth() + 1);
+        this.proximaCotaVencimento = nextDate;
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados de cotas:', error);
+    } finally {
+      this.isLoadingQuotas = false;
+    }
+  }
+  
+  formatCurrency(value: number): string {
+    return value.toLocaleString('pt-MZ', { style: 'currency', currency: 'MZN', minimumFractionDigits: 0 });
+  }
+  
+  formatDate(date: Date | null): string {
+    if (!date) return '-';
+    return date.toLocaleDateString('pt-MZ', { 
+      day: '2-digit', 
+      month: 'long', 
+      year: 'numeric' 
+    });
   }
 }

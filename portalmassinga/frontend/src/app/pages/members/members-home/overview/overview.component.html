@@ -1,0 +1,82 @@
+<div class="overview-cards-grid">
+  <!-- Card 1: Minhas Contribuições -->
+  <section class="info-section member-contributions-section">
+    <div class="section-header">
+      <h3><mat-icon>account_balance_wallet</mat-icon>Minhas Contribuições</h3>
+      <p class="section-subtitle">Histórico das suas contribuições</p>
+    </div>
+    <div class="contributions-content">
+      <div class="contribution-summary">
+        <div class="contribution-item">
+          <div class="contribution-label">Total Contribuído</div>
+          <div class="contribution-value">{{ memberContributions?.total | currency:'MZN':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="contribution-item">
+          <div class="contribution-label">Última Contribuição</div>
+          <div class="contribution-value">{{ memberContributions?.lastContribution | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <div class="contribution-item">
+          <div class="contribution-label">Cotas Pagas</div>
+          <div class="contribution-value">{{ memberContributions?.quotasPaid }}/{{ memberContributions?.totalQuotas }}</div>
+        </div>
+      </div>
+      <div class="contribution-chart">
+        <canvas #memberContributionsChart></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 2: Resumo da Associação -->
+  <section class="info-section association-summary-section">
+    <div class="section-header">
+      <h3><mat-icon>assessment</mat-icon>Resumo da Associação</h3>
+      <p class="section-subtitle">Estado atual e progresso</p>
+    </div>
+    <div class="summary-content">
+      <div class="summary-stat-item">
+        <div class="summary-stat-header">
+          <mat-icon>handshake</mat-icon>
+          <span>Parceiros</span>
+        </div>
+        <div class="summary-stat-value">{{ associationSummary?.partners }}</div>
+        <div class="summary-stat-desc">Organizações parceiras</div>
+      </div>
+      <div class="summary-stat-item">
+        <div class="summary-stat-header">
+          <mat-icon>folder_special</mat-icon>
+          <span>Projetos Ativos</span>
+        </div>
+        <div class="summary-stat-value">{{ associationSummary?.activeProjects }}</div>
+        <div class="summary-stat-desc">Projetos em execução</div>
+      </div>
+      <div class="summary-stat-item">
+        <div class="summary-stat-header">
+          <mat-icon>location_on</mat-icon>
+          <span>Abrangência</span>
+        </div>
+        <div class="summary-stat-value">{{ associationSummary?.coverage }}</div>
+        <div class="summary-stat-desc">Províncias atendidas</div>
+      </div>
+      <div class="summary-stat-item">
+        <div class="summary-stat-header">
+          <mat-icon>people</mat-icon>
+          <span>Membros</span>
+        </div>
+        <div class="summary-stat-value">{{ associationSummary?.totalMembers }}</div>
+        <div class="summary-stat-desc">Total de associados</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 3: Crescimento da Associação -->
+  <section class="info-section association-growth-section">
+    <div class="section-header">
+      <h3><mat-icon>trending_up</mat-icon>Crescimento da Associação</h3>
+      <p class="section-subtitle">Evolução do número de membros (últimos 12 meses)</p>
+    </div>
+    <div class="growth-chart-container">
+      <canvas #associationGrowthChart></canvas>
+    </div>
+  </section>
+</div>
+

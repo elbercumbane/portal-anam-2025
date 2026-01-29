@@ -42,24 +42,15 @@ export class ProfileComponent implements OnInit {
     this.loadMemberDataFromStorage();
     
     if (!this.memberData) {
-      // Se não encontrar dados, tentar buscar novamente após um pequeno delay
-      setTimeout(() => {
-        this.loadMemberDataFromStorage();
-        if (!this.memberData) {
-          // Tentar uma última vez com busca mais ampla
-          this.loadMemberDataWithFallback();
-          if (!this.memberData) {
-            console.error('Dados não encontrados. Email do usuário:', this.authService.getCurrentUser()?.email);
-            console.error('Aplicações no localStorage:', localStorage.getItem('anam_applications'));
-            alert('Dados do membro não encontrados. Por favor, verifique se o email usado no login corresponde ao email do cadastro.');
-            this.router.navigate(['/membros']);
-            return;
-          }
-        }
-        this.initForm();
-        this.loadMemberData();
-      }, 500);
-      return;
+      // Tentar busca mais ampla
+      this.loadMemberDataWithFallback();
+      if (!this.memberData) {
+        console.error('Dados não encontrados. Email do usuário:', this.authService.getCurrentUser()?.email);
+        console.error('Aplicações no localStorage:', localStorage.getItem('anam_applications'));
+        alert('Dados do membro não encontrados. Por favor, verifique se o email usado no login corresponde ao email do cadastro.');
+        this.router.navigate(['/membros']);
+        return;
+      }
     }
 
     this.initForm();
@@ -300,6 +291,7 @@ export class ProfileComponent implements OnInit {
     this.showSuccessMessage = true;
     this.isEditing = false;
 
+    // Ocultar mensagem de sucesso após 3 segundos
     setTimeout(() => {
       this.showSuccessMessage = false;
     }, 3000);

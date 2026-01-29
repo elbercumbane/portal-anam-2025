@@ -72,70 +72,102 @@ export class MembersManagementComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
-    console.log('📋 Carregando candidaturas...');
-    
     this.apiClient.getApplications().subscribe({
       next: (response: any) => {
-        console.log('✅ Resposta do servidor:', response);
+        let applications: any[] = [];
         
-        if (response.success) {
-          if (response.data && Array.isArray(response.data)) {
-            console.log(`📊 Total de candidaturas recebidas: ${response.data.length}`);
-            
-            this.members = response.data.map((app: any) => ({
-              id: app.id,
-              nome: app.nome,
-              nomePai: app.nome_pai,
-              nomeMae: app.nome_mae,
-              dataNascimento: app.data_nascimento,
-              estadoCivil: app.estado_civil,
-              profissao: app.profissao,
-              celular: app.celular,
-              email: app.email,
-              telefone: app.telefone,
-              rua: app.rua,
-              bairro: app.bairro,
-              cidade: app.cidade,
-              nomeConjuge: app.nome_conjuge,
-              dataNascimentoConjuge: app.data_nascimento_conjuge,
-              filiacaoPaiConjuge: app.filiacao_pai_conjuge,
-              filiacaoMaeConjuge: app.filiacao_mae_conjuge,
-              localTrabalho: app.local_trabalho,
-              cargo: app.cargo,
-              enderecoTrabalho: app.endereco_trabalho,
-              telefoneTrabalho: app.telefone_trabalho,
-              foto: app.foto,
-              outrasInformacoes: app.outras_informacoes,
-              dataCadastro: app.data_cadastro,
-              status: app.status || 'Pendente',
-              aceitaTermos: app.aceita_termos
-            }));
-            
-            this.filteredMembers = [...this.members];
-            console.log(`✅ ${this.members.length} candidaturas carregadas com sucesso`);
+        if (Array.isArray(response)) {
+          applications = response;
+        } else if (response && typeof response === 'object' && response !== null) {
+          if (Array.isArray(response.data)) {
+            applications = response.data;
+          } else if (Array.isArray(response.body)) {
+            applications = response.body;
           } else {
-            console.warn('⚠️ Resposta sem dados ou dados não é array:', response);
-            this.members = [];
-            this.filteredMembers = [];
-            this.errorMessage = 'Nenhuma candidatura encontrada';
+            const arrayKeys = Object.keys(response).filter(key => Array.isArray(response[key]));
+            if (arrayKeys.length > 0) {
+              applications = response[arrayKeys[0]];
+            } else if (Object.keys(response).length === 0 || response === null) {
+              applications = [];
+            } else {
+              this.members = [];
+              this.filteredMembers = [];
+              this.errorMessage = `Formato de resposta inesperado. O servidor deve retornar um array, mas retornou: ${JSON.stringify(response).substring(0, 200)}`;
+              this.isLoading = false;
+              return;
+            }
           }
+        } else if (response === null || response === undefined) {
+          applications = [];
         } else {
-          console.error('❌ Resposta sem sucesso:', response);
-          this.errorMessage = response.message || 'Erro ao carregar candidaturas';
           this.members = [];
           this.filteredMembers = [];
+          this.errorMessage = `Formato de resposta não suportado. Tipo: ${typeof response}`;
+          this.isLoading = false;
+          return;
         }
+        
+        if (applications.length === 0) {
+          this.members = [];
+          this.filteredMembers = [];
+          this.isLoading = false;
+          return;
+        }
+        
+        // Mapear campos do backend (inglês/camelCase) para o formato do frontend
+        this.members = applications.map((app: any) => {
+          // Converter status do backend (inglês) para português
+          const statusMap: { [key: string]: string } = {
+            'Pending': 'Pendente',
+            'Approved': 'Aprovado',
+            'Rejected': 'Rejeitado'
+          };
+          const backendStatus = app.status || 'Pending';
+          const status = statusMap[backendStatus] || backendStatus;
+          
+          // Mapear dependentes do formato backend (inglês) para frontend (português)
+          const dependentesMapeados = (app.dependents || []).map((dep: any) => ({
+            nome: dep.name || dep.nome,
+            parentesco: dep.relationship || dep.parentesco,
+            profissao: dep.profession || dep.profissao,
+            idade: dep.age || dep.idade
+          }));
+          
+          return {
+            id: app.id,
+            nome: app.fullName || app.nome,
+            nomePai: app.fatherName || app.nomePai || app.nome_pai,
+            nomeMae: app.motherName || app.nomeMae || app.nome_mae,
+            dataNascimento: app.birthDate || app.dataNascimento || app.data_nascimento,
+            estadoCivil: app.maritalStatus || app.estadoCivil || app.estado_civil,
+            profissao: app.profession || app.profissao,
+            celular: app.mobilePhone || app.celular,
+            email: app.email,
+            telefone: app.phone || app.telefone,
+            rua: app.street || app.rua,
+            bairro: app.neighborhood || app.bairro,
+            cidade: app.city || app.cidade,
+            nomeConjuge: app.spouseName || app.nomeConjuge || app.nome_conjuge,
+            dataNascimentoConjuge: app.spouseBirthDate || app.dataNascimentoConjuge || app.data_nascimento_conjuge,
+            filiacaoPaiConjuge: app.spouseFatherName || app.filiacaoPaiConjuge || app.filiacao_pai_conjuge,
+            filiacaoMaeConjuge: app.spouseMotherName || app.filiacaoMaeConjuge || app.filiacao_mae_conjuge,
+            localTrabalho: app.workplace || app.localTrabalho || app.local_trabalho,
+            cargo: app.position || app.cargo,
+            enderecoTrabalho: app.workAddress || app.enderecoTrabalho || app.endereco_trabalho,
+            telefoneTrabalho: app.workPhone || app.telefoneTrabalho || app.telefone_trabalho,
+            foto: app.photo || app.foto,
+            outrasInformacoes: app.additionalInformation || app.outrasInformacoes || app.outras_informacoes,
+            dataCadastro: app.createdAt || app.dataCadastro || app.data_cadastro,
+            status: status,
+            aceitaTermos: app.acceptsTerms || app.aceitaTermos || app.aceita_termos,
+            dependentes: dependentesMapeados
+          };
+        });
+        
+        this.filteredMembers = [...this.members];
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('❌ Erro ao carregar candidaturas:', error);
-        console.error('Detalhes do erro:', {
-          message: error.message,
-          status: error.status,
-          error: error.error,
-          url: error.url
-        });
-        
         let errorMsg = 'Erro ao carregar candidaturas do servidor';
         if (error.error?.message) {
           errorMsg = error.error.message;
@@ -239,12 +271,8 @@ export class MembersManagementComponent implements OnInit {
     
     const confirmMessage = `Tem certeza que deseja aprovar esta candidatura?\n\n` +
       `Isso irá:\n` +
-      `✅ Criar o membro na base de dados\n` +
-      `✅ Criar uma conta de usuário para login\n\n` +
-      `O membro poderá fazer login com:\n` +
-      `📧 Email: ${memberEmail}\n` +
-      `🔑 Senha padrão: membro123\n\n` +
-      `(O membro deve alterar a senha após o primeiro login)`;
+      `✅ Atualizar o status da candidatura para "Aprovado"\n\n` +
+      `📧 Email: ${memberEmail}`;
 
     if (!confirm(confirmMessage)) {
       return;
@@ -253,24 +281,17 @@ export class MembersManagementComponent implements OnInit {
     this.isLoading = true;
     this.apiClient.approveApplication(applicationId).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          const successMessage = `✅ Candidatura aprovada com sucesso!\n\n` +
-            `O membro foi criado na base de dados e já pode fazer login:\n\n` +
-            `📧 Email: ${memberEmail}\n` +
-            `🔑 Senha: membro123\n\n` +
-            `O membro deve ser informado sobre estas credenciais.`;
-          
-          alert(successMessage);
-          this.loadMembers();
-        } else {
-          alert('Erro ao aprovar candidatura: ' + (response.message || 'Erro desconhecido'));
-        }
-        this.isLoading = false;
+        const successMessage = `✅ Candidatura aprovada com sucesso!\n\n` +
+          `O status foi atualizado para "Aprovado".\n\n` +
+          `📧 Email: ${memberEmail}`;
+        
+        alert(successMessage);
+        // Recarregar lista para atualizar status
+        this.loadMembers();
       },
       error: (error) => {
-        alert('Erro ao aprovar candidatura: ' + (error.message || 'Erro desconhecido'));
+        alert('Erro ao aprovar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'));
         this.isLoading = false;
-        console.error('Erro ao aprovar candidatura:', error);
       }
     });
   }
@@ -279,20 +300,16 @@ export class MembersManagementComponent implements OnInit {
     const observacoes = prompt('Digite as observações para a rejeição (opcional):');
     
     this.isLoading = true;
+    // O backend espera um objeto com "observations" no body
     this.apiClient.rejectApplication(applicationId, observacoes || undefined).subscribe({
       next: (response: any) => {
-        if (response.success) {
-          alert('Candidatura rejeitada com sucesso.');
-          this.loadMembers();
-        } else {
-          alert('Erro ao rejeitar candidatura: ' + (response.message || 'Erro desconhecido'));
-        }
-        this.isLoading = false;
+        alert('Candidatura rejeitada com sucesso.');
+        // Recarregar lista para atualizar status
+        this.loadMembers();
       },
       error: (error) => {
-        alert('Erro ao rejeitar candidatura: ' + (error.message || 'Erro desconhecido'));
+        alert('Erro ao rejeitar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'));
         this.isLoading = false;
-        console.error('Erro ao rejeitar candidatura:', error);
       }
     });
   }

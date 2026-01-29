@@ -6,19 +6,24 @@
 @import '../_sections';
 @import '../_variables';
 
-// Secção: Estatísticas
-.stats-section {
-  padding: 4rem 0;
+// ========================================
+// SECÇÃO: POR QUE APOIAR
+// ========================================
+.why-support-section {
+  padding: 5rem 0;
   background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
   
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
+  .why-support-content {
     margin-top: 3rem;
   }
   
-  .stat-card {
+  .why-support-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .why-support-card {
     background: $white;
     padding: 2.5rem;
     border-radius: $border-radius-xl;
@@ -26,230 +31,265 @@
     box-shadow: $shadow-medium;
     border: 2px solid rgba(76, 175, 80, 0.1);
     @include smooth-transition;
+    position: relative;
+    overflow: hidden;
     
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: $shadow-xl;
-      border-color: rgba(76, 175, 80, 0.3);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $green-primary 0%, $blue-primary 100%);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
     }
     
-    .stat-icon {
-      font-size: 3rem;
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: $shadow-xl;
+      border-color: rgba(76, 175, 80, 0.3);
+      
+      &::before {
+        transform: scaleX(1);
+      }
+      
+      .why-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+    }
+    
+    .why-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+      border-radius: 50%;
+      @include smooth-transition;
+      
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+      
+      &.heart-icon {
+        animation: heartbeat 2s ease infinite;
+      }
+    }
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: $ink-900;
       margin-bottom: 1rem;
     }
     
-    .stat-value {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: $green-primary;
-      margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-      color: $ink-500;
-      font-size: 1rem;
-      font-weight: 500;
+    p {
+      color: $ink-400;
+      line-height: 1.7;
+      font-size: 1.05rem;
+      margin: 0;
     }
   }
 }
 
-// Secção: Distribuição de Custos
-.cost-distribution-section {
-  padding: 4rem 0;
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// ========================================
+// SECÇÃO: FORMAS DE APOIO
+// ========================================
+.support-ways-section {
+  padding: 5rem 0;
   background: $white;
   
-  .chart-card {
+  .support-ways-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  
+  .support-way-card {
     background: $white;
-    padding: 3rem;
+    padding: 2.5rem;
     border-radius: $border-radius-xl;
-    box-shadow: $shadow-medium;
-    border: 2px solid rgba(76, 175, 80, 0.1);
-    
-    .card-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      
-      h2 {
-        font-family: 'Playfair Display', serif;
-        font-size: 2rem;
-        font-weight: 700;
-        color: $ink-900;
-        margin-bottom: 0.5rem;
-      }
-      
-      .card-subtitle {
-        color: $ink-500;
-        font-size: 1rem;
-      }
-    }
-    
-    .chart-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-    
-    .chart-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      
-      .pie-chart {
-        width: 100%;
-        max-width: 400px;
-        height: auto;
-        
-        .chart-segment {
-          transition: stroke-width 0.3s ease;
-          cursor: pointer;
-          
-          &:hover {
-            stroke-width: 70;
-          }
-        }
-        
-        .chart-center-value {
-          font-family: 'Playfair Display', serif;
-          font-size: 2rem;
-          font-weight: 700;
-          fill: $ink-900;
-        }
-        
-        .chart-center-label {
-          font-size: 1rem;
-          fill: $ink-500;
-          font-weight: 500;
-        }
-      }
-    }
-    
-    .chart-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        
-        .legend-color {
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
-          flex-shrink: 0;
-        }
-        
-        .legend-info {
-          flex: 1;
-          
-          .legend-name {
-            font-weight: 600;
-            color: $ink-900;
-            margin-bottom: 0.25rem;
-            font-size: 1rem;
-          }
-          
-          .legend-details {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            color: $ink-500;
-          }
-        }
-      }
-    }
-  }
-}
-
-// Secção: Gráfico de Impacto
-.impact-chart-section {
-  padding: 4rem 0;
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
-  
-  .chart-card {
-    background: $white;
-    padding: 3rem;
-    border-radius: $border-radius-xl;
-    box-shadow: $shadow-medium;
-    border: 2px solid rgba(76, 175, 80, 0.1);
-    
-    .card-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      
-      h2 {
-        font-family: 'Playfair Display', serif;
-        font-size: 2rem;
-        font-weight: 700;
-        color: $ink-900;
-        margin-bottom: 0.5rem;
-      }
-      
-      .card-subtitle {
-        color: $ink-500;
-        font-size: 1rem;
-      }
-    }
-    
-    .chart-content {
-      overflow-x: auto;
-      padding: 1rem 0;
-    }
-    
-    .bar-chart {
-      width: 100%;
-      min-width: 800px;
-      height: auto;
-      display: block;
-      
-      .bar {
-        transition: opacity 0.3s ease;
-        cursor: pointer;
-        
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-      
-      .bar-value {
-        font-size: 0.875rem;
-        font-weight: 600;
-        fill: $ink-700;
-      }
-      
-      .bar-label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        fill: $ink-600;
-      }
-      
-      .axis-label {
-        font-size: 0.875rem;
-        fill: $ink-500;
-      }
-    }
-  }
-}
-
-// Secção: CTA Final
-.final-cta-section {
-  padding: 4rem 0;
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
-  
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  
-  .cta-content {
     text-align: center;
+    box-shadow: $shadow-medium;
+    border: 2px solid rgba(76, 175, 80, 0.1);
+    @include smooth-transition;
+    position: relative;
+    overflow: hidden;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(76, 175, 80, 0.08) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    &:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: $shadow-xl;
+      border-color: rgba(76, 175, 80, 0.4);
+      
+      &::after {
+        opacity: 1;
+      }
+      
+      .way-icon {
+        transform: scale(1.15) rotate(5deg);
+      }
+    }
+    
+    .way-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
+      border-radius: 50%;
+      @include smooth-transition;
+      
+      svg {
+        width: 35px;
+        height: 35px;
+      }
+    }
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      color: $ink-400;
+      line-height: 1.7;
+      font-size: 1rem;
+      margin: 0;
+    }
+  }
+}
+
+// ========================================
+// SECÇÃO: NÍVEIS DE APOIO (Estilos adicionais)
+// ========================================
+.support-levels-section {
+  .support-level-card {
+    .medal-icon-large {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+    
+    .level-description {
+      color: $ink-500;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .level-benefits {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        color: $ink-600;
+        font-size: 1rem;
+        line-height: 1.6;
+        
+        svg {
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+          margin-top: 0.2rem;
+          color: $green-primary;
+        }
+      }
+    }
+    
+    // Estilos específicos por nível
+    &.level-platinum {
+      background: linear-gradient(135deg, rgba(229, 228, 226, 0.2) 0%, rgba(192, 192, 192, 0.2) 100%);
+      border-color: rgba(192, 192, 192, 0.3);
+      
+      &:hover {
+        border-color: rgba(192, 192, 192, 0.6);
+      }
+    }
+    
+    &.level-gold {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+      border-color: rgba(255, 215, 0, 0.3);
+      
+      &:hover {
+        border-color: rgba(255, 215, 0, 0.6);
+      }
+    }
+    
+    &.level-diamond {
+      background: linear-gradient(135deg, rgba(185, 242, 255, 0.2) 0%, rgba(135, 206, 235, 0.2) 100%);
+      border-color: rgba(135, 206, 235, 0.3);
+      
+      &:hover {
+        border-color: rgba(135, 206, 235, 0.6);
+      }
+    }
+  }
+}
+
+// ========================================
+// SECÇÃO: CTA FINAL (Estilos adicionais)
+// ========================================
+.final-cta-section {
+  .cta-content {
     background: $white;
-    padding: 2.5rem 2.5rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 3rem 2.5rem;
+    border-radius: $border-radius-xl;
+    box-shadow: $shadow-medium;
     border: 2px solid rgba(76, 175, 80, 0.15);
     position: relative;
     overflow: visible;
@@ -262,142 +302,99 @@
       right: 0;
       height: 5px;
       background: linear-gradient(90deg, $green-primary 0%, $blue-primary 100%);
-      border-radius: 20px 20px 0 0;
-    }
-    
-    h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 4vw, 2.75rem);
-      font-weight: 700;
-      color: $ink-900;
-      margin-bottom: 1.5rem;
-    }
-    
-    p {
-      font-size: 1.15rem;
-      color: $ink-400;
-      line-height: 1.7;
-      margin-bottom: 2.5rem;
-    }
-    
-    .cta-button-large {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.875rem;
-      padding: 1.5rem 3.5rem;
-      background: linear-gradient(135deg, $green-primary 0%, darken($green-primary, 8%) 100%);
-      color: $white;
-      border: none;
-      border-radius: 50px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      cursor: pointer;
-      @include smooth-transition;
-      box-shadow: 
-        0 6px 30px rgba(76, 175, 80, 0.5),
-        0 0 0 0 rgba(76, 175, 80, 0.4);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-      }
-      
-      span {
-        position: relative;
-        z-index: 1;
-      }
-      
-      svg {
-        width: 24px;
-        height: 24px;
-        position: relative;
-        z-index: 1;
-        @include smooth-transition;
-      }
-      
-      &:hover {
-        transform: translateY(-4px);
-        box-shadow: 
-          0 8px 40px rgba(76, 175, 80, 0.6),
-          0 0 0 8px rgba(76, 175, 80, 0.1);
-        
-        &::before {
-          width: 300px;
-          height: 300px;
-        }
-        
-        svg {
-          transform: translateX(6px);
-        }
-      }
-      
-      &:active {
-        transform: translateY(-2px);
-      }
+      border-radius: $border-radius-xl $border-radius-xl 0 0;
     }
   }
 }
 
-// Responsivo
+// ========================================
+// RESPONSIVO
+// ========================================
 @media (max-width: $mobile) {
-  .stats-section {
+  .why-support-section {
     padding: 3rem 0;
     
-    .stats-grid {
+    .why-support-grid {
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
     
-    .stat-card {
+    .why-support-card {
       padding: 2rem;
       
-      .stat-value {
-        font-size: 2rem;
+      .why-icon {
+        width: 60px;
+        height: 60px;
+        
+        svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+      
+      h3 {
+        font-size: 1.5rem;
       }
     }
   }
   
-  .cost-distribution-section {
+  .support-ways-section {
     padding: 3rem 0;
     
-    .chart-card {
+    .support-ways-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .support-way-card {
       padding: 2rem;
       
-      .chart-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+      .way-icon {
+        width: 60px;
+        height: 60px;
+        
+        svg {
+          width: 30px;
+          height: 30px;
+        }
       }
       
-      .chart-container .pie-chart {
-        max-width: 300px;
+      h3 {
+        font-size: 1.25rem;
       }
     }
   }
   
-  .impact-chart-section {
+  .support-levels-section {
     padding: 3rem 0;
     
-    .chart-card {
+    .support-levels-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .support-level-card {
       padding: 2rem;
       
-      .chart-content {
-        padding: 0.5rem 0;
+      .medal-icon-large {
+        width: 100px;
+        height: 100px;
+      }
+      
+      h3 {
+        font-size: 1.75rem;
+      }
+      
+      .level-benefits {
+        li {
+          font-size: 0.95rem;
+        }
       }
     }
   }
   
   .final-cta-section {
-    padding: 4rem 0;
+    padding: 3rem 0;
     
     .cta-content {
       padding: 2.5rem 2rem;
@@ -418,4 +415,3 @@
     }
   }
 }
-

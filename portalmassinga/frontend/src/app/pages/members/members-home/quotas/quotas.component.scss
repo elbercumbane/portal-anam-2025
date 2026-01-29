@@ -1,0 +1,325 @@
+@import '../shared/_variables.scss';
+@import '../shared/_common-styles.scss';
+
+.quotas-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// Quotas Summary Section
+.quotas-summary-section {
+  .quotas-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .quota-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: $gray-50;
+    border-radius: 12px;
+    border: 1px solid rgba($green-primary, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .quota-summary-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba($green-primary, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $green-primary;
+      }
+    }
+
+    .quota-summary-info {
+      flex: 1;
+
+      .quota-summary-label {
+        font-size: 0.875rem;
+        color: $ink-600;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+      }
+
+      .quota-summary-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $green-primary;
+      }
+    }
+  }
+
+  .quotas-action {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+
+    .btn-pay-quotas {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      background: $gradient-primary;
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba($green-primary, 0.3);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($green-primary, 0.4);
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+// Quotas Search Section
+.quotas-search-section {
+  .search-filters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $ink-700;
+      }
+
+      select {
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba($green-primary, 0.2);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: white;
+        color: $ink-900;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $green-primary;
+          box-shadow: 0 0 0 3px rgba($green-primary, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// Receipts List Section
+.receipts-list-section {
+  .receipts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .receipt-item {
+    background: $gray-50;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba($green-primary, 0.1);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .receipt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba($green-primary, 0.1);
+
+      .receipt-info {
+        .receipt-number {
+          font-size: 1.125rem;
+          font-weight: 700;
+          color: $ink-900;
+          margin-bottom: 0.25rem;
+        }
+
+        .receipt-date {
+          font-size: 0.875rem;
+          color: $ink-600;
+        }
+      }
+
+      .receipt-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+
+        &.status-pago {
+          background: rgba($success, 0.1);
+          color: $success;
+        }
+
+        &.status-pendente {
+          background: rgba($warning, 0.1);
+          color: $warning;
+        }
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+    .receipt-body {
+      .receipt-details {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
+
+        .receipt-detail-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.9rem;
+          color: $ink-700;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: $green-primary;
+          }
+        }
+      }
+
+      .receipt-actions {
+        display: flex;
+        gap: 1rem;
+
+        .btn-view-receipt,
+        .btn-download-receipt {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        .btn-view-receipt {
+          background: rgba($green-primary, 0.1);
+          color: $green-primary;
+
+          &:hover {
+            background: rgba($green-primary, 0.2);
+          }
+        }
+
+        .btn-download-receipt {
+          background: rgba($ink-600, 0.1);
+          color: $ink-700;
+
+          &:hover {
+            background: rgba($ink-600, 0.2);
+          }
+        }
+      }
+    }
+  }
+
+  .no-receipts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: $ink-500;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .no-receipts-subtitle {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: $ink-500;
+    }
+  }
+}
+

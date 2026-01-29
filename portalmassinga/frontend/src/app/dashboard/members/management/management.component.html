@@ -133,10 +133,14 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="filteredMembers.length === 0 && !isLoading">
+        <tr *ngIf="filteredMembers.length === 0 && !isLoading && !errorMessage">
           <td colspan="8" class="no-data">
-            <mat-icon>info</mat-icon>
-            <p>Nenhum membro encontrado</p>
+            <div class="empty-state">
+              <mat-icon>people_outline</mat-icon>
+              <h3>Nenhuma candidatura encontrada</h3>
+              <p>Não há candidaturas registadas na base de dados ainda.</p>
+              <p class="hint">As candidaturas submetidas através da página "Associar-se" aparecerão aqui.</p>
+            </div>
           </td>
         </tr>
       </tbody>

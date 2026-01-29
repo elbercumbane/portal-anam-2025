@@ -8,7 +8,7 @@
   <div class="hero__scrim hero__scrim--bright"></div>
   
   <!-- Efeito de Neve -->
-  <div class="snow-container">
+  <div class="snow-container" *ngIf="enableSnow">
     <div class="snowflake" *ngFor="let flake of snowflakes; let i = index" 
          [style.left.%]="flake.left"
          [style.animation-delay.s]="flake.delay"
@@ -63,7 +63,7 @@
   </div>
   
   <!-- Papai Noel Popup (Funcionalidade Separada) - Fixo no Hero -->
-  <app-santa-popup></app-santa-popup>
+  <app-santa-popup *ngIf="enableSanta"></app-santa-popup>
 </section>
 
 <!-- NOVA ESTRUTURA DA HOME -->

@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
+import { OverviewComponent } from './overview/overview.component';
+import { QuotasComponent } from './quotas/quotas.component';
+import { ProgramsComponent } from './programs/programs.component';
+import { ReportsComponent } from './reports/reports.component';
 
 interface Member {
   id: string;
@@ -42,46 +46,47 @@ interface Member {
 @Component({
   selector: 'app-members-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatIconModule],
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    MatIconModule,
+    OverviewComponent,
+    QuotasComponent,
+    ProgramsComponent,
+    ReportsComponent
+  ],
   templateUrl: './members-home.component.html',
   styleUrl: './members-home.component.scss'
 })
-export class MembersHomeComponent implements OnInit {
-  userName = '';
+export class MembersHomeComponent implements OnInit, OnDestroy {
+  userName = 'Guilherme dos Santos';
   memberData: Member | null = null;
   activeTab: string = 'overview';
+  currentTime = '';
+  currentDate = '';
+  private timeInterval: any;
 
   stats = [
-    { icon: '👥', number: '150+', label: 'Membros Activos' },
-    { icon: '📊', number: '50+', label: 'Projectos Assinados' },
-    { icon: 'location_on', number: '12', label: 'Províncias Representadas' },
-    { icon: '💰', number: '85%', label: 'Cotas Pagas' }
+    { icon: 'people', iconType: 'mat', number: '150+', label: 'Membros Activos', color: '#3B82F6', bgColor: '#3B82F615', borderColor: '#3B82F630' },
+    { icon: 'assignment', iconType: 'mat', number: '50+', label: 'Projectos Assinados', color: '#8B5CF6', bgColor: '#8B5CF615', borderColor: '#8B5CF630' },
+    { icon: 'location_on', iconType: 'mat', number: '12', label: 'Províncias Representadas', color: '#F59E0B', bgColor: '#F59E0B15', borderColor: '#F59E0B30' },
+    { icon: 'account_balance_wallet', iconType: 'mat', number: '85%', label: 'Cotas Pagas', color: '#10B981', bgColor: '#10B98115', borderColor: '#10B98130' }
   ];
 
   memberInfo = [
     {
-      icon: '📋',
+      icon: 'list',
+      iconType: 'mat',
       title: 'Lista de Membros',
       description: 'Consulte informações sobre todos os membros da associação',
       link: '/membros/lista'
     },
     {
-      icon: '📈',
-      title: 'Estatísticas',
-      description: 'Visualize dados e métricas sobre a associação',
-      link: '/membros/estatisticas'
-    },
-    {
-      icon: '🏢',
+      icon: 'account_tree',
+      iconType: 'mat',
       title: 'Organograma',
       description: 'Conheça a estrutura organizacional da associação',
       link: '/membros/organograma'
-    },
-    {
-      icon: '💳',
-      title: 'Pagamento de Cotas',
-      description: 'Efetue o pagamento das suas cotas de forma rápida',
-      link: '/membros/pagar-cotas'
     }
   ];
 
@@ -114,28 +119,32 @@ export class MembersHomeComponent implements OnInit {
 
   reports = [
     {
-      icon: '📄',
+      icon: 'description',
+      iconType: 'mat',
       title: 'Relatório Anual 2024',
       description: 'Relatório completo das atividades e resultados do ano de 2024',
       date: '15 Jan 2025',
       link: '#'
     },
     {
-      icon: '📊',
+      icon: 'account_balance',
+      iconType: 'mat',
       title: 'Relatório Financeiro Q4 2024',
       description: 'Análise financeira do último trimestre de 2024',
       date: '10 Jan 2025',
       link: '#'
     },
     {
-      icon: '📈',
+      icon: 'trending_up',
+      iconType: 'mat',
       title: 'Relatório de Projetos',
       description: 'Status e progresso de todos os projetos em execução',
       date: '05 Jan 2025',
       link: '#'
     },
     {
-      icon: '👥',
+      icon: 'people',
+      iconType: 'mat',
       title: 'Relatório de Membros',
       description: 'Estatísticas e informações sobre o quadro de membros',
       date: '01 Jan 2025',
@@ -143,13 +152,66 @@ export class MembersHomeComponent implements OnInit {
     }
   ];
 
-  quickActions = [
-    { icon: 'person', label: 'Meu Perfil', link: '/membros/perfil' },
-    { icon: 'payment', label: 'Pagar Cotas', link: '/membros/pagar-cotas' },
-    { icon: 'receipt_long', label: 'Consultar Recibos', link: '/membros/consultar-recibos' },
-    { icon: 'person_add', label: 'Cadastro', link: '/membros/cadastro' },
-    { icon: 'account_tree', label: 'Organograma', link: '/membros/organograma' }
+  // Dados para gráfico de pizza - Distribuição de Membros por Status
+  pieChartData = [
+    { label: 'Aprovados', value: 65, color: '#10B981' },
+    { label: 'Pendentes', value: 25, color: '#F59E0B' },
+    { label: 'Rejeitados', value: 10, color: '#EF4444' }
   ];
+
+  // Dados de contribuições do membro
+  memberContributions = {
+    total: 12500,
+    lastContribution: new Date('2025-01-10'),
+    quotasPaid: 8,
+    totalQuotas: 12
+  };
+
+  // Dados para gráfico de barras de contribuições do membro (últimos 6 meses)
+  memberContributionsData = {
+    labels: ['Jul 2024', 'Ago 2024', 'Set 2024', 'Out 2024', 'Nov 2024', 'Dez 2024'],
+    values: [1500, 2000, 1800, 2200, 2500, 1500]
+  };
+
+  // Dados para gráfico de crescimento da associação (últimos 12 meses)
+  growthChartData = {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    values: [120, 125, 130, 135, 140, 145, 150, 155, 160, 170, 175, 187]
+  };
+
+  // Resumo da associação
+  associationSummary = {
+    partners: 4,
+    activeProjects: 12,
+    coverage: '8 Províncias',
+    totalMembers: 187
+  };
+
+  // Dados de cotas
+  quotasSummary = {
+    paid: 8,
+    total: 12,
+    pending: 4,
+    totalPaid: 12500
+  };
+
+  // Recibos
+  receipts: any[] = [];
+
+  getPieDashArray(value: number): number {
+    const circumference = 2 * Math.PI * 80;
+    return (value / 100) * circumference;
+  }
+
+  getPieSegmentOffset(index: number): number {
+    if (index === 0) return 0;
+    let offset = 0;
+    for (let i = 0; i < index; i++) {
+      offset += this.pieChartData[i]?.value || 0;
+    }
+    const circumference = 2 * Math.PI * 80;
+    return -(offset / 100) * circumference;
+  }
 
   constructor(
     private authService: AuthService,
@@ -160,15 +222,46 @@ export class MembersHomeComponent implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.nome;
-      // Carregar dados do membro
-      setTimeout(() => {
-        this.loadMemberData();
-      }, 100);
+      // Carregar dados do membro imediatamente
+      this.loadMemberData();
     }
-    // Redirecionamento removido - não redireciona para login
-    // } else {
-    //   this.router.navigate(['/login']);
-    // }
+    
+    // Inicializar data e hora
+    this.updateDateTime();
+    // Atualizar a cada segundo
+    this.timeInterval = setInterval(() => {
+      this.updateDateTime();
+    }, 1000);
+
+    // Carregar recibos
+    this.loadReceipts();
+  }
+
+  ngOnDestroy(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+  }
+
+  updateDateTime(): void {
+    const now = new Date();
+    
+    // Formatar hora (HH:MM:SS)
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    this.currentTime = `${hours}:${minutes}:${seconds}`;
+    
+    // Formatar data (DD de Mês de YYYY)
+    const days = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    
+    const dayName = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+    
+    this.currentDate = `${dayName}, ${day} de ${month} de ${year}`;
   }
   
   loadMemberData(): void {
@@ -249,12 +342,6 @@ export class MembersHomeComponent implements OnInit {
     this.authService.logout();
   }
   
-  onActionClick(action: any): void {
-    // Se for "Meu Perfil", garantir que os dados estejam carregados antes de navegar
-    if (action.link === '/membros/perfil' && !this.memberData) {
-      this.loadMemberData();
-    }
-  }
 
   switchTab(tabName: string): void {
     this.activeTab = tabName;
@@ -263,4 +350,61 @@ export class MembersHomeComponent implements OnInit {
   isTabActive(tabName: string): boolean {
     return this.activeTab === tabName;
   }
+
+  loadReceipts(): void {
+    // Carregar recibos do localStorage
+    const storedReceipts = localStorage.getItem('payment_receipts');
+    if (storedReceipts) {
+      try {
+        this.receipts = JSON.parse(storedReceipts);
+        // Converter strings de data para objetos Date
+        this.receipts = this.receipts.map(receipt => ({
+          ...receipt,
+          dataPagamento: new Date(receipt.dataPagamento)
+        }));
+      } catch (error) {
+        console.error('Error loading receipts:', error);
+        this.receipts = [];
+      }
+    } else {
+      // Dados de exemplo para demonstração
+      const currentYear = new Date().getFullYear();
+      this.receipts = [
+        {
+          id: 'REC001',
+          numeroMembro: '001',
+          nomeMembro: this.userName,
+          dataPagamento: new Date(currentYear, 0, 15),
+          meses: ['Janeiro'],
+          valorTotal: 1500,
+          metodoPagamento: 'M-Pesa',
+          numeroTelefone: '841234567',
+          status: 'pago'
+        },
+        {
+          id: 'REC002',
+          numeroMembro: '001',
+          nomeMembro: this.userName,
+          dataPagamento: new Date(currentYear, 1, 20),
+          meses: ['Fevereiro'],
+          valorTotal: 1500,
+          metodoPagamento: 'E-Mola',
+          numeroTelefone: '841234567',
+          status: 'pago'
+        },
+        {
+          id: 'REC003',
+          numeroMembro: '001',
+          nomeMembro: this.userName,
+          dataPagamento: new Date(currentYear - 1, 11, 10),
+          meses: ['Dezembro'],
+          valorTotal: 1500,
+          metodoPagamento: 'M-Pesa',
+          numeroTelefone: '841234567',
+          status: 'pago'
+        }
+      ];
+    }
+  }
+
 }

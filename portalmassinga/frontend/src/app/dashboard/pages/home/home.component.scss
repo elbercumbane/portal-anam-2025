@@ -67,3 +67,160 @@
     }
   }
 }
+
+// Estilos para a seção de Eventos
+.eventos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  
+  .evento-panel {
+    border-radius: 16px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: white;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    
+    &:hover {
+      border-color: $color-paginas;
+      box-shadow: 0 8px 20px rgba($color-paginas, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    ::ng-deep .mat-expansion-panel-header {
+      padding: 18px 20px;
+      background: linear-gradient(135deg, rgba($color-paginas, 0.05) 0%, rgba($color-paginas-secondary, 0.05) 100%);
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba($color-paginas, 0.1) 0%, rgba($color-paginas-secondary, 0.1) 100%);
+      }
+    }
+    
+    .evento-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      
+      .evento-icon {
+        color: white;
+        background: linear-gradient(135deg, $color-paginas 0%, $color-paginas-secondary 100%);
+        font-size: 20px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba($color-paginas, 0.3);
+      }
+      
+      span {
+        font-weight: 600;
+        color: #374151;
+        font-size: 16px;
+      }
+    }
+    
+    .evento-content {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: white;
+    }
+  }
+}
+
+// Estilos para formulários de duas colunas
+.two-column-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Melhorias gerais no layout
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  
+  .page-header {
+    margin-bottom: 32px;
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+  }
+  
+  .section-card {
+    margin-bottom: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    ::ng-deep .mat-card-header {
+      padding: 20px 24px 16px;
+      background: linear-gradient(135deg, rgba($color-paginas, 0.05) 0%, rgba($color-paginas-secondary, 0.05) 100%);
+      border-radius: 16px 16px 0 0;
+      
+      .mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #1f2937;
+        
+        mat-icon {
+          color: $color-paginas;
+          font-size: 28px;
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+    
+    ::ng-deep .mat-card-content {
+      padding: 24px;
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 2px solid #e5e7eb;
+    
+    button {
+      min-width: 200px;
+      height: 48px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}

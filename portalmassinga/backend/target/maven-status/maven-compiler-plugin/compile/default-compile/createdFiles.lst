@@ -1,0 +1,15 @@
+com\anam\PortalAnamApplication.class
+com\anam\controller\HomeContentController.class
+com\anam\dto\RejectApplicationDTO.class
+com\anam\controller\MemberApplicationController.class
+com\anam\entity\ApplicationDependent.class
+com\anam\repository\HomeContentRepository.class
+com\anam\dto\HomeContentDTO.class
+com\anam\config\CorsConfig.class
+com\anam\repository\MemberApplicationRepository.class
+com\anam\entity\MemberApplication.class
+com\anam\dto\MemberApplicationDTO.class
+com\anam\entity\HomeContent.class
+com\anam\repository\ApplicationDependentRepository.class
+com\anam\config\WebConfig.class
+com\anam\dto\MemberApplicationDTO$DependentDTO.class

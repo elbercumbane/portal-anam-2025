@@ -1,0 +1,28 @@
+<section class="info-section reports-section">
+  <div class="section-header">
+    <h3>
+      <mat-icon>assessment</mat-icon>
+      Relatórios Internos
+    </h3>
+    <p class="section-subtitle">Acesse relatórios e documentos da associação</p>
+  </div>
+  <div class="reports-grid">
+    <div class="report-card" *ngFor="let report of reports">
+      <div class="report-card-icon">
+        <mat-icon>{{ report.icon }}</mat-icon>
+      </div>
+      <div class="report-card-content">
+        <h4>{{ report.title }}</h4>
+        <p>{{ report.description }}</p>
+        <div class="report-card-footer">
+          <span class="report-date">{{ report.date }}</span>
+          <a [href]="report.link" class="report-download-btn">
+            <mat-icon>download</mat-icon>
+            Download
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

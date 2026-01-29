@@ -1,0 +1,33 @@
+<section class="info-section programs-section">
+  <div class="section-header">
+    <h3>
+      <mat-icon>event_note</mat-icon>
+      Programas em Andamento
+    </h3>
+    <p class="section-subtitle">Acompanhe os programas e projetos da associação</p>
+  </div>
+  <div class="programs-grid">
+    <div class="program-card" *ngFor="let program of programs">
+      <div class="program-card-header">
+        <div class="program-title-section">
+          <h4>{{ program.name }}</h4>
+          <span class="program-status-badge" [class]="program.status">
+            {{ program.statusLabel }}
+          </span>
+        </div>
+      </div>
+      <p class="program-description">{{ program.description }}</p>
+      <div class="program-details">
+        <div class="program-detail-item">
+          <mat-icon>calendar_today</mat-icon>
+          <span>{{ program.date }}</span>
+        </div>
+        <div class="program-detail-item">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ program.location }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

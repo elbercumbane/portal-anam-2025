@@ -158,22 +158,34 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
     const numero = this.memberForm.value.numeroMembro;
     this.memberLoading = true;
     
-    // Simular busca de membro (sem backend)
-    setTimeout(() => {
-      // Simulação: membros de exemplo
-      const membrosExemplo: { [key: string]: { numero: string; nome: string; email: string; telefone: string } } = {
-        '001': { numero: '001', nome: 'João Silva', email: 'joao@example.com', telefone: '841234567' },
-        '002': { numero: '002', nome: 'Maria Santos', email: 'maria@example.com', telefone: '842345678' },
-        '003': { numero: '003', nome: 'Pedro Costa', email: 'pedro@example.com', telefone: '843456789' }
-      };
-      
-      this.member = membrosExemplo[numero] || null;
-      this.memberLoading = false;
-      
-      if (!this.member) {
-        this.snackBar.open('Membro não encontrado', 'Fechar', { duration: 3000 });
+    // Buscar dados do membro do localStorage ou API
+    // Primeiro tentar buscar do localStorage (dados de cadastro)
+    const stored = localStorage.getItem('anam_applications');
+    if (stored) {
+      try {
+        const members: any[] = JSON.parse(stored);
+        const member = members.find(m => m.id === numero || m.numero === numero);
+        
+        if (member) {
+          this.member = {
+            numero: member.id || member.numero || numero,
+            nome: member.nome || '',
+            email: member.email || '',
+            telefone: member.celular || member.telefone || ''
+          };
+          this.memberLoading = false;
+          return;
+        }
+      } catch (error) {
+        console.error('Erro ao buscar membro:', error);
       }
-    }, 1000);
+    }
+    
+    // Se não encontrou, mostrar mensagem
+    setTimeout(() => {
+      this.memberLoading = false;
+      this.snackBar.open('Membro não encontrado. Verifique o número do membro.', 'Fechar', { duration: 3000 });
+    }, 500);
   }
 
   selecionarTipoPagamento(tipo: 'mensal' | 'anual'): void {

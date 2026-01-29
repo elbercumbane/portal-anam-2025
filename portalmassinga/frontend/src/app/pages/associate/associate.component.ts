@@ -20,6 +20,7 @@ export class AssociateComponent implements OnInit {
   showSuccessModal = false;
   isLoading = false;
   errorMessage = '';
+  private modalTimeoutId: any = null;
   
   // Seções expansíveis
   showConjugeSection = false;
@@ -173,56 +174,25 @@ export class AssociateComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
-    // Preparar dados do formulário no formato esperado pelo backend
-    const formData = {
-      // Mapear campos do formulário para o formato do backend
-      nome: this.memberForm.value.nome,
-      nome_pai: this.memberForm.value.nomePai,
-      nome_mae: this.memberForm.value.nomeMae,
-      data_nascimento: this.memberForm.value.dataNascimento,
-      estado_civil: this.memberForm.value.estadoCivil,
-      profissao: this.memberForm.value.profissao,
-      celular: this.memberForm.value.celular,
-      email: this.memberForm.value.email,
-      telefone: this.memberForm.value.telefone || null,
-      rua: this.memberForm.value.rua,
-      bairro: this.memberForm.value.bairro,
-      cidade: this.memberForm.value.cidade,
-      // Cônjuge (opcional)
-      nome_conjuge: this.memberForm.value.nomeConjuge || null,
-      data_nascimento_conjuge: this.memberForm.value.dataNascimentoConjuge || null,
-      filiacao_pai_conjuge: this.memberForm.value.filiacaoPaiConjuge || null,
-      filiacao_mae_conjuge: this.memberForm.value.filiacaoMaeConjuge || null,
-      // Trabalho (opcional)
-      local_trabalho: this.memberForm.value.localTrabalho || null,
-      cargo: this.memberForm.value.cargo || null,
-      endereco_trabalho: this.memberForm.value.enderecoTrabalho || null,
-      telefone_trabalho: this.memberForm.value.telefoneTrabalho || null,
-      // Outros
-      foto: this.photoPreview || null,
-      outras_informacoes: this.memberForm.value.outrasInformacoes || null,
-      aceita_termos: true // Já validado pelo canSubmit()
-    };
+    // Mapear campos do formulário para o formato esperado pelo backend (inglês/camelCase)
+    const applicationData = this.mapToBackendFormat(this.memberForm.value);
 
-    console.log('📤 Enviando candidatura do formulário "Torne-se Membro":', formData);
+    console.log('📤 Enviando candidatura do formulário "Torne-se Membro":', applicationData);
 
-    this.apiClient.createApplication(formData).subscribe({
+    this.apiClient.createApplication(applicationData).subscribe({
       next: (response) => {
         console.log('✅ Resposta do servidor:', response);
-        if (response.success) {
-          this.showSuccessModal = true;
-          // Limpar formulário após sucesso
-          setTimeout(() => {
-            this.memberForm.reset();
-            this.photoPreview = null;
-            this.showSuccessModal = false;
-            // Opcional: redirecionar para home
-            // this.router.navigate(['/']);
-          }, 3000);
-        } else {
-          this.errorMessage = response.message || 'Erro ao enviar candidatura';
-        }
         this.isLoading = false;
+        
+        // Mostrar modal de sucesso
+        this.showSuccessModal = true;
+        
+        // Limpar formulário após 10 segundos (se o modal não foi fechado manualmente)
+        this.modalTimeoutId = setTimeout(() => {
+          if (this.showSuccessModal) {
+            this.closeModal();
+          }
+        }, 10000);
       },
       error: (error) => {
         console.error('❌ Erro ao criar candidatura:', error);
@@ -233,33 +203,73 @@ export class AssociateComponent implements OnInit {
           url: error.url
         });
         
-        let errorMsg = 'Erro ao conectar com o servidor. Tente novamente.';
-        if (error.error?.message) {
+        this.isLoading = false;
+        
+        let errorMsg = 'Erro ao conectar com o servidor. Verifique se o backend está rodando.';
+        if (error.status === 0) {
+          errorMsg = 'Não foi possível conectar ao servidor. Verifique se o backend está rodando em http://localhost:8080';
+        } else if (error.error?.message) {
           errorMsg = error.error.message;
         } else if (error.error?.errors && Array.isArray(error.error.errors)) {
-          errorMsg = error.error.errors.map((e: any) => e.msg || e.message).join(', ');
+          errorMsg = error.error.errors.map((e: any) => e.msg || e.message || e.defaultMessage).join(', ');
         } else if (error.message) {
           errorMsg = error.message;
+        } else if (typeof error.error === 'string') {
+          errorMsg = error.error;
         }
         
         this.errorMessage = errorMsg;
-        this.isLoading = false;
       }
     });
   }
 
-  // Método para obter candidaturas salvas (útil para demonstração)
-  getStoredApplications(): any[] {
-    const stored = localStorage.getItem('anam_applications');
-    return stored ? JSON.parse(stored) : [];
-  }
+  private mapToBackendFormat(formValue: any): any {
+    // Mapear campos do formulário para o formato esperado pelo backend (inglês/camelCase)
+    const dependents = this.dependentes.controls.map((control: any) => {
+      const value = control.value;
+      return {
+        name: value.nome || '',
+        relationship: value.parentesco || '',
+        profession: value.profissao || null,
+        age: value.idade ? parseInt(value.idade) : null
+      };
+    }).filter((dep: any) => dep.name); // Filtrar dependentes vazios
 
-  // Método para limpar todas as candidaturas (útil para testes)
-  clearStoredApplications(): void {
-    localStorage.removeItem('anam_applications');
+    return {
+      photo: this.photoPreview || null,
+      fullName: formValue.nome,
+      fatherName: formValue.nomePai,
+      motherName: formValue.nomeMae,
+      birthDate: formValue.dataNascimento || null,
+      maritalStatus: formValue.estadoCivil,
+      profession: formValue.profissao,
+      mobilePhone: formValue.celular,
+      email: formValue.email,
+      phone: formValue.telefone || null,
+      street: formValue.rua,
+      neighborhood: formValue.bairro,
+      city: formValue.cidade,
+      spouseName: formValue.nomeConjuge || null,
+      spouseBirthDate: formValue.dataNascimentoConjuge || null,
+      spouseFatherName: formValue.filiacaoPaiConjuge || null,
+      spouseMotherName: formValue.filiacaoMaeConjuge || null,
+      workplace: formValue.localTrabalho || null,
+      position: formValue.cargo || null,
+      workAddress: formValue.enderecoTrabalho || null,
+      workPhone: formValue.telefoneTrabalho || null,
+      additionalInformation: formValue.outrasInformacoes || null,
+      acceptsTerms: formValue.aceitaTermos || false,
+      dependents: dependents.length > 0 ? dependents : []
+    };
   }
 
   closeModal(): void {
+    // Cancelar timeout se o modal for fechado manualmente
+    if (this.modalTimeoutId) {
+      clearTimeout(this.modalTimeoutId);
+      this.modalTimeoutId = null;
+    }
+    
     this.showSuccessModal = false;
     this.memberForm.reset();
     this.photoPreview = null;

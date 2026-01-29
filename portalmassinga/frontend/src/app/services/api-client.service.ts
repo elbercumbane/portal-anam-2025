@@ -5,15 +5,58 @@ import { catchError, map } from 'rxjs/operators';
 import { STORAGE_KEYS } from './auth.data';
 import { environment } from '../../environments/environment';
 
-// Usar variável de ambiente ou fallback para localhost
-const API_URL = (typeof window !== 'undefined' && (window as any).__API_URL__) 
-  || environment.apiUrl 
-  || 'http://localhost:3000/api';
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApiClientService {
+  // URL padrão para desenvolvimento - hardcoded como fallback final
+  private readonly DEFAULT_API_URL = 'http://localhost:8080/api';
+  
+  // Método para obter a URL da API dinamicamente
+  private getApiUrl(): string {
+    // Em desenvolvimento (não produção), sempre usar environment.apiUrl ou padrão
+    if (!environment.production) {
+      // Tentar usar environment.apiUrl primeiro
+      const envUrl = environment?.apiUrl;
+      if (envUrl && 
+          typeof envUrl === 'string' && 
+          envUrl.trim() !== '' &&
+          envUrl !== 'API_URL_PLACEHOLDER' && 
+          !envUrl.includes('PLACEHOLDER')) {
+        return envUrl.trim();
+      }
+      // Se environment.apiUrl não estiver válido, usar padrão hardcoded
+      console.warn('⚠️ environment.apiUrl não está válido, usando URL padrão:', this.DEFAULT_API_URL);
+      return this.DEFAULT_API_URL;
+    }
+    
+    // Em produção, verificar se há uma URL injetada no window
+    if (typeof window !== 'undefined' && (window as any).__API_URL__) {
+      const windowUrl = (window as any).__API_URL__;
+      // Se não for placeholder, usar a URL do window
+      if (windowUrl && 
+          typeof windowUrl === 'string' &&
+          windowUrl.trim() !== '' &&
+          windowUrl !== 'API_URL_PLACEHOLDER' && 
+          !windowUrl.includes('PLACEHOLDER')) {
+        return windowUrl.trim();
+      }
+    }
+    
+    // Fallback final: usar environment ou padrão hardcoded
+    const envUrl = environment?.apiUrl;
+    if (envUrl && 
+        typeof envUrl === 'string' &&
+        envUrl.trim() !== '' &&
+        envUrl !== 'API_URL_PLACEHOLDER' && 
+        !envUrl.includes('PLACEHOLDER')) {
+      return envUrl.trim();
+    }
+    
+    // Último recurso: usar URL padrão hardcoded
+    return this.DEFAULT_API_URL;
+  }
+
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
     let headers = new HttpHeaders({
@@ -27,18 +70,24 @@ export class ApiClientService {
     return headers;
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Log da URL configurada ao inicializar o serviço
+    const apiUrl = this.getApiUrl();
+    console.log('🔧 API Client Service inicializado. URL:', apiUrl);
+  }
 
   // Auth endpoints
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${API_URL}/auth/login`, { email, password })
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/auth/login`, { email, password })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   getCurrentUser(): Observable<any> {
-    return this.http.get(`${API_URL}/auth/me`, { headers: this.getHeaders() })
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/auth/me`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
@@ -46,10 +95,27 @@ export class ApiClientService {
 
   // Member Application endpoints
   createApplication(data: any): Observable<any> {
-    console.log('🌐 Criando candidatura:', `${API_URL}/member-applications`);
+    const apiUrl = this.getApiUrl();
+    
+    // Logs de debug
+    console.log('🔧 Environment production:', environment.production);
+    console.log('🔧 Environment apiUrl:', environment?.apiUrl);
+    console.log('🔧 Window __API_URL__:', typeof window !== 'undefined' ? (window as any).__API_URL__ : 'N/A');
+    console.log('🔧 URL final resolvida:', apiUrl);
+    console.log('🌐 Criando candidatura - URL completa:', `${apiUrl}/member-applications`);
     console.log('📤 Dados enviados:', data);
     
-    return this.http.post(`${API_URL}/member-applications`, data, {
+    // Validação rigorosa da URL
+    if (!apiUrl || 
+        apiUrl === 'API_URL_PLACEHOLDER' || 
+        apiUrl.includes('PLACEHOLDER') ||
+        apiUrl.trim() === '') {
+      const errorMsg = `URL da API inválida: "${apiUrl}". Verifique o environment.ts. URL esperada: http://localhost:8080/api`;
+      console.error('❌ ERRO:', errorMsg);
+      return throwError(() => new Error(errorMsg));
+    }
+    
+    return this.http.post(`${apiUrl}/member-applications`, data, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -60,26 +126,31 @@ export class ApiClientService {
   }
 
   getApplications(): Observable<any> {
-    console.log('🌐 Buscando candidaturas:', `${API_URL}/member-applications`);
+    const apiUrl = this.getApiUrl();
+    const url = `${apiUrl}/member-applications`;
     const headers = this.getHeaders();
-    console.log('🔑 Headers:', headers.keys());
     
-    return this.http.get(`${API_URL}/member-applications`, { headers })
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.get<any[]>(url, { 
+      headers,
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getApplicationById(id: string): Observable<any> {
-    return this.http.get(`${API_URL}/member-applications/${id}`, { headers: this.getHeaders() })
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/member-applications/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   approveApplication(applicationId: string, observacoes?: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
     return this.http.put(
-      `${API_URL}/member-applications/${applicationId}/approve`,
+      `${apiUrl}/member-applications/${applicationId}/approve`,
       { observacoes },
       { headers: this.getHeaders() }
     ).pipe(
@@ -88,9 +159,11 @@ export class ApiClientService {
   }
 
   rejectApplication(applicationId: string, observacoes?: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const body = observacoes ? { observations: observacoes } : null;
     return this.http.put(
-      `${API_URL}/member-applications/${applicationId}/reject`,
-      { observacoes },
+      `${apiUrl}/member-applications/${applicationId}/reject`,
+      body,
       { headers: this.getHeaders() }
     ).pipe(
       catchError(this.handleError)
@@ -99,14 +172,16 @@ export class ApiClientService {
 
   // Member endpoints
   getMembers(): Observable<any> {
-    return this.http.get(`${API_URL}/members`, { headers: this.getHeaders() })
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/members`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
   }
 
   getMemberById(id: string): Observable<any> {
-    return this.http.get(`${API_URL}/members/${id}`, { headers: this.getHeaders() })
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/members/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
@@ -114,7 +189,8 @@ export class ApiClientService {
 
   // Health check
   healthCheck(): Observable<any> {
-    return this.http.get(`${API_URL.replace('/api', '')}/health`)
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl.replace('/api', '')}/health`)
       .pipe(
         catchError(this.handleError)
       );
@@ -146,6 +222,50 @@ export class ApiClientService {
     });
     
     return throwError(() => new Error(errorMessage));
+  }
+
+  // Home Content Management
+  getHomeContent(activeOnly: boolean = false): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    const url = `${apiUrl}/home-content${activeOnly ? '?activeOnly=true' : ''}`;
+    return this.http.get<any[]>(url, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getHomeContentById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/home-content/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getHomeContentBySectionKey(sectionKey: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/home-content/section/${sectionKey}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  createHomeContent(content: any): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/home-content`, content, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateHomeContent(id: string, content: any): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(`${apiUrl}/home-content/${id}`, content, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteHomeContent(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.delete(`${apiUrl}/home-content/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getHomeContentByPrefix(prefix: string): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/home-content/sections/${prefix}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
 }
 

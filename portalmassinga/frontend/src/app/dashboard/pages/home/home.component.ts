@@ -1,4 +1,6 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { ApiClientService } from '../../../services/api-client.service';
+import { firstValueFrom } from 'rxjs';
 
 interface SlideData {
   titulo: string;
@@ -33,6 +35,18 @@ interface ChristmasConfig {
   enableSnow: boolean;
   enableSanta: boolean;
   christmasMessage: string;
+}
+
+interface HomeContent {
+  id?: string;
+  sectionKey: string;
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  imageUrl?: string;
+  orderIndex?: number;
+  isActive?: boolean;
+  metadata?: string;
 }
 
 @Component({
@@ -101,97 +115,435 @@ export class HomeComponent implements OnInit {
     ]
   };
 
-  private readonly STORAGE_KEY = 'anam_home_page_data';
 
-  constructor() {}
+  isLoading = false;
+  errorMessage = '';
+  private contentCache: Map<string, HomeContent> = new Map();
+
+  constructor(private apiClient: ApiClientService) {}
 
   ngOnInit(): void {
     this.loadData();
   }
 
   loadData(): void {
-    const stored = localStorage.getItem(this.STORAGE_KEY);
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    this.apiClient.getHomeContent(false).subscribe({
+      next: (contents: HomeContent[]) => {
+        this.contentCache.clear();
+        contents.forEach(content => {
+          this.contentCache.set(content.sectionKey, content);
+        });
+        
+        // Carregar slides
+        for (let i = 0; i < 3; i++) {
+          const slideKey = `hero_slide_${i + 1}`;
+          const slideContent = this.contentCache.get(slideKey);
+          if (slideContent) {
+            this.slides[i] = {
+              titulo: slideContent.title || this.slides[i].titulo,
+              subtitulo: slideContent.subtitle || this.slides[i].subtitulo,
+              imagem: slideContent.imageUrl || this.slides[i].imagem
+            };
+          }
+        }
+        
+        // Carregar Sobre ANAM
+        const sobreAnamContent = this.contentCache.get('sobre_anam');
+        if (sobreAnamContent) {
+          this.sobreAnam.titulo = sobreAnamContent.title || this.sobreAnam.titulo;
+          this.sobreAnam.introducao = sobreAnamContent.content || this.sobreAnam.introducao;
+        }
+        
+        // Carregar Missão
+        const missaoContent = this.contentCache.get('missao');
+        if (missaoContent) {
+          this.sobreAnam.cardMissao.titulo = missaoContent.title || this.sobreAnam.cardMissao.titulo;
+          this.sobreAnam.cardMissao.descricao = missaoContent.content || this.sobreAnam.cardMissao.descricao;
+        }
+        
+        // Carregar Visão
+        const visaoContent = this.contentCache.get('visao');
+        if (visaoContent) {
+          this.sobreAnam.cardVisao.titulo = visaoContent.title || this.sobreAnam.cardVisao.titulo;
+          this.sobreAnam.cardVisao.descricao = visaoContent.content || this.sobreAnam.cardVisao.descricao;
+        }
+        
+        // Carregar Nossos Valores
+        const valoresContent = this.contentCache.get('valores');
+        if (valoresContent) {
+          this.nossosValores.titulo = valoresContent.title || this.nossosValores.titulo;
+          if (valoresContent.metadata) {
+            try {
+              const valoresData = JSON.parse(valoresContent.metadata);
+              if (valoresData.valores && Array.isArray(valoresData.valores)) {
+                this.nossosValores.valores = valoresData.valores;
+              }
+            } catch (e) {
+              console.error('Erro ao parsear metadata de valores:', e);
+            }
+          }
+        }
         
         // Carregar configurações de Natal
-        if (data.christmas) {
-          this.enableSnow = data.christmas.enableSnow ?? true;
-          this.enableSanta = data.christmas.enableSanta ?? true;
-          this.christmasMessage = data.christmas.christmasMessage || 'Feliz Natal e Próspero 2025 🎄';
-        }
-        
-        // Carregar slides (mesclar com valores padrão)
-        if (data.slides && Array.isArray(data.slides)) {
-          this.slides = data.slides.map((slide: SlideData, index: number) => ({
-            titulo: slide.titulo || this.slides[index].titulo,
-            subtitulo: slide.subtitulo || this.slides[index].subtitulo,
-            imagem: slide.imagem || this.slides[index].imagem
-          }));
-        }
-        
-        // Carregar seção Sobre ANAM (mesclar com valores padrão)
-        if (data.sobreAnam) {
-          this.sobreAnam = {
-            titulo: data.sobreAnam.titulo || this.sobreAnam.titulo,
-            introducao: data.sobreAnam.introducao || this.sobreAnam.introducao,
-            cardMissao: {
-              titulo: data.sobreAnam.cardMissao?.titulo || this.sobreAnam.cardMissao.titulo,
-              descricao: data.sobreAnam.cardMissao?.descricao || this.sobreAnam.cardMissao.descricao
-            },
-            cardVisao: {
-              titulo: data.sobreAnam.cardVisao?.titulo || this.sobreAnam.cardVisao.titulo,
-              descricao: data.sobreAnam.cardVisao?.descricao || this.sobreAnam.cardVisao.descricao
+        const christmasContent = this.contentCache.get('christmas_config');
+        if (christmasContent) {
+          if (christmasContent.metadata) {
+            try {
+              const christmasData = JSON.parse(christmasContent.metadata);
+              this.enableSnow = christmasData.enableSnow !== false; // Default true
+              this.enableSanta = christmasData.enableSanta !== false; // Default true
+              this.christmasMessage = christmasData.christmasMessage || 'Feliz Natal e Próspero 2025 🎄';
+            } catch (e) {
+              console.error('Erro ao parsear metadata de natal:', e);
             }
-          };
+          }
+          // Garantir que o ID está no cache se o conteúdo existe
+          if (!christmasContent.id && contents.find((c: any) => c.sectionKey === 'christmas_config')) {
+            const dbContent = contents.find((c: any) => c.sectionKey === 'christmas_config');
+            if (dbContent) {
+              this.contentCache.set('christmas_config', dbContent);
+            }
+          }
         }
+
         
-        // Carregar seção Nossos Valores (mesclar com valores padrão)
-        if (data.nossosValores) {
-          this.nossosValores = {
-            titulo: data.nossosValores.titulo || this.nossosValores.titulo,
-            valores: this.nossosValores.valores.map((valorPadrao, index) => ({
-              titulo: data.nossosValores.valores?.[index]?.titulo || valorPadrao.titulo,
-              descricao: data.nossosValores.valores?.[index]?.descricao || valorPadrao.descricao
-            }))
-          };
-        }
-      } catch (error) {
-        console.error('Erro ao carregar dados do localStorage:', error);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage = 'Erro ao carregar dados: ' + (error.message || 'Erro desconhecido');
+        this.isLoading = false;
+        console.error('Erro ao carregar dados da API:', error);
       }
-    }
+    });
   }
 
   saveData(): void {
-    const data = {
-      christmas: {
-        enableSnow: this.enableSnow,
-        enableSanta: this.enableSanta,
-        christmasMessage: this.christmasMessage
-      },
-      slides: this.slides,
-      sobreAnam: this.sobreAnam,
-      nossosValores: this.nossosValores
-    };
+    this.isLoading = true;
+    this.errorMessage = '';
     
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
-    } catch (error) {
-      console.error('Erro ao salvar dados no localStorage:', error);
+    const savePromises: Promise<any>[] = [];
+    
+    // Salvar slides
+    for (let i = 0; i < this.slides.length; i++) {
+      const slideKey = `hero_slide_${i + 1}`;
+      const existing = this.contentCache.get(slideKey);
+      const slideData: any = {
+        sectionKey: slideKey,
+        title: this.slides[i].titulo || '',
+        subtitle: this.slides[i].subtitulo || '',
+        imageUrl: this.slides[i].imagem || '',
+        orderIndex: i,
+        isActive: true
+      };
+      
+      if (existing?.id) {
+        savePromises.push(
+          firstValueFrom(this.apiClient.updateHomeContent(existing.id, slideData))
+            .then((response: any) => {
+              // Atualizar cache com resposta
+              if (response && response.id) {
+                this.contentCache.set(slideKey, response);
+              }
+            })
+            .catch((error) => {
+              console.error(`Erro ao salvar slide ${i + 1}:`, error);
+              throw error;
+            })
+        );
+      } else {
+        savePromises.push(
+          firstValueFrom(this.apiClient.createHomeContent(slideData))
+            .then((response: any) => {
+              // Adicionar ao cache
+              if (response && response.id) {
+                this.contentCache.set(slideKey, response);
+              }
+            })
+            .catch((error) => {
+              // Se der erro 409 (já existe), tentar buscar e atualizar
+              if (error.status === 409) {
+                return firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
+                  .then((existingContent: any) => {
+                    if (existingContent && existingContent.id) {
+                      return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
+                        .then((response: any) => {
+                          if (response && response.id) {
+                            this.contentCache.set(slideKey, response);
+                          }
+                          return response;
+                        });
+                    }
+                    // Se não encontrou, lançar erro
+                    throw new Error(`Conteúdo com chave ${slideKey} não encontrado após erro 409`);
+                  });
+              }
+              console.error(`Erro ao criar slide ${i + 1}:`, error);
+              throw error;
+            })
+        );
+      }
     }
+    
+    // Salvar Sobre ANAM
+    const sobreAnamData = {
+      sectionKey: 'sobre_anam',
+      title: this.sobreAnam.titulo,
+      content: this.sobreAnam.introducao,
+      orderIndex: 10,
+      isActive: true
+    };
+    const sobreAnamExisting = this.contentCache.get('sobre_anam');
+    if (sobreAnamExisting?.id) {
+      savePromises.push(
+        firstValueFrom(this.apiClient.updateHomeContent(sobreAnamExisting.id, sobreAnamData))
+      );
+    } else {
+      savePromises.push(
+        firstValueFrom(this.apiClient.createHomeContent(sobreAnamData))
+      );
+    }
+    
+    // Salvar Missão
+    const missaoData = {
+      sectionKey: 'missao',
+      title: this.sobreAnam.cardMissao.titulo,
+      content: this.sobreAnam.cardMissao.descricao,
+      orderIndex: 11,
+      isActive: true
+    };
+    const missaoExisting = this.contentCache.get('missao');
+    if (missaoExisting?.id) {
+      savePromises.push(
+        firstValueFrom(this.apiClient.updateHomeContent(missaoExisting.id, missaoData))
+      );
+    } else {
+      savePromises.push(
+        firstValueFrom(this.apiClient.createHomeContent(missaoData))
+      );
+    }
+    
+    // Salvar Visão
+    const visaoData = {
+      sectionKey: 'visao',
+      title: this.sobreAnam.cardVisao.titulo,
+      content: this.sobreAnam.cardVisao.descricao,
+      orderIndex: 12,
+      isActive: true
+    };
+    const visaoExisting = this.contentCache.get('visao');
+    if (visaoExisting?.id) {
+      savePromises.push(
+        firstValueFrom(this.apiClient.updateHomeContent(visaoExisting.id, visaoData))
+      );
+    } else {
+      savePromises.push(
+        firstValueFrom(this.apiClient.createHomeContent(visaoData))
+      );
+    }
+    
+    // Salvar Nossos Valores
+    const valoresData = {
+      sectionKey: 'valores',
+      title: this.nossosValores.titulo,
+      metadata: JSON.stringify({ valores: this.nossosValores.valores }),
+      orderIndex: 13,
+      isActive: true
+    };
+    const valoresExisting = this.contentCache.get('valores');
+    if (valoresExisting?.id) {
+      savePromises.push(
+        firstValueFrom(this.apiClient.updateHomeContent(valoresExisting.id, valoresData))
+      );
+    } else {
+      savePromises.push(
+        firstValueFrom(this.apiClient.createHomeContent(valoresData))
+      );
+    }
+    
+    // Salvar configurações de Natal (já salvo pelo saveChristmasConfig, não precisa duplicar)
+    
+    Promise.all(savePromises).then(() => {
+      this.isLoading = false;
+      alert('Dados salvos com sucesso na base de dados!');
+      this.loadData(); // Recarregar para atualizar cache
+    }).catch((error) => {
+      this.isLoading = false;
+      this.errorMessage = 'Erro ao salvar: ' + (error.message || 'Erro desconhecido');
+      alert('Erro ao salvar dados: ' + this.errorMessage);
+      console.error('Erro ao salvar dados:', error);
+    });
   }
 
   onSnowToggleChange(): void {
-    this.saveData();
+    this.saveChristmasConfig();
   }
 
   onSantaToggleChange(): void {
-    this.saveData();
+    this.saveChristmasConfig();
   }
 
   onChristmasMessageChange(): void {
-    this.saveData();
+    this.saveChristmasConfig();
+  }
+
+  saveSlide(slideIndex: number): void {
+    if (slideIndex < 0 || slideIndex >= this.slides.length) {
+      return;
+    }
+
+    const slideKey = `hero_slide_${slideIndex + 1}`;
+    const existing = this.contentCache.get(slideKey);
+    const slideData: any = {
+      sectionKey: slideKey,
+      title: this.slides[slideIndex].titulo || '',
+      subtitle: this.slides[slideIndex].subtitulo || '',
+      imageUrl: this.slides[slideIndex].imagem || '',
+      orderIndex: slideIndex,
+      isActive: true
+    };
+
+    if (existing?.id) {
+      firstValueFrom(this.apiClient.updateHomeContent(existing.id, slideData))
+        .then((response: any) => {
+          if (response && response.id) {
+            this.contentCache.set(slideKey, response);
+          }
+        })
+        .catch((error) => {
+          console.error(`Erro ao salvar slide ${slideIndex + 1}:`, error);
+        });
+    } else {
+      firstValueFrom(this.apiClient.createHomeContent(slideData))
+        .then((response: any) => {
+          if (response && response.id) {
+            this.contentCache.set(slideKey, response);
+          }
+        })
+        .catch((error) => {
+          // Se der erro 409 (já existe), tentar buscar e atualizar
+          if (error.status === 409) {
+            firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
+              .then((existingContent: any) => {
+                if (existingContent && existingContent.id) {
+                  return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
+                    .then((response: any) => {
+                      if (response && response.id) {
+                        this.contentCache.set(slideKey, response);
+                      }
+                      return response;
+                    });
+                }
+                throw new Error(`Conteúdo com chave ${slideKey} não encontrado após erro 409`);
+              })
+              .catch((err) => {
+                console.error(`Erro ao atualizar slide ${slideIndex + 1}:`, err);
+              });
+          } else {
+            console.error(`Erro ao criar slide ${slideIndex + 1}:`, error);
+          }
+        });
+    }
+  }
+
+  saveChristmasConfig(): void {
+    const christmasData = {
+      sectionKey: 'christmas_config',
+      metadata: JSON.stringify({
+        enableSnow: this.enableSnow,
+        enableSanta: this.enableSanta,
+        christmasMessage: this.christmasMessage
+      }),
+      orderIndex: 0,
+      isActive: true
+    };
+    
+    const christmasExisting = this.contentCache.get('christmas_config');
+    
+    // Se já existe no cache com ID, atualizar diretamente
+    if (christmasExisting?.id) {
+      firstValueFrom(this.apiClient.updateHomeContent(christmasExisting.id, christmasData))
+        .then((response: any) => {
+          // Atualizar cache com resposta do servidor
+          if (response && response.id) {
+            this.contentCache.set('christmas_config', response);
+          } else {
+            christmasExisting.metadata = christmasData.metadata;
+          }
+        })
+        .catch((error) => {
+          console.error('Erro ao atualizar configurações de Natal:', error);
+          // Se der erro 404 ou similar, tentar criar
+          if (error.status === 404) {
+            this.createChristmasConfig(christmasData);
+          } else {
+            alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+          }
+        });
+    } else {
+      // Se não existe no cache, tentar buscar primeiro
+      this.apiClient.getHomeContentBySectionKey('christmas_config').subscribe({
+        next: (existing: any) => {
+          if (existing && existing.id) {
+            // Existe na base de dados, atualizar
+            firstValueFrom(this.apiClient.updateHomeContent(existing.id, christmasData))
+              .then((response: any) => {
+                this.contentCache.set('christmas_config', response);
+              })
+              .catch((error) => {
+                console.error('Erro ao atualizar configurações de Natal:', error);
+                alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+              });
+          } else {
+            // Não existe, criar
+            this.createChristmasConfig(christmasData);
+          }
+        },
+        error: (error) => {
+          // Se não encontrar (404), criar novo
+          if (error.status === 404) {
+            this.createChristmasConfig(christmasData);
+          } else {
+            // Outro erro, tentar criar mesmo assim
+            this.createChristmasConfig(christmasData);
+          }
+        }
+      });
+    }
+  }
+
+  private createChristmasConfig(christmasData: any): void {
+    firstValueFrom(this.apiClient.createHomeContent(christmasData))
+      .then((response: any) => {
+        // Adicionar ao cache
+        if (response && response.id) {
+          this.contentCache.set('christmas_config', response);
+        }
+      })
+      .catch((error) => {
+        console.error('Erro ao criar configurações de Natal:', error);
+        // Se for erro 409 (já existe), tentar atualizar
+        if (error.status === 409) {
+          // Buscar o existente e atualizar
+          this.apiClient.getHomeContentBySectionKey('christmas_config').subscribe({
+            next: (existing: any) => {
+              if (existing && existing.id) {
+                firstValueFrom(this.apiClient.updateHomeContent(existing.id, christmasData))
+                  .then((response: any) => {
+                    this.contentCache.set('christmas_config', response);
+                  })
+                  .catch((err) => {
+                    alert('Erro ao atualizar configurações: ' + (err.error || err.message || 'Erro desconhecido'));
+                  });
+              }
+            }
+          });
+        } else {
+          alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+        }
+      });
   }
 
   getSlidePlaceholder(index: number): string {

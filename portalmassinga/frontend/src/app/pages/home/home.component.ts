@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AnimationService } from '../../services/animation.service';
 import { PageTransitionService } from '../../services/page-transition.service';
 import { GsapAnimationsService } from '../../services/gsap-animations.service';
+import { ApiClientService } from '../../services/api-client.service';
 
 // Import section components
 import { HistorySectionComponent } from './sections/history/history.component';
@@ -51,6 +52,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   public totalSlides = SLIDER_CONFIG.totalSlides;
   private slideTimeout: any;
   public snowflakes: Array<{left: number, delay: number, duration: number}> = [];
+  public enableSnow = true; // Valor padrão, será carregado da API
+  public enableSanta = true; // Valor padrão, será carregado da API
 
   private sliderAnimations = new HomeSliderAnimations();
 
@@ -58,11 +61,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private animationService: AnimationService,
     private pageTransitionService: PageTransitionService,
     private activatedRoute: ActivatedRoute,
-    private gsapAnimations: GsapAnimationsService
+    private gsapAnimations: GsapAnimationsService,
+    private apiClient: ApiClientService
   ) {}
 
   ngOnInit() {
-    this.initSnowflakes();
+    this.loadChristmasConfig();
     this.initSliderAnimations();
     inicializarAnimacoesHistoria(this.historiaSection);
     inicializarAnimacoesQuemSomos(this.quemSomosSection);
@@ -72,7 +76,44 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }, 100);
   }
 
+  private loadChristmasConfig(): void {
+    // Tentar carregar configurações de Natal da API
+    this.apiClient.getHomeContentBySectionKey('christmas_config').subscribe({
+      next: (content: any) => {
+        if (content && content.metadata) {
+          try {
+            const christmasData = JSON.parse(content.metadata);
+            this.enableSnow = christmasData.enableSnow !== false; // Default true se não especificado
+            this.enableSanta = christmasData.enableSanta !== false; // Default true se não especificado
+            
+            // Inicializar neve apenas se estiver habilitada
+            if (this.enableSnow) {
+              this.initSnowflakes();
+            }
+          } catch (e) {
+            console.error('Erro ao parsear configurações de Natal:', e);
+            // Usar valores padrão se houver erro no parse
+            this.initSnowflakes();
+          }
+        } else {
+          // Se não houver configuração, usar valores padrão (neve e santa habilitados)
+          this.initSnowflakes();
+        }
+      },
+      error: (error) => {
+        // Se houver erro ao carregar (endpoint não encontrado, etc), usar valores padrão
+        // Isso permite que a página funcione mesmo se a API não estiver disponível
+        console.warn('Não foi possível carregar configurações de Natal da API, usando padrões:', error);
+        this.initSnowflakes();
+      }
+    });
+  }
+
   private initSnowflakes() {
+    if (!this.enableSnow) {
+      return; // Não inicializar se estiver desabilitado
+    }
+    
     for (let i = 0; i < SLIDER_CONFIG.quantidadeFlocos; i++) {
       this.snowflakes.push({
         left: Math.random() * 100,

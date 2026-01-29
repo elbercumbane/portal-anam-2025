@@ -1,141 +1,181 @@
-# Backend - Portal da Associação e Massinga
+# Portal ANAM - Backend Spring Boot
 
-Backend API desenvolvido com Node.js, Express, TypeScript e PostgreSQL.
+Backend desenvolvido com Spring Boot e Java para o Portal da Associação ANAM.
 
 ## 🚀 Tecnologias
 
-- **Node.js** com **Express**
-- **TypeScript**
-- **PostgreSQL** (banco de dados)
-- **JWT** (autenticação)
-- **bcryptjs** (hash de senhas)
+- **Spring Boot 3.2.0**
+- **Java 17**
+- **PostgreSQL**
+- **Spring Data JPA**
+- **Lombok**
 
 ## 📋 Pré-requisitos
 
-- Node.js 18+ 
+- Java 17 ou superior
+- Maven 3.6+
 - PostgreSQL 12+
-- npm ou yarn
+- pgAdmin4 (opcional, para gerenciar o banco)
 
-## 🔧 Instalação
+## 🔧 Configuração
 
-1. Instalar dependências:
-```bash
-npm install
-```
+### 1. Criar a Base de Dados no PostgreSQL
 
-2. Configurar variáveis de ambiente:
-```bash
-cp .env.example .env
-```
+#### Opção A: Via pgAdmin4
+1. Abra o pgAdmin4
+2. Clique com botão direito em "Databases"
+3. Selecione "Create" > "Database"
+4. Nome: `anam2025`
+5. Clique em "Save"
 
-Edite o arquivo `.env` com suas configurações:
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=anam_portal
-DB_USER=postgres
-DB_PASSWORD=postgres
-
-PORT=3000
-NODE_ENV=development
-
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-JWT_EXPIRES_IN=7d
-
-CORS_ORIGIN=http://localhost:4200
-```
-
-3. Criar banco de dados PostgreSQL:
+#### Opção B: Via SQL
 ```sql
-CREATE DATABASE anam_portal;
+CREATE DATABASE anam2025;
 ```
 
-4. Executar migrações (criar tabelas):
+### 2. Executar o Script SQL
+
+1. No pgAdmin4, conecte-se à base de dados `anam2025`
+2. Abra o arquivo `sql/create-database-anam2025.sql`
+3. Execute o script completo (F5 ou botão Execute)
+
+Ou via linha de comando:
 ```bash
-npm run db:migrate
+psql -U postgres -d anam2025 -f sql/create-database-anam2025.sql
 ```
 
-5. Popular banco com dados iniciais:
+### 3. Configurar as Propriedades da Aplicação
+
+Edite o arquivo `src/main/resources/application.properties` e ajuste as credenciais do PostgreSQL:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/anam2025
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+```
+
+### 4. Compilar e Executar
+
 ```bash
-npm run db:seed
+# Windows (PowerShell) - dentro da pasta backend/
+.\mvnw.cmd clean install
+.\mvnw.cmd spring-boot:run
+
+# Windows (CMD) - dentro da pasta backend/
+mvnw.cmd clean install
+mvnw.cmd spring-boot:run
+
+# Linux/Mac - dentro da pasta backend/
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
-## 🏃 Executar
-
-### Desenvolvimento:
-```bash
-npm run dev
-```
-
-### Produção:
-```bash
-npm run build
-npm start
-```
+A aplicação estará disponível em: `http://localhost:8080/api`
 
 ## 📡 Endpoints da API
 
-### Autenticação
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Obter usuário atual (requer autenticação)
-
 ### Candidaturas de Membros
-- `POST /api/member-applications` - Criar candidatura (público)
-- `GET /api/member-applications` - Listar candidaturas (autenticado)
-- `GET /api/member-applications/:id` - Buscar candidatura por ID
-- `PUT /api/member-applications/:id/approve` - Aprovar candidatura (admin)
-- `PUT /api/member-applications/:id/reject` - Rejeitar candidatura (admin)
 
-### Membros
-- `GET /api/members` - Listar membros (autenticado)
-- `GET /api/members/:id` - Buscar membro por ID
-- `PUT /api/members/:id` - Atualizar membro
-- `DELETE /api/members/:id` - Desativar membro (admin)
+- **POST** `/api/member-applications` - Criar nova candidatura
+- **GET** `/api/member-applications` - Listar todas as candidaturas
+- **GET** `/api/member-applications?status=Pendente` - Filtrar por status
+- **GET** `/api/member-applications/{id}` - Buscar candidatura por ID
+- **PUT** `/api/member-applications/{id}/approve` - Aprovar candidatura
+- **PUT** `/api/member-applications/{id}/reject` - Rejeitar candidatura
 
-### Health Check
-- `GET /health` - Verificar status do servidor e banco de dados
+## 📝 Exemplo de Requisição
 
-## 🔐 Autenticação
+### Criar Candidatura
 
-As rotas protegidas requerem um token JWT no header:
+```json
+POST /api/member-applications
+Content-Type: application/json
+
+{
+  "photo": "base64_encoded_image_or_url",
+  "fullName": "João Silva",
+  "fatherName": "José Silva",
+  "motherName": "Maria Silva",
+  "birthDate": "1990-01-15",
+  "maritalStatus": "Solteiro",
+  "profession": "Engenheiro",
+  "mobilePhone": "+258 84 123 4567",
+  "email": "joao@email.com",
+  "phone": "+258 21 123 456",
+  "street": "Avenida Principal",
+  "neighborhood": "Centro",
+  "city": "Maputo",
+  "spouseName": "Ana Silva",
+  "spouseBirthDate": "1992-05-20",
+  "spouseFatherName": "Carlos Silva",
+  "spouseMotherName": "Sofia Silva",
+  "dependents": [
+    {
+      "name": "Pedro Silva",
+      "relationship": "child",
+      "profession": "Estudante",
+      "age": 10
+    }
+  ],
+  "workplace": "Empresa XYZ",
+  "position": "Engenheiro Sênior",
+  "workAddress": "Rua do Trabalho, 123",
+  "workPhone": "+258 21 987 654",
+  "additionalInformation": "Informações adicionais",
+  "acceptsTerms": true
+}
 ```
-Authorization: Bearer <token>
+
+## 🗂️ Estrutura do Projeto
+
+```
+backend-spring/
+├── src/
+│   ├── main/
+│   │   ├── java/com/anam/
+│   │   │   ├── PortalAnamApplication.java
+│   │   │   ├── controller/
+│   │   │   │   └── MemberApplicationController.java
+│   │   │   ├── dto/
+│   │   │   │   └── MemberApplicationDTO.java
+│   │   │   ├── entity/
+│   │   │   │   ├── MemberApplication.java
+│   │   │   │   └── ApplicationDependent.java
+│   │   │   └── repository/
+│   │   │       ├── MemberApplicationRepository.java
+│   │   │       └── ApplicationDependentRepository.java
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/
+├── sql/
+│   └── create-database-anam.sql
+├── pom.xml
+└── README.md
 ```
 
-## 👤 Usuários Padrão (após seed)
+## 🔍 Validações
 
-- **Admin**: `admin@anam.org` / `admin123`
-- **Membro**: `guilherme@gmail.com` / `membro123`
-- **Membro**: `maria@gmail.com` / `membro123`
+A aplicação valida automaticamente:
+- Campos obrigatórios
+- Formato de email
+- Tipos de dados
+- Relacionamentos entre entidades
 
-## 📊 Estrutura do Banco de Dados
+## 📌 Notas
 
-O banco de dados inclui as seguintes tabelas:
-- `users` - Usuários do sistema
-- `member_applications` - Candidaturas de membros
-- `members` - Membros aprovados
-- `dependents` - Dependentes dos membros
-- `payments` - Pagamentos/cotas
-- `projects` - Projetos disponíveis
-- `project_applications` - Candidaturas a projetos
-- `partners` - Parceiros
-- `treasury` - Tesouraria (receitas e despesas)
+- A tabela `member_applications` armazena as candidaturas
+- A tabela `application_dependents` armazena os dependentes de cada candidatura
+- Todas as colunas estão em inglês
+- O status padrão é "Pending" (Pendente, Approved, Rejected)
+- A data de cadastro (`created_at`) é preenchida automaticamente
 
-## 🔄 Fluxo de Candidatura
+## 🛠️ Desenvolvimento
 
-1. Usuário preenche formulário de candidatura (`POST /api/member-applications`)
-2. Candidatura é salva com status "Pendente"
-3. Admin visualiza candidaturas pendentes no dashboard
-4. Admin aprova candidatura (`PUT /api/member-applications/:id/approve`)
-5. Sistema cria automaticamente:
-   - Registro na tabela `members`
-   - Usuário na tabela `users` (senha padrão: `membro123`)
-6. Membro pode fazer login e acessar área de membros
+Para desenvolvimento com hot-reload, use:
 
-## 📝 Scripts Disponíveis
+```bash
+mvn spring-boot:run
+```
 
-- `npm run dev` - Inicia servidor em modo desenvolvimento
-- `npm run build` - Compila TypeScript para JavaScript
-- `npm start` - Inicia servidor em produção
-- `npm run db:migrate` - Executa migrações do banco
-- `npm run db:seed` - Popula banco com dados iniciais
+O Spring Boot DevTools está configurado para recarregar automaticamente as mudanças.
+

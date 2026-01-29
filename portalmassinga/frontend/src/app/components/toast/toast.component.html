@@ -1,0 +1,22 @@
+<div class="toast-container">
+  <div 
+    *ngFor="let message of messages" 
+    class="toast"
+    [class.toast-success]="message.type === 'success'"
+    [class.toast-error]="message.type === 'error'"
+    [class.toast-info]="message.type === 'info'"
+    [class.toast-warning]="message.type === 'warning'"
+    (click)="remove(message.id)">
+    <div class="toast-content">
+      <span class="toast-icon">
+        <span *ngIf="message.type === 'success'">✓</span>
+        <span *ngIf="message.type === 'error'">✕</span>
+        <span *ngIf="message.type === 'info'">ℹ</span>
+        <span *ngIf="message.type === 'warning'">⚠</span>
+      </span>
+      <span class="toast-message">{{ message.message }}</span>
+      <button class="toast-close" (click)="remove(message.id); $event.stopPropagation()">×</button>
+    </div>
+  </div>
+</div>
+

@@ -1,10 +1,20 @@
 <div class="page-container">
   <div class="page-header">
     <h1>Página Inicial</h1>
-    <p>Gerencie o conteúdo da página inicial do portal</p>
+    <p>Gerencie o conteúdo da página inicial do portal. Todas as alterações são salvas na base de dados.</p>
   </div>
 
-  <div class="page-content">
+  <div *ngIf="errorMessage" class="error-message" style="padding: 16px; background-color: #ffebee; color: #c62828; border-radius: 4px; margin-bottom: 16px;">
+    <mat-icon>error</mat-icon>
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading-message" style="padding: 16px; text-align: center; color: #666;">
+    <mat-icon class="spinner" style="animation: spin 1s linear infinite;">refresh</mat-icon>
+    Carregando dados da base de dados...
+  </div>
+
+  <div class="page-content" *ngIf="!isLoading">
     <!-- Hero Section - Slides -->
     <mat-card class="section-card">
       <mat-card-header>
@@ -27,11 +37,11 @@
             <div class="slide-content">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Título do Slide</mat-label>
-                <input matInput [placeholder]="getSlidePlaceholder(i)" [(ngModel)]="slides[i].titulo" (blur)="saveData()">
+                <input matInput [placeholder]="getSlidePlaceholder(i)" [(ngModel)]="slides[i].titulo" (blur)="saveSlide(i)">
               </mat-form-field>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Subtítulo/Descrição</mat-label>
-                <textarea matInput rows="3" [placeholder]="getSlideSubtitlePlaceholder(i)" [(ngModel)]="slides[i].subtitulo" (blur)="saveData()"></textarea>
+                <textarea matInput rows="3" [placeholder]="getSlideSubtitlePlaceholder(i)" [(ngModel)]="slides[i].subtitulo" (blur)="saveSlide(i)"></textarea>
               </mat-form-field>
               <div class="image-upload-section">
                 <label class="upload-label">Imagem de Fundo do Slide</label>
@@ -204,14 +214,22 @@
 
     <!-- Botões de Ação -->
     <div class="action-buttons">
-      <button mat-raised-button color="primary" class="save-btn" (click)="saveData()">
-        <mat-icon>save</mat-icon>
-        Salvar Alterações
+      <button mat-raised-button color="primary" class="save-btn" (click)="saveData()" [disabled]="isLoading">
+        <mat-icon *ngIf="!isLoading">save</mat-icon>
+        <mat-icon *ngIf="isLoading" class="spinner" style="animation: spin 1s linear infinite;">refresh</mat-icon>
+        {{ isLoading ? 'Salvando...' : 'Salvar Todas as Alterações' }}
       </button>
-      <button mat-stroked-button>
-        <mat-icon>preview</mat-icon>
-        Visualizar Página
+      <button mat-stroked-button [disabled]="isLoading" (click)="loadData()">
+        <mat-icon>refresh</mat-icon>
+        Recarregar Dados
       </button>
     </div>
   </div>
 </div>
+
+<style>
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>

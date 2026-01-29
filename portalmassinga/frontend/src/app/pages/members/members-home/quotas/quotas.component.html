@@ -1,0 +1,148 @@
+<div class="quotas-content">
+  <!-- Resumo das Cotas -->
+  <section class="info-section quotas-summary-section">
+    <div class="section-header">
+      <h3>
+        <mat-icon>account_balance_wallet</mat-icon>
+        Resumo das Cotas
+      </h3>
+      <p class="section-subtitle">Visão geral dos seus pagamentos</p>
+    </div>
+    <div class="quotas-summary-grid">
+      <div class="quota-summary-card">
+        <div class="quota-summary-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="quota-summary-info">
+          <div class="quota-summary-label">Cotas Pagas</div>
+          <div class="quota-summary-value">{{ quotasSummary?.paid }}/{{ quotasSummary?.total }}</div>
+        </div>
+      </div>
+      <div class="quota-summary-card">
+        <div class="quota-summary-icon">
+          <mat-icon>pending</mat-icon>
+        </div>
+        <div class="quota-summary-info">
+          <div class="quota-summary-label">Cotas Pendentes</div>
+          <div class="quota-summary-value">{{ quotasSummary?.pending }}</div>
+        </div>
+      </div>
+      <div class="quota-summary-card">
+        <div class="quota-summary-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="quota-summary-info">
+          <div class="quota-summary-label">Total Pago</div>
+          <div class="quota-summary-value">{{ quotasSummary?.totalPaid | currency:'MZN':'symbol':'1.0-0' }}</div>
+        </div>
+      </div>
+      <div class="quota-summary-card">
+        <div class="quota-summary-icon">
+          <mat-icon>receipt</mat-icon>
+        </div>
+        <div class="quota-summary-info">
+          <div class="quota-summary-label">Total de Recibos</div>
+          <div class="quota-summary-value">{{ filteredReceipts.length }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="quotas-action">
+      <a [routerLink]="['/membros/pagar-cotas']" class="btn-pay-quotas">
+        <mat-icon>payment</mat-icon>
+        <span>Pagar Cotas</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Pesquisa e Filtros -->
+  <section class="info-section quotas-search-section">
+    <div class="section-header">
+      <h3>
+        <mat-icon>search</mat-icon>
+        Consultar Recibos
+      </h3>
+      <p class="section-subtitle">Pesquise seus recibos por ano ou período</p>
+    </div>
+    <div class="search-filters">
+      <div class="filter-group">
+        <label>Ano</label>
+        <select [(ngModel)]="selectedYear" (change)="filterReceiptsByYear()" class="year-select">
+          <option value="">Todos os anos</option>
+          <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Mês</label>
+        <select [(ngModel)]="selectedMonth" (change)="filterReceiptsByMonth()" class="month-select">
+          <option value="">Todos os meses</option>
+          <option *ngFor="let month of months" [value]="month.value">{{ month.label }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Status</label>
+        <select [(ngModel)]="selectedStatus" (change)="filterReceiptsByStatus()" class="status-select">
+          <option value="">Todos</option>
+          <option value="pago">Pago</option>
+          <option value="pendente">Pendente</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lista de Recibos -->
+  <section class="info-section receipts-list-section">
+    <div class="section-header">
+      <h3>
+        <mat-icon>receipt_long</mat-icon>
+        Meus Recibos
+      </h3>
+      <p class="section-subtitle">Histórico completo dos seus pagamentos</p>
+    </div>
+    <div class="receipts-list" *ngIf="filteredReceipts.length > 0">
+      <div class="receipt-item" *ngFor="let receipt of filteredReceipts">
+        <div class="receipt-header">
+          <div class="receipt-info">
+            <div class="receipt-number">Recibo #{{ receipt.id }}</div>
+            <div class="receipt-date">{{ receipt.dataPagamento | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <div class="receipt-status" [ngClass]="'status-' + receipt.status">
+            <mat-icon>{{ receipt.status === 'pago' ? 'check_circle' : 'pending' }}</mat-icon>
+            <span>{{ receipt.status === 'pago' ? 'Pago' : 'Pendente' }}</span>
+          </div>
+        </div>
+        <div class="receipt-body">
+          <div class="receipt-details">
+            <div class="receipt-detail-item">
+              <mat-icon>calendar_month</mat-icon>
+              <span>Meses: {{ receipt.meses.join(', ') }}</span>
+            </div>
+            <div class="receipt-detail-item">
+              <mat-icon>attach_money</mat-icon>
+              <span>Valor: {{ receipt.valorTotal | currency:'MZN':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="receipt-detail-item">
+              <mat-icon>payment</mat-icon>
+              <span>Método: {{ receipt.metodoPagamento }}</span>
+            </div>
+          </div>
+          <div class="receipt-actions">
+            <button class="btn-view-receipt" (click)="viewReceipt(receipt)">
+              <mat-icon>visibility</mat-icon>
+              <span>Ver Recibo</span>
+            </button>
+            <button class="btn-download-receipt" (click)="downloadReceipt(receipt)">
+              <mat-icon>download</mat-icon>
+              <span>Download</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-receipts" *ngIf="filteredReceipts.length === 0">
+      <mat-icon>receipt_long</mat-icon>
+      <p>Nenhum recibo encontrado</p>
+      <p class="no-receipts-subtitle">Não há recibos para os filtros selecionados</p>
+    </div>
+  </section>
+</div>
+

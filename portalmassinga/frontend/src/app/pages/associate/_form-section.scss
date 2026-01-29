@@ -6,7 +6,7 @@
   padding: 3rem 0 5rem;
   
   .container {
-    max-width: 850px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 0 1.5rem;
   }
@@ -26,12 +26,10 @@
   border: 1px solid rgba(76, 175, 80, 0.2); // Verde
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.15); // Verde
-    border-color: rgba(76, 175, 80, 0.4);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
   }
   
   @media (max-width: 600px) {
@@ -96,14 +94,11 @@
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.06);
   border: 1px solid rgba($brown-gold, 0.15);
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
   position: relative;
   
   &:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 
-      0 20px 50px rgba(76, 175, 80, 0.15), // Verde
-      0 10px 25px rgba(11, 47, 65, 0.1); // Azul
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     border-color: rgba(76, 175, 80, 0.3); // Verde
   }
   
@@ -154,14 +149,10 @@
   
   &.clickable {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.2s ease;
     
     &:hover {
-      background: linear-gradient(135deg, #fff8e1 0%, #fffef5 100%);
-      
-      .expand-icon svg {
-        stroke: $gold-accent;
-      }
+      background: linear-gradient(135deg, #fafafa 0%, #fff 100%);
     }
   }
   
@@ -199,7 +190,6 @@
       color: #333;
       margin: 0;
       font-weight: 600;
-      transition: color 0.3s ease;
     }
   }
   
@@ -230,13 +220,12 @@
   }
   
   &.clickable:hover .optional-badge {
-    background: linear-gradient(135deg, rgba(11, 47, 65, 0.25) 0%, rgba(11, 47, 65, 0.2) 100%); // Azul
-    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(11, 47, 65, 0.2) 0%, rgba(11, 47, 65, 0.15) 100%); // Azul
   }
   
   .expand-icon {
     svg {
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.2s ease, stroke 0.2s ease;
       stroke: rgba(11, 47, 65, 0.6); // Azul
       
       &.rotated {
@@ -254,7 +243,7 @@
     max-height: 0;
     overflow: hidden;
     padding: 0 1.5rem;
-    transition: all 0.3s ease;
+    transition: max-height 0.2s ease, padding 0.2s ease;
     
     &.show {
       max-height: 500px;
