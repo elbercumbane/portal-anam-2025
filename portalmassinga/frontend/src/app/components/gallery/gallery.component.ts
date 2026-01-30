@@ -203,40 +203,17 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   private initScrollAnimations() {
-    // Configurar posição inicial da seção com fade in
-    gsap.set(this.galeriaSection.nativeElement, { 
-      opacity: 0, 
-      y: 60,
-      scale: 0.98
-    });
-    
-    // Criar um observer para detectar quando a seção entra na viewport
+    // Animações simplificadas - apenas fade in suave
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Timeline para fade in profissional
-          const tl = gsap.timeline();
-          
-          // Animar a entrada da seção
-          tl.to(this.galeriaSection.nativeElement, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 1.2,
-            ease: "power3.out"
-          });
-          
-          // Animar os cards de eventos em cascata
           const cards = this.galeriaSection.nativeElement.querySelectorAll('.evento-card');
           if (cards.length > 0) {
-            gsap.set(cards, { opacity: 0, y: 40 });
             gsap.to(cards, {
               opacity: 1,
-              y: 0,
-              duration: 0.8,
-              stagger: 0.15,
-              ease: "power2.out",
-              delay: 0.3
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "power1.out"
             });
           }
           

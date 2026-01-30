@@ -1,0 +1,24 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { NewsSectionComponent } from './news.component';
+
+describe('NewsSectionComponent', () => {
+  let component: NewsSectionComponent;
+  let fixture: ComponentFixture<NewsSectionComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [NewsSectionComponent]
+    })
+    .compileComponents();
+    
+    fixture = TestBed.createComponent(NewsSectionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+

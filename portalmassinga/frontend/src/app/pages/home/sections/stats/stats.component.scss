@@ -1,0 +1,239 @@
+@import '../../variables';
+
+.stats-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.2), transparent);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}
+
+.stats-header {
+  text-align: center;
+  margin-bottom: 60px;
+
+  .section-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    line-height: 1.2;
+
+    .highlight {
+      color: #60A5FA;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #60A5FA, transparent);
+        opacity: 0.3;
+      }
+    }
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 36px 28px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    border-color: transparent;
+    
+    .stat-decoration {
+      opacity: 1;
+    }
+    
+    .stat-accent {
+      width: 100%;
+    }
+  }
+
+  // Decoração de fundo
+  .stat-decoration {
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .stat-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    .stat-icon-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      opacity: 0.1;
+    }
+
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      color: white;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+  }
+
+  .stat-content {
+    position: relative;
+    z-index: 2;
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: #4b5563;
+      font-weight: 500;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+
+  // Elemento decorativo inferior
+  .stat-accent {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    border-radius: 2px 2px 0 0;
+    transition: width 0.4s ease;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .stats-section {
+    padding: 60px 0;
+  }
+
+  .stats-header {
+    margin-bottom: 40px;
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .stat-card {
+    padding: 28px 20px;
+
+    .stat-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 16px;
+
+      .stat-icon {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+    .stat-content {
+      .stat-number {
+        font-size: 2.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

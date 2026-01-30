@@ -29,7 +29,7 @@
   }
 }
 
-// Card de Evento com animações
+// Card de Evento simplificado - apenas zoom
 .evento-card {
   position: relative;
   border-radius: 20px;
@@ -37,56 +37,14 @@
   cursor: pointer;
   background: #ffffff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+  transition: box-shadow 0.3s ease;
   opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  animation: cardFadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  
-  // Delay escalonado para cada card (stagger effect)
-  &:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  
-  &:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  
-  &:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-  
-  &:nth-child(4) {
-    animation-delay: 0.4s;
-  }
 
   &:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 
     .evento-foto {
-      transform: scale(1.15);
-    }
-
-    .evento-overlay {
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.15) 100%);
-    }
-
-    .evento-titulo {
-      transform: translateY(-4px);
-    }
-
-    .evento-icon {
-      transform: scale(1.1) rotate(5deg);
-      background: rgba(76, 175, 80, 0.95);
-      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-
-      svg {
-        stroke: #ffffff;
-      }
-
-      span {
-        color: #ffffff;
-      }
+      transform: scale(1.1);
     }
   }
 
@@ -112,7 +70,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.5s ease;
   display: block;
 }
 
@@ -128,7 +86,6 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 24px;
-  transition: background 0.3s ease;
 
   @media (max-width: 768px) {
     padding: 20px;
@@ -166,7 +123,6 @@
     line-height: 1.3;
     font-family: 'Playfair Display', serif;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease;
   }
 
   .evento-data {
@@ -195,21 +151,18 @@
   border-radius: 25px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 
   svg {
     width: 20px;
     height: 20px;
     stroke: #4CAF50;
     flex-shrink: 0;
-    transition: stroke 0.3s ease;
   }
 
   span {
     font-size: 0.875rem;
     font-weight: 600;
     color: #1a1a1a;
-    transition: color 0.3s ease;
   }
 
   @media (max-width: 768px) {

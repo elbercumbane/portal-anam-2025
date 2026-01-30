@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { gsap } from 'gsap';
 
 interface Evento {
@@ -21,7 +22,10 @@ interface Evento {
 })
 export class EventsSectionComponent implements OnInit, AfterViewInit {
   
-  constructor(private elementRef: ElementRef) {}
+  constructor(
+    private elementRef: ElementRef,
+    private router: Router
+  ) {}
   
   eventos: Evento[] = [
     {
@@ -89,7 +93,6 @@ export class EventsSectionComponent implements OnInit, AfterViewInit {
   }
 
   inscreverSe(eventoId: string) {
-    console.log('Inscrição no evento:', eventoId);
-    // Implementar lógica de inscrição
+    this.router.navigate(['/eventos/inscricao', eventoId]);
   }
 }

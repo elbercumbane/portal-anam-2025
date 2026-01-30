@@ -1,0 +1,79 @@
+<section class="quick-links-section" id="links-rapidos" aria-labelledby="quick-links-title">
+  <div class="container">
+    <!-- Header -->
+    <div class="quick-links-header">
+      <span class="section-badge">Acesso Rápido</span>
+      <h2 id="quick-links-title" class="section-title">
+        Comece <span class="highlight">Aqui</span>
+      </h2>
+      <p class="section-subtitle">
+        Aceda rapidamente às principais áreas e funcionalidades do portal
+      </p>
+    </div>
+    
+    <!-- Quick Links Grid -->
+    <div class="quick-links-grid">
+      <a 
+        *ngFor="let link of quickLinks; let i = index" 
+        [routerLink]="link.link"
+        class="quick-link-card"
+        [attr.data-index]="i"
+        [style.--link-color]="link.color"
+        [style.--link-bg]="link.bgColor">
+        <div class="link-icon-wrapper">
+          <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <!-- person_add icon -->
+            <path *ngIf="link.icon === 'person_add'" d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle *ngIf="link.icon === 'person_add'" cx="8.5" cy="7" r="4"/>
+            <line *ngIf="link.icon === 'person_add'" x1="20" y1="8" x2="20" y2="14"/>
+            <line *ngIf="link.icon === 'person_add'" x1="23" y1="11" x2="17" y2="11"/>
+            
+            <!-- event icon -->
+            <rect *ngIf="link.icon === 'event'" x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line *ngIf="link.icon === 'event'" x1="16" y1="2" x2="16" y2="6"/>
+            <line *ngIf="link.icon === 'event'" x1="8" y1="2" x2="8" y2="6"/>
+            <line *ngIf="link.icon === 'event'" x1="3" y1="10" x2="21" y2="10"/>
+            
+            <!-- mail icon -->
+            <path *ngIf="link.icon === 'mail'" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline *ngIf="link.icon === 'mail'" points="22,6 12,13 2,6"/>
+            
+            <!-- account_circle icon -->
+            <path *ngIf="link.icon === 'account_circle'" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle *ngIf="link.icon === 'account_circle'" cx="12" cy="7" r="4"/>
+            
+            <!-- photo_library icon -->
+            <rect *ngIf="link.icon === 'photo_library'" x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="7" y1="2" x2="7" y2="22"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="17" y1="2" x2="17" y2="22"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="2" y1="12" x2="22" y2="12"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="2" y1="7" x2="7" y2="7"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="2" y1="17" x2="7" y2="17"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="17" y1="17" x2="22" y2="17"/>
+            <line *ngIf="link.icon === 'photo_library'" x1="17" y1="7" x2="22" y2="7"/>
+            
+            <!-- business icon -->
+            <path *ngIf="link.icon === 'business'" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline *ngIf="link.icon === 'business'" points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        
+        <div class="link-content">
+          <h3 class="link-title">{{ link.title }}</h3>
+          <p class="link-description">{{ link.description }}</p>
+        </div>
+        
+        <div class="link-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+        
+        <!-- Hover effect -->
+        <div class="link-hover-effect"></div>
+      </a>
+    </div>
+  </div>
+</section>
+

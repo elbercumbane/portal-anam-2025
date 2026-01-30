@@ -21,6 +21,7 @@ export class NavbarComponent {
   
   showMobileMenu = false;
   showPaginasSubmenu = false;
+  showEventosSubmenu = false;
   showProjectosSubmenu = false;
   showMembrosSubmenu = false;
   showApoioSubmenu = false;

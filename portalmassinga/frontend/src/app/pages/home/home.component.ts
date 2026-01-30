@@ -1,10 +1,7 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../services/animation.service';
-import { PageTransitionService } from '../../services/page-transition.service';
-import { GsapAnimationsService } from '../../services/gsap-animations.service';
 import { ApiClientService } from '../../services/api-client.service';
 
 // Import section components
@@ -12,118 +9,78 @@ import { HistorySectionComponent } from './sections/history/history.component';
 import { EventsSectionComponent } from './sections/events/events.component';
 import { GalleryComponent } from '../../components/gallery/gallery.component';
 import { PartnersSectionComponent } from './sections/partners/partners.component';
-import { SantaPopupComponent } from './sections/santa-popup/santa-popup.component';
 import { ScrollToTopComponent } from '../../components/scroll-to-top/scroll-to-top.component';
+import { StatsSectionComponent } from './sections/stats/stats.component';
+import { NewsSectionComponent } from './sections/news/news.component';
 
-// Importar arquivos de animação e dados separados
-import { SLIDER_CONFIG } from './home.data';
-import { HomeSliderAnimations, SliderRefs } from './home-slider.animations';
-import { inicializarAnimacoesHistoria, inicializarAnimacoesQuemSomos } from './home-sections.animations';
+// Importar dados
+import { SLIDE_TEXTOS } from './home.data';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     MatButtonModule, 
-    CommonModule, 
+    CommonModule,
+    RouterModule,
     HistorySectionComponent,
     EventsSectionComponent, 
     GalleryComponent, 
     PartnersSectionComponent,
-    SantaPopupComponent,
-    ScrollToTopComponent
+    ScrollToTopComponent,
+    StatsSectionComponent,
+    NewsSectionComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('heroContent', { static: true }) heroContent!: ElementRef;
-  @ViewChild('heroTitle', { static: true }) heroTitle!: ElementRef;
-  @ViewChild('titlePartLeft', { static: true }) titlePartLeft!: ElementRef;
-  @ViewChild('titlePartRight', { static: true }) titlePartRight!: ElementRef;
-  @ViewChild('heroSubtitle', { static: true }) heroSubtitle!: ElementRef;
-  @ViewChild('heroSubtitleBox', { static: true }) heroSubtitleBox!: ElementRef;
-  @ViewChild('heroButton') heroButton?: ElementRef;
-  @ViewChild('slider', { static: true }) slider!: ElementRef;
-  @ViewChild('historiaSection', { static: true }) historiaSection!: ElementRef;
-  @ViewChild('quemSomosSection', { static: true }) quemSomosSection!: ElementRef;
-
+export class HomeComponent implements OnInit, OnDestroy {
   public currentSlide = 0;
-  public totalSlides = SLIDER_CONFIG.totalSlides;
   private slideTimeout: any;
-  public snowflakes: Array<{left: number, delay: number, duration: number}> = [];
-  public enableSnow = true; // Valor padrão, será carregado da API
-  public enableSanta = true; // Valor padrão, será carregado da API
+  public isTransitioning = false;
+  
+  slides = [
+    { imagem: '/assets/FOTO1 ANAM.jpeg' },
+    { imagem: '/assets/FOTO 4 ANAM.jpeg' },
+    { imagem: '/assets/FOTO 3 ANAM.jpeg' },
+    { imagem: '/assets/FOTO1 ANAM.jpeg' } // Usando a primeira imagem para o slide de valores
+  ];
 
-  private sliderAnimations = new HomeSliderAnimations();
+  // Configuração dos botões por slide
+  slideButtons = [
+    { 
+      text: 'Torne-se Membro', 
+      link: '/associar', 
+      color: '#FFD700' // Amarelo
+    },
+    { 
+      text: 'Torne-se Simpatizante', 
+      link: '/associar', 
+      color: '#EF4444' // Vermelho
+    },
+    { 
+      text: 'Torne-se Apoiante', 
+      link: '/associar', 
+      color: '#60A5FA' // Azul
+    },
+    { 
+      text: 'Torne-se Parceiro', 
+      link: '/parceiros', 
+      color: '#4CAF50' // Verde
+    }
+  ];
+
+  getCurrentButton() {
+    return this.slideButtons[this.currentSlide] || this.slideButtons[0];
+  }
 
   constructor(
-    private animationService: AnimationService,
-    private pageTransitionService: PageTransitionService,
     private activatedRoute: ActivatedRoute,
-    private gsapAnimations: GsapAnimationsService,
     private apiClient: ApiClientService
   ) {}
 
   ngOnInit() {
-    this.loadChristmasConfig();
-    this.initSliderAnimations();
-    inicializarAnimacoesHistoria(this.historiaSection);
-    inicializarAnimacoesQuemSomos(this.quemSomosSection);
-    
-    setTimeout(() => {
-      this.gsapAnimations.initAllAnimations();
-    }, 100);
-  }
-
-  private loadChristmasConfig(): void {
-    // Tentar carregar configurações de Natal da API
-    this.apiClient.getHomeContentBySectionKey('christmas_config').subscribe({
-      next: (content: any) => {
-        if (content && content.metadata) {
-          try {
-            const christmasData = JSON.parse(content.metadata);
-            this.enableSnow = christmasData.enableSnow !== false; // Default true se não especificado
-            this.enableSanta = christmasData.enableSanta !== false; // Default true se não especificado
-            
-            // Inicializar neve apenas se estiver habilitada
-            if (this.enableSnow) {
-              this.initSnowflakes();
-            }
-          } catch (e) {
-            console.error('Erro ao parsear configurações de Natal:', e);
-            // Usar valores padrão se houver erro no parse
-            this.initSnowflakes();
-          }
-        } else {
-          // Se não houver configuração, usar valores padrão (neve e santa habilitados)
-          this.initSnowflakes();
-        }
-      },
-      error: (error) => {
-        // Se houver erro ao carregar (endpoint não encontrado, etc), usar valores padrão
-        // Isso permite que a página funcione mesmo se a API não estiver disponível
-        console.warn('Não foi possível carregar configurações de Natal da API, usando padrões:', error);
-        this.initSnowflakes();
-      }
-    });
-  }
-
-  private initSnowflakes() {
-    if (!this.enableSnow) {
-      return; // Não inicializar se estiver desabilitado
-    }
-    
-    for (let i = 0; i < SLIDER_CONFIG.quantidadeFlocos; i++) {
-      this.snowflakes.push({
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 5 + Math.random() * 10
-      });
-    }
-  }
-
-  ngAfterViewInit(): void {
+    this.startSlideCycle();
     this.activatedRoute.fragment.subscribe(fragment => {
       if (fragment) {
         setTimeout(() => {
@@ -133,24 +90,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private getSliderRefs(): SliderRefs {
-    return {
-      heroContent: this.heroContent,
-      heroTitle: this.heroTitle,
-      titlePartLeft: this.titlePartLeft,
-      titlePartRight: this.titlePartRight,
-      heroSubtitle: this.heroSubtitle,
-      heroSubtitleBox: this.heroSubtitleBox,
-      heroButton: this.heroButton,
-      slider: this.slider
-    };
+  getCurrentTitle(): string {
+    return SLIDE_TEXTOS[this.currentSlide]?.titulo || '';
   }
 
-  private initSliderAnimations() {
-    const refs = this.getSliderRefs();
-    this.sliderAnimations.configurarAnimacoesIniciais(refs);
-    this.sliderAnimations.configurarAnimacoesImagens(refs);
-    this.startSlideCycle();
+  getCurrentSubtitle(): string {
+    return SLIDE_TEXTOS[this.currentSlide]?.subtitulo || '';
   }
 
   private startSlideCycle() {
@@ -158,8 +103,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private scheduleNextSlide() {
-    const duracaoAtual = SLIDER_CONFIG.duracoesPorSlideMs[this.currentSlide] ?? 12000;
-
     if (this.slideTimeout) {
       clearTimeout(this.slideTimeout);
     }
@@ -167,34 +110,33 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.slideTimeout = setTimeout(() => {
       this.nextSlide();
       this.scheduleNextSlide();
-    }, duracaoAtual);
+    }, 8000); // 8 segundos por slide
   }
 
   public nextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-    this.animateSlideTransition();
-    if (this.slideTimeout) clearTimeout(this.slideTimeout);
-    this.scheduleNextSlide();
-  }
-
-  public prevSlide() {
-    this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-    this.animateSlideTransition();
+    this.isTransitioning = true;
+    setTimeout(() => {
+      this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+      setTimeout(() => {
+        this.isTransitioning = false;
+      }, 200);
+    }, 400);
     if (this.slideTimeout) clearTimeout(this.slideTimeout);
     this.scheduleNextSlide();
   }
 
   public goToSlide(index: number): void {
-    if (index >= 0 && index < this.totalSlides && index !== this.currentSlide) {
-      this.currentSlide = index;
-      this.animateSlideTransition();
+    if (index >= 0 && index < this.slides.length && index !== this.currentSlide) {
+      this.isTransitioning = true;
+      setTimeout(() => {
+        this.currentSlide = index;
+        setTimeout(() => {
+          this.isTransitioning = false;
+        }, 200);
+      }, 400);
       if (this.slideTimeout) clearTimeout(this.slideTimeout);
       this.scheduleNextSlide();
     }
-  }
-
-  private animateSlideTransition() {
-    this.sliderAnimations.animarTransicaoSlide(this.getSliderRefs(), this.currentSlide, this.totalSlides);
   }
 
   scrollToSection(sectionId: string): void {
@@ -208,7 +150,5 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.slideTimeout) {
       clearTimeout(this.slideTimeout);
     }
-    this.sliderAnimations.destruir();
-    this.gsapAnimations.killAllAnimations();
   }
 }

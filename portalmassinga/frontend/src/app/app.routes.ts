@@ -8,6 +8,10 @@ export const routes: Routes = [
       { path: '', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
       { path: 'servicos', loadChildren: () => import('./pages/services/services.module').then(m => m.ServicesModule) },
       { path: 'eventos', redirectTo: '/', pathMatch: 'full' }, // Redireciona para home (seção de eventos já está lá)
+      { path: 'eventos/inscricao/:id', loadComponent: () => import('./pages/events/event-registration/event-registration.component').then(m => m.EventRegistrationComponent) },
+      { path: 'eventos/inscricao', loadComponent: () => import('./pages/events/event-registration/event-registration.component').then(m => m.EventRegistrationComponent) },
+      { path: 'eventos/consultar-registro', loadComponent: () => import('./pages/events/event-registration-query/event-registration-query.component').then(m => m.EventRegistrationQueryComponent) },
+      { path: 'eventos/meus-eventos', loadComponent: () => import('./pages/events/my-events/my-events.component').then(m => m.MyEventsComponent) },
       { path: 'historial', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
       { path: 'documentacao', loadChildren: () => import('./pages/documentation/documentation.module').then(m => m.DocumentationModule) },
       { path: 'projectos', loadChildren: () => import('./pages/projects/projects.module').then(m => m.ProjectsModule) },

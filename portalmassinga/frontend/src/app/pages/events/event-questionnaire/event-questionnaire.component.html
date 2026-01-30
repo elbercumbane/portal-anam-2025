@@ -1,0 +1,51 @@
+<div class="questionnaire-dialog">
+  <div class="dialog-header">
+    <h2>Como ficou sabendo do evento?</h2>
+    <p>Ajude-nos a melhorar nossa comunicação selecionando os canais pelos quais você soube deste evento.</p>
+  </div>
+
+  <form [formGroup]="questionnaireForm" (ngSubmit)="onSubmit()" class="questionnaire-form">
+    <div class="form-group">
+      <label class="form-label">Selecione um ou mais canais *</label>
+      <div class="canais-list">
+        <label 
+          class="canal-item" 
+          *ngFor="let canal of canais"
+          [class.checked]="canal.checked">
+          <input 
+            type="checkbox" 
+            [checked]="canal.checked"
+            (change)="toggleCanal(canal.id)">
+          <span class="checkmark"></span>
+          <span class="canal-label">{{ canal.label }}</span>
+        </label>
+      </div>
+      <span class="error-message" *ngIf="questionnaireForm.get('canais')?.invalid && questionnaireForm.get('canais')?.touched">
+        Selecione pelo menos um canal
+      </span>
+    </div>
+
+    <div class="form-group" *ngIf="isOutroCanalChecked()">
+      <label for="outroCanal" class="form-label">Especifique o outro canal</label>
+      <input 
+        type="text" 
+        id="outroCanal" 
+        formControlName="outroCanal"
+        placeholder="Digite o canal"
+        class="form-input">
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">
+        Pular
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="questionnaireForm.invalid">
+        Enviar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
+

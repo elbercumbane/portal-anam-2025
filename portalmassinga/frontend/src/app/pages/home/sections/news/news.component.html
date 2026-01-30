@@ -1,0 +1,52 @@
+<section class="news-section" id="noticias" aria-labelledby="news-title">
+  <div class="container">
+    <!-- Header -->
+    <div class="news-header">
+      <span class="section-badge">Notícias</span>
+      <h2 id="news-title" class="section-title">
+        Últimas <span class="highlight">Notícias</span>
+      </h2>
+      <p class="section-subtitle">
+        Mantenha-se informado sobre as últimas novidades e atividades da ANAM
+      </p>
+    </div>
+    
+    <!-- News Grid -->
+    <div class="news-grid">
+      <article class="news-card" *ngFor="let item of news; let i = index" [attr.data-index]="i">
+        <a [routerLink]="item.link" class="news-link">
+          <div class="news-image-container">
+            <img [src]="item.image" [alt]="item.title" class="news-image" loading="lazy">
+            <div class="news-overlay"></div>
+            <div class="news-category">{{ item.category }}</div>
+          </div>
+          
+          <div class="news-content">
+            <div class="news-date">{{ item.date }}</div>
+            <h3 class="news-title">{{ item.title }}</h3>
+            <p class="news-excerpt">{{ item.excerpt }}</p>
+            <div class="news-read-more">
+              Ler mais
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+    
+    <!-- Ver todas as notícias -->
+    <div class="news-footer">
+      <a routerLink="/noticias" class="btn-view-all">
+        Ver Todas as Notícias
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,92 @@
+<div class="confirmation-dialog">
+  <div class="dialog-header">
+    <h2>Confirmar Dados da Inscrição</h2>
+    <p>Revise seus dados antes de finalizar a inscrição</p>
+  </div>
+
+  <div class="dialog-content">
+    <div class="eventos-list">
+      <h3>Eventos Selecionados:</h3>
+      <ul>
+        <li *ngFor="let evento of data.eventos">
+          <strong>{{ evento.titulo }}</strong>
+          <span>{{ evento.data }} - {{ evento.local }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <form [formGroup]="confirmationForm" class="confirmation-form">
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input 
+          type="text" 
+          formControlName="nome"
+          [readonly]="!isEditing"
+          [class.editing]="isEditing">
+      </div>
+
+      <div class="form-group">
+        <label>E-mail</label>
+        <input 
+          type="email" 
+          formControlName="email"
+          [readonly]="!isEditing"
+          [class.editing]="isEditing">
+      </div>
+
+      <div class="form-group">
+        <label>Telefone</label>
+        <input 
+          type="tel" 
+          formControlName="telefone"
+          [readonly]="!isEditing"
+          [class.editing]="isEditing">
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de Participante</label>
+        <select 
+          formControlName="tipoParticipante"
+          [disabled]="!isEditing"
+          [class.editing]="isEditing">
+          <option value="membro">Membro</option>
+          <option value="simpatizante">Simpatizante</option>
+          <option value="apoiante">Apoiante</option>
+          <option value="publico">Público Geral</option>
+        </select>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            formControlName="receberWhatsApp"
+            [disabled]="!isEditing">
+          <span>Receber comprovativo pelo WhatsApp</span>
+        </label>
+      </div>
+
+      <div class="edit-actions" *ngIf="isEditing">
+        <button type="button" class="btn-secondary" (click)="onCancelEdit()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-primary" (click)="onSave()">
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button class="btn-secondary" (click)="onCancel()" *ngIf="!isEditing">
+      Cancelar
+    </button>
+    <button class="btn-edit" (click)="onEdit()" *ngIf="!isEditing">
+      Editar
+    </button>
+    <button class="btn-primary" (click)="onFinalize()" [disabled]="isEditing || confirmationForm.invalid">
+      Finalizar Inscrição
+    </button>
+  </div>
+</div>
+

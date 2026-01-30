@@ -1,0 +1,214 @@
+<div class="event-query-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>Consultar Registro de Eventos</h1>
+      <p>Consulte seus eventos inscritos, eventos que participou e eventos disponíveis para inscrição</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container" *ngIf="eventosInscritos.length > 0 || eventosParticipados.length > 0 || eventosDisponiveis.length > 0">
+      <button 
+        class="tab-button" 
+        [class.active]="showSection === 'inscritos'"
+        [disabled]="eventosInscritos.length === 0"
+        (click)="showSection = 'inscritos'">
+        Eventos Inscritos ({{ eventosInscritos.length }})
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="showSection === 'participados'"
+        [disabled]="eventosParticipados.length === 0"
+        (click)="showSection = 'participados'">
+        Eventos Participados ({{ eventosParticipados.length }})
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="showSection === 'disponiveis'"
+        [disabled]="eventosDisponiveis.length === 0"
+        (click)="showSection = 'disponiveis'">
+        Eventos Disponíveis ({{ eventosDisponiveis.length }})
+      </button>
+    </div>
+
+    <!-- Eventos Inscritos -->
+    <div class="events-section" *ngIf="showSection === 'inscritos' && eventosInscritos.length > 0">
+      <h2>Meus Eventos Inscritos</h2>
+      <div class="events-grid">
+        <div class="event-card" *ngFor="let evento of eventosInscritos">
+          <div class="event-header">
+            <h3>{{ evento.titulo }}</h3>
+            <span class="nivel-acesso" [ngClass]="getNivelAcessoClass(evento.nivelAcesso)">
+              {{ getNivelAcessoLabel(evento.nivelAcesso) }}
+            </span>
+          </div>
+          
+          <div class="event-content">
+            <div class="event-info">
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{{ evento.data }}</span>
+              </div>
+              
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>{{ evento.local }}</span>
+              </div>
+              
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>{{ evento.hora }}</span>
+              </div>
+            </div>
+            
+            <p class="event-descricao">{{ evento.descricao }}</p>
+            
+            <div class="inscricao-info" *ngIf="getInscricaoData(evento.id)">
+              <div class="inscricao-detail">
+                <strong>Inscrito como:</strong> 
+                <span>{{ getInscricaoData(evento.id)?.dadosParticipante?.tipoParticipante || 'Não especificado' }}</span>
+              </div>
+              <div class="inscricao-detail">
+                <strong>E-mail:</strong> 
+                <span>{{ getInscricaoData(evento.id)?.dadosParticipante?.email || 'Não informado' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-actions">
+            <button class="btn-ticket" (click)="verTicket(evento)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              Ver Ticket
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eventos Participados -->
+    <div class="events-section" *ngIf="showSection === 'participados' && eventosParticipados.length > 0">
+      <h2>Eventos que Participei</h2>
+      <p class="section-description">Estes são eventos que você já participou.</p>
+      <div class="events-grid">
+        <div class="event-card" *ngFor="let evento of eventosParticipados">
+          <div class="event-header">
+            <h3>{{ evento.titulo }}</h3>
+            <span class="nivel-acesso" [ngClass]="getNivelAcessoClass(evento.nivelAcesso)">
+              {{ getNivelAcessoLabel(evento.nivelAcesso) }}
+            </span>
+          </div>
+          
+          <div class="event-content">
+            <div class="event-info">
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{{ evento.data }}</span>
+              </div>
+              
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>{{ evento.local }}</span>
+              </div>
+            </div>
+            
+            <p class="event-descricao">{{ evento.descricao }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eventos Disponíveis -->
+    <div class="events-section" *ngIf="showSection === 'disponiveis' && eventosDisponiveis.length > 0">
+      <h2>Eventos Disponíveis para Inscrição</h2>
+      <p class="section-description">Estes são eventos futuros que ainda não se inscreveu. Clique em "Inscrever-se" para participar.</p>
+      <div class="events-grid">
+        <div class="event-card available" *ngFor="let evento of eventosDisponiveis">
+          <div class="event-header">
+            <h3>{{ evento.titulo }}</h3>
+            <span class="nivel-acesso" [ngClass]="getNivelAcessoClass(evento.nivelAcesso)">
+              {{ getNivelAcessoLabel(evento.nivelAcesso) }}
+            </span>
+          </div>
+          
+          <div class="event-content">
+            <div class="event-info">
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{{ evento.data }}</span>
+              </div>
+              
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>{{ evento.local }}</span>
+              </div>
+              
+              <div class="info-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>{{ evento.hora }}</span>
+              </div>
+            </div>
+            
+            <p class="event-descricao">{{ evento.descricao }}</p>
+          </div>
+
+          <div class="event-actions">
+            <button class="btn-primary" (click)="inscreverEmEvento(evento.id)">
+              Inscrever-se
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty States -->
+    <div class="empty-state" *ngIf="eventosInscritos.length === 0 && eventosParticipados.length === 0 && eventosDisponiveis.length === 0">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <h3>Nenhum evento encontrado</h3>
+      <p>Você ainda não se inscreveu em nenhum evento. Explore nossos eventos e faça sua inscrição!</p>
+      <button class="btn-primary" (click)="goToNewEvents()">
+        Ver Novos Eventos
+      </button>
+    </div>
+  </div>
+</div>
+

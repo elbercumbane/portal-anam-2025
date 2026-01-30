@@ -13,8 +13,7 @@
       <article 
         class="evento-card" 
         *ngFor="let evento of getEventosPreview(); let i = index; trackBy: trackByEventoId"
-        (click)="abrirEvento(evento)"
-        [style.animation-delay.ms]="i * 100">
+        (click)="abrirEvento(evento)">
         
         <!-- Foto do Evento -->
         <div class="evento-foto-container">

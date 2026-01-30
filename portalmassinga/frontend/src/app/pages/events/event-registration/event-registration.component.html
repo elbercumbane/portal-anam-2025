@@ -1,0 +1,189 @@
+<div class="event-registration-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Voltar
+      </button>
+      <h1>Inscrição em Eventos</h1>
+    </div>
+
+    <!-- Step 1: Registration Form -->
+    <div class="registration-section" *ngIf="step === 'registration'">
+      <div class="evento-info-card" *ngIf="eventoAtual; else noEvento">
+        <div class="evento-header">
+          <h2>{{ eventoAtual.titulo }}</h2>
+          <span class="evento-data">{{ eventoAtual.data }}</span>
+        </div>
+        <div class="evento-details">
+          <div class="detail-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>{{ eventoAtual.local }}</span>
+          </div>
+          <div class="detail-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>{{ eventoAtual.hora }}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noEvento>
+        <div class="evento-info-card">
+          <h2>Selecione os eventos que deseja participar</h2>
+          <p>Preencha seus dados abaixo e depois selecione os eventos de seu interesse.</p>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmitRegistration()" class="registration-form">
+        <h3>Dados de Inscrição</h3>
+        
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input 
+            type="text" 
+            id="nome" 
+            formControlName="nome"
+            placeholder="Digite seu nome completo"
+            [class.error]="registrationForm.get('nome')?.invalid && registrationForm.get('nome')?.touched">
+          <span class="error-message" *ngIf="registrationForm.get('nome')?.invalid && registrationForm.get('nome')?.touched">
+            Nome é obrigatório (mínimo 3 caracteres)
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail *</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="seu@email.com"
+            [class.error]="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+          <span class="error-message" *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+            E-mail inválido
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="telefone">Telefone *</label>
+          <input 
+            type="tel" 
+            id="telefone" 
+            formControlName="telefone"
+            placeholder="+258 XX XXX XXXX"
+            [class.error]="registrationForm.get('telefone')?.invalid && registrationForm.get('telefone')?.touched">
+          <span class="error-message" *ngIf="registrationForm.get('telefone')?.invalid && registrationForm.get('telefone')?.touched">
+            Telefone é obrigatório
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoParticipante">Tipo de Participante *</label>
+          <select 
+            id="tipoParticipante" 
+            formControlName="tipoParticipante"
+            [class.error]="registrationForm.get('tipoParticipante')?.invalid && registrationForm.get('tipoParticipante')?.touched">
+            <option value="">Selecione...</option>
+            <option value="membro">Membro</option>
+            <option value="simpatizante">Simpatizante</option>
+            <option value="apoiante">Apoiante</option>
+            <option value="publico">Público Geral</option>
+          </select>
+          <span class="error-message" *ngIf="registrationForm.get('tipoParticipante')?.invalid && registrationForm.get('tipoParticipante')?.touched">
+            Selecione o tipo de participante
+          </span>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              formControlName="receberWhatsApp">
+            <span>Receber comprovativo pelo WhatsApp</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="registrationForm.invalid">
+          Submeter Inscrição
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Step 2: Other Events -->
+    <div class="other-events-section" *ngIf="step === 'other-events'">
+      <h2>Inscrever-se em Outros Eventos</h2>
+      <p class="section-description">
+        Selecione outros eventos que deseja participar. Você pode selecionar múltiplos eventos.
+      </p>
+
+      <div class="eventos-grid">
+        <div 
+          class="evento-card-selectable" 
+          *ngFor="let evento of outrosEventos"
+          [class.selected]="isEventoSelecionado(evento.id)"
+          (click)="toggleEvento(evento.id)">
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              [checked]="isEventoSelecionado(evento.id)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleEvento(evento.id)">
+            <span class="checkmark"></span>
+          </div>
+          <div class="evento-content">
+            <h3>{{ evento.titulo }}</h3>
+            <p class="evento-data">{{ evento.data }}</p>
+            <p class="evento-local">{{ evento.local }}</p>
+            <span class="nivel-acesso" [attr.data-nivel]="evento.nivelAcesso">
+              {{ evento.nivelAcesso === 'publico' ? 'Público' : 
+                 evento.nivelAcesso === 'membros' ? 'Membros' : 
+                 evento.nivelAcesso === 'simpatizantes' ? 'Simpatizantes' : 'Apoiantes' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-secondary" (click)="goBack()">Voltar</button>
+        <button class="btn-primary" (click)="onContinue()">
+          Finalizar Inscrição
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Complete -->
+    <div class="complete-section" *ngIf="step === 'complete'">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <h2>Inscrição Realizada com Sucesso!</h2>
+      <p>Sua inscrição foi registrada. Você receberá um e-mail de confirmação em breve.</p>
+      <div class="actions">
+        <button class="btn-primary" (click)="goToMyEvents()">
+          Ver Minhas Inscrições
+        </button>
+        <button class="btn-secondary" (click)="goBack()">
+          Voltar para Eventos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

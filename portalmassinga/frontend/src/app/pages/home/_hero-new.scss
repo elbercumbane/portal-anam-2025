@@ -1,0 +1,311 @@
+// Novo Hero Section - Layout Simples baseado na imagem
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+  // Transições suaves para mudanças de conteúdo
+  .hero-title,
+  .hero-subtitle,
+  .hero-badge,
+  .hero-actions {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity;
+
+  &.active {
+    opacity: 1;
+    z-index: 1;
+  }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 80, 0, 0.7);
+  z-index: 2;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 3;
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 5%;
+  color: white;
+  animation: fadeInUp 0.8s ease-out;
+  
+  // Animação suave para mudanças de conteúdo quando muda de slide
+  .hero-title-text,
+  .hero-subtitle,
+  .hero-badge,
+  .hero-actions {
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+    animation: fadeInContent 0.8s ease-in-out;
+  }
+  
+  // Quando está em transição, o conteúdo faz fade out
+  &.transitioning {
+    .hero-title-text,
+    .hero-subtitle,
+    .hero-badge,
+    .hero-actions {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: none;
+    }
+  }
+}
+
+@keyframes fadeInContent {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(34, 139, 34, 0.9);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 30px;
+  animation: fadeInContent 0.5s ease-out;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 24px 0;
+  color: white;
+  max-width: 800px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  .hero-title-text {
+    display: block;
+    
+    ::ng-deep .highlight-letter {
+      color: #FFD700; // Amarelo
+    }
+    
+    ::ng-deep .highlight-letter-yellow {
+      color: #FFD700; // Amarelo
+    }
+    
+    ::ng-deep .highlight-letter-green {
+      color: #4CAF50; // Verde
+    }
+    
+    ::ng-deep .highlight-letter-red {
+      color: #EF4444; // Vermelho
+    }
+    
+    ::ng-deep .highlight-letter-blue {
+      color: #60A5FA; // Azul
+    }
+  }
+}
+
+.hero-subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.8;
+  margin: 0 0 40px 0;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 800px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+
+  ::ng-deep .highlight-letter {
+    color: #FFD700;
+  }
+  
+  ::ng-deep .highlight-letter-yellow {
+    color: #FFD700;
+  }
+  
+  ::ng-deep .highlight-letter-green {
+    color: #4CAF50;
+  }
+  
+  ::ng-deep .highlight-letter-red {
+    color: #EF4444;
+  }
+  
+  ::ng-deep .highlight-letter-blue {
+    color: #60A5FA;
+  }
+  
+  ::ng-deep strong {
+    color: #FFD700;
+    font-weight: 600;
+  }
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeInContent 0.6s ease-out 0.2s both;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+    color: white;
+    filter: brightness(1.1);
+
+    svg {
+      transform: translateX(5px);
+    }
+  }
+}
+
+.hero-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 4;
+}
+
+.hero-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.2);
+  }
+
+  &.active {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 500px;
+  }
+
+  .hero-container {
+    padding: 0 20px;
+  }
+
+  .hero-badge {
+    padding: 8px 18px;
+    font-size: 0.75rem;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    margin-bottom: 16px;
+  }
+
+  .hero-subtitle {
+    margin-bottom: 30px;
+    font-size: 1rem;
+  }
+
+  .hero-cta-button {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+
+  .hero-controls {
+    bottom: 30px;
+  }
+}
+

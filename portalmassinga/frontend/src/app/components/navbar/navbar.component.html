@@ -15,8 +15,19 @@
       <div class="dropdown-menu" [class.show]="showPaginasSubmenu">
         <a mat-button routerLink="/documentacao" routerLinkActive="active" class="dropdown-item">Documentação</a>
         <a mat-button routerLink="/servicos" routerLinkActive="active" class="dropdown-item">Serviços</a>
-        <a mat-button (click)="scrollToSection('eventos')" class="dropdown-item">Eventos</a>
         <a mat-button routerLink="/historial" routerLinkActive="active" class="dropdown-item">Historial</a>
+      </div>
+    </div>
+    
+    <!-- Submenu Eventos -->
+    <div class="dropdown" (mouseenter)="showEventosSubmenu = true" (mouseleave)="showEventosSubmenu = false" [class.active]="showEventosSubmenu">
+      <a mat-button class="nav-link dropdown-toggle">
+        <span>Eventos</span>
+        <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+      </a>
+      <div class="dropdown-menu" [class.show]="showEventosSubmenu">
+        <a mat-button routerLink="/eventos/inscricao" routerLinkActive="active" class="dropdown-item highlight">Novos Eventos</a>
+        <a mat-button routerLink="/eventos/consultar-registro" routerLinkActive="active" class="dropdown-item">Consultar Registro</a>
       </div>
     </div>
     
@@ -106,8 +117,15 @@
       <div class="mobile-section-title">Páginas</div>
       <a mat-button routerLink="/documentacao" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Documentação</a>
       <a mat-button routerLink="/servicos" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Serviços</a>
-      <a mat-button (click)="scrollToSection('eventos'); closeMobileMenu()" class="mobile-nav-link">Eventos</a>
       <a mat-button routerLink="/historial" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Historial</a>
+    </div>
+
+    <div class="mobile-divider"></div>
+
+    <div class="mobile-section">
+      <div class="mobile-section-title">Eventos</div>
+      <a mat-button routerLink="/eventos/inscricao" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link highlight">Novos Eventos</a>
+      <a mat-button routerLink="/eventos/consultar-registro" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Consultar Registro</a>
     </div>
 
     <div class="mobile-divider"></div>
