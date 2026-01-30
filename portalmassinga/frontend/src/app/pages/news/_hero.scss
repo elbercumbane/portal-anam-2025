@@ -1,0 +1,223 @@
+@import 'variables';
+
+// Hero Dinâmico com Carrossel
+.news-hero-dynamic {
+  margin-top: 0;
+  padding-top: 140px; // Espaço para o navbar fixo (top: 20px + altura navbar + margem)
+  padding-bottom: 60px;
+  background: transparent; // Transparente para mostrar o fundo vermelho fixo
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+  
+  .hero-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-carousel {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: $color-white;
+    
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      
+      .carousel-slides {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+        
+        .carousel-slide {
+          min-width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1.5fr;
+          gap: 0;
+          cursor: pointer;
+          transition: transform 0.3s;
+          
+          &:hover {
+            .slide-content .slide-title {
+              color: $color-primary;
+            }
+          }
+          
+          .slide-image {
+            position: relative;
+            background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            overflow: hidden;
+            
+            .slide-img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              transition: transform 0.5s ease;
+            }
+            
+            .image-placeholder {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              
+              .placeholder-icon {
+                font-size: 5rem;
+                opacity: 0.2;
+                color: white;
+              }
+            }
+          }
+          
+          &:hover .slide-image .slide-img {
+            transform: scale(1.05);
+          }
+          
+          .slide-content {
+            padding: $spacing-xl;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: $color-white;
+            
+            .slide-badge {
+              display: inline-block;
+              background: $color-primary;
+              color: white;
+              padding: 6px 14px;
+              border-radius: 20px;
+              font-size: 0.75rem;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              margin-bottom: $spacing-md;
+              width: fit-content;
+            }
+            
+            .slide-title {
+              font-family: $font-serif;
+              font-size: 2.75rem;
+              font-weight: 700;
+              line-height: 1.2;
+              margin: 0 0 $spacing-md 0;
+              color: $color-text;
+              transition: color 0.3s;
+            }
+            
+            .slide-excerpt {
+              font-size: 1.15rem;
+              line-height: 1.7;
+              color: $color-text-light;
+              margin: 0 0 $spacing-lg 0;
+            }
+            
+            .slide-meta {
+              display: flex;
+              gap: $spacing-lg;
+              align-items: center;
+              
+              .slide-category {
+                color: $color-primary;
+                font-weight: 700;
+                font-size: 0.95rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+              
+              .slide-date {
+                color: $color-text-lighter;
+                font-size: 0.95rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s;
+      color: $color-text;
+      
+      &:hover {
+        background: $color-white;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      }
+      
+      &:active {
+        transform: translateY(-50%) scale(0.95);
+      }
+      
+      &.carousel-prev {
+        left: 20px;
+      }
+      
+      &.carousel-next {
+        right: 20px;
+      }
+      
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    
+    .carousel-indicators {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+      
+      .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        padding: 0;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.5);
+          transform: scale(1.2);
+        }
+        
+        &.active {
+          background: $color-white;
+          width: 32px;
+          border-radius: 6px;
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,129 @@
+@import 'variables';
+
+// Responsividade
+@media (max-width: $breakpoint-desktop) {
+  .news-hero-dynamic {
+    .hero-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .hero-featured {
+      grid-template-columns: 1fr;
+      
+      .featured-image {
+        height: 250px;
+      }
+    }
+  }
+  
+  .news-main-content {
+    .news-grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      
+      .news-card.featured {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .news-hero-dynamic {
+    padding: 60px 0 40px;
+    
+    .hero-container {
+      padding: 0 20px;
+    }
+    
+    .hero-carousel {
+      .carousel-wrapper {
+        .carousel-slides {
+          .carousel-slide {
+            grid-template-columns: 1fr;
+            
+            .slide-image {
+              min-height: 250px;
+            }
+            
+            .slide-content {
+              padding: $spacing-lg $spacing-md;
+              
+              .slide-title {
+                font-size: 1.75rem;
+              }
+              
+              .slide-excerpt {
+                font-size: 1rem;
+              }
+            }
+          }
+        }
+      }
+      
+      .carousel-btn {
+        width: 40px;
+        height: 40px;
+        
+        &.carousel-prev {
+          left: 10px;
+        }
+        
+        &.carousel-next {
+          right: 10px;
+        }
+      }
+      
+      .carousel-indicators {
+        bottom: 20px;
+      }
+    }
+  }
+  
+  .news-main-content {
+    padding: 40px 0 60px;
+    
+    .content-container {
+      padding: 0 20px;
+    }
+    
+    .category-filters {
+      gap: 0.75rem;
+      
+      .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+    }
+    
+    .news-grid {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+  }
+  
+  .news-modal {
+    padding: 20px;
+    
+    .modal-content {
+      .modal-title {
+        font-size: 1.75rem;
+        margin: 0 $spacing-md $spacing-sm;
+      }
+      
+      .modal-header {
+        padding: $spacing-md $spacing-md 0.75rem;
+      }
+      
+      .modal-body {
+        padding: 0 $spacing-md $spacing-md;
+      }
+      
+      .modal-image {
+        height: 250px;
+        margin: 0 0 $spacing-md 0;
+      }
+    }
+  }
+}
+

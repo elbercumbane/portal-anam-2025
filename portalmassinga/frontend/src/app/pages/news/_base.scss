@@ -1,0 +1,23 @@
+@import 'variables';
+
+// Estilos Base da Página
+.noticias-page {
+  padding: 0;
+  background: $color-bg;
+  min-height: 100vh;
+  color: $color-text;
+  position: relative;
+}
+
+// Fundo vermelho desde o topo até o hero
+.red-background-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 600px; // Cobre desde o topo até o final do hero
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-dark 50%, $color-primary 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
