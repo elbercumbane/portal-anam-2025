@@ -1,4 +1,35 @@
 <div class="marketplace2-page">
+  <!-- Hero Section -->
+  <section class="marketplace-hero">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>store</mat-icon>
+        <span>Marketplace ANAM</span>
+      </div>
+      <h1 class="hero-title">
+        Comércio Local <span class="highlight">Sustentável</span>
+      </h1>
+      <p class="hero-subtitle">
+        Conectamos produtores locais com a comunidade. Encontre produtos artesanais, agrícolas e serviços de qualidade.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{ totalProducts }}+</div>
+          <div class="stat-label">Produtos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ categories.length - 1 }}</div>
+          <div class="stat-label">Categorias</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Local</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Header Fixo -->
   <header class="marketplace-header">
     <div class="header-content">
@@ -112,6 +143,82 @@
 
     <!-- Conteúdo Principal -->
     <main class="marketplace-main">
+      <!-- Produtos em Destaque -->
+      <section class="featured-section" *ngIf="getFeaturedProducts().length > 0">
+        <div class="section-header">
+          <div class="section-title-group">
+            <mat-icon class="section-icon">star</mat-icon>
+            <div>
+              <h2 class="section-title">Produtos em Destaque</h2>
+              <p class="section-subtitle">Seleção especial dos melhores produtos</p>
+            </div>
+          </div>
+        </div>
+        <div class="featured-grid">
+          <article 
+            *ngFor="let product of getFeaturedProducts(); trackBy: trackByProductId" 
+            class="product-card featured-card"
+            (click)="viewProduct(product)">
+            
+            <div class="product-image-container">
+              <img 
+                [src]="product.image" 
+                [alt]="product.title"
+                class="product-image"
+                loading="lazy"
+                (error)="onImageError($event)"
+              />
+              <div class="product-overlay">
+                <button class="overlay-btn" (click)="viewProduct(product); $event.stopPropagation()">
+                  <mat-icon>visibility</mat-icon>
+                  <span>Ver detalhes</span>
+                </button>
+              </div>
+              <div class="product-badges">
+                <span class="badge featured">
+                  <mat-icon>star</mat-icon>
+                  <span>Destaque</span>
+                </span>
+                <span class="badge category" [style.background-color]="getCategoryColor(product.category)">
+                  <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
+                </span>
+              </div>
+            </div>
+
+            <div class="product-content">
+              <div class="product-header">
+                <h3 class="product-title">{{ product.title }}</h3>
+                <div class="product-price">{{ formatPrice(product.price) }}</div>
+              </div>
+              
+              <p class="product-description">{{ product.description }}</p>
+
+              <div class="product-meta">
+                <div class="meta-item">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ product.location }}</span>
+                </div>
+                <div class="meta-item">
+                  <mat-icon>person</mat-icon>
+                  <span>{{ product.seller }}</span>
+                </div>
+              </div>
+
+              <div class="product-actions">
+                <button class="btn-secondary" (click)="contactSeller(product); $event.stopPropagation()">
+                  <mat-icon>chat_bubble</mat-icon>
+                  <span>Contactar</span>
+                </button>
+                <button class="btn-primary" (click)="viewProduct(product); $event.stopPropagation()">
+                  <mat-icon>shopping_cart</mat-icon>
+                  <span>Ver mais</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <!-- Barra de Resultados -->
       <div class="results-bar">
         <div class="results-info">

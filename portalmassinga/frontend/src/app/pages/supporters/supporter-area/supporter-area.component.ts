@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 interface Donation {
   date: string;
@@ -21,15 +23,20 @@ interface Project {
 @Component({
   selector: 'app-supporter-area',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './supporter-area.component.html',
   styleUrl: './supporter-area.component.scss'
 })
-export class SupporterAreaComponent implements OnInit {
+export class SupporterAreaComponent implements OnInit, OnDestroy {
   supporterName = 'João Silva'; // Simulado - viria do login
   totalDonated = 1500;
   lastDonation = '15 de Novembro 2024';
   supporterLevel = 'Prata';
+  
+  activeTab: string = 'overview';
+  currentTime = '';
+  currentDate = '';
+  private timeInterval: any;
   
   increaseForm!: FormGroup;
   showIncreaseForm = false;
@@ -77,6 +84,12 @@ export class SupporterAreaComponent implements OnInit {
     { date: '15/08/2024', amount: 150, type: 'monthly', receipt: 'recibo-005.pdf' }
   ];
 
+  // Dados para gráfico de apoio (últimos 6 meses)
+  supportChartData = {
+    labels: ['Jul 2024', 'Ago 2024', 'Set 2024', 'Out 2024', 'Nov 2024', 'Dez 2024'],
+    values: [150, 650, 150, 150, 150, 150] // Ago tem 500 + 150
+  };
+
   exclusiveNews = [
     {
       title: 'Novo Projecto Aprovado',
@@ -98,13 +111,63 @@ export class SupporterAreaComponent implements OnInit {
     }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.increaseForm = this.fb.group({
       newAmount: ['', [Validators.required, Validators.min(1)]],
       frequency: ['monthly', [Validators.required]]
     });
+    
+    // Inicializar data e hora
+    this.updateDateTime();
+    // Atualizar a cada segundo
+    this.timeInterval = setInterval(() => {
+      this.updateDateTime();
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+  }
+
+  updateDateTime(): void {
+    const now = new Date();
+    
+    // Formatar hora (HH:MM:SS)
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    this.currentTime = `${hours}:${minutes}:${seconds}`;
+    
+    // Formatar data (DD de Mês de YYYY)
+    const days = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    
+    const dayName = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+    
+    this.currentDate = `${dayName}, ${day} de ${month} de ${year}`;
+  }
+
+  switchTab(tabName: string): void {
+    this.activeTab = tabName;
+  }
+
+  isTabActive(tabName: string): boolean {
+    return this.activeTab === tabName;
+  }
+
+  logout(): void {
+    // Implementar logout
+    this.router.navigate(['/']);
   }
 
   getLevelColor(): string {
@@ -162,6 +225,26 @@ export class SupporterAreaComponent implements OnInit {
       offset -= (this.moneyUsage[i].percentage / 100) * circumference;
     }
     return offset;
+  }
+
+  // Métodos para o gráfico de apoio
+  getMaxValue(): number {
+    return Math.max(...this.supportChartData.values, 100);
+  }
+
+  getMidValue(): number {
+    return Math.round(this.getMaxValue() * 0.5);
+  }
+
+  getBarHeight(value: number): number {
+    const maxValue = this.getMaxValue();
+    const maxHeight = 180; // altura máxima do gráfico em pixels
+    return (value / maxValue) * maxHeight;
+  }
+
+  getBarY(value: number): number {
+    const maxHeight = 180;
+    return maxHeight - this.getBarHeight(value) + 20; // +20 para compensar o espaço do topo
   }
 }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { jsPDF } from 'jspdf';
 
 interface InscricaoEvento {
   eventoPrincipal: string | null;
@@ -28,18 +29,118 @@ interface EventoCompleto {
 })
 export class EventTicketService {
 
-  generateTicket(inscricao: InscricaoEvento, evento: EventoCompleto) {
-    // Gerar ID único não sequencial
+  async generateTicket(inscricao: InscricaoEvento, evento: EventoCompleto) {
+    // Gerar ID único não sequencial (máximo 5 dígitos)
     const ticketId = this.generateUniqueTicketId();
     
-    // Criar conteúdo do ticket em HTML
-    const ticketContent = this.createTicketHTML(inscricao, evento, ticketId);
-    
-    // Criar e baixar o PDF/HTML
-    this.downloadTicket(ticketContent, ticketId, evento.titulo);
+    // Gerar e baixar o PDF
+    await this.generateTicketPDF(inscricao, evento, ticketId);
   }
 
-  private createTicketHTML(inscricao: InscricaoEvento, evento: EventoCompleto, ticketId: string): string {
+  private async generateTicketPDF(inscricao: InscricaoEvento, evento: EventoCompleto, ticketId: string) {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let yPosition = margin;
+
+    // Cores
+    const primaryColor = [76, 175, 80]; // Verde
+    const secondaryColor = [96, 165, 250]; // Azul
+    const textColor = [31, 41, 55]; // Cinza escuro
+    const lightGray = [107, 114, 128]; // Cinza claro
+
+    // Header - Logo e Título
+    doc.setFontSize(24);
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ANAM', margin, yPosition);
+    yPosition += 10;
+
+    doc.setFontSize(20);
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text('Confirmação de Inscrição', margin, yPosition);
+    yPosition += 8;
+
+    // Badge de confirmação
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.roundedRect(margin, yPosition, 60, 8, 2, 2, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('✓ INSCRIÇÃO CONFIRMADA', margin + 3, yPosition + 5.5);
+    yPosition += 15;
+
+    // Ticket ID
+    doc.setFillColor(243, 244, 246);
+    doc.roundedRect(margin, yPosition, pageWidth - (margin * 2), 10, 2, 2, 'F');
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Ticket ID: ${ticketId}`, margin + 5, yPosition + 6.5);
+    yPosition += 15;
+
+    // QR Code Section
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(ticketId)}`;
+    
+    // Carregar imagem do QR code e adicionar ao PDF
+    try {
+      const qrCodeImage = await this.loadImageAsBase64(qrCodeUrl);
+      const qrCodeSize = 40; // tamanho em mm
+      const qrCodeX = (pageWidth - qrCodeSize) / 2; // centralizar
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      doc.text('Código QR para Validação', margin, yPosition);
+      yPosition += 10;
+      
+      // Adicionar imagem do QR code
+      doc.addImage(qrCodeImage, 'PNG', qrCodeX, yPosition, qrCodeSize, qrCodeSize);
+      yPosition += qrCodeSize + 8;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+      doc.text('Apresente este código no dia do evento para validação', margin, yPosition, { align: 'center' });
+      yPosition += 10;
+    } catch (error) {
+      // Se falhar ao carregar QR code, mostrar apenas o ID
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      doc.text('Código QR para Validação', margin, yPosition);
+      yPosition += 8;
+      
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+      doc.text(`ID do Ticket: ${ticketId}`, margin, yPosition);
+      yPosition += 5;
+      doc.text('Apresente este código no dia do evento para validação', margin, yPosition);
+      yPosition += 10;
+    }
+
+    // Linha divisória
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 10;
+
+    // Dados do Participante
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text('Dados do Participante', margin, yPosition);
+    yPosition += 8;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
     const dataFormatada = new Date(inscricao.dataInscricao).toLocaleDateString('pt-MZ', {
       day: '2-digit',
       month: 'long',
@@ -48,275 +149,126 @@ export class EventTicketService {
       minute: '2-digit'
     });
 
-    // Gerar QR Code (usando API pública para gerar QR code)
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(ticketId)}`;
+    const infoItems = [
+      ['Nome:', inscricao.dadosParticipante.nome],
+      ['E-mail:', inscricao.dadosParticipante.email],
+      ['Telefone:', inscricao.dadosParticipante.telefone],
+      ['Tipo:', this.getTipoParticipanteLabel(inscricao.dadosParticipante.tipoParticipante)],
+      ['Data de Inscrição:', dataFormatada]
+    ];
+
+    infoItems.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      doc.text(label, margin, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+      doc.text(value, margin + 40, yPosition);
+      yPosition += 6;
+    });
+
+    yPosition += 10;
+
+    // Linha divisória
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 10;
+
+    // Evento Inscrito
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text('Evento Inscrito', margin, yPosition);
+    yPosition += 8;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.text(evento.titulo, margin, yPosition);
+    yPosition += 7;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text(`Data: ${evento.data}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Local: ${evento.local}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Hora: ${evento.hora}`, margin, yPosition);
+    yPosition += 6;
+    doc.text(`Nível de Acesso: ${this.getNivelAcessoLabel(evento.nivelAcesso)}`, margin, yPosition);
+    yPosition += 15;
+
+    // Footer
+    let footerY = pageHeight - 30;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, footerY, pageWidth - margin, footerY);
+    footerY += 5;
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+    doc.text('Associação de Naturais e Amigos de Massinga (ANAM)', margin, footerY, { align: 'center' });
+    footerY += 5;
     
-    // Dados do evento
-    const eventoHTML = `
-      <div class="evento-item">
-        <h3>${evento.titulo}</h3>
-        <p><strong>Data:</strong> ${evento.data}</p>
-        <p><strong>Local:</strong> ${evento.local}</p>
-        <p><strong>Hora:</strong> ${evento.hora}</p>
-        <p><strong>Nível de Acesso:</strong> ${this.getNivelAcessoLabel(evento.nivelAcesso)}</p>
-      </div>
-    `;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(lightGray[0], lightGray[1], lightGray[2]);
+    doc.text('Este documento serve como confirmação da sua inscrição.', margin, footerY, { align: 'center' });
+    footerY += 4;
+    doc.text('Por favor, apresente este ticket no dia do evento.', margin, footerY, { align: 'center' });
+    footerY += 4;
+    doc.text(`Documento gerado em ${new Date().toLocaleString('pt-MZ')}`, margin, footerY, { align: 'center' });
 
-    return `
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirmação de Inscrição - ANAM</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 40px;
-      background: #f5f5f5;
-    }
-    .ticket {
-      max-width: 800px;
-      margin: 0 auto;
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    .header {
-      text-align: center;
-      border-bottom: 3px solid #4CAF50;
-      padding-bottom: 20px;
-      margin-bottom: 30px;
-    }
-    .header h1 {
-      color: #1f2937;
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-    .header .logo {
-      color: #4CAF50;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .confirmation-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #4CAF50 0%, #60A5FA 100%);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 20px;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-    .participant-info {
-      background: #f9fafb;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-      border-left: 4px solid #60A5FA;
-    }
-    .participant-info h2 {
-      color: #1f2937;
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-    }
-    .info-row {
-      display: flex;
-      margin-bottom: 10px;
-    }
-    .info-label {
-      font-weight: 600;
-      color: #374151;
-      width: 150px;
-    }
-    .info-value {
-      color: #6b7280;
-    }
-    .eventos-section {
-      margin-top: 30px;
-    }
-    .eventos-section h2 {
-      color: #1f2937;
-      margin-bottom: 20px;
-      font-size: 1.3rem;
-    }
-    .evento-item {
-      background: #f9fafb;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      border-left: 4px solid #4CAF50;
-    }
-    .evento-item h3 {
-      color: #1f2937;
-      margin-bottom: 10px;
-    }
-    .evento-item p {
-      color: #6b7280;
-      margin-bottom: 5px;
-    }
-    .footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 2px solid #e5e7eb;
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
-    .ticket-number {
-      background: #f3f4f6;
-      padding: 10px;
-      border-radius: 6px;
-      text-align: center;
-      margin-bottom: 20px;
-      font-family: monospace;
-      font-size: 1.1rem;
-      color: #1f2937;
-      font-weight: 600;
-    }
-    .qr-code-section {
-      text-align: center;
-      margin: 30px 0;
-      padding: 20px;
-      background: #f9fafb;
-      border-radius: 8px;
-    }
-    .qr-code-section h3 {
-      color: #1f2937;
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-    }
-    .qr-code-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-    .qr-code {
-      width: 200px;
-      height: 200px;
-      border: 4px solid white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .qr-note {
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin: 0;
-    }
-    @media print {
-      body {
-        background: white;
-        padding: 20px;
-      }
-      .ticket {
-        box-shadow: none;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="ticket">
-    <div class="header">
-      <div class="logo">ANAM</div>
-      <h1>Confirmação de Inscrição</h1>
-      <div class="confirmation-badge">✓ INSCRIÇÃO CONFIRMADA</div>
-    </div>
-
-    <div class="ticket-number">
-      Ticket ID: ${ticketId}
-    </div>
-
-    <div class="qr-code-section">
-      <h3>Código QR para Validação</h3>
-      <div class="qr-code-container">
-        <img src="${qrCodeUrl}" alt="QR Code" class="qr-code">
-        <p class="qr-note">Apresente este código no dia do evento para validação</p>
-      </div>
-    </div>
-
-    <div class="participant-info">
-      <h2>Dados do Participante</h2>
-      <div class="info-row">
-        <span class="info-label">Nome:</span>
-        <span class="info-value">${inscricao.dadosParticipante.nome}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">E-mail:</span>
-        <span class="info-value">${inscricao.dadosParticipante.email}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Telefone:</span>
-        <span class="info-value">${inscricao.dadosParticipante.telefone}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Tipo:</span>
-        <span class="info-value">${this.getTipoParticipanteLabel(inscricao.dadosParticipante.tipoParticipante)}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Data de Inscrição:</span>
-        <span class="info-value">${dataFormatada}</span>
-      </div>
-    </div>
-
-    <div class="eventos-section">
-      <h2>Evento Inscrito</h2>
-      ${eventoHTML}
-    </div>
-
-    <div class="footer">
-      <p><strong>Associação de Naturais e Amigos de Massinga (ANAM)</strong></p>
-      <p>Este documento serve como confirmação da sua inscrição. Por favor, apresente este ticket no dia do evento.</p>
-      <p style="margin-top: 10px; font-size: 0.85rem;">Documento gerado em ${new Date().toLocaleString('pt-MZ')}</p>
-    </div>
-  </div>
-</body>
-</html>
-    `;
-  }
-
-  private downloadTicket(content: string, ticketId: string, eventoTitulo: string) {
-    // Criar blob
-    const blob = new Blob([content], { type: 'text/html' });
-    const url = window.URL.createObjectURL(blob);
+    // Abrir PDF no navegador
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    window.open(pdfUrl, '_blank');
     
-    // Criar link de download
-    const link = document.createElement('a');
-    link.href = url;
-    const nomeArquivo = `ticket-${ticketId}-${eventoTitulo.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.html`;
-    link.download = nomeArquivo;
-    document.body.appendChild(link);
-    link.click();
-    
-    // Limpar
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    // Limpar a URL do objeto após um tempo
+    setTimeout(() => {
+      URL.revokeObjectURL(pdfUrl);
+    }, 100);
   }
 
   private generateUniqueTicketId(): string {
-    // Gerar ID único não sequencial usando timestamp + random + hash
+    // Gerar ID único de no máximo 5 dígitos
+    // Usar timestamp + random para garantir unicidade
     const timestamp = Date.now();
-    const random1 = Math.floor(Math.random() * 1000000);
-    const random2 = Math.floor(Math.random() * 1000000);
-    const hash = this.simpleHash(`${timestamp}-${random1}-${random2}`);
+    const random = Math.floor(Math.random() * 10000);
     
-    // Formato: ANAM-{hash}-{timestamp}-{random}
-    return `ANAM-${hash}-${timestamp.toString(36).toUpperCase()}-${random1.toString(36).toUpperCase()}`;
+    // Combinar timestamp e random, depois pegar últimos 5 dígitos
+    const combined = (timestamp + random).toString();
+    const id = combined.slice(-5); // Pega os últimos 5 dígitos
+    
+    // Garantir que sempre tenha 5 dígitos (preencher com zeros à esquerda se necessário)
+    return id.padStart(5, '0');
   }
 
-  private simpleHash(str: string): string {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash).toString(36).toUpperCase().substring(0, 8);
+  private async loadImageAsBase64(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const base64 = canvas.toDataURL('image/png');
+          resolve(base64);
+        } else {
+          reject(new Error('Não foi possível criar contexto do canvas'));
+        }
+      };
+      
+      img.onerror = () => reject(new Error('Erro ao carregar imagem do QR code'));
+      img.src = url;
+    });
   }
 
   private getNivelAcessoLabel(nivel?: string): string {

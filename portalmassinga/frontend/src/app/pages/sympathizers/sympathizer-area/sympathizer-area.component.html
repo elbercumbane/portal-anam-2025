@@ -1,160 +1,277 @@
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="8.5" cy="7" r="4"></circle>
-        <path d="M20 8v6M23 11h-6"></path>
-      </svg>
-      <span>Área de Simpatizante</span>
-    </div>
-    <h1 class="hero-title">
-      Bem-vindo à <span class="highlight">Área de Simpatizante</span>
-    </h1>
-    <p class="hero-subtitle">
-      Acompanhe informações, programas, actividades e protocolos da associação.
-    </p>
-  </div>
-  <div class="hero-wave">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-      <path d="M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z"></path>
-    </svg>
-  </div>
-</section>
-
-<!-- Seção: Programas -->
-<section class="programs-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Programas da <span class="highlight-text">Associação</span></h2>
-      <p class="section-description">
-        Conheça os programas em que a ANAM está envolvida e como você pode participar.
-      </p>
-    </div>
-
-    <div class="programs-grid">
-      <div class="program-card" *ngFor="let program of programs">
-        <div class="program-icon">{{ program.icon }}</div>
-        <div class="program-status" [class.active]="program.status === 'Ativo'">
-          {{ program.status }}
+<div class="simpatizante-dashboard">
+  <!-- Header/Welcome Card -->
+  <header class="welcome-header">
+    <div class="container header-container">
+      <div class="welcome-header-content">
+        <!-- Left Section - Logo and Area -->
+        <div class="header-left">
+          <div class="logo-section">
+            <h1>ANAM</h1>
+            <p>Associação de Naturais e<br>Amigos de Massinga</p>
+          </div>
+          <div class="area-section">
+            <mat-icon class="area-icon">people</mat-icon>
+            <h2>Área de Simpatizante</h2>
+          </div>
         </div>
-        <h3>{{ program.title }}</h3>
-        <p>{{ program.description }}</p>
-        <button class="program-btn">Saber Mais</button>
+
+        <!-- Center Section - Search -->
+        <div class="header-center">
+          <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input type="text" placeholder="Pesquisar documentos..." class="search-input" (input)="searchDocuments($event)">
+          </div>
+        </div>
+
+        <!-- Right Section - Date, Time, User, Logout -->
+        <div class="header-right">
+          <div class="date-time">
+            <div class="time">{{ currentTime }}</div>
+            <div class="date">{{ currentDate }}</div>
+          </div>
+          <div class="user-section">
+            <div class="user-info">
+              <div class="user-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <span class="user-name">{{ sympathizerName }}</span>
+            </div>
+            <button class="btn-logout" (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Sair</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </header>
 
-<!-- Seção: Actividades -->
-<section class="activities-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Actividades <span class="highlight-text">Disponíveis</span></h2>
-      <p class="section-description">
-        Participe em actividades exclusivas para simpatizantes.
-      </p>
-    </div>
-
-    <div class="activities-grid">
-      <div class="activity-card" *ngFor="let activity of activities" [class.unavailable]="!activity.available">
-        <div class="activity-badge" [attr.data-type]="activity.type">
-          <mat-icon>{{ activity.type === 'evento' ? 'celebration' : activity.type === 'visita' ? 'location_on' : 'menu_book' }}</mat-icon>
-        </div>
-        <div class="activity-content">
-          <div class="activity-date">{{ activity.date }}</div>
-          <h3>{{ activity.title }}</h3>
-          <p>{{ activity.description }}</p>
-          <button class="activity-btn" [disabled]="!activity.available">
-            {{ activity.available ? 'Participar' : 'Em breve' }}
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="content-layout">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar-navigation">
+        <nav class="sidebar-nav">
+          <button class="sidebar-nav-item" [class.active]="isTabActive('documents')" (click)="switchTab('documents')">
+            <mat-icon>description</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Documentos</span>
+              <span class="nav-item-desc">Todos os documentos disponíveis</span>
+            </div>
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Seção: Documentos e Protocolos -->
-<section class="documents-section">
-  <div class="container">
-    <div class="section-header">
-      <h2>Documentos e <span class="highlight-text">Protocolos</span></h2>
-      <p class="section-description">
-        Acesso a documentos importantes, protocolos e relatórios da associação.
-      </p>
-    </div>
-
-    <div class="documents-grid">
-      <div class="document-card" *ngFor="let doc of documents">
-        <div class="document-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-        </div>
-        <div class="document-content">
-          <div class="document-type">{{ doc.type }}</div>
-          <h3>{{ doc.title }}</h3>
-          <p>{{ doc.description }}</p>
-          <button class="document-btn" *ngIf="doc.download">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Descarregar
+          <button class="sidebar-nav-item" [class.active]="isTabActive('protocols')" (click)="switchTab('protocols')">
+            <mat-icon>gavel</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Protocolos</span>
+              <span class="nav-item-desc">Regras e diretrizes</span>
+            </div>
           </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('reports')" (click)="switchTab('reports')">
+            <mat-icon>assessment</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Relatórios</span>
+              <span class="nav-item-desc">Relatórios e análises</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('guides')" (click)="switchTab('guides')">
+            <mat-icon>menu_book</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Guias</span>
+              <span class="nav-item-desc">Guias e orientações</span>
+            </div>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="main-content-area">
+        <!-- Hero Section - Perfil do Simpatizante -->
+        <section class="hero-section">
+          <div class="profile-hero-card">
+            <div class="profile-hero-content">
+              <div class="profile-avatar-large">
+                <div class="avatar-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+              </div>
+              <div class="profile-hero-info">
+                <div class="profile-title-section">
+                  <h2>{{ sympathizerName }}</h2>
+                </div>
+                <div class="profile-quick-info">
+                  <div class="quick-info-item">
+                    <mat-icon>description</mat-icon>
+                    <span>Documentos Disponíveis: {{ documents.length }}</span>
+                  </div>
+                  <div class="quick-info-item">
+                    <mat-icon>category</mat-icon>
+                    <span>Categorias: {{ getCategories().length }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Content Sections -->
+        <div class="content-sections">
+          <!-- Documents Tab -->
+          <div class="content-tab" [class.active]="isTabActive('documents')" id="tab-documents">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>description</mat-icon>
+                  Todos os Documentos
+                </h3>
+                <p class="section-subtitle">Acesso a todos os documentos disponíveis para simpatizantes</p>
+              </div>
+              <div class="documents-grid">
+                <div class="document-card" *ngFor="let doc of documents">
+                  <div class="document-icon">
+                    <mat-icon>{{ getDocumentIcon(doc.type) }}</mat-icon>
+                  </div>
+                  <div class="document-content">
+                    <div class="document-type">{{ getDocumentTypeLabel(doc.type) }}</div>
+                    <h3>{{ doc.title }}</h3>
+                    <p>{{ doc.description }}</p>
+                    <div class="document-meta">
+                      <span class="document-date" *ngIf="doc.date">
+                        <mat-icon>calendar_today</mat-icon>
+                        {{ doc.date }}
+                      </span>
+                      <span class="document-size" *ngIf="doc.size">
+                        <mat-icon>storage</mat-icon>
+                        {{ doc.size }}
+                      </span>
+                    </div>
+                    <button class="document-btn" *ngIf="doc.download" (click)="downloadDocument(doc)">
+                      <mat-icon>download</mat-icon>
+                      Descarregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Protocols Tab -->
+          <div class="content-tab" [class.active]="isTabActive('protocols')" id="tab-protocols">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>gavel</mat-icon>
+                  Protocolos
+                </h3>
+                <p class="section-subtitle">Regras, diretrizes e protocolos da associação</p>
+              </div>
+              <div class="documents-grid">
+                <div class="document-card" *ngFor="let doc of getFilteredDocuments('Protocolos')">
+                  <div class="document-icon">
+                    <mat-icon>{{ getDocumentIcon(doc.type) }}</mat-icon>
+                  </div>
+                  <div class="document-content">
+                    <div class="document-type">{{ getDocumentTypeLabel(doc.type) }}</div>
+                    <h3>{{ doc.title }}</h3>
+                    <p>{{ doc.description }}</p>
+                    <div class="document-meta">
+                      <span class="document-date" *ngIf="doc.date">
+                        <mat-icon>calendar_today</mat-icon>
+                        {{ doc.date }}
+                      </span>
+                      <span class="document-size" *ngIf="doc.size">
+                        <mat-icon>storage</mat-icon>
+                        {{ doc.size }}
+                      </span>
+                    </div>
+                    <button class="document-btn" *ngIf="doc.download" (click)="downloadDocument(doc)">
+                      <mat-icon>download</mat-icon>
+                      Descarregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reports Tab -->
+          <div class="content-tab" [class.active]="isTabActive('reports')" id="tab-reports">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>assessment</mat-icon>
+                  Relatórios
+                </h3>
+                <p class="section-subtitle">Relatórios e análises das atividades da associação</p>
+              </div>
+              <div class="documents-grid">
+                <div class="document-card" *ngFor="let doc of getFilteredDocuments('Relatórios')">
+                  <div class="document-icon">
+                    <mat-icon>{{ getDocumentIcon(doc.type) }}</mat-icon>
+                  </div>
+                  <div class="document-content">
+                    <div class="document-type">{{ getDocumentTypeLabel(doc.type) }}</div>
+                    <h3>{{ doc.title }}</h3>
+                    <p>{{ doc.description }}</p>
+                    <div class="document-meta">
+                      <span class="document-date" *ngIf="doc.date">
+                        <mat-icon>calendar_today</mat-icon>
+                        {{ doc.date }}
+                      </span>
+                      <span class="document-size" *ngIf="doc.size">
+                        <mat-icon>storage</mat-icon>
+                        {{ doc.size }}
+                      </span>
+                    </div>
+                    <button class="document-btn" *ngIf="doc.download" (click)="downloadDocument(doc)">
+                      <mat-icon>download</mat-icon>
+                      Descarregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guides Tab -->
+          <div class="content-tab" [class.active]="isTabActive('guides')" id="tab-guides">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>menu_book</mat-icon>
+                  Guias
+                </h3>
+                <p class="section-subtitle">Guias e orientações para simpatizantes</p>
+              </div>
+              <div class="documents-grid">
+                <div class="document-card" *ngFor="let doc of getFilteredDocuments('Guias')">
+                  <div class="document-icon">
+                    <mat-icon>{{ getDocumentIcon(doc.type) }}</mat-icon>
+                  </div>
+                  <div class="document-content">
+                    <div class="document-type">{{ getDocumentTypeLabel(doc.type) }}</div>
+                    <h3>{{ doc.title }}</h3>
+                    <p>{{ doc.description }}</p>
+                    <div class="document-meta">
+                      <span class="document-date" *ngIf="doc.date">
+                        <mat-icon>calendar_today</mat-icon>
+                        {{ doc.date }}
+                      </span>
+                      <span class="document-size" *ngIf="doc.size">
+                        <mat-icon>storage</mat-icon>
+                        {{ doc.size }}
+                      </span>
+                    </div>
+                    <button class="document-btn" *ngIf="doc.download" (click)="downloadDocument(doc)">
+                      <mat-icon>download</mat-icon>
+                      Descarregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</section>
-
-<!-- Seção: Informações -->
-<section class="info-section">
-  <div class="container">
-    <div class="info-grid">
-      <div class="info-card">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-        </div>
-        <h3>Newsletter</h3>
-        <p>Receba atualizações regulares sobre os projectos e actividades da associação.</p>
-        <button class="info-btn">Subscrever</button>
-      </div>
-
-      <div class="info-card">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-        </div>
-        <h3>Comunidade</h3>
-        <p>Conecte-se com outros simpatizantes e membros da associação.</p>
-        <button class="info-btn">Participar</button>
-      </div>
-
-      <div class="info-card">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-            <path d="M2 17l10 5 10-5"></path>
-            <path d="M2 12l10 5 10-5"></path>
-          </svg>
-        </div>
-        <h3>Evoluir para Membro</h3>
-        <p>Interessado em tornar-se membro oficial? Saiba como evoluir.</p>
-        <button class="info-btn">Saber Mais</button>
-      </div>
-    </div>
-  </div>
-</section>
-
+</div>

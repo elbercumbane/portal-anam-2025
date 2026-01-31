@@ -1,0 +1,226 @@
+@import './_variables.scss';
+
+// Welcome Header
+.welcome-header {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+  padding: 1.5rem 0;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.08);
+
+  .header-container {
+    padding: 0 2rem;
+  }
+
+  .welcome-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    position: relative;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    flex: 0 0 auto;
+    min-width: 0;
+
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex-shrink: 0;
+
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 900;
+        color: $green-primary;
+        line-height: 1.2;
+        letter-spacing: 1px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: $ink-600;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+    }
+
+    .area-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      
+      .area-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: $green-primary;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $ink-900;
+      }
+    }
+  }
+
+  .header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 2rem;
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $ink-500;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid rgba($green-primary, 0.2);
+        border-radius: 12px;
+        font-size: 0.95rem;
+        background: white;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $green-primary;
+          box-shadow: 0 0 0 3px rgba($green-primary, 0.1);
+        }
+
+        &::placeholder {
+          color: $ink-500;
+        }
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-shrink: 0;
+    flex: 0 0 auto;
+
+    .date-time {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+      padding-right: 1.5rem;
+      border-right: 1px solid rgba(16, 185, 129, 0.2);
+
+      .time {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $green-primary;
+        line-height: 1;
+      }
+
+      .date {
+        font-size: 0.875rem;
+        color: $ink-600;
+        font-weight: 500;
+      }
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+
+        .user-avatar {
+          width: 36px;
+          height: 36px;
+          background: $green-primary;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: white;
+          }
+        }
+
+        .user-name {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: $ink-900;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      background: #EF4444;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+      white-space: nowrap;
+
+      &:hover {
+        background: #DC2626;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      span {
+        @media (max-width: 640px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventTicketService } from '../event-ticket.service';
 
@@ -31,11 +32,20 @@ interface EventoCompleto {
 @Component({
   selector: 'app-event-registration-query',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './event-registration-query.component.html',
   styleUrl: './event-registration-query.component.scss'
 })
 export class EventRegistrationQueryComponent implements OnInit {
+  // Estados do fluxo
+  step: 'phone' | 'token' | 'results' = 'phone';
+  
+  // Dados do formulário
+  telefone: string = '';
+  token: string = '';
+  tokenEnviado: string = '';
+  
+  // Dados carregados
   inscricoes: InscricaoEvento[] = [];
   eventosInscritos: EventoCompleto[] = [];
   eventosParticipados: EventoCompleto[] = [];
@@ -43,6 +53,9 @@ export class EventRegistrationQueryComponent implements OnInit {
   eventoSelecionado: EventoCompleto | null = null;
   showTicketView = false;
   showSection: 'inscritos' | 'participados' | 'disponiveis' = 'inscritos';
+  
+  // Mensagens de erro
+  errorMessage: string = '';
 
   todosEventos: EventoCompleto[] = [
     {
@@ -93,23 +106,133 @@ export class EventRegistrationQueryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Página inicia no passo de telefone
+    this.step = 'phone';
+  }
+
+  // Gerar token de 5 dígitos
+  generateToken(): string {
+    return Math.floor(10000 + Math.random() * 90000).toString();
+  }
+
+  // Validar formato de telefone
+  isValidPhone(phone: string): boolean {
+    // Aceita formatos como: +258 XX XXX XXXX, 258 XX XXX XXXX, ou apenas números
+    const phoneRegex = /^(\+?258)?[\s-]?(\d{2})[\s-]?(\d{3})[\s-]?(\d{4})$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  }
+
+  // Enviar token (simulado)
+  enviarToken() {
+    if (!this.telefone || !this.isValidPhone(this.telefone)) {
+      this.errorMessage = 'Por favor, insira um número de telefone válido';
+      return;
+    }
+
+    // Normalizar telefone (remover espaços e caracteres especiais)
+    this.telefone = this.telefone.replace(/\s+/g, '').replace(/[^\d+]/g, '');
+    
+    // Gerar token de 5 dígitos
+    this.tokenEnviado = this.generateToken();
+    
+    // Simular envio do token (em produção, seria enviado via SMS)
+    console.log(`Token enviado para ${this.telefone}: ${this.tokenEnviado}`);
+    
+    // Avançar para o passo de token
+    this.step = 'token';
+    this.errorMessage = '';
+  }
+
+  // Validar token e carregar dados
+  validarToken() {
+    if (this.token.length !== 5) {
+      this.errorMessage = 'O token deve ter 5 dígitos';
+      return;
+    }
+
+    if (this.token !== this.tokenEnviado) {
+      this.errorMessage = 'Token inválido. Por favor, verifique e tente novamente.';
+      return;
+    }
+
+    // Token válido, carregar dados
     this.loadInscricoes();
     this.processarEventos();
     
-    // Definir seção inicial baseada no que tem conteúdo
+    // Verificar se há bilhetes e se não expiraram
+    if (this.eventosInscritos.length === 0) {
+      this.errorMessage = 'Nenhum bilhete encontrado para este número de telefone.';
+      this.step = 'phone';
+      this.token = '';
+      return;
+    }
+
+    // Verificar eventos expirados
+    const eventosValidos = this.eventosInscritos.filter(evento => !this.isEventoExpirado(evento));
+    
+    if (eventosValidos.length === 0 && this.eventosInscritos.length > 0) {
+      this.errorMessage = 'Todos os eventos associados a este número já expiraram.';
+      this.step = 'phone';
+      this.token = '';
+      return;
+    }
+
+    // Filtrar apenas eventos válidos
+    this.eventosInscritos = eventosValidos;
+    
+    // Avançar para resultados
+    this.step = 'results';
+    this.errorMessage = '';
+    
+    // Definir seção inicial
     if (this.eventosInscritos.length > 0) {
       this.showSection = 'inscritos';
     } else if (this.eventosDisponiveis.length > 0) {
       this.showSection = 'disponiveis';
-    } else if (this.eventosParticipados.length > 0) {
-      this.showSection = 'participados';
+    }
+  }
+
+  // Verificar se evento expirou
+  isEventoExpirado(evento: EventoCompleto): boolean {
+    // Extrair data do evento (formato: "15 de Janeiro, 2024")
+    const dataStr = evento.data;
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    
+    // Converter data do evento para Date
+    // Formato esperado: "15 de Janeiro, 2024"
+    const meses: { [key: string]: number } = {
+      'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3,
+      'maio': 4, 'junho': 5, 'julho': 6, 'agosto': 7,
+      'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11
+    };
+    
+    try {
+      const partes = dataStr.split(' de ');
+      const dia = parseInt(partes[0]);
+      const mesAno = partes[1].split(', ');
+      const mes = meses[mesAno[0].toLowerCase()];
+      const ano = parseInt(mesAno[1]);
+      
+      const dataEvento = new Date(ano, mes, dia);
+      dataEvento.setHours(0, 0, 0, 0);
+      
+      return dataEvento < hoje;
+    } catch {
+      // Se não conseguir parsear, assumir que não expirou
+      return false;
     }
   }
 
   loadInscricoes() {
     const inscricoesData = localStorage.getItem('minhasInscricoes');
     if (inscricoesData) {
-      this.inscricoes = JSON.parse(inscricoesData);
+      const todasInscricoes = JSON.parse(inscricoesData);
+      // Filtrar apenas inscrições com o telefone informado
+      this.inscricoes = todasInscricoes.filter((insc: InscricaoEvento) => {
+        const telefoneInscricao = insc.dadosParticipante.telefone.replace(/\s+/g, '').replace(/[^\d+]/g, '');
+        return telefoneInscricao === this.telefone;
+      });
     }
   }
 
@@ -184,6 +307,31 @@ export class EventRegistrationQueryComponent implements OnInit {
 
   goToNewEvents() {
     this.router.navigate(['/eventos/inscricao']);
+  }
+
+  // Voltar para o início
+  voltarInicio() {
+    this.step = 'phone';
+    this.telefone = '';
+    this.token = '';
+    this.tokenEnviado = '';
+    this.errorMessage = '';
+    this.inscricoes = [];
+    this.eventosInscritos = [];
+    this.eventosParticipados = [];
+    this.eventosDisponiveis = [];
+  }
+
+  // Reenviar token
+  reenviarToken() {
+    this.enviarToken();
+  }
+
+  // Formatar token (apenas números)
+  onTokenInput(event: any) {
+    const value = event.target.value.replace(/\D/g, '');
+    this.token = value.slice(0, 5);
+    event.target.value = this.token;
   }
 }
 

@@ -1,0 +1,30 @@
+@import 'variables';
+
+.event-query-page {
+  min-height: 100vh;
+  padding: 2rem 0;
+  padding-top: calc(76px + 2rem); // Altura do navbar + padding
+  background: linear-gradient(135deg, #0f766e 0%, #047857 25%, #065f46 50%, #064e3b 75%, #022c22 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(20, 184, 166, 0.12) 100%);
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+}
+

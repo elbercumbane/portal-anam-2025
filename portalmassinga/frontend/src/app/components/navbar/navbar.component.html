@@ -26,7 +26,7 @@
         <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
       </a>
       <div class="dropdown-menu" [class.show]="showEventosSubmenu">
-        <a mat-button routerLink="/eventos/inscricao" routerLinkActive="active" class="dropdown-item highlight">Novos Eventos</a>
+        <a mat-button (click)="scrollToSection('eventos')" class="dropdown-item highlight">Novos Eventos</a>
         <a mat-button routerLink="/eventos/consultar-registro" routerLinkActive="active" class="dropdown-item">Consultar Registro</a>
       </div>
     </div>
@@ -124,10 +124,9 @@
 
     <div class="mobile-section">
       <div class="mobile-section-title">Eventos</div>
-      <a mat-button routerLink="/eventos/inscricao" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link highlight">Novos Eventos</a>
+      <a mat-button (click)="scrollToSection('eventos'); closeMobileMenu()" class="mobile-nav-link highlight">Novos Eventos</a>
       <a mat-button routerLink="/eventos/consultar-registro" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Consultar Registro</a>
     </div>
-
     <div class="mobile-divider"></div>
 
     <div class="mobile-section">

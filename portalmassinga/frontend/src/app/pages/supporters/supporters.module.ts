@@ -10,10 +10,6 @@ const routes: Routes = [
     path: 'torne-se-apoiante', 
     loadComponent: () => import('./become-supporter/become-supporter.component').then(m => m.BecomeSupporterComponent) 
   },
-  { 
-    path: 'area-apoiante', 
-    loadComponent: () => import('./supporter-area/supporter-area.component').then(m => m.SupporterAreaComponent) 
-  },
   { path: '', redirectTo: 'porque-apoiar', pathMatch: 'full' }
 ];
 

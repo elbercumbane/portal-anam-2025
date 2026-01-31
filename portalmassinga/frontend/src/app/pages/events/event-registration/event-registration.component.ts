@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EventQuestionnaireComponent } from '../event-questionnaire/event-questionnaire.component';
 import { EventSuccessDialogComponent } from '../event-success-dialog/event-success-dialog.component';
 import { EventConfirmationDialogComponent } from '../event-confirmation-dialog/event-confirmation-dialog.component';
+import { EventThankYouDialogComponent } from '../event-thank-you-dialog/event-thank-you-dialog.component';
 import { EventTicketService } from '../event-ticket.service';
 
 interface Evento {
@@ -31,7 +32,7 @@ export class EventRegistrationComponent implements OnInit {
   eventoAtual: Evento | null = null;
   outrosEventos: Evento[] = [];
   eventosSelecionados: string[] = [];
-  step: 'registration' | 'other-events' | 'complete' = 'registration';
+  step: 'registration' | 'other-events' = 'registration';
   isFinalizandoCompletamente = false; // Flag para controlar quando finalizar completamente
 
   // Lista de todos os eventos disponíveis
@@ -219,13 +220,17 @@ export class EventRegistrationComponent implements OnInit {
       if (evento) eventosInscritos.push(evento);
     });
 
-    // Gerar ticket para cada evento
-    eventosInscritos.forEach(evento => {
-      this.ticketService.generateTicket(inscricoes, evento);
+    // Gerar ticket para cada evento (em paralelo)
+    Promise.all(
+      eventosInscritos.map(evento => this.ticketService.generateTicket(inscricoes, evento))
+    ).then(() => {
+      // Abrir popup de sucesso após gerar todos os tickets
+      this.openSuccessDialog();
+    }).catch(error => {
+      console.error('Erro ao gerar tickets:', error);
+      // Mesmo assim, abrir popup de sucesso
+      this.openSuccessDialog();
     });
-
-    // Abrir popup de sucesso
-    this.openSuccessDialog();
   }
 
   onContinue() {
@@ -288,7 +293,23 @@ export class EventRegistrationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.step = 'complete';
+      // Após o questionário, abrir popup de agradecimento final
+      this.openThankYouDialog();
+    });
+  }
+
+  openThankYouDialog() {
+    const dialogRef = this.dialog.open(EventThankYouDialogComponent, {
+      width: '500px',
+      disableClose: false,
+      data: {
+        nomeParticipante: this.registrationForm.value.nome
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      // Após fechar o popup de agradecimento, redirecionar para home
+      this.router.navigate(['/']);
     });
   }
 

@@ -1,80 +1,456 @@
-<!-- Secção A: Visão Geral -->
-<section class="dashboard-header">
-  <div class="container">
-    <div class="welcome-card">
-      <div class="welcome-content">
-        <h1>Olá, <span class="highlight">{{ supporterName }}</span>!</h1>
-        <p class="welcome-subtitle">Bem-vindo à tua Área do Apoiante</p>
-      </div>
-      <div class="level-badge" [style.background]="getLevelColor() + '20'" [style.border-color]="getLevelColor()">
-        <span class="level-icon">🏆</span>
-        <div>
-          <div class="level-label">Nível</div>
-          <div class="level-name">{{ supporterLevel }}</div>
+<div class="apoiante-dashboard">
+  <!-- Header/Welcome Card -->
+  <header class="welcome-header">
+    <div class="container header-container">
+      <div class="welcome-header-content">
+        <!-- Left Section - Logo and Area -->
+        <div class="header-left">
+          <div class="logo-section">
+            <h1>ANAM</h1>
+            <p>Associação de Naturais e<br>Amigos de Massinga</p>
+          </div>
+          <div class="area-section">
+            <mat-icon class="area-icon">favorite</mat-icon>
+            <h2>Área do Apoiante</h2>
+          </div>
+        </div>
+
+        <!-- Center Section - Search -->
+        <div class="header-center">
+          <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input type="text" placeholder="Pesquisar..." class="search-input">
+          </div>
+        </div>
+
+        <!-- Right Section - Date, Time, User, Logout -->
+        <div class="header-right">
+          <div class="date-time">
+            <div class="time">{{ currentTime }}</div>
+            <div class="date">{{ currentDate }}</div>
+          </div>
+          <div class="user-section">
+            <div class="user-info">
+              <div class="user-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <span class="user-name">{{ supporterName }}</span>
+            </div>
+            <button class="btn-logout" (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Sair</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </header>
 
-    <div class="stats-overview">
-      <div class="stat-box">
-        <div class="stat-icon">💰</div>
-        <div class="stat-info">
-          <div class="stat-label">Total Doado</div>
-          <div class="stat-value">{{ totalDonated }} MZN</div>
-        </div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-icon">📅</div>
-        <div class="stat-info">
-          <div class="stat-label">Última Contribuição</div>
-          <div class="stat-value">{{ lastDonation }}</div>
-        </div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-info">
-          <div class="stat-label">Projectos Apoiados</div>
-          <div class="stat-value">{{ activeProjects.length }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="content-layout">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar-navigation">
+        <nav class="sidebar-nav">
+          <button class="sidebar-nav-item" [class.active]="isTabActive('overview')" (click)="switchTab('overview')">
+            <mat-icon>dashboard</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Visão Geral</span>
+              <span class="nav-item-desc">Resumo das estatísticas</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('money')" (click)="switchTab('money')">
+            <mat-icon>account_balance</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Aplicação de Fundos</span>
+              <span class="nav-item-desc">Onde o dinheiro foi aplicado</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('projects')" (click)="switchTab('projects')">
+            <mat-icon>work</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Projectos</span>
+              <span class="nav-item-desc">Projectos activos financiados</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('donations')" (click)="switchTab('donations')">
+            <mat-icon>receipt</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Doações</span>
+              <span class="nav-item-desc">Histórico de doações</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('news')" (click)="switchTab('news')">
+            <mat-icon>newspaper</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Notícias</span>
+              <span class="nav-item-desc">Notícias exclusivas</span>
+            </div>
+          </button>
+          <button class="sidebar-nav-item" [class.active]="isTabActive('increase')" (click)="switchTab('increase')">
+            <mat-icon>trending_up</mat-icon>
+            <div class="nav-item-content">
+              <span class="nav-item-title">Aumentar Apoio</span>
+              <span class="nav-item-desc">Aumentar contribuição</span>
+            </div>
+          </button>
+        </nav>
+      </aside>
 
-<!-- Secção B: Onde o Dinheiro Foi Aplicado -->
-<section class="money-usage-section">
-  <div class="container">
-    <div class="section-card">
-      <div class="card-header">
-        <h2>Onde o Teu Dinheiro Foi Aplicado</h2>
-        <p class="card-subtitle">Actualizado trimestralmente</p>
-      </div>
-      <div class="usage-content">
-        <div class="usage-chart">
-          <svg viewBox="0 0 200 200" class="pie-chart">
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="40"/>
-            <circle 
-              *ngFor="let item of moneyUsage; let i = index"
-              cx="100" 
-              cy="100" 
-              r="80" 
-              fill="none"
-              [attr.stroke]="getCategoryColor(i)"
-              stroke-width="40"
-              [attr.stroke-dasharray]="getDashArray(item.percentage)"
-              [attr.stroke-dashoffset]="getDashOffset(i)"
-              transform="rotate(-90 100 100)"
-              class="chart-segment"/>
-          </svg>
-        </div>
-        <div class="usage-legend">
-          <div class="legend-item" *ngFor="let item of moneyUsage; let i = index">
-            <div class="legend-color" [style.background]="getCategoryColor(i)"></div>
-            <div class="legend-info">
-              <div class="legend-name">{{ item.category }}</div>
-              <div class="legend-details">
-                <span>{{ item.percentage }}%</span>
-                <span>{{ item.amount }} MZN</span>
+      <!-- Main Content Area -->
+      <div class="main-content-area">
+        <!-- Hero Section - Perfil do Apoiante -->
+        <section class="hero-section">
+          <div class="profile-hero-card">
+            <div class="profile-hero-content">
+              <div class="profile-avatar-large">
+                <div class="avatar-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+              </div>
+              <div class="profile-hero-info">
+                <div class="profile-title-section">
+                  <h2>{{ supporterName }}</h2>
+                  <span class="level-badge-large" [style.background]="getLevelColor() + '20'" [style.border-color]="getLevelColor()" [style.color]="getLevelColor()">
+                    {{ supporterLevel }}
+                  </span>
+                </div>
+                <div class="profile-quick-info">
+                  <div class="quick-info-item">
+                    <mat-icon>account_balance_wallet</mat-icon>
+                    <span>Total Doado: {{ totalDonated }} MZN</span>
+                  </div>
+                  <div class="quick-info-item">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span>Última Contribuição: {{ lastDonation }}</span>
+                  </div>
+                  <div class="quick-info-item">
+                    <mat-icon>work</mat-icon>
+                    <span>Projectos Apoiados: {{ activeProjects.length }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Content Sections -->
+        <div class="content-sections">
+          <!-- Overview Tab -->
+          <div class="content-tab" [class.active]="isTabActive('overview')" id="tab-overview">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>dashboard</mat-icon>
+                  Visão Geral
+                </h3>
+                <p class="section-subtitle">Resumo das tuas contribuições e impacto</p>
+              </div>
+              <div class="stats-overview">
+                <div class="stat-box">
+                  <div class="stat-icon">💰</div>
+                  <div class="stat-info">
+                    <div class="stat-label">Total Doado</div>
+                    <div class="stat-value">{{ totalDonated }} MZN</div>
+                  </div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-icon">📅</div>
+                  <div class="stat-info">
+                    <div class="stat-label">Última Contribuição</div>
+                    <div class="stat-value">{{ lastDonation }}</div>
+                  </div>
+                </div>
+                <div class="stat-box">
+                  <div class="stat-icon">🎯</div>
+                  <div class="stat-info">
+                    <div class="stat-label">Projectos Apoiados</div>
+                    <div class="stat-value">{{ activeProjects.length }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráfico de Apoio -->
+            <div class="info-section support-chart-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>trending_up</mat-icon>
+                  Histórico de Apoio
+                </h3>
+                <p class="section-subtitle">Evolução das tuas contribuições (últimos 6 meses)</p>
+              </div>
+              <div class="support-chart-container">
+                <svg class="support-chart" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet">
+                  <!-- Grid lines -->
+                  <g class="grid-lines">
+                    <line x1="50" y1="20" x2="50" y2="200" stroke="#e5e7eb" stroke-width="1"/>
+                    <line x1="50" y1="200" x2="550" y2="200" stroke="#e5e7eb" stroke-width="1"/>
+                    <line x1="50" y1="150" x2="550" y2="150" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                    <line x1="50" y1="100" x2="550" y2="100" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                    <line x1="50" y1="50" x2="550" y2="50" stroke="#e5e7eb" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                  </g>
+                  
+                  <!-- Y-axis labels -->
+                  <g class="y-labels">
+                    <text x="45" y="25" text-anchor="end" fill="#64748B" font-size="12" font-weight="600">{{ getMaxValue() }} MZN</text>
+                    <text x="45" y="105" text-anchor="end" fill="#64748B" font-size="12" font-weight="600">{{ getMidValue() }} MZN</text>
+                    <text x="45" y="205" text-anchor="end" fill="#64748B" font-size="12" font-weight="600">0 MZN</text>
+                  </g>
+                  
+                  <!-- Bars -->
+                  <g class="bars">
+                    <g *ngFor="let value of supportChartData.values; let i = index" class="bar-group">
+                      <rect
+                        [attr.x]="80 + (i * 80)"
+                        [attr.y]="getBarY(value)"
+                        [attr.width]="50"
+                        [attr.height]="getBarHeight(value)"
+                        fill="#10B981"
+                        rx="4"
+                        class="bar"
+                        [attr.data-value]="value">
+                        <title>{{ supportChartData.labels[i] }}: {{ value }} MZN</title>
+                      </rect>
+                      <text
+                        [attr.x]="105 + (i * 80)"
+                        [attr.y]="getBarY(value) - 5"
+                        text-anchor="middle"
+                        fill="#10B981"
+                        font-size="11"
+                        font-weight="700">
+                        {{ value }}
+                      </text>
+                    </g>
+                  </g>
+                  
+                  <!-- X-axis labels -->
+                  <g class="x-labels">
+                    <text *ngFor="let label of supportChartData.labels; let i = index"
+                      [attr.x]="105 + (i * 80)"
+                      y="220"
+                      text-anchor="middle"
+                      fill="#64748B"
+                      font-size="11"
+                      font-weight="600">
+                      {{ label }}
+                    </text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Money Usage Tab -->
+          <div class="content-tab" [class.active]="isTabActive('money')" id="tab-money">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>account_balance</mat-icon>
+                  Onde o Teu Dinheiro Foi Aplicado
+                </h3>
+                <p class="section-subtitle">Actualizado trimestralmente</p>
+              </div>
+              <div class="usage-content">
+                <div class="usage-chart">
+                  <svg viewBox="0 0 200 200" class="pie-chart">
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#e5e7eb" stroke-width="40"/>
+                    <circle 
+                      *ngFor="let item of moneyUsage; let i = index"
+                      cx="100" 
+                      cy="100" 
+                      r="80" 
+                      fill="none"
+                      [attr.stroke]="getCategoryColor(i)"
+                      stroke-width="40"
+                      [attr.stroke-dasharray]="getDashArray(item.percentage)"
+                      [attr.stroke-dashoffset]="getDashOffset(i)"
+                      transform="rotate(-90 100 100)"
+                      class="chart-segment"/>
+                  </svg>
+                </div>
+                <div class="usage-legend">
+                  <div class="legend-item" *ngFor="let item of moneyUsage; let i = index">
+                    <div class="legend-color" [style.background]="getCategoryColor(i)"></div>
+                    <div class="legend-info">
+                      <div class="legend-name">{{ item.category }}</div>
+                      <div class="legend-details">
+                        <span>{{ item.percentage }}%</span>
+                        <span>{{ item.amount }} MZN</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects Tab -->
+          <div class="content-tab" [class.active]="isTabActive('projects')" id="tab-projects">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>work</mat-icon>
+                  Projectos Activos Financiados pelo Teu Apoio
+                </h3>
+              </div>
+              <div class="projects-grid">
+                <div class="project-card" *ngFor="let project of activeProjects">
+                  <div class="project-header">
+                    <h3>{{ project.name }}</h3>
+                    <div class="progress-badge">{{ project.progress }}%</div>
+                  </div>
+                  <p class="project-description">{{ project.description }}</p>
+                  <div class="project-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width.%]="project.progress"></div>
+                    </div>
+                  </div>
+                  <div class="project-impact">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>{{ project.impact }} pessoas beneficiadas</span>
+                  </div>
+                  <div class="project-actions">
+                    <button class="btn-secondary" (click)="viewReport(project.reportUrl)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                      </svg>
+                      Ver Relatório PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Donations Tab -->
+          <div class="content-tab" [class.active]="isTabActive('donations')" id="tab-donations">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>receipt</mat-icon>
+                  Histórico de Doações
+                </h3>
+              </div>
+              <div class="donations-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Valor</th>
+                      <th>Tipo</th>
+                      <th>Recibo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let donation of donationHistory">
+                      <td>{{ donation.date }}</td>
+                      <td class="amount-cell">{{ donation.amount }} MZN</td>
+                      <td>
+                        <span class="type-badge" [class.unique]="donation.type === 'unique'" [class.monthly]="donation.type === 'monthly'">
+                          {{ donation.type === 'unique' ? 'Única' : 'Mensal' }}
+                        </span>
+                      </td>
+                      <td>
+                        <button class="btn-download" (click)="downloadReceipt(donation.receipt)">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                          Download
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- News Tab -->
+          <div class="content-tab" [class.active]="isTabActive('news')" id="tab-news">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>newspaper</mat-icon>
+                  Notícias Exclusivas para Apoiantes
+                </h3>
+                <p class="section-subtitle">Actualizações internas que não aparecem no site público</p>
+              </div>
+              <div class="news-list">
+                <div class="news-item" *ngFor="let news of exclusiveNews">
+                  <div class="news-icon" [attr.data-type]="news.type">
+                    <span *ngIf="news.type === 'projecto'">🎯</span>
+                    <span *ngIf="news.type === 'relatorio'">📊</span>
+                    <span *ngIf="news.type === 'evento'">🎉</span>
+                  </div>
+                  <div class="news-content">
+                    <div class="news-date">{{ news.date }}</div>
+                    <h3>{{ news.title }}</h3>
+                    <p>{{ news.excerpt }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Increase Support Tab -->
+          <div class="content-tab" [class.active]="isTabActive('increase')" id="tab-increase">
+            <div class="info-section">
+              <div class="section-header">
+                <h3>
+                  <mat-icon>trending_up</mat-icon>
+                  Aumentar o Teu Apoio
+                </h3>
+                <p class="section-subtitle">Queres fazer ainda mais diferença? Aumenta a tua contribuição.</p>
+              </div>
+              
+              <div class="increase-options">
+                <button class="increase-option-card" (click)="toggleIncreaseForm()">
+                  <div class="option-icon">📈</div>
+                  <h3>Aumentar Contribuição Mensal</h3>
+                  <p>Altera o valor da tua contribuição mensal recorrente</p>
+                </button>
+                
+                <button class="increase-option-card" (click)="makeExtraDonation()">
+                  <div class="option-icon">➕</div>
+                  <h3>Fazer Contribuição Extra</h3>
+                  <p>Faz uma doação adicional além da tua contribuição regular</p>
+                </button>
+              </div>
+
+              <!-- Formulário de Aumento -->
+              <div class="increase-form-container" *ngIf="showIncreaseForm">
+                <form [formGroup]="increaseForm" (ngSubmit)="onSubmitIncrease()" class="increase-form">
+                  <div class="form-row">
+                    <div class="form-field">
+                      <label>Novo Valor Mensal <span class="required">*</span></label>
+                      <input type="number" formControlName="newAmount" placeholder="Ex: 200" min="1">
+                    </div>
+                    <div class="form-field">
+                      <label>Frequência <span class="required">*</span></label>
+                      <select formControlName="frequency">
+                        <option value="monthly">Mensal</option>
+                        <option value="unique">Única</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" class="btn-cancel" (click)="toggleIncreaseForm()">Cancelar</button>
+                    <button type="submit" class="btn-submit" [disabled]="increaseForm.invalid">
+                      Confirmar Aumento
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -82,171 +458,4 @@
       </div>
     </div>
   </div>
-</section>
-
-<!-- Secção C: Projectos Activos Financiados -->
-<section class="projects-section">
-  <div class="container">
-    <div class="section-card">
-      <div class="card-header">
-        <h2>Projectos Activos Financiados pelo Teu Apoio</h2>
-      </div>
-      <div class="projects-grid">
-        <div class="project-card" *ngFor="let project of activeProjects">
-          <div class="project-header">
-            <h3>{{ project.name }}</h3>
-            <div class="progress-badge">{{ project.progress }}%</div>
-          </div>
-          <p class="project-description">{{ project.description }}</p>
-          <div class="project-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" [style.width.%]="project.progress"></div>
-            </div>
-          </div>
-          <div class="project-impact">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-            <span>{{ project.impact }} pessoas beneficiadas</span>
-          </div>
-          <div class="project-actions">
-            <button class="btn-secondary" (click)="viewReport(project.reportUrl)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-              </svg>
-              Ver Relatório PDF
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Secção D: Histórico de Doações -->
-<section class="donations-section">
-  <div class="container">
-    <div class="section-card">
-      <div class="card-header">
-        <h2>Histórico de Doações</h2>
-      </div>
-      <div class="donations-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Valor</th>
-              <th>Tipo</th>
-              <th>Recibo</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let donation of donationHistory">
-              <td>{{ donation.date }}</td>
-              <td class="amount-cell">{{ donation.amount }} MZN</td>
-              <td>
-                <span class="type-badge" [class.unique]="donation.type === 'unique'" [class.monthly]="donation.type === 'monthly'">
-                  {{ donation.type === 'unique' ? 'Única' : 'Mensal' }}
-                </span>
-              </td>
-              <td>
-                <button class="btn-download" (click)="downloadReceipt(donation.receipt)">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  Download
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Secção E: Notícias Exclusivas -->
-<section class="news-section">
-  <div class="container">
-    <div class="section-card">
-      <div class="card-header">
-        <h2>Notícias Exclusivas para Apoiantes</h2>
-        <p class="card-subtitle">Actualizações internas que não aparecem no site público</p>
-      </div>
-      <div class="news-list">
-        <div class="news-item" *ngFor="let news of exclusiveNews">
-          <div class="news-icon" [attr.data-type]="news.type">
-            <span *ngIf="news.type === 'projecto'">🎯</span>
-            <span *ngIf="news.type === 'relatorio'">📊</span>
-            <span *ngIf="news.type === 'evento'">🎉</span>
-          </div>
-          <div class="news-content">
-            <div class="news-date">{{ news.date }}</div>
-            <h3>{{ news.title }}</h3>
-            <p>{{ news.excerpt }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Secção F: Aumentar Apoio -->
-<section class="increase-support-section">
-  <div class="container">
-    <div class="section-card">
-      <div class="card-header">
-        <h2>Aumentar o Teu Apoio</h2>
-        <p class="card-subtitle">Queres fazer ainda mais diferença? Aumenta a tua contribuição.</p>
-      </div>
-      
-      <div class="increase-options">
-        <button class="increase-option-card" (click)="toggleIncreaseForm()">
-          <div class="option-icon">📈</div>
-          <h3>Aumentar Contribuição Mensal</h3>
-          <p>Altera o valor da tua contribuição mensal recorrente</p>
-        </button>
-        
-        <button class="increase-option-card" (click)="makeExtraDonation()">
-          <div class="option-icon">➕</div>
-          <h3>Fazer Contribuição Extra</h3>
-          <p>Faz uma doação adicional além da tua contribuição regular</p>
-        </button>
-      </div>
-
-      <!-- Formulário de Aumento -->
-      <div class="increase-form-container" *ngIf="showIncreaseForm">
-        <form [formGroup]="increaseForm" (ngSubmit)="onSubmitIncrease()" class="increase-form">
-          <div class="form-row">
-            <div class="form-field">
-              <label>Novo Valor Mensal <span class="required">*</span></label>
-              <input type="number" formControlName="newAmount" placeholder="Ex: 200" min="1">
-            </div>
-            <div class="form-field">
-              <label>Frequência <span class="required">*</span></label>
-              <select formControlName="frequency">
-                <option value="monthly">Mensal</option>
-                <option value="unique">Única</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn-cancel" (click)="toggleIncreaseForm()">Cancelar</button>
-            <button type="submit" class="btn-submit" [disabled]="increaseForm.invalid">
-              Confirmar Aumento
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-
+</div>

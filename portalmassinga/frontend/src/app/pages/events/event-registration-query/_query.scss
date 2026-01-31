@@ -1,0 +1,232 @@
+@import 'variables';
+
+// Query Section (Telefone e Token)
+.query-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.query-card {
+  background: $white;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba($green-primary, 0.1);
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: $gradient-primary;
+  }
+
+  .query-icon {
+    width: 80px;
+    height: 80px;
+    background: $gradient-primary;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto 2rem;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $ink-900;
+    margin: 0 0 0.75rem 0;
+    text-align: center;
+  }
+
+  .query-description {
+    color: $ink-600;
+    font-size: 1rem;
+    text-align: center;
+    margin: 0 0 2rem 0;
+    line-height: 1.6;
+
+    strong {
+      color: $ink-900;
+      font-weight: 600;
+    }
+  }
+
+  .query-form {
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: $ink-900;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+      }
+
+      .input-phone,
+      .input-token {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid rgba($green-primary, 0.2);
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: $white;
+        color: $ink-900;
+        font-weight: 500;
+
+        &:focus {
+          outline: none;
+          border-color: $green-primary;
+          box-shadow: 0 0 0 4px rgba($green-primary, 0.1);
+        }
+
+        &::placeholder {
+          color: $gray-500;
+        }
+      }
+
+      .input-token {
+        text-align: center;
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+      }
+
+      .token-input-container {
+        position: relative;
+      }
+
+      .input-hint {
+        display: block;
+        color: $ink-600;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .error-message {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba($error, 0.1);
+      border: 1px solid rgba($error, 0.3);
+      border-radius: 12px;
+      color: $error;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+
+      svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: $gradient-primary;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba($green-primary, 0.3);
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba($green-primary, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      .btn-secondary {
+        padding: 0.875rem 1.5rem;
+        background: rgba($green-primary, 0.05);
+        border: 1px solid rgba($green-primary, 0.2);
+        border-radius: 12px;
+        color: $ink-700;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        &:hover {
+          background: rgba($green-primary, 0.1);
+          border-color: $green-primary;
+          color: $green-primary;
+        }
+      }
+
+      .btn-link {
+        background: none;
+        border: none;
+        color: $green-primary;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        text-decoration: underline;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: $green-700;
+        }
+      }
+
+      .btn-primary {
+        flex: 1;
+        min-width: 150px;
+      }
+    }
+  }
+}
+

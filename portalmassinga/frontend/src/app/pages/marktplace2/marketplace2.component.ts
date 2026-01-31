@@ -204,7 +204,11 @@ export class Marketplace2Component implements OnInit, OnDestroy {
   }
 
   getCategoryProductCount(categoryId: string): number {
-    return this.filteredProducts.filter(p => p.category === categoryId).length;
+    return this.products.filter(p => p.category === categoryId).length;
+  }
+
+  getFeaturedProducts(): Product[] {
+    return this.filteredProducts.filter(p => p.featured).slice(0, 3);
   }
 }
 

@@ -61,8 +61,41 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 80, 0, 0.7);
   z-index: 2;
+  transition: background 0.8s ease;
+  
+  // Overlay Amarelo Suave (Bem-vindo - tom reduzido)
+  &.overlay-yellow-soft {
+    background: linear-gradient(
+      to right,
+      rgba(255, 215, 0, 0.4) 0%,
+      rgba(255, 215, 0, 0.3) 30%,
+      rgba(255, 215, 0, 0.15) 60%,
+      rgba(255, 215, 0, 0) 100%
+    );
+  }
+  
+  // Overlay Vermelho Suave (Missão e Valores - menos carregado)
+  &.overlay-red-soft {
+    background: linear-gradient(
+      to right,
+      rgba(239, 68, 68, 0.4) 0%,
+      rgba(239, 68, 68, 0.3) 30%,
+      rgba(239, 68, 68, 0.15) 60%,
+      rgba(239, 68, 68, 0) 100%
+    );
+  }
+  
+  // Overlay Amarelo (Visão)
+  &.overlay-yellow {
+    background: linear-gradient(
+      to right,
+      rgba(255, 215, 0, 0.7) 0%,
+      rgba(255, 215, 0, 0.5) 30%,
+      rgba(255, 215, 0, 0.2) 60%,
+      rgba(255, 215, 0, 0) 100%
+    );
+  }
 }
 
 .hero-container {

@@ -40,10 +40,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   public isTransitioning = false;
   
   slides = [
-    { imagem: '/assets/FOTO1 ANAM.jpeg' },
-    { imagem: '/assets/FOTO 4 ANAM.jpeg' },
-    { imagem: '/assets/FOTO 3 ANAM.jpeg' },
-    { imagem: '/assets/FOTO1 ANAM.jpeg' } // Usando a primeira imagem para o slide de valores
+    { 
+      imagem: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Bem-vindo - Comunidade unida com pessoas negras
+    },
+    { 
+      imagem: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Missão - Propósito e direção com pessoas negras
+    },
+    { 
+      imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Visão - Futuro e crescimento com pessoas negras
+    },
+    { 
+      imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Valores - Trabalho em equipe com pessoas negras
+    }
   ];
 
   // Configuração dos botões por slide

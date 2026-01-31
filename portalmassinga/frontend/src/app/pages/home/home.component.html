@@ -8,7 +8,11 @@
            [style.background-image]="'url(' + slide.imagem + ')'">
       </div>
     </div>
-    <div class="hero-overlay"></div>
+    <div class="hero-overlay" 
+         [class.overlay-yellow-soft]="currentSlide === 0"
+         [class.overlay-red-soft]="currentSlide === 1"
+         [class.overlay-yellow]="currentSlide === 2"
+         [class.overlay-red-soft]="currentSlide === 3"></div>
   </div>
   
   <div class="hero-container" [class.transitioning]="isTransitioning">
