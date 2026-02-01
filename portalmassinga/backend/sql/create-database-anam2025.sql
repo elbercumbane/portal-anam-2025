@@ -56,7 +56,12 @@ CREATE TABLE IF NOT EXISTS member_applications (
     status VARCHAR(50) DEFAULT 'Pending', -- Pending, Approved, Rejected
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     approved_at TIMESTAMP,
-    observations TEXT
+    observations TEXT,
+
+    -- Registo: dispositivo, navegador e User-Agent (data de registo = created_at)
+    registration_device VARCHAR(255),
+    registration_browser VARCHAR(255),
+    registration_user_agent TEXT
 );
 
 -- Tabela para armazenar dependentes das candidaturas

@@ -121,6 +121,16 @@ public class MemberApplication {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // Registo: dispositivo, navegador e data (created_at)
+    @Column(name = "registration_device", length = 255)
+    private String registrationDevice;
+
+    @Column(name = "registration_browser", length = 255)
+    private String registrationBrowser;
+
+    @Column(name = "registration_user_agent", columnDefinition = "TEXT")
+    private String registrationUserAgent;
+
     @Column(name = "approved_at")
     private LocalDateTime approvedAt;
 

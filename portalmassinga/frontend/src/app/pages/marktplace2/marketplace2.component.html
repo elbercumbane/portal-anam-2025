@@ -1,46 +1,51 @@
-<div class="marketplace2-page">
-  <!-- Hero Section -->
+<div class="marketplace2-page" [class.sidebar-closed]="!sidebarOpen">
+  <!-- Hero Section com Slides (cada slide com imagem) -->
   <section class="marketplace-hero">
-    <div class="hero-background"></div>
-    <div class="hero-content">
-      <div class="hero-badge">
-        <mat-icon>store</mat-icon>
-        <span>Marketplace ANAM</span>
-      </div>
-      <h1 class="hero-title">
-        Comércio Local <span class="highlight">Sustentável</span>
-      </h1>
-      <p class="hero-subtitle">
-        Conectamos produtores locais com a comunidade. Encontre produtos artesanais, agrícolas e serviços de qualidade.
-      </p>
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-value">{{ totalProducts }}+</div>
-          <div class="stat-label">Produtos</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">{{ categories.length - 1 }}</div>
-          <div class="stat-label">Categorias</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value">100%</div>
-          <div class="stat-label">Local</div>
+    <div class="hero-slides">
+      <div 
+        *ngFor="let slide of heroSlides; let i = index" 
+        class="hero-slide" 
+        [class.active]="currentSlide === i"
+        [ngStyle]="{'background-image': 'url(' + slide.image + ')'}">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <mat-icon>store</mat-icon>
+            <span>Marketplace ANAM</span>
+          </div>
+          <h1 class="hero-title">{{ slide.title }}</h1>
+          <p class="hero-subtitle">{{ slide.subtitle }}</p>
         </div>
       </div>
     </div>
+    <div class="hero-indicators">
+      <button 
+        *ngFor="let slide of heroSlides; let i = index" 
+        class="hero-dot" 
+        [class.active]="currentSlide === i"
+        (click)="goToSlide(i)"
+        [attr.aria-label]="'Slide ' + (i + 1)">
+      </button>
+    </div>
   </section>
 
-  <!-- Header Fixo -->
+  <!-- Header Fixo (navbar da página) -->
   <header class="marketplace-header">
     <div class="header-content">
       <div class="header-left">
-        <button class="sidebar-toggle" (click)="toggleSidebar()" [attr.aria-label]="sidebarOpen ? 'Fechar menu' : 'Abrir menu'">
-          <mat-icon>{{ sidebarOpen ? 'menu_open' : 'menu' }}</mat-icon>
-        </button>
-        <div class="header-title">
-          <h1>Marketplace ANAM</h1>
-          <span class="header-subtitle">Comércio Local Sustentável</span>
-        </div>
+        <a routerLink="/marketplace" class="header-logo" title="Marketplace ANAM">
+          <mat-icon class="logo-icon">store</mat-icon>
+          <div class="header-title">
+            <h1>Marketplace ANAM</h1>
+            <span class="header-subtitle">Produtos locais de Massinga</span>
+          </div>
+        </a>
+        <nav class="header-nav">
+          <a routerLink="/marketplace" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="header-nav-link link-inicio">
+            <mat-icon>home</mat-icon>
+            <span>Início</span>
+          </a>
+        </nav>
       </div>
       
       <div class="header-search">
@@ -58,22 +63,27 @@
       </div>
 
       <div class="header-actions">
-        <button class="action-btn" (click)="clearFilters()" *ngIf="activeFilters > 0" [matBadge]="activeFilters" [matBadgeHidden]="activeFilters === 0">
+        <button class="action-btn action-btn-sm btn-limpar" (click)="clearFilters()" *ngIf="activeFilters > 0" [matBadge]="activeFilters" [matBadgeHidden]="activeFilters === 0" title="Limpar filtros">
           <mat-icon>filter_alt_off</mat-icon>
           <span>Limpar</span>
         </button>
-        <button class="action-btn primary">
-          <mat-icon>add</mat-icon>
-          <span>Anunciar</span>
+        <span class="header-datetime" *ngIf="currentDateTime">{{ currentDateTime }}</span>
+        <button class="action-btn action-btn-sm btn-ajuda" title="Ajuda" (click)="openAnunciarPopup()">
+          <mat-icon>help_outline</mat-icon>
+          <span>Ajuda</span>
         </button>
+        <a routerLink="/" class="action-btn action-btn-sm btn-voltar" title="Voltar ao portal">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Portal</span>
+        </a>
       </div>
     </div>
   </header>
 
   <!-- Layout Principal -->
   <div class="marketplace-layout" [class.sidebar-closed]="!sidebarOpen">
-    <!-- Sidebar de Navegação -->
-    <aside class="marketplace-sidebar" [class.open]="sidebarOpen">
+    <!-- Sidebar de Navegação (recolhida = só ícones) -->
+    <aside class="marketplace-sidebar" [class.open]="sidebarOpen" [class.collapsed]="!sidebarOpen">
       <div class="sidebar-content">
         <!-- Seção de Categorias -->
         <nav class="sidebar-nav">
@@ -83,66 +93,73 @@
               *ngFor="let category of categories"
               class="nav-item"
               [class.active]="selectedCategory === category.id"
-              (click)="onCategorySelect(category.id)">
-              <mat-icon [style.color]="getCategoryColor(category.id)">{{ category.icon }}</mat-icon>
-              <span>{{ category.label }}</span>
-              <span class="nav-count" *ngIf="category.id !== 'todos'">
-                {{ getCategoryProductCount(category.id) }}
-              </span>
+              (click)="onCategorySelect(category.id)"
+              [title]="category.label">
+              <mat-icon>{{ category.icon }}</mat-icon>
+              <span class="nav-label">{{ category.label }}</span>
             </button>
           </div>
         </nav>
-
-        <!-- Seção de Ordenação -->
-        <div class="sidebar-sort">
-          <h3 class="sort-title">Ordenar por</h3>
-          <div class="sort-options">
-            <button 
-              class="sort-option"
-              [class.active]="sortBy === 'recent'"
-              (click)="onSortChange('recent')">
-              <mat-icon>schedule</mat-icon>
-              <span>Mais recentes</span>
-            </button>
-            <button 
-              class="sort-option"
-              [class.active]="sortBy === 'price-low'"
-              (click)="onSortChange('price-low')">
-              <mat-icon>arrow_upward</mat-icon>
-              <span>Menor preço</span>
-            </button>
-            <button 
-              class="sort-option"
-              [class.active]="sortBy === 'price-high'"
-              (click)="onSortChange('price-high')">
-              <mat-icon>arrow_downward</mat-icon>
-              <span>Maior preço</span>
-            </button>
-            <button 
-              class="sort-option"
-              [class.active]="sortBy === 'name'"
-              (click)="onSortChange('name')">
-              <mat-icon>sort_by_alpha</mat-icon>
-              <span>Nome A-Z</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Informações -->
-        <div class="sidebar-info">
-          <div class="info-card">
-            <mat-icon>info</mat-icon>
-            <div class="info-content">
-              <p><strong>Total de produtos:</strong></p>
-              <p class="info-value">{{ totalProducts }}</p>
-            </div>
-          </div>
-        </div>
+        <!-- Botão Anunciar na sidebar -->
+        <button type="button" class="sidebar-anunciar" (click)="openAnunciarPopup()" title="Anunciar seu produto">
+          <mat-icon>add_circle</mat-icon>
+          <span class="sidebar-anunciar-label">Anunciar seu produto</span>
+        </button>
       </div>
+      <button type="button" class="sidebar-toggle" (click)="toggleSidebar()" [attr.aria-label]="sidebarOpen ? 'Recolher menu' : 'Expandir menu'" title="{{ sidebarOpen ? 'Recolher' : 'Expandir' }}">
+        <mat-icon>{{ sidebarOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+      </button>
     </aside>
 
     <!-- Conteúdo Principal -->
     <main class="marketplace-main">
+      <!-- Barra Ordenar por (logo abaixo do hero) -->
+      <div class="results-bar">
+        <div class="results-info">
+          <span class="results-count">{{ getProductCountText() }}</span>
+          <span class="results-category" *ngIf="selectedCategory !== 'todos'">
+            em <strong>{{ getCategoryLabel(selectedCategory) }}</strong>
+          </span>
+        </div>
+        <div class="results-sort">
+          <span class="sort-label">Ordenar por:</span>
+          <div class="sort-buttons">
+            <button 
+              class="sort-btn" 
+              [class.active]="sortBy === 'recent'"
+              (click)="onSortChange('recent')"
+              title="Mais recentes">
+              <mat-icon>schedule</mat-icon>
+              <span>Recentes</span>
+            </button>
+            <button 
+              class="sort-btn" 
+              [class.active]="sortBy === 'price-low'"
+              (click)="onSortChange('price-low')"
+              title="Menor preço">
+              <mat-icon>arrow_upward</mat-icon>
+              <span>Menor preço</span>
+            </button>
+            <button 
+              class="sort-btn" 
+              [class.active]="sortBy === 'price-high'"
+              (click)="onSortChange('price-high')"
+              title="Maior preço">
+              <mat-icon>arrow_downward</mat-icon>
+              <span>Maior preço</span>
+            </button>
+            <button 
+              class="sort-btn" 
+              [class.active]="sortBy === 'name'"
+              (click)="onSortChange('name')"
+              title="Ordem A-Z">
+              <mat-icon>sort_by_alpha</mat-icon>
+              <span>A-Z</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Produtos em Destaque -->
       <section class="featured-section" *ngIf="getFeaturedProducts().length > 0">
         <div class="section-header">
@@ -179,7 +196,7 @@
                   <mat-icon>star</mat-icon>
                   <span>Destaque</span>
                 </span>
-                <span class="badge category" [style.background-color]="getCategoryColor(product.category)">
+                <span class="badge category">
                   <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
                 </span>
               </div>
@@ -219,16 +236,6 @@
         </div>
       </section>
 
-      <!-- Barra de Resultados -->
-      <div class="results-bar">
-        <div class="results-info">
-          <span class="results-count">{{ getProductCountText() }}</span>
-          <span class="results-category" *ngIf="selectedCategory !== 'todos'">
-            em <strong>{{ getCategoryLabel(selectedCategory) }}</strong>
-          </span>
-        </div>
-      </div>
-
       <!-- Grid de Produtos -->
       <section class="products-section">
         <div class="products-grid" *ngIf="filteredProducts.length > 0; else noResults">
@@ -257,7 +264,7 @@
                   <mat-icon>star</mat-icon>
                   <span>Destaque</span>
                 </span>
-                <span class="badge category" [style.background-color]="getCategoryColor(product.category)">
+                <span class="badge category">
                   <mat-icon>{{ getCategoryIcon(product.category) }}</mat-icon>
                 </span>
               </div>
@@ -318,5 +325,44 @@
       </section>
     </main>
   </div>
+
+  <!-- Popup flutuante Anunciar seu produto (pode ser fechado) -->
+  <div class="anunciar-popup-wrapper" *ngIf="showAnunciarPopup">
+    <div class="anunciar-popup-overlay" (click)="closeAnunciarPopup()"></div>
+    <div class="anunciar-popup" (click)="$event.stopPropagation()">
+    <button type="button" class="popup-close" (click)="closeAnunciarPopup()" aria-label="Fechar">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h3 class="popup-title">Anunciar seu produto</h3>
+    <p class="popup-text">Coloque os seus produtos locais à venda no Marketplace ANAM e alcance compradores em Massinga e Inhambane.</p>
+    <button type="button" class="popup-btn-info" (click)="showInfoContent = !showInfoContent">
+      <mat-icon>info</mat-icon>
+      <span>{{ showInfoContent ? 'Ocultar' : 'Como anunciar e como é processada a venda' }}</span>
+    </button>
+    <div class="popup-info-content" *ngIf="showInfoContent">
+      <p><strong>Como anunciar:</strong></p>
+      <ul>
+        <li>Clique em "Anunciar seus produtos" no topo da página.</li>
+        <li>Preencha os dados do produto (foto, título, preço, localização).</li>
+        <li>Escolha a categoria (Artesanato, Agricultura, Alimentação, etc.).</li>
+        <li>O anúncio será revisado e publicado em breve.</li>
+      </ul>
+      <p><strong>Como é processada a venda:</strong></p>
+      <ul>
+        <li>O comprador contacta-o através do Marketplace.</li>
+        <li>Você combina a entrega ou levantamento com o comprador.</li>
+        <li>O pagamento é acordado entre vendedor e comprador (dinheiro, móvel, etc.).</li>
+        <li>Esta página está em desenvolvimento; em breve terá formulário completo de anúncio.</li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  <!-- Rodapé da página Marketplace (sem botão Voltar) -->
+  <footer class="marketplace-footer">
+    <div class="marketplace-footer-inner">
+      <span class="footer-copy">&copy; {{ currentYear }} Marketplace ANAM — Produtos locais de Massinga</span>
+    </div>
+  </footer>
 </div>
 

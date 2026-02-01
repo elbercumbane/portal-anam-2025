@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,19 +25,58 @@ public class MemberApplicationController {
     private MemberApplicationRepository repository;
 
     @PostMapping
-    public ResponseEntity<?> createApplication(@Valid @RequestBody MemberApplicationDTO dto) {
+    public ResponseEntity<?> createApplication(@Valid @RequestBody MemberApplicationDTO dto,
+                                                HttpServletRequest request) {
         try {
             // Converter DTO para Entity
             MemberApplication application = convertToEntity(dto);
-            
+
+            // Registo: dispositivo, navegador e User-Agent
+            String userAgent = request.getHeader("User-Agent");
+            if (userAgent != null) {
+                application.setRegistrationUserAgent(userAgent);
+                if (dto.getRegistrationDevice() != null && !dto.getRegistrationDevice().isBlank()) {
+                    application.setRegistrationDevice(dto.getRegistrationDevice());
+                } else {
+                    application.setRegistrationDevice(detectDevice(userAgent));
+                }
+                if (dto.getRegistrationBrowser() != null && !dto.getRegistrationBrowser().isBlank()) {
+                    application.setRegistrationBrowser(dto.getRegistrationBrowser());
+                } else {
+                    application.setRegistrationBrowser(detectBrowser(userAgent));
+                }
+            } else {
+                application.setRegistrationDevice(dto.getRegistrationDevice());
+                application.setRegistrationBrowser(dto.getRegistrationBrowser());
+            }
+            // created_at é preenchido automaticamente na entidade (data de registo)
+
             // Salvar candidatura
             MemberApplication saved = repository.save(application);
-            
+
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao criar candidatura: " + e.getMessage());
         }
+    }
+
+    private String detectDevice(String userAgent) {
+        if (userAgent == null) return null;
+        String ua = userAgent.toLowerCase();
+        if (ua.contains("mobile") && !ua.contains("tablet")) return "Mobile";
+        if (ua.contains("tablet") || ua.contains("ipad")) return "Tablet";
+        return "Desktop";
+    }
+
+    private String detectBrowser(String userAgent) {
+        if (userAgent == null) return null;
+        if (userAgent.contains("Edg/")) return "Edge";
+        if (userAgent.contains("Chrome/") && !userAgent.contains("Edg")) return "Chrome";
+        if (userAgent.contains("Firefox/")) return "Firefox";
+        if (userAgent.contains("Safari/") && !userAgent.contains("Chrome")) return "Safari";
+        if (userAgent.contains("OPR/") || userAgent.contains("Opera")) return "Opera";
+        return "Outro";
     }
 
     @GetMapping
@@ -129,7 +169,7 @@ public class MemberApplicationController {
         // Additional Information
         application.setAdditionalInformation(dto.getAdditionalInformation());
         application.setAcceptsTerms(dto.getAcceptsTerms());
-        
+
         // Dependents
         if (dto.getDependents() != null && !dto.getDependents().isEmpty()) {
             List<ApplicationDependent> dependents = dto.getDependents().stream()

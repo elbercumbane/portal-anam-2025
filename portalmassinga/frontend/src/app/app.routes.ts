@@ -22,13 +22,13 @@ export const routes: Routes = [
       { path: 'contato', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
       { path: 'programas', loadComponent: () => import('./pages/programs/programs.component').then(m => m.ProgramsComponent) },
       { path: 'parceiros', loadComponent: () => import('./pages/partners/partners.component').then(m => m.PartnersComponent) },
-      { path: 'marketplace', loadComponent: () => import('./pages/marktplace2/marketplace2.component').then(m => m.Marketplace2Component) },
       { path: 'simpatizantes', loadChildren: () => import('./pages/sympathizers/sympathizers.module').then(m => m.SympathizersModule) },
       { path: 'apoio', loadChildren: () => import('./pages/supporters/supporters.module').then(m => m.SupportersModule) },
     ],
   },
   // Rotas sem navbar (fora do shell)
-      { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
+  { path: 'marketplace', loadComponent: () => import('./pages/marktplace2/marketplace2.component').then(m => m.Marketplace2Component) },
+  { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
       // Rotas de membros - fora do shell para não ter navbar
       { path: 'membros', loadChildren: () => import('./pages/members/members.module').then(m => m.MembersModule) },
       // Rotas de apoiante - fora do shell para não ter navbar

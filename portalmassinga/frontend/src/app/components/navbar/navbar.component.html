@@ -5,6 +5,7 @@
   
   <nav class="desktop-nav">
     <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Início</a>
+    <a mat-button routerLink="/noticias" routerLinkActive="active" class="nav-link">Notícias</a>
     
     <!-- Submenu Páginas -->
     <div class="dropdown" (mouseenter)="showPaginasSubmenu = true" (mouseleave)="showPaginasSubmenu = false" [class.active]="showPaginasSubmenu">
@@ -110,6 +111,7 @@
   </div>
   <div class="mobile-menu-body">
     <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()" class="mobile-nav-link">Início</a>
+    <a mat-button routerLink="/noticias" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Notícias</a>
     
     <div class="mobile-divider"></div>
     

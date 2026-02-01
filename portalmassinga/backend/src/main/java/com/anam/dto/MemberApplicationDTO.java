@@ -76,6 +76,10 @@ public class MemberApplicationDTO {
     @NotNull(message = "Aceitar termos é obrigatório")
     private Boolean acceptsTerms;
 
+    // Registo: dispositivo e navegador (opcional; pode ser enviado pelo frontend ou inferido do User-Agent)
+    private String registrationDevice;
+    private String registrationBrowser;
+
     @Data
     public static class DependentDTO {
         @NotBlank(message = "Nome do dependente é obrigatório")

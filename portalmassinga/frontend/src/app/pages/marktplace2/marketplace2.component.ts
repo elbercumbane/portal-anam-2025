@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +14,8 @@ import { MARKETPLACE_CATEGORIES, MARKETPLACE_PRODUCTS } from './data/marketplace
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
+    RouterLinkActive,
     FormsModule,
     MatButtonModule,
     MatIconModule,
@@ -21,8 +25,8 @@ import { MARKETPLACE_CATEGORIES, MARKETPLACE_PRODUCTS } from './data/marketplace
   styleUrl: './marketplace2.component.scss'
 })
 export class Marketplace2Component implements OnInit, OnDestroy {
-  // Estado da sidebar
-  sidebarOpen = true;
+  // Estado da sidebar (recolhida ao entrar)
+  sidebarOpen = false;
   
   // Filtros e busca
   searchQuery = '';
@@ -37,16 +41,96 @@ export class Marketplace2Component implements OnInit, OnDestroy {
   // Estatísticas
   totalProducts = 0;
   activeFilters = 0;
+  currentYear = new Date().getFullYear();
 
-  constructor() {}
+  // Hero slides (imagens de agricultura e produtos locais)
+  heroSlides: { title: string; subtitle: string; image: string }[] = [
+    {
+      title: 'Produtos Locais de Massinga',
+      subtitle: 'Comércio sustentável da província de Inhambane',
+      image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1200'
+    },
+    {
+      title: 'Inhambane — Terra de Oportunidades',
+      subtitle: 'Agricultura, artesanato e alimentação 100% local',
+      image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200'
+    },
+    {
+      title: 'Comércio Local Sustentável',
+      subtitle: 'Conectamos produtores locais com a comunidade',
+      image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200'
+    }
+  ];
+  currentSlide = 0;
+  private slideInterval: any;
+
+  showAnunciarPopup = true;
+  showInfoContent = false;
+
+  currentDateTime = '';
+
+  private dateTimeInterval: any;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private doc: Document
+  ) {}
 
   ngOnInit(): void {
+    this.doc.body.classList.add('marketplace-page');
     this.filterProducts();
     this.updateStats();
+    this.startHeroSlides();
+    this.updateDateTime();
+    this.dateTimeInterval = setInterval(() => this.updateDateTime(), 1000);
   }
 
   ngOnDestroy(): void {
-    // Cleanup se necessário
+    this.doc.body.classList.remove('marketplace-page');
+    if (this.slideInterval) clearInterval(this.slideInterval);
+    if (this.dateTimeInterval) clearInterval(this.dateTimeInterval);
+  }
+
+  updateDateTime(): void {
+    const now = new Date();
+    this.currentDateTime = now.toLocaleString('pt-MZ', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    this.cdr.detectChanges();
+  }
+
+  startHeroSlides(): void {
+    this.slideInterval = setInterval(() => {
+      this.currentSlide = (this.currentSlide + 1) % this.heroSlides.length;
+    }, 10000);
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+    if (this.slideInterval) {
+      clearInterval(this.slideInterval);
+      this.startHeroSlides();
+    }
+  }
+
+  openAnunciarPopup(): void {
+    this.showAnunciarPopup = true;
+    this.cdr.detectChanges();
+  }
+
+  scrollToProducts(): void {
+    const el = document.querySelector('.marketplace-main');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  closeAnunciarPopup(): void {
+    this.showAnunciarPopup = false;
+    this.showInfoContent = false;
   }
 
   toggleSidebar(): void {
