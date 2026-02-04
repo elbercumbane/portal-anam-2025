@@ -1,0 +1,57 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: anam-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: elber123
+      POSTGRES_DB: anam
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pt_BR.UTF-8"
+      LANG: pt_BR.UTF-8
+      LC_ALL: pt_BR.UTF-8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/create-database-anam.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - anam-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: anam-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/anam?useUnicode=true&characterEncoding=UTF-8&stringtype=unspecified
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: elber123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8081
+      SERVER_SERVLET_CONTEXT_PATH: /api
+      SPRING_HTTP_ENCODING_CHARSET: UTF-8
+      SPRING_HTTP_ENCODING_ENABLED: true
+      SPRING_HTTP_ENCODING_FORCE: true
+      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8 -Duser.language=pt -Duser.country=BR
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - anam-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  anam-network:
+    driver: bridge

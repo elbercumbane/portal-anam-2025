@@ -12,6 +12,7 @@ import { PartnersSectionComponent } from './sections/partners/partners.component
 import { ScrollToTopComponent } from '../../components/scroll-to-top/scroll-to-top.component';
 import { StatsSectionComponent } from './sections/stats/stats.component';
 import { NewsSectionComponent } from './sections/news/news.component';
+import { SantaPopupComponent } from './sections/santa-popup/santa-popup.component';
 
 // Importar dados
 import { SLIDE_TEXTOS } from './home.data';
@@ -29,7 +30,8 @@ import { SLIDE_TEXTOS } from './home.data';
     PartnersSectionComponent,
     ScrollToTopComponent,
     StatsSectionComponent,
-    NewsSectionComponent
+    NewsSectionComponent,
+    SantaPopupComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -38,43 +40,59 @@ export class HomeComponent implements OnInit, OnDestroy {
   public currentSlide = 0;
   private slideTimeout: any;
   public isTransitioning = false;
+  public isLoading = true;
   
+  // Configurações de Natal (carregadas da BD)
+  enableSnow = false;
+  enableSanta = false;
+  christmasMessage = 'Feliz Natal e Próspero 2025 🎄';
+  snowflakes: number[] = [];
+  
+  // Dados padrão (fallback caso a BD não esteja disponível)
   slides = [
     { 
-      imagem: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Bem-vindo - Comunidade unida com pessoas negras
+      titulo: '',
+      subtitulo: '',
+      imagem: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
     },
     { 
-      imagem: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Missão - Propósito e direção com pessoas negras
+      titulo: '',
+      subtitulo: '',
+      imagem: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
     },
     { 
-      imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Visão - Futuro e crescimento com pessoas negras
+      titulo: '',
+      subtitulo: '',
+      imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
     },
     { 
-      imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80' // Valores - Trabalho em equipe com pessoas negras
+      titulo: '',
+      subtitulo: '',
+      imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80'
     }
   ];
 
-  // Configuração dos botões por slide
+  // Configuração dos botões por slide (será carregado da BD)
   slideButtons = [
     { 
       text: 'Torne-se Membro', 
       link: '/associar', 
-      color: '#FFD700' // Amarelo
+      color: '#FFD700'
     },
     { 
       text: 'Torne-se Simpatizante', 
       link: '/associar', 
-      color: '#EF4444' // Vermelho
+      color: '#EF4444'
     },
     { 
       text: 'Torne-se Apoiante', 
       link: '/associar', 
-      color: '#60A5FA' // Azul
+      color: '#60A5FA'
     },
     { 
       text: 'Torne-se Parceiro', 
       link: '/parceiros', 
-      color: '#4CAF50' // Verde
+      color: '#4CAF50'
     }
   ];
 
@@ -88,7 +106,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.startSlideCycle();
+    // Carregar conteúdo da base de dados
+    this.loadContentFromDatabase();
+    
     this.activatedRoute.fragment.subscribe(fragment => {
       if (fragment) {
         setTimeout(() => {
@@ -98,12 +118,151 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Carrega todo o conteúdo da página inicial diretamente da base de dados
+   */
+  loadContentFromDatabase(): void {
+    this.isLoading = true;
+    
+    this.apiClient.getHomeContent(true).subscribe({
+      next: (contents: any[]) => {
+        console.log('📋 Todos os conteúdos recebidos:', contents.length);
+        
+        // Processar slides do hero
+        const heroSlides = contents
+          .filter(c => c.sectionKey && c.sectionKey.startsWith('hero_slide_'))
+          .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+        
+        console.log('📸 Slides do Hero encontrados:', heroSlides.length);
+        console.log('📸 Dados completos dos slides:', JSON.stringify(heroSlides, null, 2));
+        
+        // Garantir que temos pelo menos 4 slides na ordem correta (Bem-vindo, Missão, Visão, Valores)
+        const slidesToProcess = Math.min(heroSlides.length, 4);
+        console.log(`📸 Processando ${slidesToProcess} slides`);
+        
+        for (let index = 0; index < slidesToProcess; index++) {
+          const content = heroSlides[index];
+          
+          if (!content) {
+            console.warn(`⚠️ Slide ${index + 1} não encontrado na BD`);
+            continue;
+          }
+          
+          // Garantir que a imagem seja carregada corretamente
+          // Tentar diferentes variações do nome do campo (pode vir como imageUrl ou image_url)
+          // O Lombok/Jackson serializa como camelCase (imageUrl)
+          const imageUrl = content.imageUrl || content['imageUrl'] || content.image_url || content['image_url'] || null;
+          
+          console.log(`📸 Slide ${index + 1} (${content.sectionKey}):`, {
+            imageUrl: imageUrl,
+            imageUrlType: typeof imageUrl,
+            imageUrlIsNull: imageUrl === null,
+            imageUrlIsUndefined: imageUrl === undefined,
+            imageUrlIsEmpty: imageUrl === '',
+            title: content.title,
+            allFields: Object.keys(content),
+            rawContent: content
+          });
+          
+          // Atualizar slide com dados da BD
+          // Se não houver imagem na BD, manter a imagem padrão
+          let finalImageUrl = imageUrl;
+          
+          if (!finalImageUrl || finalImageUrl === null || finalImageUrl === undefined || finalImageUrl.toString().trim() === '' || finalImageUrl === 'null') {
+            console.warn(`⚠️ Slide ${index + 1} sem imagem válida na BD, usando fallback:`, this.slides[index].imagem);
+            finalImageUrl = this.slides[index].imagem;
+          } else {
+            // Garantir que o caminho está correto (adicionar / se necessário)
+            finalImageUrl = finalImageUrl.toString().trim();
+            if (!finalImageUrl.startsWith('http') && !finalImageUrl.startsWith('/')) {
+              finalImageUrl = '/' + finalImageUrl;
+            }
+            console.log(`✅ Slide ${index + 1} usando imagem da BD: ${finalImageUrl}`);
+          }
+          
+          // Atualizar o slide com os dados da BD
+          this.slides[index] = {
+            titulo: content.title || this.slides[index].titulo || SLIDE_TEXTOS[index]?.titulo || '',
+            subtitulo: content.subtitle || this.slides[index].subtitulo || SLIDE_TEXTOS[index]?.subtitulo || '',
+            imagem: finalImageUrl
+          };
+          
+          console.log(`✅ Slide ${index + 1} FINAL configurado:`, {
+            titulo: this.slides[index].titulo,
+            imagem: this.slides[index].imagem,
+            imagemLength: this.slides[index].imagem?.length
+          });
+          
+          // Carregar configurações do botão do metadata
+          if (content.metadata) {
+            try {
+              const metadata = JSON.parse(content.metadata);
+              if (metadata.buttonText && index < this.slideButtons.length) {
+                this.slideButtons[index] = {
+                  text: metadata.buttonText,
+                  link: metadata.buttonLink || this.slideButtons[index].link,
+                  color: metadata.buttonColor || this.slideButtons[index].color
+                };
+              }
+            } catch (e) {
+              console.warn('Erro ao parsear metadata do slide', index, e);
+            }
+          }
+        }
+        
+        // Log final para debug
+        console.log('🎯 Slides FINAIS após processamento:', this.slides.slice(0, 3).map((s, i) => ({
+          index: i,
+          titulo: s.titulo,
+          imagem: s.imagem
+        })));
+        
+        // Carregar configurações de Natal
+        const christmasConfig = contents.find(c => c.sectionKey === 'christmas_config');
+        if (christmasConfig && christmasConfig.metadata) {
+          try {
+            const metadata = JSON.parse(christmasConfig.metadata);
+            this.enableSnow = metadata.enableSnow === true;
+            this.enableSanta = metadata.enableSanta === true;
+            this.christmasMessage = metadata.christmasMessage || this.christmasMessage;
+            
+            // Aplicar efeitos após carregar configurações
+            if (this.enableSnow) {
+              console.log('❄️ Habilitando efeito de neve...');
+              this.createSnowEffect();
+              console.log('❄️ Flocos de neve criados:', this.snowflakes.length);
+            } else {
+              console.log('❄️ Efeito de neve desabilitado');
+              this.snowflakes = [];
+            }
+          } catch (e) {
+            console.warn('Erro ao parsear configurações de Natal:', e);
+          }
+        }
+        
+        this.isLoading = false;
+        // Iniciar ciclo de slides após carregar dados
+        this.startSlideCycle();
+      },
+      error: (error) => {
+        console.error('Erro ao carregar conteúdo da base de dados:', error);
+        // Usar dados padrão em caso de erro
+        this.slides.forEach((slide, index) => {
+          slide.titulo = SLIDE_TEXTOS[index]?.titulo || '';
+          slide.subtitulo = SLIDE_TEXTOS[index]?.subtitulo || '';
+        });
+        this.isLoading = false;
+        this.startSlideCycle();
+      }
+    });
+  }
+
   getCurrentTitle(): string {
-    return SLIDE_TEXTOS[this.currentSlide]?.titulo || '';
+    return this.slides[this.currentSlide]?.titulo || SLIDE_TEXTOS[this.currentSlide]?.titulo || '';
   }
 
   getCurrentSubtitle(): string {
-    return SLIDE_TEXTOS[this.currentSlide]?.subtitulo || '';
+    return this.slides[this.currentSlide]?.subtitulo || SLIDE_TEXTOS[this.currentSlide]?.subtitulo || '';
   }
 
   private startSlideCycle() {
@@ -152,6 +311,47 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  /**
+   * Cria o efeito de neve dinamicamente
+   */
+  createSnowEffect(): void {
+    // Criar array de flocos de neve (50 flocos)
+    this.snowflakes = Array.from({ length: 50 }, (_, i) => i);
+    console.log('❄️ Efeito de neve criado com', this.snowflakes.length, 'flocos');
+  }
+
+  /**
+   * Retorna posição X aleatória para cada floco de neve
+   */
+  getSnowflakePosition(index: number): number {
+    // Usar índice para criar posições pseudo-aleatórias consistentes
+    return (index * 7.3) % 100;
+  }
+
+  /**
+   * Retorna delay aleatório para cada floco de neve
+   */
+  getSnowflakeDelay(index: number): number {
+    // Usar índice para criar delays pseudo-aleatórios consistentes
+    return (index * 0.1) % 5;
+  }
+
+  /**
+   * Retorna duração aleatória para cada floco de neve
+   */
+  getSnowflakeDuration(index: number): number {
+    // Usar índice para criar durações pseudo-aleatórias consistentes (6-14 segundos)
+    return 6 + ((index * 0.15) % 8);
+  }
+
+  /**
+   * Retorna drift (desvio horizontal) para cada floco de neve
+   */
+  getSnowflakeDrift(index: number): number {
+    // Criar movimento lateral variado para cada floco
+    return (index * 3.7) % 60 - 30; // Entre -30px e 30px
   }
 
   ngOnDestroy() {

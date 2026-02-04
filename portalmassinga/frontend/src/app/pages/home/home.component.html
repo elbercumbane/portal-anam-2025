@@ -1,5 +1,17 @@
 <!-- Hero Section - Novo Layout Simples -->
-<section class="hero-section" aria-labelledby="hero-title">
+<section class="hero-section" aria-labelledby="hero-title" *ngIf="!isLoading">
+  <!-- Efeito de Neve (condicional) -->
+  <div class="snow-container" *ngIf="enableSnow && snowflakes.length > 0" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100; pointer-events: none; overflow: visible;">
+    <div class="snowflake" 
+         *ngFor="let flake of snowflakes; let i = index"
+         [style.left.%]="getSnowflakePosition(i)"
+         [style.animation-delay.s]="getSnowflakeDelay(i)"
+         [style.animation-duration.s]="getSnowflakeDuration(i)"></div>
+  </div>
+  
+  <!-- Papai Noel (condicional) -->
+  <app-santa-popup *ngIf="enableSanta" [message]="christmasMessage"></app-santa-popup>
+  
   <div class="hero-background">
     <div class="hero-slider">
       <div class="hero-slide" 
@@ -51,6 +63,14 @@
     </button>
   </div>
 </section>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="hero-loading" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+  <div style="text-align: center; color: white;">
+    <div style="font-size: 24px; margin-bottom: 16px;">Carregando conteúdo...</div>
+    <div style="font-size: 14px; opacity: 0.8;">A carregar da base de dados</div>
+  </div>
+</div>
 
 <!-- NOVA ESTRUTURA DA HOME -->
 <app-stats-section></app-stats-section>

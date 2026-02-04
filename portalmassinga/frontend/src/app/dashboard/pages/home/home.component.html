@@ -47,7 +47,8 @@
                 <label class="upload-label">Imagem de Fundo do Slide</label>
                 <div class="image-preview-container">
                   <img [src]="getSlideImagePreview(i)" alt="Preview" class="image-preview">
-                  <button mat-raised-button color="primary" class="upload-btn">
+                  <input type="file" [id]="'fileInput' + i" (change)="onImageSelected($event, i)" accept="image/*" style="display: none;">
+                  <button mat-raised-button color="primary" class="upload-btn" (click)="triggerFileInput(i)">
                     <mat-icon>cloud_upload</mat-icon>
                     Alterar Imagem
                   </button>
@@ -222,6 +223,10 @@
       <button mat-stroked-button [disabled]="isLoading" (click)="loadData()">
         <mat-icon>refresh</mat-icon>
         Recarregar Dados
+      </button>
+      <button mat-stroked-button color="accent" [disabled]="isLoading" (click)="initializeContent()" title="Inicializar conteúdo padrão na base de dados">
+        <mat-icon>cloud_upload</mat-icon>
+        Inicializar Conteúdo Padrão
       </button>
     </div>
   </div>

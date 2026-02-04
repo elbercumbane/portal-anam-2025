@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 })
 export class ApiClientService {
   // URL padrão para desenvolvimento - hardcoded como fallback final
-  private readonly DEFAULT_API_URL = 'http://localhost:8080/api';
+  private readonly DEFAULT_API_URL = 'http://localhost:8081/api';
   
   // Método para obter a URL da API dinamicamente
   private getApiUrl(): string {
@@ -60,7 +60,7 @@ export class ApiClientService {
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json; charset=UTF-8'
     });
     
     if (token) {
@@ -117,7 +117,7 @@ export class ApiClientService {
     
     return this.http.post(`${apiUrl}/member-applications`, data, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json; charset=UTF-8'
       }
     })
       .pipe(
@@ -170,10 +170,26 @@ export class ApiClientService {
     );
   }
 
-  // Member endpoints
+  // Member endpoints (tabela membros)
+  criarMembro(data: any): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    
+    console.log('🌐 Criando membro - URL completa:', `${apiUrl}/membros`);
+    console.log('📤 Dados enviados:', data);
+    
+    return this.http.post(`${apiUrl}/membros`, data, {
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getMembers(): Observable<any> {
     const apiUrl = this.getApiUrl();
-    return this.http.get(`${apiUrl}/members`, { headers: this.getHeaders() })
+    return this.http.get(`${apiUrl}/membros`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
@@ -181,7 +197,7 @@ export class ApiClientService {
 
   getMemberById(id: string): Observable<any> {
     const apiUrl = this.getApiUrl();
-    return this.http.get(`${apiUrl}/members/${id}`, { headers: this.getHeaders() })
+    return this.http.get(`${apiUrl}/membros/${id}`, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
@@ -228,7 +244,8 @@ export class ApiClientService {
   getHomeContent(activeOnly: boolean = false): Observable<any[]> {
     const apiUrl = this.getApiUrl();
     const url = `${apiUrl}/home-content${activeOnly ? '?activeOnly=true' : ''}`;
-    return this.http.get<any[]>(url, { headers: this.getHeaders() })
+    // Não requer autenticação para acesso público
+    return this.http.get<any[]>(url)
       .pipe(catchError(this.handleError));
   }
 
@@ -265,6 +282,84 @@ export class ApiClientService {
   getHomeContentByPrefix(prefix: string): Observable<any[]> {
     const apiUrl = this.getApiUrl();
     return this.http.get<any[]>(`${apiUrl}/home-content/sections/${prefix}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  initializeHomeContent(): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/home-content/initialize`, {}, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Apoiante endpoints
+  criarApoiante(data: any): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    
+    console.log('🌐 Criando apoiante - URL completa:', `${apiUrl}/apoiantes`);
+    console.log('📤 Dados enviados:', data);
+    
+    return this.http.post(`${apiUrl}/apoiantes`, data, {
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getApoiantes(status?: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const url = status ? `${apiUrl}/apoiantes?status=${status}` : `${apiUrl}/apoiantes`;
+    return this.http.get(url, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getApoianteById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/apoiantes/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getApoianteByEmail(email: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/apoiantes/email/${email}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Simpatizante endpoints
+  criarSimpatizante(data: any): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    
+    console.log('🌐 Criando simpatizante - URL completa:', `${apiUrl}/simpatizantes`);
+    console.log('📤 Dados enviados:', data);
+    
+    return this.http.post(`${apiUrl}/simpatizantes`, data, {
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      }
+    })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  getSimpatizantes(status?: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const url = status ? `${apiUrl}/simpatizantes?status=${status}` : `${apiUrl}/simpatizantes`;
+    return this.http.get(url, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getSimpatizanteById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/simpatizantes/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getSimpatizanteByEmail(email: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/simpatizantes/email/${email}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 }

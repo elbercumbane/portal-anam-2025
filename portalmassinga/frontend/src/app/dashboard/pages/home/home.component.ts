@@ -126,6 +126,37 @@ export class HomeComponent implements OnInit {
     this.loadData();
   }
 
+  /**
+   * Inicializar conteúdo padrão na base de dados
+   * Salva todos os conteúdos atuais organizados por seção
+   */
+  initializeContent(): void {
+    if (confirm('Deseja inicializar o conteúdo padrão na base de dados? Isso irá salvar todos os conteúdos atuais organizados por seção.')) {
+      this.isLoading = true;
+      this.errorMessage = '';
+      
+      this.apiClient.initializeHomeContent().subscribe({
+        next: (response: any) => {
+          this.isLoading = false;
+          if (response.success) {
+            alert(`✅ Conteúdo inicializado com sucesso!\n${response.itemsProcessed} itens processados.`);
+            // Recarregar dados após inicialização
+            this.loadData();
+          } else {
+            this.errorMessage = response.message || 'Erro ao inicializar conteúdo';
+            alert('Erro: ' + this.errorMessage);
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Erro ao inicializar conteúdo: ' + (error.message || 'Erro desconhecido');
+          alert('Erro ao inicializar conteúdo: ' + this.errorMessage);
+          console.error('Erro ao inicializar conteúdo:', error);
+        }
+      });
+    }
+  }
+
   loadData(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -226,7 +257,7 @@ export class HomeComponent implements OnInit {
     
     const savePromises: Promise<any>[] = [];
     
-    // Salvar slides
+    // Salvar slides - sempre substituir conteúdo existente
     for (let i = 0; i < this.slides.length; i++) {
       const slideKey = `hero_slide_${i + 1}`;
       const existing = this.contentCache.get(slideKey);
@@ -239,55 +270,68 @@ export class HomeComponent implements OnInit {
         isActive: true
       };
       
+      // Sempre substituir: se existe, atualizar; se não existe, criar ou buscar e atualizar
       if (existing?.id) {
         savePromises.push(
           firstValueFrom(this.apiClient.updateHomeContent(existing.id, slideData))
             .then((response: any) => {
-              // Atualizar cache com resposta
               if (response && response.id) {
                 this.contentCache.set(slideKey, response);
+                console.log(`✅ Slide ${i + 1} substituído na base de dados`);
               }
             })
             .catch((error) => {
-              console.error(`Erro ao salvar slide ${i + 1}:`, error);
+              console.error(`Erro ao substituir slide ${i + 1}:`, error);
               throw error;
             })
         );
       } else {
+        // Buscar primeiro para ver se já existe na BD
         savePromises.push(
-          firstValueFrom(this.apiClient.createHomeContent(slideData))
-            .then((response: any) => {
-              // Adicionar ao cache
-              if (response && response.id) {
-                this.contentCache.set(slideKey, response);
+          firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
+            .then((existingContent: any) => {
+              if (existingContent && existingContent.id) {
+                // Já existe, atualizar (substituir)
+                return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
+                  .then((response: any) => {
+                    if (response && response.id) {
+                      this.contentCache.set(slideKey, response);
+                      console.log(`✅ Slide ${i + 1} substituído na base de dados`);
+                    }
+                    return response;
+                  });
+              } else {
+                // Não existe, criar novo
+                return firstValueFrom(this.apiClient.createHomeContent(slideData))
+                  .then((response: any) => {
+                    if (response && response.id) {
+                      this.contentCache.set(slideKey, response);
+                      console.log(`✅ Slide ${i + 1} criado na base de dados`);
+                    }
+                    return response;
+                  });
               }
             })
             .catch((error) => {
-              // Se der erro 409 (já existe), tentar buscar e atualizar
-              if (error.status === 409) {
-                return firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
-                  .then((existingContent: any) => {
-                    if (existingContent && existingContent.id) {
-                      return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
-                        .then((response: any) => {
-                          if (response && response.id) {
-                            this.contentCache.set(slideKey, response);
-                          }
-                          return response;
-                        });
+              // Se não encontrou (404), criar novo
+              if (error.status === 404) {
+                return firstValueFrom(this.apiClient.createHomeContent(slideData))
+                  .then((response: any) => {
+                    if (response && response.id) {
+                      this.contentCache.set(slideKey, response);
+                      console.log(`✅ Slide ${i + 1} criado na base de dados`);
                     }
-                    // Se não encontrou, lançar erro
-                    throw new Error(`Conteúdo com chave ${slideKey} não encontrado após erro 409`);
+                    return response;
                   });
               }
-              console.error(`Erro ao criar slide ${i + 1}:`, error);
+              console.error(`Erro ao processar slide ${i + 1}:`, error);
               throw error;
             })
         );
       }
     }
     
-    // Salvar Sobre ANAM
+    // Salvar Sobre ANAM - sempre substituir
     const sobreAnamData = {
       sectionKey: 'sobre_anam',
       title: this.sobreAnam.titulo,
@@ -295,18 +339,9 @@ export class HomeComponent implements OnInit {
       orderIndex: 10,
       isActive: true
     };
-    const sobreAnamExisting = this.contentCache.get('sobre_anam');
-    if (sobreAnamExisting?.id) {
-      savePromises.push(
-        firstValueFrom(this.apiClient.updateHomeContent(sobreAnamExisting.id, sobreAnamData))
-      );
-    } else {
-      savePromises.push(
-        firstValueFrom(this.apiClient.createHomeContent(sobreAnamData))
-      );
-    }
+    savePromises.push(this.saveOrUpdateContent('sobre_anam', sobreAnamData));
     
-    // Salvar Missão
+    // Salvar Missão - sempre substituir
     const missaoData = {
       sectionKey: 'missao',
       title: this.sobreAnam.cardMissao.titulo,
@@ -314,18 +349,9 @@ export class HomeComponent implements OnInit {
       orderIndex: 11,
       isActive: true
     };
-    const missaoExisting = this.contentCache.get('missao');
-    if (missaoExisting?.id) {
-      savePromises.push(
-        firstValueFrom(this.apiClient.updateHomeContent(missaoExisting.id, missaoData))
-      );
-    } else {
-      savePromises.push(
-        firstValueFrom(this.apiClient.createHomeContent(missaoData))
-      );
-    }
+    savePromises.push(this.saveOrUpdateContent('missao', missaoData));
     
-    // Salvar Visão
+    // Salvar Visão - sempre substituir
     const visaoData = {
       sectionKey: 'visao',
       title: this.sobreAnam.cardVisao.titulo,
@@ -333,18 +359,9 @@ export class HomeComponent implements OnInit {
       orderIndex: 12,
       isActive: true
     };
-    const visaoExisting = this.contentCache.get('visao');
-    if (visaoExisting?.id) {
-      savePromises.push(
-        firstValueFrom(this.apiClient.updateHomeContent(visaoExisting.id, visaoData))
-      );
-    } else {
-      savePromises.push(
-        firstValueFrom(this.apiClient.createHomeContent(visaoData))
-      );
-    }
+    savePromises.push(this.saveOrUpdateContent('visao', visaoData));
     
-    // Salvar Nossos Valores
+    // Salvar Nossos Valores - sempre substituir
     const valoresData = {
       sectionKey: 'valores',
       title: this.nossosValores.titulo,
@@ -352,16 +369,7 @@ export class HomeComponent implements OnInit {
       orderIndex: 13,
       isActive: true
     };
-    const valoresExisting = this.contentCache.get('valores');
-    if (valoresExisting?.id) {
-      savePromises.push(
-        firstValueFrom(this.apiClient.updateHomeContent(valoresExisting.id, valoresData))
-      );
-    } else {
-      savePromises.push(
-        firstValueFrom(this.apiClient.createHomeContent(valoresData))
-      );
-    }
+    savePromises.push(this.saveOrUpdateContent('valores', valoresData));
     
     // Salvar configurações de Natal (já salvo pelo saveChristmasConfig, não precisa duplicar)
     
@@ -405,44 +413,63 @@ export class HomeComponent implements OnInit {
       isActive: true
     };
 
+    // Sempre substituir o conteúdo existente na base de dados
     if (existing?.id) {
+      // Atualizar conteúdo existente
       firstValueFrom(this.apiClient.updateHomeContent(existing.id, slideData))
         .then((response: any) => {
           if (response && response.id) {
             this.contentCache.set(slideKey, response);
+            console.log(`✅ Slide ${slideIndex + 1} atualizado na base de dados`);
           }
         })
         .catch((error) => {
-          console.error(`Erro ao salvar slide ${slideIndex + 1}:`, error);
+          console.error(`Erro ao atualizar slide ${slideIndex + 1}:`, error);
+          alert(`Erro ao salvar slide ${slideIndex + 1}: ${error.message || 'Erro desconhecido'}`);
         });
     } else {
-      firstValueFrom(this.apiClient.createHomeContent(slideData))
-        .then((response: any) => {
-          if (response && response.id) {
-            this.contentCache.set(slideKey, response);
+      // Criar novo conteúdo ou buscar e atualizar se já existir
+      firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
+        .then((existingContent: any) => {
+          if (existingContent && existingContent.id) {
+            // Já existe, atualizar
+            return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(slideKey, response);
+                  console.log(`✅ Slide ${slideIndex + 1} atualizado na base de dados`);
+                }
+                return response;
+              });
+          } else {
+            // Não existe, criar novo
+            return firstValueFrom(this.apiClient.createHomeContent(slideData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(slideKey, response);
+                  console.log(`✅ Slide ${slideIndex + 1} criado na base de dados`);
+                }
+                return response;
+              });
           }
         })
         .catch((error) => {
-          // Se der erro 409 (já existe), tentar buscar e atualizar
-          if (error.status === 409) {
-            firstValueFrom(this.apiClient.getHomeContentBySectionKey(slideKey))
-              .then((existingContent: any) => {
-                if (existingContent && existingContent.id) {
-                  return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, slideData))
-                    .then((response: any) => {
-                      if (response && response.id) {
-                        this.contentCache.set(slideKey, response);
-                      }
-                      return response;
-                    });
+          // Se não encontrou (404), criar novo
+          if (error.status === 404) {
+            firstValueFrom(this.apiClient.createHomeContent(slideData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(slideKey, response);
+                  console.log(`✅ Slide ${slideIndex + 1} criado na base de dados`);
                 }
-                throw new Error(`Conteúdo com chave ${slideKey} não encontrado após erro 409`);
               })
-              .catch((err) => {
-                console.error(`Erro ao atualizar slide ${slideIndex + 1}:`, err);
+              .catch((createError) => {
+                console.error(`Erro ao criar slide ${slideIndex + 1}:`, createError);
+                alert(`Erro ao salvar slide ${slideIndex + 1}: ${createError.message || 'Erro desconhecido'}`);
               });
           } else {
-            console.error(`Erro ao criar slide ${slideIndex + 1}:`, error);
+            console.error(`Erro ao buscar slide ${slideIndex + 1}:`, error);
+            alert(`Erro ao salvar slide ${slideIndex + 1}: ${error.message || 'Erro desconhecido'}`);
           }
         });
     }
@@ -592,6 +619,113 @@ export class HomeComponent implements OnInit {
       'Participe de projetos nos setores de mineração, energia, agricultura e infraestrutura com dados transparentes e em tempo real.'
     ];
     return placeholders[index] || 'Descrição do valor';
+  }
+
+  /**
+   * Método auxiliar para salvar ou atualizar conteúdo
+   * Sempre substitui o conteúdo existente na base de dados
+   */
+  private saveOrUpdateContent(sectionKey: string, contentData: any): Promise<any> {
+    const existing = this.contentCache.get(sectionKey);
+    
+    if (existing?.id) {
+      // Atualizar conteúdo existente (substituir)
+      return firstValueFrom(this.apiClient.updateHomeContent(existing.id, contentData))
+        .then((response: any) => {
+          if (response && response.id) {
+            this.contentCache.set(sectionKey, response);
+            console.log(`✅ ${sectionKey} substituído na base de dados`);
+          }
+          return response;
+        })
+        .catch((error) => {
+          console.error(`Erro ao substituir ${sectionKey}:`, error);
+          throw error;
+        });
+    } else {
+      // Buscar primeiro para ver se já existe na BD
+      return firstValueFrom(this.apiClient.getHomeContentBySectionKey(sectionKey))
+        .then((existingContent: any) => {
+          if (existingContent && existingContent.id) {
+            // Já existe, atualizar (substituir)
+            return firstValueFrom(this.apiClient.updateHomeContent(existingContent.id, contentData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(sectionKey, response);
+                  console.log(`✅ ${sectionKey} substituído na base de dados`);
+                }
+                return response;
+              });
+          } else {
+            // Não existe, criar novo
+            return firstValueFrom(this.apiClient.createHomeContent(contentData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(sectionKey, response);
+                  console.log(`✅ ${sectionKey} criado na base de dados`);
+                }
+                return response;
+              });
+          }
+        })
+        .catch((error) => {
+          // Se não encontrou (404), criar novo
+          if (error.status === 404) {
+            return firstValueFrom(this.apiClient.createHomeContent(contentData))
+              .then((response: any) => {
+                if (response && response.id) {
+                  this.contentCache.set(sectionKey, response);
+                  console.log(`✅ ${sectionKey} criado na base de dados`);
+                }
+                return response;
+              });
+          }
+          console.error(`Erro ao processar ${sectionKey}:`, error);
+          throw error;
+        });
+    }
+  }
+
+  triggerFileInput(slideIndex: number): void {
+    const fileInput = document.getElementById(`fileInput${slideIndex}`) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
+  }
+
+  onImageSelected(event: Event, slideIndex: number): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Validar tamanho (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 5MB');
+        return;
+      }
+
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione uma imagem válida (JPG, PNG, GIF)');
+        return;
+      }
+
+      // Converter para base64
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64Image = e.target?.result as string;
+        // Atualizar a imagem do slide
+        if (this.slides[slideIndex]) {
+          this.slides[slideIndex].imagem = base64Image;
+          // Salvar automaticamente após selecionar a imagem
+          this.saveSlide(slideIndex);
+        }
+      };
+      reader.onerror = () => {
+        alert('Erro ao ler a imagem. Por favor, tente novamente.');
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
 

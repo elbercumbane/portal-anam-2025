@@ -6,11 +6,8 @@
         <!-- Coluna Esquerda: Missão e Visão -->
         <div class="mission-visions-column">
           <div class="mission-header">
-            <h2 class="section-main-title">
-              Sobre a <span class="highlight-word">ANAM</span>
-            </h2>
-            <p class="mission-intro">
-              Promovemos o desenvolvimento sustentável e o bem-estar socioeconómico das comunidades do Distrito de Massinga.
+            <h2 class="section-main-title" [innerHTML]="sobreAnam.titulo"></h2>
+            <p class="mission-intro" [innerHTML]="sobreAnam.introducao">
             </p>
             
             <!-- Missão -->
@@ -23,8 +20,8 @@
                 </svg>
               </div>
               <div class="mission-content">
-                <h3>Missão</h3>
-                <p>Promover o desenvolvimento sustentável e melhorar o bem-estar socioeconómico das comunidades do Distrito de Massinga, gerindo e capitalizando estrategicamente os recursos e potencial locais.</p>
+                <h3 [innerHTML]="missao.titulo"></h3>
+                <p [innerHTML]="missao.descricao"></p>
               </div>
             </div>
             
@@ -37,8 +34,8 @@
                 </svg>
               </div>
               <div class="mission-content">
-                <h3>Visão</h3>
-                <p>Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos.</p>
+                <h3 [innerHTML]="visao.titulo"></h3>
+                <p [innerHTML]="visao.descricao"></p>
               </div>
             </div>
           </div>
@@ -46,51 +43,31 @@
 
         <!-- Coluna Direita: Valores -->
         <div class="values-column">
-          <h3 class="values-section-title">Nossos Valores</h3>
+          <h3 class="values-section-title" [innerHTML]="valores.titulo"></h3>
           <div class="values-list">
-            <!-- Valor 1 -->
-            <div class="value-item">
+            <!-- Valores carregados da base de dados -->
+            <div class="value-item" *ngFor="let valor of valores.valores; let i = index">
               <div class="value-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg *ngIf="i === 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                   <circle cx="9" cy="7" r="4"/>
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                   <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
-              </div>
-              <div class="value-content">
-                <h4>Desenvolvimento de Competências</h4>
-                <p>Acesse uma força de trabalho qualificada, identifique programas de capacitação e gerencie necessidades de capital humano.</p>
-              </div>
-            </div>
-
-            <!-- Valor 2 -->
-            <div class="value-item">
-              <div class="value-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg *ngIf="i === 1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                   <circle cx="9" cy="7" r="4"/>
                   <line x1="19" y1="8" x2="19" y2="14"/>
                   <line x1="22" y1="11" x2="16" y2="11"/>
                 </svg>
-              </div>
-              <div class="value-content">
-                <h4>Networking Empresarial</h4>
-                <p>Conecte-se com profissionais de alto nível, tomadores de decisão e agentes-chave em múltiplos setores.</p>
-              </div>
-            </div>
-
-            <!-- Valor 3 -->
-            <div class="value-item">
-              <div class="value-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg *ngIf="i === 2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"/>
                   <polyline points="12 6 12 12 16 14"/>
                 </svg>
               </div>
               <div class="value-content">
-                <h4>Oportunidades em Tempo Real</h4>
-                <p>Participe de projetos nos setores de mineração, energia, agricultura e infraestrutura com dados transparentes e em tempo real.</p>
+                <h4 [innerHTML]="valor.titulo"></h4>
+                <p [innerHTML]="valor.descricao"></p>
               </div>
             </div>
           </div>
