@@ -490,16 +490,32 @@
 </section>
 
 <!-- Modal de Sucesso -->
-<div class="modal-overlay" *ngIf="showSuccessModal" (click)="closeModal()">
-  <div class="modal-card" (click)="$event.stopPropagation()">
-    <div class="modal-icon">
+<div class="modal-overlay success-modal" *ngIf="showSuccessModal" (click)="closeModal()">
+  <div class="modal-card success-card" (click)="$event.stopPropagation()">
+    <div class="modal-icon success-icon">
       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
     </div>
-    <h3>Candidatura Enviada!</h3>
+    <h3>Formulário Enviado com Sucesso!</h3>
     <p>Sua candidatura foi recebida com sucesso. Entraremos em contato em breve.</p>
-    <button class="btn-modal" (click)="closeModal()">Fechar</button>
+    <button class="btn-modal btn-success" (click)="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<!-- Modal de Erro -->
+<div class="modal-overlay error-modal" *ngIf="showErrorModal" (click)="closeErrorModal()">
+  <div class="modal-card error-card" (click)="$event.stopPropagation()">
+    <div class="modal-icon error-icon">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    </div>
+    <h3>Formulário Não Foi Enviado</h3>
+    <p>{{ errorMessage || 'Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.' }}</p>
+    <button class="btn-modal btn-error" (click)="closeErrorModal()">Fechar</button>
   </div>
 </div>

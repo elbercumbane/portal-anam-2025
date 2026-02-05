@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './santa-popup.component.scss'
 })
 export class SantaPopupComponent implements OnInit {
+  @Input() message: string = 'Feliz Natal e Próspero 2025 🎄';
   isVisible = true; // Sempre visível
   showMessage = true; // Mensagem sempre visível
 

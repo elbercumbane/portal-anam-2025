@@ -1,11 +1,18 @@
 <section class="partners-section">
   <div class="section-header">
-    <h2 class="title">Nossos <span class="highlight">Parceiros</span></h2>
-    <p class="subtitle">Organizações que acreditam na nossa missão</p>
+    <h2 class="title" [innerHTML]="getFormattedTitle()"></h2>
+    <p class="subtitle">{{ subtitle }}</p>
   </div>
 
   <div class="marquee-container">
-    <div class="marquee-track"><div class="marquee-content"><img src="/assets/parceiros.png" alt="Parceiros" class="partners-image"><img src="/assets/parceiros2.png" alt="Parceiros" class="partners-image"></div><div class="marquee-content"><img src="/assets/parceiros.png" alt="Parceiros" class="partners-image"><img src="/assets/parceiros2.png" alt="Parceiros" class="partners-image"></div></div>
+    <div class="marquee-track">
+      <div class="marquee-content">
+        <img *ngFor="let img of partnerImages" [src]="img" alt="Parceiros" class="partners-image">
+      </div>
+      <div class="marquee-content">
+        <img *ngFor="let img of partnerImages" [src]="img" alt="Parceiros" class="partners-image">
+      </div>
+    </div>
   </div>
 
   <div class="view-all">

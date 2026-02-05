@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { gsap } from 'gsap';
+import { ApiClientService } from '../../../../services/api-client.service';
 
 interface StatItem {
   icon: string;
@@ -19,6 +20,8 @@ interface StatItem {
   styleUrl: './stats.component.scss'
 })
 export class StatsSectionComponent implements OnInit, AfterViewInit {
+  
+  private apiClient = inject(ApiClientService);
   
   constructor(private elementRef: ElementRef) {}
   
@@ -58,7 +61,48 @@ export class StatsSectionComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit() {
-    // Inicialização
+    // Carregar estatísticas da base de dados
+    this.loadStatsFromDatabase();
+  }
+
+  /**
+   * Carrega estatísticas da base de dados
+   */
+  loadStatsFromDatabase(): void {
+    this.apiClient.getHomeContent(true).subscribe({
+      next: (contents: any[]) => {
+        // Filtrar apenas itens de estatísticas
+        const statsItems = contents
+          .filter(c => c.sectionKey && c.sectionKey.startsWith('stats_item_'))
+          .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+        
+        if (statsItems.length > 0) {
+          this.stats = statsItems.map(item => {
+            let metadata: any = {};
+            if (item.metadata) {
+              try {
+                metadata = JSON.parse(item.metadata);
+              } catch (e) {
+                console.warn('Erro ao parsear metadata de stats:', e);
+              }
+            }
+            
+            return {
+              icon: metadata['icon'] || 'info',
+              number: item.title || '',
+              label: item.subtitle || '',
+              color: metadata['color'] || '#60A5FA',
+              bgColor: metadata['bgColor'] || '#60A5FA15',
+              borderColor: metadata['borderColor'] || '#60A5FA30'
+            };
+          });
+        }
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar estatísticas da base de dados:', error);
+        // Manter dados padrão em caso de erro
+      }
+    });
   }
 
   ngAfterViewInit() {

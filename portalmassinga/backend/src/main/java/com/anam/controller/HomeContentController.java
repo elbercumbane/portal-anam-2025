@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class HomeContentController {
 
     @Autowired
     private HomeContentRepository repository;
+    
+    @Autowired(required = false)
+    private JdbcTemplate jdbcTemplate;
 
     @GetMapping
     public ResponseEntity<?> getAllContent(
@@ -224,6 +228,116 @@ public class HomeContentController {
                 0,
                 "{\"enableSnow\": true, \"enableSanta\": true, \"christmasMessage\": \"Feliz Natal e Próspero 2025 🎄\"}");
             
+            // ESTATÍSTICAS (Stats)
+            created += initializeOrUpdateContent("stats_item_1",
+                "200+",
+                "Membros e não Membros Activos",
+                null,
+                20,
+                "{\"icon\": \"people\", \"color\": \"#60A5FA\", \"bgColor\": \"#60A5FA15\", \"borderColor\": \"#60A5FA30\"}");
+            
+            created += initializeOrUpdateContent("stats_item_2",
+                "50+",
+                "Projectos Realizados",
+                null,
+                21,
+                "{\"icon\": \"assignment\", \"color\": \"#4CAF50\", \"bgColor\": \"#4CAF5015\", \"borderColor\": \"#4CAF5030\"}");
+            
+            created += initializeOrUpdateContent("stats_item_3",
+                "12",
+                "Províncias Representadas",
+                null,
+                22,
+                "{\"icon\": \"location_on\", \"color\": \"#60A5FA\", \"bgColor\": \"#60A5FA15\", \"borderColor\": \"#60A5FA30\"}");
+            
+            created += initializeOrUpdateContent("stats_item_4",
+                "25+",
+                "Parceiros Estratégicos",
+                null,
+                23,
+                "{\"icon\": \"handshake\", \"color\": \"#4CAF50\", \"bgColor\": \"#4CAF5015\", \"borderColor\": \"#4CAF5030\"}");
+            
+            // EVENTOS (Events)
+            created += initializeOrUpdateContent("event_1",
+                "Feira de Produtos Locais",
+                "Exposição e venda de produtos artesanais e agrícolas da região.",
+                "/assets/mercado-maputo.jpg",
+                30,
+                "{\"data\": \"22 de Março, 2024\", \"local\": \"Praça Central de Massinga\", \"hora\": \"08:00 - 18:00\", \"eventoId\": \"2\"}");
+            
+            created += initializeOrUpdateContent("event_2",
+                "Conferência de Desenvolvimento Comunitário",
+                "Discussão sobre estratégias de desenvolvimento sustentável para a comunidade.",
+                "/assets/desenvolvimento-comunitario.jpg",
+                31,
+                "{\"data\": \"29 de Março, 2024\", \"local\": \"Auditório Municipal\", \"hora\": \"14:00 - 18:00\", \"eventoId\": \"3\"}");
+            
+            created += initializeOrUpdateContent("event_3",
+                "Seminário de Capacitação Empresarial",
+                "Capacitação em gestão empresarial, marketing digital e finanças para pequenos negócios.",
+                "/assets/slider/slide1.jpg",
+                32,
+                "{\"data\": \"5 de Abril, 2024\", \"local\": \"Centro de Formação Profissional\", \"hora\": \"09:00 - 16:00\", \"eventoId\": \"4\"}");
+            
+            // NOTÍCIAS (News)
+            created += initializeOrUpdateContent("news_item_1",
+                "Nova Parceria com Empresas Locais",
+                "A ANAM estabeleceu uma nova parceria estratégica com empresas locais para promover o desenvolvimento económico da região.",
+                "/assets/slider/slide1.jpg",
+                40,
+                "{\"data\": \"15 de Janeiro, 2025\", \"categoria\": \"Parcerias\", \"excerpt\": \"A ANAM estabeleceu uma nova parceria estratégica com empresas locais para promover o desenvolvimento económico da região.\", \"link\": \"/noticias/1\"}");
+            
+            created += initializeOrUpdateContent("news_item_2",
+                "Workshop de Capacitação Realizado com Sucesso",
+                "Mais de 50 participantes beneficiaram do workshop de capacitação em gestão empresarial realizado no mês passado.",
+                "/assets/slider/slide2.jpg",
+                41,
+                "{\"data\": \"10 de Janeiro, 2025\", \"categoria\": \"Eventos\", \"excerpt\": \"Mais de 50 participantes beneficiaram do workshop de capacitação em gestão empresarial realizado no mês passado.\", \"link\": \"/noticias/2\"}");
+            
+            created += initializeOrUpdateContent("news_item_3",
+                "Projeto de Desenvolvimento Comunitário Iniciado",
+                "Iniciámos um novo projeto focado no desenvolvimento sustentável das comunidades rurais do distrito de Massinga.",
+                "/assets/slider/slide3.jpg",
+                42,
+                "{\"data\": \"5 de Janeiro, 2025\", \"categoria\": \"Projetos\", \"excerpt\": \"Iniciámos um novo projeto focado no desenvolvimento sustentável das comunidades rurais do distrito de Massinga.\", \"link\": \"/noticias/3\"}");
+            
+            // GALERIA (Gallery) - Primeiros 4 eventos
+            created += initializeOrUpdateContent("gallery_event_1",
+                "Feira de Produtos Locais",
+                "Uma feira vibrante onde produtores locais apresentam e vendem os seus produtos frescos. A comunidade reúne-se para apoiar a economia local e celebrar a riqueza dos produtos da nossa terra.",
+                "/assets/slider/slide1.jpg",
+                50,
+                "{\"data\": \"30 de Janeiro, 2024\", \"local\": \"Praça Central de Massinga\", \"categoria\": \"Feira\", \"participantes\": 150, \"fotos\": [{\"src\": \"/assets/slider/slide1.jpg\", \"alt\": \"Feira de Produtos - Vista Geral da Praça\"}, {\"src\": \"/assets/slider/slide2.jpg\", \"alt\": \"Feira de Produtos - Produtores Locais\"}, {\"src\": \"/assets/slider/slide3.jpg\", \"alt\": \"Feira de Produtos - Produtos Frescos\"}]}");
+            
+            created += initializeOrUpdateContent("gallery_event_2",
+                "Workshop de Agricultura Sustentável",
+                "Sessão prática de capacitação onde agricultores aprendem técnicas modernas e sustentáveis para aumentar a produtividade das suas culturas, promovendo uma agricultura mais eficiente e amiga do ambiente.",
+                "/assets/slider/slide2.jpg",
+                51,
+                "{\"data\": \"15 de Janeiro, 2024\", \"local\": \"Centro Comunitário de Massinga\", \"categoria\": \"Workshop\", \"participantes\": 45, \"fotos\": [{\"src\": \"/assets/slider/slide2.jpg\", \"alt\": \"Workshop - Início da Sessão\"}, {\"src\": \"/assets/slider/slide3.jpg\", \"alt\": \"Workshop - Demonstração Prática\"}, {\"src\": \"/assets/slider/slide1.jpg\", \"alt\": \"Workshop - Participantes Atentos\"}]}");
+            
+            created += initializeOrUpdateContent("gallery_event_3",
+                "Encontro Mensal da Associação",
+                "Reunião estratégica onde membros da associação discutem projetos em curso, planos futuros e desafios da comunidade, fortalecendo a união e o compromisso coletivo.",
+                "/assets/galeria/encontro1.jpg",
+                52,
+                "{\"data\": \"20 de Janeiro, 2024\", \"local\": \"Sede da Associação\", \"categoria\": \"Reunião\", \"participantes\": 25, \"fotos\": [{\"src\": \"/assets/galeria/encontro1.jpg\", \"alt\": \"Encontro - Reunião de Membros\"}, {\"src\": \"/assets/galeria/encontro2.jpg\", \"alt\": \"Encontro - Discussão de Projetos\"}, {\"src\": \"/assets/galeria/encontro3.jpg\", \"alt\": \"Encontro - Membros Participativos\"}]}");
+            
+            created += initializeOrUpdateContent("gallery_event_4",
+                "Festival Cultural",
+                "Celebração da cultura local com música, dança e gastronomia tradicional, unindo a comunidade em uma festa memorável.",
+                "/assets/galeria/festival1.jpg",
+                53,
+                "{\"data\": \"10 de Fevereiro, 2024\", \"local\": \"Praça Central de Massinga\", \"categoria\": \"Cultural\", \"participantes\": 300, \"fotos\": [{\"src\": \"/assets/galeria/festival1.jpg\", \"alt\": \"Festival - Apresentação Cultural\"}, {\"src\": \"/assets/galeria/festival2.jpg\", \"alt\": \"Festival - Dança Tradicional\"}, {\"src\": \"/assets/galeria/festival3.jpg\", \"alt\": \"Festival - Música ao Vivo\"}, {\"src\": \"/assets/galeria/festival4.jpg\", \"alt\": \"Festival - Gastronomia\"}]}");
+            
+            // PARCEIROS (Partners) - Seção na home (apenas imagens)
+            created += initializeOrUpdateContent("partners_section",
+                "Nossos Parceiros",
+                "Organizações que acreditam na nossa missão",
+                null,
+                60,
+                "{\"images\": [\"/assets/parceiros.png\", \"/assets/parceiros2.png\"]}");
+            
             System.out.println("   ✅ Conteúdo inicializado: " + created + " criados/atualizados");
             System.out.println("========================================");
             
@@ -322,6 +436,88 @@ public class HomeContentController {
         }
         if (dto.getMetadata() != null) {
             entity.setMetadata(dto.getMetadata());
+        }
+    }
+
+    /**
+     * Endpoint para migrar a coluna image_url de VARCHAR(500) para TEXT
+     * Execute este endpoint uma vez para corrigir o erro 400 ao salvar imagens grandes
+     */
+    @PostMapping("/migrate-image-url")
+    public ResponseEntity<?> migrateImageUrlColumn() {
+        System.out.println("========================================");
+        System.out.println("🔧 POST /home-content/migrate-image-url - Migrando coluna image_url");
+        
+        if (jdbcTemplate == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                        "success", false,
+                        "message", "JdbcTemplate não disponível"
+                    ));
+        }
+        
+        try {
+            // Verificar o tipo atual da coluna
+            String checkColumnQuery = 
+                "SELECT data_type, character_maximum_length " +
+                "FROM information_schema.columns " +
+                "WHERE table_name = 'home_content' AND column_name = 'image_url'";
+            
+            List<Map<String, Object>> columnInfo = jdbcTemplate.queryForList(checkColumnQuery);
+            
+            if (columnInfo.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of(
+                            "success", false,
+                            "message", "Coluna image_url não encontrada na tabela home_content"
+                        ));
+            }
+            
+            Map<String, Object> column = columnInfo.get(0);
+            String dataType = (String) column.get("data_type");
+            Object maxLength = column.get("character_maximum_length");
+            
+            System.out.println("   Tipo atual: " + dataType);
+            System.out.println("   Tamanho máximo: " + maxLength);
+            
+            // Se já for TEXT, não precisa migrar
+            if ("text".equalsIgnoreCase(dataType) || maxLength == null) {
+                System.out.println("   ✅ Coluna já é TEXT, não precisa migrar");
+                return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "Coluna image_url já é TEXT, não precisa migrar",
+                    "currentType", dataType
+                ));
+            }
+            
+            // Executar migração
+            System.out.println("   🔄 Alterando coluna de VARCHAR para TEXT...");
+            jdbcTemplate.execute("ALTER TABLE home_content ALTER COLUMN image_url TYPE TEXT");
+            
+            // Verificar novamente
+            List<Map<String, Object>> updatedColumnInfo = jdbcTemplate.queryForList(checkColumnQuery);
+            Map<String, Object> updatedColumn = updatedColumnInfo.get(0);
+            String updatedDataType = (String) updatedColumn.get("data_type");
+            
+            System.out.println("   ✅ Migração concluída! Novo tipo: " + updatedDataType);
+            System.out.println("========================================");
+            
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", "Coluna image_url migrada com sucesso de VARCHAR para TEXT",
+                "previousType", dataType,
+                "newType", updatedDataType
+            ));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("   ❌ Erro na migração: " + e.getMessage());
+            System.out.println("========================================");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                        "success", false,
+                        "message", "Erro ao migrar coluna: " + e.getMessage()
+                    ));
         }
     }
 }

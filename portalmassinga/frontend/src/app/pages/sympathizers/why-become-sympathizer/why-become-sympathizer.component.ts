@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ApiClientService } from '../../../services/api-client.service';
 
 @Component({
   selector: 'app-why-become-sympathizer',
@@ -16,6 +17,9 @@ export class WhyBecomeSympathizerComponent implements OnInit {
   
   form!: FormGroup;
   formSubmitted = false;
+  showError = false;
+  errorMessage = '';
+  isLoading = false;
 
   impactStats = [
     { number: '+1.200', label: 'Jovens Beneficiados em 2024', icon: '👥' },
@@ -78,7 +82,11 @@ export class WhyBecomeSympathizerComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private fb: FormBuilder) {}
+  constructor(
+    private router: Router, 
+    private fb: FormBuilder,
+    private apiClient: ApiClientService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -98,13 +106,43 @@ export class WhyBecomeSympathizerComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      // Aqui você pode adicionar a lógica para enviar os dados
-      console.log('Form submitted:', this.form.value);
-      this.formSubmitted = true;
-      this.form.reset();
+      this.isLoading = true;
+      this.showError = false;
+      this.formSubmitted = false;
+      
+      // Preparar dados no formato esperado pelo backend
+      const formData = {
+        nomeCompleto: this.form.value.nome,
+        email: this.form.value.email,
+        telefone: this.form.value.telefone,
+        consentimento: this.form.value.consentimento
+      };
+
+      console.log('📤 Dados do simpatizante:', formData);
+
+      // Enviar para o backend
+      this.apiClient.criarSimpatizante(formData).subscribe({
+        next: (response) => {
+          console.log('✅ Simpatizante criado com sucesso:', response);
+          this.isLoading = false;
+          this.formSubmitted = true;
+          this.form.reset();
+        },
+        error: (error) => {
+          console.error('❌ Erro ao criar simpatizante:', error);
+          this.isLoading = false;
+          this.showError = true;
+          this.errorMessage = error.message || 'Erro ao cadastrar simpatizante. Por favor, tente novamente.';
+        }
+      });
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  closeErrorModal(): void {
+    this.showError = false;
+    this.errorMessage = '';
   }
 }
 

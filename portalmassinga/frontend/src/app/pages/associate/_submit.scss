@@ -63,14 +63,14 @@
   background: white;
   border-radius: 24px;
   padding: 3rem;
-  max-width: 400px;
+  max-width: 450px;
   text-align: center;
   animation: slideUp 0.4s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   
   .modal-icon {
     width: 90px;
     height: 90px;
-    background: linear-gradient(135deg, $green-success 0%, darken($green-success, 10%) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -87,16 +87,17 @@
     color: #333;
     font-size: 1.5rem;
     margin-bottom: 0.75rem;
+    font-weight: 700;
   }
   
   p {
     color: #666;
     line-height: 1.6;
     margin-bottom: 2rem;
+    font-size: 1rem;
   }
   
   .btn-modal {
-    background: #4CAF50; // Verde sólido
     color: white;
     border: none;
     padding: 1rem 3rem;
@@ -104,14 +105,72 @@
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); // Verde
     
     &:hover {
-      background: #45a049; // Verde mais escuro no hover
-      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4); // Verde
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Modal de Sucesso
+.success-modal {
+  .success-card {
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    
+    .success-icon {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
+    }
+    
+    h3 {
+      color: #2d6a4f;
+    }
+    
+    .btn-success {
+      background: #4CAF50;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+      
+      &:hover {
+        background: #45a049;
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+      }
+    }
+  }
+}
+
+// Modal de Erro
+.error-modal {
+  .error-card {
+    border: 2px solid rgba(220, 53, 69, 0.3);
+    
+    .error-icon {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      box-shadow: 0 4px 20px rgba(220, 53, 69, 0.4);
+    }
+    
+    h3 {
+      color: #c82333;
+    }
+    
+    p {
+      color: #721c24;
+      background: #f8d7da;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .btn-error {
+      background: #dc3545;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+      
+      &:hover {
+        background: #c82333;
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+      }
     }
   }
 }

@@ -68,12 +68,12 @@ export class RegisterComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    // Mapear campos do frontend (português) para backend (inglês)
-    const applicationData = this.mapToBackendFormat(this.formData);
+    // Mapear campos do frontend para o formato da tabela membros
+    const membroData = this.mapToMembroFormat(this.formData);
 
-    console.log('📤 Enviando candidatura:', applicationData);
+    console.log('📤 Enviando cadastro de membro:', membroData);
 
-    this.apiClient.createApplication(applicationData).subscribe({
+    this.apiClient.criarMembro(membroData).subscribe({
       next: (response) => {
         console.log('✅ Resposta do servidor:', response);
         this.isLoading = false;
@@ -120,33 +120,32 @@ export class RegisterComponent {
     });
   }
 
-  private mapToBackendFormat(formData: any): any {
-    // Mapear campos do frontend (português) para backend (inglês/camelCase)
+  private mapToMembroFormat(formData: any): any {
+    // Mapear campos do frontend para o formato da tabela membros (português/camelCase)
     return {
-      photo: formData.foto || null,
-      fullName: formData.nome,
-      fatherName: formData.nome_pai,
-      motherName: formData.nome_mae,
-      birthDate: formData.data_nascimento || null,
-      maritalStatus: formData.estado_civil,
-      profession: formData.profissao,
-      mobilePhone: formData.celular,
+      foto: formData.foto || null,
+      nomeCompleto: formData.nome,
+      nomePai: formData.nome_pai,
+      nomeMae: formData.nome_mae,
+      dataNascimento: formData.data_nascimento || null,
+      estadoCivil: formData.estado_civil,
+      profissao: formData.profissao,
+      celular: formData.celular,
       email: formData.email,
-      phone: formData.telefone || null,
-      street: formData.rua,
-      neighborhood: formData.bairro,
-      city: formData.cidade,
-      spouseName: formData.nome_conjuge || null,
-      spouseBirthDate: formData.data_nascimento_conjuge || null,
-      spouseFatherName: formData.filiacao_pai_conjuge || null,
-      spouseMotherName: formData.filiacao_mae_conjuge || null,
-      workplace: formData.local_trabalho || null,
-      position: formData.cargo || null,
-      workAddress: formData.endereco_trabalho || null,
-      workPhone: formData.telefone_trabalho || null,
-      additionalInformation: formData.outras_informacoes || null,
-      acceptsTerms: formData.aceita_termos || false,
-      dependents: [] // Por enquanto vazio, pode ser implementado depois
+      telefone: formData.telefone || null,
+      rua: formData.rua,
+      bairro: formData.bairro,
+      cidade: formData.cidade,
+      nomeConjuge: formData.nome_conjuge || null,
+      dataNascimentoConjuge: formData.data_nascimento_conjuge || null,
+      filiacaoPaiConjuge: formData.filiacao_pai_conjuge || null,
+      filiacaoMaeConjuge: formData.filiacao_mae_conjuge || null,
+      localTrabalho: formData.local_trabalho || null,
+      cargo: formData.cargo || null,
+      enderecoTrabalho: formData.endereco_trabalho || null,
+      telefoneTrabalho: formData.telefone_trabalho || null,
+      outrasInformacoes: formData.outras_informacoes || null,
+      aceitaTermos: formData.aceita_termos || false
     };
   }
 

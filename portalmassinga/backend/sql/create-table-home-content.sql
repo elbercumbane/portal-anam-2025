@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS home_content (
     title TEXT,
     subtitle TEXT,
     content TEXT,
-    image_url VARCHAR(500),
+    image_url TEXT,
     order_index INTEGER,
     is_active BOOLEAN DEFAULT TRUE,
     metadata TEXT,

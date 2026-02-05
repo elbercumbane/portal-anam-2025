@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { gsap } from 'gsap';
+import { ApiClientService } from '../../services/api-client.service';
 
 @Component({
   selector: 'app-gallery',
@@ -11,6 +12,8 @@ import { gsap } from 'gsap';
 })
 export class GalleryComponent implements OnInit, OnDestroy {
   @ViewChild('galeriaSection', { static: true }) galeriaSection!: ElementRef;
+
+  private apiClient = inject(ApiClientService);
 
   // Dados para galeria de eventos
   galeria: any[] = [
@@ -160,8 +163,56 @@ export class GalleryComponent implements OnInit, OnDestroy {
   private readonly SLIDE_DURATION = 8000; // 8 segundos
 
   ngOnInit() {
+    // Carregar galeria da base de dados
+    this.loadGalleryFromDatabase();
     this.initScrollAnimations();
     this.extrairCategorias();
+  }
+
+  /**
+   * Carrega galeria da base de dados
+   */
+  loadGalleryFromDatabase(): void {
+    this.apiClient.getHomeContent(true).subscribe({
+      next: (contents: any[]) => {
+        // Filtrar apenas eventos da galeria
+        const galleryItems = contents
+          .filter(c => c.sectionKey && c.sectionKey.startsWith('gallery_event_'))
+          .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+        
+        if (galleryItems.length > 0) {
+          this.galeria = galleryItems.map((item, index) => {
+            let metadata: any = {};
+            if (item.metadata) {
+              try {
+                metadata = JSON.parse(item.metadata);
+              } catch (e) {
+                console.warn('Erro ao parsear metadata de galeria:', e);
+              }
+            }
+            
+            return {
+              id: index + 1,
+              titulo: item.title || '',
+              data: metadata['data'] || '',
+              local: metadata['local'] || '',
+              descricao: item.subtitle || '',
+              fotos: metadata['fotos'] || [{ src: item.imageUrl || '/assets/slider/slide1.jpg', alt: item.title || '' }],
+              categoria: metadata['categoria'] || 'Geral',
+              participantes: metadata['participantes'] || 0
+            };
+          });
+          
+          // Atualizar categorias após carregar dados
+          this.extrairCategorias();
+        }
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar galeria da base de dados:', error);
+        // Manter dados padrão em caso de erro
+        this.extrairCategorias();
+      }
+    });
   }
 
   ngOnDestroy() {

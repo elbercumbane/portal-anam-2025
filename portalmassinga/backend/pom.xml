@@ -45,6 +45,13 @@
             <scope>runtime</scope>
         </dependency>
         
+        <!-- H2 Database (para desenvolvimento rápido, sem instalação) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
         <!-- Spring Boot Starter Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

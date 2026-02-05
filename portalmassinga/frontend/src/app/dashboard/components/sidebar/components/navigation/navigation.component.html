@@ -58,18 +58,18 @@
     </div>
   </div>
   
-  <!-- Categoria: Páginas -->
+  <!-- Categoria: Gestão de Conteúdo -->
   <div class="nav-item-wrapper">
     <a class="nav-item expandable"
        [class.active]="paginasExpanded || activeItem === 'home' || activeItem === 'documentacao' || activeItem === 'servicos' || activeItem === 'eventos' || activeItem === 'historial' || activeItem === 'galeria' || activeItem === 'parceiros' || activeItem === 'programas' || activeItem === 'noticias' || activeItem === 'associar' || activeItem === 'contato'"
        (click)="togglePaginas()">
-      <mat-icon class="nav-icon">pages</mat-icon>
-      <span class="nav-text">Páginas</span>
+      <mat-icon class="nav-icon">edit_note</mat-icon>
+      <span class="nav-text">Gestão de Conteúdo</span>
       <mat-icon class="dropdown-icon" [class.rotated]="paginasExpanded">keyboard_arrow_down</mat-icon>
     </a>
   </div>
   
-  <!-- Submenu Páginas -->
+  <!-- Submenu Gestão de Conteúdo -->
   <div class="submenu-container" [class.expanded]="paginasExpanded">
     <div class="submenu-item-wrapper" *ngFor="let item of getPaginasItems()">
       <a class="submenu-item"

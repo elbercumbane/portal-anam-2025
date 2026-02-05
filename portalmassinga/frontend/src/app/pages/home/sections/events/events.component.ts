@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { gsap } from 'gsap';
+import { ApiClientService } from '../../../../services/api-client.service';
 
 interface Evento {
   id: string;
@@ -21,6 +22,8 @@ interface Evento {
   styleUrl: './events.component.scss'
 })
 export class EventsSectionComponent implements OnInit, AfterViewInit {
+  
+  private apiClient = inject(ApiClientService);
   
   constructor(
     private elementRef: ElementRef,
@@ -58,7 +61,49 @@ export class EventsSectionComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit() {
-    // Inicialização
+    // Carregar eventos da base de dados
+    this.loadEventsFromDatabase();
+  }
+
+  /**
+   * Carrega eventos da base de dados
+   */
+  loadEventsFromDatabase(): void {
+    this.apiClient.getHomeContent(true).subscribe({
+      next: (contents: any[]) => {
+        // Filtrar apenas eventos
+        const eventItems = contents
+          .filter(c => c.sectionKey && c.sectionKey.startsWith('event_'))
+          .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+        
+        if (eventItems.length > 0) {
+          this.eventos = eventItems.map(item => {
+            let metadata: any = {};
+            if (item.metadata) {
+              try {
+                metadata = JSON.parse(item.metadata);
+              } catch (e) {
+                console.warn('Erro ao parsear metadata de evento:', e);
+              }
+            }
+            
+            return {
+              id: metadata['eventoId'] || item.sectionKey.replace('event_', ''),
+              titulo: item.title || '',
+              data: metadata['data'] || '',
+              local: metadata['local'] || '',
+              hora: metadata['hora'] || '',
+              descricao: item.subtitle || '',
+              imagem: item.imageUrl || '/assets/slider/slide1.jpg'
+            };
+          });
+        }
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar eventos da base de dados:', error);
+        // Manter dados padrão em caso de erro
+      }
+    });
   }
 
   ngAfterViewInit() {

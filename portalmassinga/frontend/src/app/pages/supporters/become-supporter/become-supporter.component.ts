@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiClientService } from '../../../services/api-client.service';
 
 @Component({
   selector: 'app-become-supporter',
@@ -13,11 +14,14 @@ import { Router } from '@angular/router';
 export class BecomeSupporterComponent implements OnInit {
   supporterForm!: FormGroup;
   showSuccess = false;
+  showError = false;
+  errorMessage = '';
   isLoading = false;
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private apiClient: ApiClientService
   ) {}
 
   ngOnInit(): void {
@@ -53,22 +57,36 @@ export class BecomeSupporterComponent implements OnInit {
   onSubmit(): void {
     if (this.supporterForm.valid) {
       this.isLoading = true;
+      this.showError = false;
+      this.showSuccess = false;
       
+      // Preparar dados no formato esperado pelo backend
       const formData = {
-        ...this.supporterForm.value
+        nomeCompleto: this.supporterForm.value.nome,
+        email: this.supporterForm.value.email,
+        contacto: this.supporterForm.value.contacto,
+        tipoApoio: this.supporterForm.value.tipoApoio,
+        descricao: this.supporterForm.value.descricao,
+        anonimato: this.supporterForm.value.anonimato === 'sim'
       };
 
       console.log('📤 Dados do apoiante:', formData);
 
-      // Simular envio (substituir por chamada real à API)
-      setTimeout(() => {
-        this.isLoading = false;
-        this.showSuccess = true;
-        
-        // Simular criação de conta e envio de email
-        console.log('✅ Conta de apoiante criada');
-        console.log('📧 Email enviado com recibo e link de login');
-      }, 2000);
+      // Enviar para o backend
+      this.apiClient.criarApoiante(formData).subscribe({
+        next: (response) => {
+          console.log('✅ Apoiante criado com sucesso:', response);
+          this.isLoading = false;
+          this.showSuccess = true;
+          this.supporterForm.reset();
+        },
+        error: (error) => {
+          console.error('❌ Erro ao criar apoiante:', error);
+          this.isLoading = false;
+          this.showError = true;
+          this.errorMessage = error.message || 'Erro ao cadastrar apoiante. Por favor, tente novamente.';
+        }
+      });
     } else {
       // Marcar todos os campos como touched para mostrar erros
       Object.keys(this.supporterForm.controls).forEach(key => {
@@ -83,6 +101,11 @@ export class BecomeSupporterComponent implements OnInit {
 
   closeSuccessModal(): void {
     this.showSuccess = false;
+  }
+
+  closeErrorModal(): void {
+    this.showError = false;
+    this.errorMessage = '';
   }
 
 }

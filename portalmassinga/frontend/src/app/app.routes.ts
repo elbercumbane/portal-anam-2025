@@ -29,12 +29,13 @@ export const routes: Routes = [
   },
   // Rotas sem navbar (fora do shell)
       { path: 'login', loadComponent: () => import('./login/login.component').then(m => m.LoginComponent) },
+      // Dashboard - deve vir antes do catch-all
+      { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
       // Rotas de membros - fora do shell para não ter navbar
       { path: 'membros', loadChildren: () => import('./pages/members/members.module').then(m => m.MembersModule) },
       // Rotas de apoiante - fora do shell para não ter navbar
       { path: 'apoio/area-apoiante', loadComponent: () => import('./pages/supporters/supporter-area/supporter-area.component').then(m => m.SupporterAreaComponent) },
       // Rotas de simpatizante - fora do shell para não ter navbar
       { path: 'simpatizantes/area-simpatizante', loadComponent: () => import('./pages/sympathizers/sympathizer-area/sympathizer-area.component').then(m => m.SympathizerAreaComponent) },
-  { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: '**', redirectTo: '' },
 ];

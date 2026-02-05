@@ -20,7 +20,7 @@ export const SLIDE_TEXTOS: SlideTexto[] = [
   },
   {
     titulo: "Nossos <span class='highlight-letter-red'>Valores</span>",
-    subtitulo: "<strong class='highlight-letter-yellow'>Desenvolvimento de Competências:</strong> Força de trabalho qualificada e programas de capacitação.<br><br><strong class='highlight-letter-yellow'>Networking Empresarial:</strong> Conexão com profissionais de alto nível e tomadores de decisão.<br><br><strong class='highlight-letter-yellow'>Oportunidades em Tempo Real:</strong> Projetos em mineração, energia, agricultura e infraestrutura."
+    subtitulo: "<ul class='valores-list'><li><strong class='valores-title'>Desenvolvimento de Competências:</strong> Força de trabalho qualificada e programas de capacitação.</li><li><strong class='valores-title'>Networking Empresarial:</strong> Conexão com profissionais de alto nível e tomadores de decisão.</li><li><strong class='valores-title'>Oportunidades em Tempo Real:</strong> Projetos em mineração, energia, agricultura e infraestrutura.</li></ul>"
   }
 ];
 

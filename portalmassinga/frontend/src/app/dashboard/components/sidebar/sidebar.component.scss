@@ -16,14 +16,27 @@
   position: relative;
   overflow: hidden;
   
-  // Ocultar scrollbar do mat-sidenav
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  // Scrollbar customizada e visível
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(16, 185, 129, 0.3) rgba(16, 185, 129, 0.05); /* Firefox */
   
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-    width: 0;
-    height: 0;
+    width: 8px; /* Chrome, Safari, Opera */
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(16, 185, 129, 0.05);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.3);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: rgba(16, 185, 129, 0.5);
+    }
   }
   
   &::before {
@@ -91,14 +104,28 @@
   z-index: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
   
-  // Ocultar scrollbar mas manter funcionalidade
+  // Scrollbar customizada e visível
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(16, 185, 129, 0.3) rgba(16, 185, 129, 0.05); /* Firefox */
+  
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-    width: 0;
-    height: 0;
+    width: 8px; /* Chrome, Safari, Opera */
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(16, 185, 129, 0.05);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.3);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: rgba(16, 185, 129, 0.5);
+    }
   }
   
   -webkit-overflow-scrolling: touch;
@@ -231,28 +258,54 @@
   flex: 1;
 }
 
-// Ocultar scrollbar em todos os elementos do Angular Material
+// Scrollbar customizada em todos os elementos do Angular Material
 ::ng-deep {
   .mat-drawer-inner-container,
   .mat-sidenav-inner-container {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(16, 185, 129, 0.3) rgba(16, 185, 129, 0.05); /* Firefox */
     
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-      width: 0;
-      height: 0;
+      width: 8px; /* Chrome, Safari, Opera */
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(16, 185, 129, 0.05);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.3);
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: rgba(16, 185, 129, 0.5);
+      }
     }
   }
   
   mat-sidenav {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgba(16, 185, 129, 0.3) rgba(16, 185, 129, 0.05); /* Firefox */
     
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-      width: 0;
-      height: 0;
+      width: 8px; /* Chrome, Safari, Opera */
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(16, 185, 129, 0.05);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(16, 185, 129, 0.3);
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: rgba(16, 185, 129, 0.5);
+      }
     }
   }
 }

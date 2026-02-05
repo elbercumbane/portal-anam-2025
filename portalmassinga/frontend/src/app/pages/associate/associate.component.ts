@@ -18,6 +18,7 @@ export class AssociateComponent implements OnInit {
   memberForm!: FormGroup;
   photoPreview: string | null = null;
   showSuccessModal = false;
+  showErrorModal = false;
   isLoading = false;
   errorMessage = '';
   private modalTimeoutId: any = null;
@@ -173,19 +174,22 @@ export class AssociateComponent implements OnInit {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.showSuccessModal = false;
     
-    // Mapear campos do formulário para o formato esperado pelo backend (inglês/camelCase)
-    const applicationData = this.mapToBackendFormat(this.memberForm.value);
+    // Mapear campos do formulário para o formato esperado pelo backend (tabela membros)
+    const membroData = this.mapToMembroFormat(this.memberForm.value);
 
-    console.log('📤 Enviando candidatura do formulário "Torne-se Membro":', applicationData);
+    console.log('📤 Enviando candidatura do formulário "Torne-se Membro":', membroData);
+    console.log('🌐 URL da API:', 'http://localhost:8081/api/membros');
 
-    this.apiClient.createApplication(applicationData).subscribe({
+    this.apiClient.criarMembro(membroData).subscribe({
       next: (response) => {
         console.log('✅ Resposta do servidor:', response);
         this.isLoading = false;
         
         // Mostrar modal de sucesso
         this.showSuccessModal = true;
+        this.errorMessage = '';
         
         // Limpar formulário após 10 segundos (se o modal não foi fechado manualmente)
         this.modalTimeoutId = setTimeout(() => {
@@ -204,10 +208,13 @@ export class AssociateComponent implements OnInit {
         });
         
         this.isLoading = false;
+        this.showSuccessModal = false;
         
         let errorMsg = 'Erro ao conectar com o servidor. Verifique se o backend está rodando.';
         if (error.status === 0) {
-          errorMsg = 'Não foi possível conectar ao servidor. Verifique se o backend está rodando em http://localhost:8080';
+          errorMsg = 'Não foi possível conectar ao servidor. Verifique se o backend está rodando em http://localhost:8081';
+        } else if (error.status === 409) {
+          errorMsg = 'Este email já está cadastrado! Por favor, use outro email.';
         } else if (error.error?.message) {
           errorMsg = error.error.message;
         } else if (error.error?.errors && Array.isArray(error.error.errors)) {
@@ -219,47 +226,38 @@ export class AssociateComponent implements OnInit {
         }
         
         this.errorMessage = errorMsg;
+        // Mostrar modal de erro
+        this.showErrorModal = true;
       }
     });
   }
 
-  private mapToBackendFormat(formValue: any): any {
-    // Mapear campos do formulário para o formato esperado pelo backend (inglês/camelCase)
-    const dependents = this.dependentes.controls.map((control: any) => {
-      const value = control.value;
-      return {
-        name: value.nome || '',
-        relationship: value.parentesco || '',
-        profession: value.profissao || null,
-        age: value.idade ? parseInt(value.idade) : null
-      };
-    }).filter((dep: any) => dep.name); // Filtrar dependentes vazios
-
+  private mapToMembroFormat(formValue: any): any {
+    // Mapear campos do formulário para o formato da tabela membros (português/camelCase)
     return {
-      photo: this.photoPreview || null,
-      fullName: formValue.nome,
-      fatherName: formValue.nomePai,
-      motherName: formValue.nomeMae,
-      birthDate: formValue.dataNascimento || null,
-      maritalStatus: formValue.estadoCivil,
-      profession: formValue.profissao,
-      mobilePhone: formValue.celular,
+      foto: this.photoPreview || null,
+      nomeCompleto: formValue.nome,
+      nomePai: formValue.nomePai,
+      nomeMae: formValue.nomeMae,
+      dataNascimento: formValue.dataNascimento || null,
+      estadoCivil: formValue.estadoCivil,
+      profissao: formValue.profissao,
+      celular: formValue.celular,
       email: formValue.email,
-      phone: formValue.telefone || null,
-      street: formValue.rua,
-      neighborhood: formValue.bairro,
-      city: formValue.cidade,
-      spouseName: formValue.nomeConjuge || null,
-      spouseBirthDate: formValue.dataNascimentoConjuge || null,
-      spouseFatherName: formValue.filiacaoPaiConjuge || null,
-      spouseMotherName: formValue.filiacaoMaeConjuge || null,
-      workplace: formValue.localTrabalho || null,
-      position: formValue.cargo || null,
-      workAddress: formValue.enderecoTrabalho || null,
-      workPhone: formValue.telefoneTrabalho || null,
-      additionalInformation: formValue.outrasInformacoes || null,
-      acceptsTerms: formValue.aceitaTermos || false,
-      dependents: dependents.length > 0 ? dependents : []
+      telefone: formValue.telefone || null,
+      rua: formValue.rua,
+      bairro: formValue.bairro,
+      cidade: formValue.cidade,
+      nomeConjuge: formValue.nomeConjuge || null,
+      dataNascimentoConjuge: formValue.dataNascimentoConjuge || null,
+      filiacaoPaiConjuge: formValue.filiacaoPaiConjuge || null,
+      filiacaoMaeConjuge: formValue.filiacaoMaeConjuge || null,
+      localTrabalho: formValue.localTrabalho || null,
+      cargo: formValue.cargo || null,
+      enderecoTrabalho: formValue.enderecoTrabalho || null,
+      telefoneTrabalho: formValue.telefoneTrabalho || null,
+      outrasInformacoes: formValue.outrasInformacoes || null,
+      aceitaTermos: formValue.aceitaTermos || false
     };
   }
 
@@ -271,8 +269,15 @@ export class AssociateComponent implements OnInit {
     }
     
     this.showSuccessModal = false;
+    this.showErrorModal = false;
     this.memberForm.reset();
     this.photoPreview = null;
+    this.errorMessage = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  closeErrorModal(): void {
+    this.showErrorModal = false;
+    this.errorMessage = '';
   }
 }

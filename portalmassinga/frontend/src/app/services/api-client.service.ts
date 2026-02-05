@@ -237,7 +237,14 @@ export class ApiClientService {
       error: error.error
     });
     
-    return throwError(() => new Error(errorMessage));
+    // Criar um erro customizado que preserva o status HTTP
+    const customError: any = new Error(errorMessage);
+    customError.status = error.status;
+    customError.statusText = error.statusText;
+    customError.url = error.url;
+    customError.error = error.error;
+    
+    return throwError(() => customError);
   }
 
   // Home Content Management
@@ -288,6 +295,12 @@ export class ApiClientService {
   initializeHomeContent(): Observable<any> {
     const apiUrl = this.getApiUrl();
     return this.http.post(`${apiUrl}/home-content/initialize`, {}, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  migrateImageUrl(): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/home-content/migrate-image-url`, {}, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
   }
 

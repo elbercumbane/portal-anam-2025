@@ -31,7 +31,7 @@ public class HomeContent {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content; // Para conteúdo HTML ou texto longo
 
-    @Column(name = "image_url", length = 500)
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(name = "order_index")

@@ -136,15 +136,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.log('📸 Slides do Hero encontrados:', heroSlides.length);
         console.log('📸 Dados completos dos slides:', JSON.stringify(heroSlides, null, 2));
         
-        // Garantir que temos pelo menos 4 slides na ordem correta (Bem-vindo, Missão, Visão, Valores)
-        const slidesToProcess = Math.min(heroSlides.length, 4);
-        console.log(`📸 Processando ${slidesToProcess} slides`);
+        // Garantir que sempre processamos 4 slides (criar slides vazios se necessário)
+        console.log(`📸 Processando slides do Hero (encontrados: ${heroSlides.length}, esperados: 4)`);
         
-        for (let index = 0; index < slidesToProcess; index++) {
-          const content = heroSlides[index];
+        // Processar sempre 4 slides
+        for (let index = 0; index < 4; index++) {
+          // Buscar o slide correspondente na BD pelo sectionKey
+          const slideKey = `hero_slide_${index + 1}`;
+          const content = heroSlides.find(s => s.sectionKey === slideKey);
           
           if (!content) {
-            console.warn(`⚠️ Slide ${index + 1} não encontrado na BD`);
+            console.warn(`⚠️ Slide ${index + 1} (${slideKey}) não encontrado na BD, mantendo valores padrão`);
+            // Manter os valores padrão se não encontrar na BD
             continue;
           }
           
@@ -154,14 +157,14 @@ export class HomeComponent implements OnInit, OnDestroy {
           const imageUrl = content.imageUrl || content['imageUrl'] || content.image_url || content['image_url'] || null;
           
           console.log(`📸 Slide ${index + 1} (${content.sectionKey}):`, {
-            imageUrl: imageUrl,
+            imageUrl: imageUrl ? (imageUrl.substring(0, 50) + '...') : 'null',
             imageUrlType: typeof imageUrl,
+            imageUrlLength: imageUrl ? imageUrl.length : 0,
             imageUrlIsNull: imageUrl === null,
             imageUrlIsUndefined: imageUrl === undefined,
             imageUrlIsEmpty: imageUrl === '',
             title: content.title,
-            allFields: Object.keys(content),
-            rawContent: content
+            allFields: Object.keys(content)
           });
           
           // Atualizar slide com dados da BD
@@ -169,28 +172,41 @@ export class HomeComponent implements OnInit, OnDestroy {
           let finalImageUrl = imageUrl;
           
           if (!finalImageUrl || finalImageUrl === null || finalImageUrl === undefined || finalImageUrl.toString().trim() === '' || finalImageUrl === 'null') {
-            console.warn(`⚠️ Slide ${index + 1} sem imagem válida na BD, usando fallback:`, this.slides[index].imagem);
-            finalImageUrl = this.slides[index].imagem;
+            console.warn(`⚠️ Slide ${index + 1} sem imagem válida na BD, usando fallback:`, this.slides[index]?.imagem);
+            finalImageUrl = this.slides[index]?.imagem || '';
           } else {
-            // Garantir que o caminho está correto (adicionar / se necessário)
+            // Processar a URL da imagem
             finalImageUrl = finalImageUrl.toString().trim();
-            if (!finalImageUrl.startsWith('http') && !finalImageUrl.startsWith('/')) {
-              finalImageUrl = '/' + finalImageUrl;
+            
+            // Se for base64 (data:image), usar diretamente
+            if (finalImageUrl.startsWith('data:image')) {
+              console.log(`✅ Slide ${index + 1} usando imagem base64 da BD`);
+            } 
+            // Se for URL HTTP/HTTPS, usar diretamente
+            else if (finalImageUrl.startsWith('http://') || finalImageUrl.startsWith('https://')) {
+              console.log(`✅ Slide ${index + 1} usando imagem URL externa da BD: ${finalImageUrl.substring(0, 50)}...`);
             }
-            console.log(`✅ Slide ${index + 1} usando imagem da BD: ${finalImageUrl}`);
+            // Se for caminho relativo, garantir que comece com /
+            else if (!finalImageUrl.startsWith('/')) {
+              finalImageUrl = '/' + finalImageUrl;
+              console.log(`✅ Slide ${index + 1} usando imagem relativa da BD: ${finalImageUrl}`);
+            } else {
+              console.log(`✅ Slide ${index + 1} usando imagem da BD: ${finalImageUrl.substring(0, 50)}...`);
+            }
           }
           
           // Atualizar o slide com os dados da BD
           this.slides[index] = {
-            titulo: content.title || this.slides[index].titulo || SLIDE_TEXTOS[index]?.titulo || '',
-            subtitulo: content.subtitle || this.slides[index].subtitulo || SLIDE_TEXTOS[index]?.subtitulo || '',
+            titulo: content.title || this.slides[index]?.titulo || SLIDE_TEXTOS[index]?.titulo || '',
+            subtitulo: content.subtitle || this.slides[index]?.subtitulo || SLIDE_TEXTOS[index]?.subtitulo || '',
             imagem: finalImageUrl
           };
           
           console.log(`✅ Slide ${index + 1} FINAL configurado:`, {
-            titulo: this.slides[index].titulo,
-            imagem: this.slides[index].imagem,
-            imagemLength: this.slides[index].imagem?.length
+            titulo: this.slides[index].titulo?.substring(0, 30) + '...',
+            imagem: this.slides[index].imagem ? (this.slides[index].imagem.substring(0, 50) + '...') : 'vazia',
+            imagemLength: this.slides[index].imagem?.length || 0,
+            isBase64: this.slides[index].imagem?.startsWith('data:image') || false
           });
           
           // Carregar configurações do botão do metadata
@@ -210,11 +226,13 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }
         
-        // Log final para debug
-        console.log('🎯 Slides FINAIS após processamento:', this.slides.slice(0, 3).map((s, i) => ({
-          index: i,
-          titulo: s.titulo,
-          imagem: s.imagem
+        // Log final para debug - mostrar todos os 4 slides
+        console.log('🎯 Slides FINAIS após processamento (4 slides):', this.slides.map((s, i) => ({
+          index: i + 1,
+          titulo: s.titulo?.substring(0, 30) + '...',
+          imagem: s.imagem ? (s.imagem.substring(0, 50) + '...') : 'vazia',
+          imagemLength: s.imagem?.length || 0,
+          isBase64: s.imagem?.startsWith('data:image') || false
         })));
         
         // Carregar configurações de Natal

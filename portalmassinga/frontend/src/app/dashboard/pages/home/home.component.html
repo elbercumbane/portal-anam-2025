@@ -25,7 +25,7 @@
       </mat-card-header>
       <mat-card-content>
         <div class="slides-container">
-          <mat-expansion-panel *ngFor="let slide of [1,2,3]; let i = index" class="slide-panel">
+          <mat-expansion-panel *ngFor="let slide of [1,2,3,4]; let i = index" class="slide-panel">
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <div class="slide-header">
@@ -35,14 +35,112 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="slide-content">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Título do Slide</mat-label>
-                <input matInput [placeholder]="getSlidePlaceholder(i)" [(ngModel)]="slides[i].titulo" (blur)="saveSlide(i)">
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Subtítulo/Descrição</mat-label>
-                <textarea matInput rows="3" [placeholder]="getSlideSubtitlePlaceholder(i)" [(ngModel)]="slides[i].subtitulo" (blur)="saveSlide(i)"></textarea>
-              </mat-form-field>
+              <!-- Editor Visual Simples - Título -->
+              <div class="visual-editor-section">
+                <label class="editor-label">Título do Slide</label>
+                <div class="editor-toolbar">
+                  <span class="toolbar-label">📝 <strong>Como usar:</strong> Digite seu texto, selecione (arraste com o mouse) e clique em uma cor</span>
+                  <div class="toolbar-buttons">
+                    <button mat-mini-fab color="warn" 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'title', 'highlight-letter-red')" 
+                            title="Vermelho">
+                      <span class="color-dot" style="background: #EF4444;"></span>
+                    </button>
+                    <button mat-mini-fab color="accent" 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'title', 'highlight-letter-yellow')" 
+                            title="Amarelo">
+                      <span class="color-dot" style="background: #FFD700;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'title', 'highlight-letter-green')" 
+                            title="Verde" style="background: #4CAF50;">
+                      <span class="color-dot" style="background: #4CAF50;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'title', 'highlight-letter-blue')" 
+                            title="Azul" style="background: #60A5FA;">
+                      <span class="color-dot" style="background: #60A5FA;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'title', 'highlight-letter-white')" 
+                            title="Branco" style="background: #FFFFFF; border: 1px solid #ccc;">
+                      <span class="color-dot" style="background: #FFFFFF; border: 1px solid #ccc;"></span>
+                    </button>
+                  </div>
+                </div>
+                <div 
+                  class="visual-editor" 
+                  contenteditable="true"
+                  [attr.data-field]="'title-' + i"
+                  [innerHTML]="getPlainTextAsHtml(slides[i].titulo)"
+                  (input)="onEditorInput($any($event), i, 'title')"
+                  (blur)="onEditorBlur($any($event), i, 'title')"
+                  (keydown)="onEditorKeyDown($any($event), i, 'title')"
+                  [attr.placeholder]="getSlidePlaceholder(i)">
+                </div>
+              </div>
+
+              <!-- Editor Visual Simples - Subtítulo -->
+              <div class="visual-editor-section">
+                <label class="editor-label">Subtítulo/Descrição</label>
+                <div class="editor-toolbar">
+                  <span class="toolbar-label">📝 <strong>Como usar:</strong> Digite seu texto, selecione (arraste com o mouse) e clique em uma cor</span>
+                  <div class="toolbar-buttons">
+                    <button mat-mini-fab color="warn" 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'subtitle', 'highlight-letter-red')" 
+                            title="Vermelho">
+                      <span class="color-dot" style="background: #EF4444;"></span>
+                    </button>
+                    <button mat-mini-fab color="accent" 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'subtitle', 'highlight-letter-yellow')" 
+                            title="Amarelo">
+                      <span class="color-dot" style="background: #FFD700;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'subtitle', 'valores-title')" 
+                            title="Amarelo (Títulos de Valores)" style="background: #FFD700;">
+                      <span class="color-dot" style="background: #FFD700;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'subtitle', 'highlight-letter-green')" 
+                            title="Verde" style="background: #4CAF50;">
+                      <span class="color-dot" style="background: #4CAF50;"></span>
+                    </button>
+                    <button mat-mini-fab 
+                            (mousedown)="$event.preventDefault()"
+                            (click)="applyColorToSelection(i, 'subtitle', 'highlight-letter-blue')" 
+                            title="Azul" style="background: #60A5FA;">
+                      <span class="color-dot" style="background: #60A5FA;"></span>
+                    </button>
+                  </div>
+                </div>
+                <div 
+                  class="visual-editor visual-editor-large" 
+                  contenteditable="true"
+                  [attr.data-field]="'subtitle-' + i"
+                  [innerHTML]="getPlainTextAsHtml(slides[i].subtitulo)"
+                  (input)="onEditorInput($any($event), i, 'subtitle')"
+                  (blur)="onEditorBlur($any($event), i, 'subtitle')"
+                  (keydown)="onEditorKeyDown($any($event), i, 'subtitle')"
+                  [attr.placeholder]="getSlideSubtitlePlaceholder(i)">
+                </div>
+                <p class="editor-hint">
+                  💡 <strong>Dicas:</strong><br>
+                  • Pressione <strong>Enter</strong> para criar nova linha<br>
+                  • Pressione <strong>Enter</strong> duas vezes para criar parágrafo<br>
+                  • Espaços múltiplos são preservados automaticamente<br>
+                  • <strong>Selecione o texto</strong> (clique e arraste) e depois clique em uma cor para aplicar
+                </p>
+              </div>
               <div class="image-upload-section">
                 <label class="upload-label">Imagem de Fundo do Slide</label>
                 <div class="image-preview-container">
@@ -55,6 +153,10 @@
                 </div>
                 <p class="image-hint">Recomendado: 1920x800px, formato JPG ou PNG</p>
               </div>
+              <button mat-raised-button color="primary" (click)="saveSlide(i)" style="margin-top: 16px;">
+                <mat-icon>save</mat-icon>
+                Salvar Slide {{ i + 1 }}
+              </button>
             </div>
           </mat-expansion-panel>
         </div>
@@ -114,12 +216,16 @@
           <div class="column-left">
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Título da Seção</mat-label>
-              <input matInput placeholder="Sobre a ANAM" [(ngModel)]="sobreAnam.titulo" (blur)="saveData()">
+              <input matInput placeholder="Sobre a ANAM" [(ngModel)]="sobreAnam.titulo" (blur)="saveSobreAnam()">
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Texto de Introdução</mat-label>
-              <textarea matInput rows="4" placeholder="Promovemos o desenvolvimento sustentável e o bem-estar socioeconómico das comunidades do Distrito de Massinga." [(ngModel)]="sobreAnam.introducao" (blur)="saveData()"></textarea>
+              <textarea matInput rows="4" placeholder="Promovemos o desenvolvimento sustentável e o bem-estar socioeconómico das comunidades do Distrito de Massinga." [(ngModel)]="sobreAnam.introducao" (blur)="saveSobreAnam()"></textarea>
             </mat-form-field>
+            <button mat-raised-button color="primary" (click)="saveSobreAnam()" style="margin-top: 16px;">
+              <mat-icon>save</mat-icon>
+              Salvar Sobre ANAM
+            </button>
           </div>
           
           <div class="column-right">
@@ -137,12 +243,16 @@
                 <div class="card-content">
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Título do Card</mat-label>
-                    <input matInput placeholder="Missão" [(ngModel)]="sobreAnam.cardMissao.titulo" (blur)="saveData()">
+                    <input matInput placeholder="Missão" [(ngModel)]="sobreAnam.cardMissao.titulo" (blur)="saveMissao()">
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Descrição</mat-label>
-                    <textarea matInput rows="4" placeholder="Promover o desenvolvimento sustentável e melhorar o bem-estar socioeconómico das comunidades do Distrito de Massinga, gerindo e capitalizando estrategicamente os recursos e potencial locais." [(ngModel)]="sobreAnam.cardMissao.descricao" (blur)="saveData()"></textarea>
+                    <textarea matInput rows="4" placeholder="Promover o desenvolvimento sustentável e melhorar o bem-estar socioeconómico das comunidades do Distrito de Massinga, gerindo e capitalizando estrategicamente os recursos e potencial locais." [(ngModel)]="sobreAnam.cardMissao.descricao" (blur)="saveMissao()"></textarea>
                   </mat-form-field>
+                  <button mat-raised-button color="primary" (click)="saveMissao()" style="margin-top: 16px;">
+                    <mat-icon>save</mat-icon>
+                    Salvar Missão
+                  </button>
                 </div>
               </mat-expansion-panel>
 
@@ -158,12 +268,16 @@
                 <div class="card-content">
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Título do Card</mat-label>
-                    <input matInput placeholder="Visão" [(ngModel)]="sobreAnam.cardVisao.titulo" (blur)="saveData()">
+                    <input matInput placeholder="Visão" [(ngModel)]="sobreAnam.cardVisao.titulo" (blur)="saveVisao()">
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Descrição</mat-label>
-                    <textarea matInput rows="4" placeholder="Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos." [(ngModel)]="sobreAnam.cardVisao.descricao" (blur)="saveData()"></textarea>
+                    <textarea matInput rows="4" placeholder="Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos." [(ngModel)]="sobreAnam.cardVisao.descricao" (blur)="saveVisao()"></textarea>
                   </mat-form-field>
+                  <button mat-raised-button color="primary" (click)="saveVisao()" style="margin-top: 16px;">
+                    <mat-icon>save</mat-icon>
+                    Salvar Visão
+                  </button>
                 </div>
               </mat-expansion-panel>
             </div>
@@ -184,8 +298,12 @@
         <div class="form-section">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Título da Seção</mat-label>
-            <input matInput placeholder="Nossos Valores" [(ngModel)]="nossosValores.titulo" (blur)="saveData()">
+            <input matInput placeholder="Nossos Valores" [(ngModel)]="nossosValores.titulo" (blur)="saveValores()">
           </mat-form-field>
+          <button mat-raised-button color="primary" (click)="saveValores()" style="margin-top: 16px;">
+            <mat-icon>save</mat-icon>
+            Salvar Valores
+          </button>
         </div>
         
         <div class="valores-list">
@@ -201,15 +319,337 @@
             <div class="valor-content">
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Título do Valor</mat-label>
-                <input matInput [placeholder]="getValorPlaceholder(i)" [(ngModel)]="valor.titulo" (blur)="saveData()">
+                <input matInput [placeholder]="getValorPlaceholder(i)" [(ngModel)]="valor.titulo" (blur)="saveValores()">
               </mat-form-field>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Descrição</mat-label>
-                <textarea matInput rows="4" [placeholder]="getValorDescricaoPlaceholder(i)" [(ngModel)]="valor.descricao" (blur)="saveData()"></textarea>
+                <textarea matInput rows="4" [placeholder]="getValorDescricaoPlaceholder(i)" [(ngModel)]="valor.descricao" (blur)="saveValores()"></textarea>
               </mat-form-field>
             </div>
           </mat-expansion-panel>
         </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Estatísticas -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>bar_chart</mat-icon>
+          Seção Estatísticas
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stats-list">
+          <mat-expansion-panel *ngFor="let stat of stats; let i = index" class="stat-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="stat-header">
+                  <mat-icon class="stat-icon">{{ stat.icon }}</mat-icon>
+                  <span>Estatística {{ i + 1 }}: {{ stat.number }} {{ stat.label }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="stat-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Número</mat-label>
+                <input matInput placeholder="200+" [(ngModel)]="stat.number" (blur)="saveStats()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Label/Descrição</mat-label>
+                <input matInput placeholder="Membros e não Membros Activos" [(ngModel)]="stat.label" (blur)="saveStats()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ícone (Material Icons)</mat-label>
+                <input matInput placeholder="people" [(ngModel)]="stat.icon" (blur)="saveStats()">
+                <mat-hint>Ex: people, assignment, location_on, handshake</mat-hint>
+              </mat-form-field>
+              <div class="color-fields">
+                <mat-form-field appearance="outline">
+                  <mat-label>Cor Principal</mat-label>
+                  <input matInput type="color" [(ngModel)]="stat.color" (change)="saveStats()">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Cor de Fundo</mat-label>
+                  <input matInput type="color" [(ngModel)]="stat.bgColor" (change)="saveStats()">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Cor da Borda</mat-label>
+                  <input matInput type="color" [(ngModel)]="stat.borderColor" (change)="saveStats()">
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+        <button mat-raised-button color="primary" (click)="saveStats()" style="margin-top: 16px;">
+          <mat-icon>save</mat-icon>
+          Salvar Estatísticas
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Eventos -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>event</mat-icon>
+          Seção Eventos
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="eventos-list">
+          <mat-expansion-panel *ngFor="let evento of eventos; let i = index" class="evento-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="evento-header">
+                  <mat-icon class="evento-icon">event</mat-icon>
+                  <span>Evento {{ i + 1 }}: {{ evento.titulo || 'Novo Evento' }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="evento-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título do Evento</mat-label>
+                <input matInput placeholder="Feira de Produtos Locais" [(ngModel)]="evento.titulo" (blur)="saveEventos()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="3" placeholder="Exposição e venda de produtos artesanais e agrícolas da região." [(ngModel)]="evento.descricao" (blur)="saveEventos()"></textarea>
+              </mat-form-field>
+              <div class="two-column-layout">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Data</mat-label>
+                  <input matInput placeholder="22 de Março, 2024" [(ngModel)]="evento.data" (blur)="saveEventos()">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Hora</mat-label>
+                  <input matInput placeholder="08:00 - 18:00" [(ngModel)]="evento.hora" (blur)="saveEventos()">
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Local</mat-label>
+                <input matInput placeholder="Praça Central de Massinga" [(ngModel)]="evento.local" (blur)="saveEventos()">
+              </mat-form-field>
+              <div class="image-upload-section">
+                <label class="upload-label">Imagem do Evento</label>
+                <div class="image-preview-container">
+                  <img [src]="evento.imagem || '/assets/slider/slide1.jpg'" alt="Preview" class="image-preview">
+                  <input type="file" [id]="'eventoFileInput' + i" (change)="onEventoImageSelected($event, i)" accept="image/*" style="display: none;">
+                  <button mat-raised-button color="primary" class="upload-btn" (click)="triggerEventoFileInput(i)">
+                    <mat-icon>cloud_upload</mat-icon>
+                    Alterar Imagem
+                  </button>
+                </div>
+                <mat-form-field appearance="outline" class="full-width" style="margin-top: 10px;">
+                  <mat-label>URL da Imagem</mat-label>
+                  <input matInput placeholder="/assets/mercado-maputo.jpg" [(ngModel)]="evento.imagem" (blur)="saveEventos()">
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+        <button mat-raised-button color="primary" (click)="saveEventos()" style="margin-top: 16px;">
+          <mat-icon>save</mat-icon>
+          Salvar Eventos
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Notícias -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>article</mat-icon>
+          Seção Notícias
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="news-list">
+          <mat-expansion-panel *ngFor="let noticia of news; let i = index" class="news-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="news-header">
+                  <mat-icon class="news-icon">article</mat-icon>
+                  <span>Notícia {{ i + 1 }}: {{ noticia.title || 'Nova Notícia' }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="news-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título da Notícia</mat-label>
+                <input matInput placeholder="Nova Parceria com Empresas Locais" [(ngModel)]="noticia.title" (blur)="saveNews()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Resumo/Excerpt</mat-label>
+                <textarea matInput rows="3" placeholder="A ANAM estabeleceu uma nova parceria estratégica..." [(ngModel)]="noticia.excerpt" (blur)="saveNews()"></textarea>
+              </mat-form-field>
+              <div class="two-column-layout">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Data</mat-label>
+                  <input matInput placeholder="15 de Janeiro, 2025" [(ngModel)]="noticia.date" (blur)="saveNews()">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Categoria</mat-label>
+                  <input matInput placeholder="Parcerias" [(ngModel)]="noticia.category" (blur)="saveNews()">
+                </mat-form-field>
+              </div>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Link</mat-label>
+                <input matInput placeholder="/noticias/1" [(ngModel)]="noticia.link" (blur)="saveNews()">
+              </mat-form-field>
+              <div class="image-upload-section">
+                <label class="upload-label">Imagem da Notícia</label>
+                <div class="image-preview-container">
+                  <img [src]="noticia.image || '/assets/slider/slide1.jpg'" alt="Preview" class="image-preview">
+                  <input type="file" [id]="'newsFileInput' + i" (change)="onNewsImageSelected($event, i)" accept="image/*" style="display: none;">
+                  <button mat-raised-button color="primary" class="upload-btn" (click)="triggerNewsFileInput(i)">
+                    <mat-icon>cloud_upload</mat-icon>
+                    Alterar Imagem
+                  </button>
+                </div>
+                <mat-form-field appearance="outline" class="full-width" style="margin-top: 10px;">
+                  <mat-label>URL da Imagem</mat-label>
+                  <input matInput placeholder="/assets/slider/slide1.jpg" [(ngModel)]="noticia.image" (blur)="saveNews()">
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+        <button mat-raised-button color="primary" (click)="saveNews()" style="margin-top: 16px;">
+          <mat-icon>save</mat-icon>
+          Salvar Notícias
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Galeria -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>photo_library</mat-icon>
+          Seção Galeria
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="galeria-list">
+          <mat-expansion-panel *ngFor="let item of galeria; let i = index" class="galeria-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <div class="galeria-header">
+                  <mat-icon class="galeria-icon">photo_library</mat-icon>
+                  <span>Evento {{ i + 1 }}: {{ item.titulo || 'Novo Evento' }}</span>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="galeria-content">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Título do Evento</mat-label>
+                <input matInput placeholder="Feira de Produtos Locais" [(ngModel)]="item.titulo" (blur)="saveGaleria()">
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Descrição</mat-label>
+                <textarea matInput rows="3" placeholder="Uma feira vibrante onde produtores locais..." [(ngModel)]="item.descricao" (blur)="saveGaleria()"></textarea>
+              </mat-form-field>
+              <div class="two-column-layout">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Data</mat-label>
+                  <input matInput placeholder="30 de Janeiro, 2024" [(ngModel)]="item.data" (blur)="saveGaleria()">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Local</mat-label>
+                  <input matInput placeholder="Praça Central de Massinga" [(ngModel)]="item.local" (blur)="saveGaleria()">
+                </mat-form-field>
+              </div>
+              <div class="two-column-layout">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Categoria</mat-label>
+                  <input matInput placeholder="Feira" [(ngModel)]="item.categoria" (blur)="saveGaleria()">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Participantes</mat-label>
+                  <input matInput type="number" placeholder="150" [(ngModel)]="item.participantes" (blur)="saveGaleria()">
+                </mat-form-field>
+              </div>
+              <div class="fotos-section">
+                <label class="upload-label">Fotos do Evento (mínimo 1 foto)</label>
+                <div *ngFor="let foto of item.fotos; let j = index" class="foto-item">
+                  <div class="image-preview-container">
+                    <img [src]="foto.src || '/assets/slider/slide1.jpg'" alt="Preview" class="image-preview-small">
+                    <input type="file" [id]="'galeriaFotoInput' + i + '_' + j" (change)="onGaleriaFotoSelected($event, i, j)" accept="image/*" style="display: none;">
+                    <button mat-icon-button (click)="triggerGaleriaFotoInput(i, j)" title="Alterar Foto">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="removeFoto(i, j)" title="Remover Foto" *ngIf="item.fotos.length > 1">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>URL da Foto {{ j + 1 }}</mat-label>
+                    <input matInput [(ngModel)]="foto.src" (blur)="saveGaleria()">
+                  </mat-form-field>
+                </div>
+                <button mat-stroked-button (click)="addFoto(i)" style="margin-top: 10px;">
+                  <mat-icon>add</mat-icon>
+                  Adicionar Foto
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+        <button mat-raised-button color="primary" (click)="saveGaleria()" style="margin-top: 16px;">
+          <mat-icon>save</mat-icon>
+          Salvar Galeria
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Seção Parceiros -->
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>handshake</mat-icon>
+          Seção Parceiros
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="partners-section">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Título da Seção</mat-label>
+            <input matInput placeholder="Nossos Parceiros" [(ngModel)]="partners.title" (blur)="savePartners()">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Subtítulo</mat-label>
+            <input matInput placeholder="Organizações que acreditam na nossa missão" [(ngModel)]="partners.subtitle" (blur)="savePartners()">
+          </mat-form-field>
+          
+          <div class="partners-images-section">
+            <label class="upload-label">Imagens dos Parceiros (obrigatório: 2 imagens)</label>
+            <div class="partners-images-grid">
+              <div class="partner-image-item" *ngFor="let img of partners.images; let i = index">
+                <div class="image-preview-container">
+                  <img [src]="img || '/assets/parceiros.png'" alt="Parceiro {{ i + 1 }}" class="image-preview-medium">
+                  <input type="file" [id]="'partnerFileInput' + i" (change)="onPartnerImageSelected($event, i)" accept="image/*" style="display: none;">
+                  <button mat-raised-button color="primary" class="upload-btn" (click)="triggerPartnerFileInput(i)">
+                    <mat-icon>cloud_upload</mat-icon>
+                    Alterar Imagem {{ i + 1 }}
+                  </button>
+                </div>
+                <mat-form-field appearance="outline" class="full-width" style="margin-top: 10px;">
+                  <mat-label>URL da Imagem {{ i + 1 }}</mat-label>
+                  <input matInput [placeholder]="'/assets/parceiros' + (i === 0 ? '.png' : '2.png')" [(ngModel)]="partners.images[i]" (blur)="savePartners()">
+                </mat-form-field>
+              </div>
+            </div>
+            <p class="image-hint" style="margin-top: 10px; color: #666;">
+              <mat-icon style="vertical-align: middle; font-size: 18px;">info</mat-icon>
+              Esta seção requer exatamente 2 imagens. Ambas serão exibidas no carrossel de parceiros.
+            </p>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" (click)="savePartners()" style="margin-top: 16px;">
+          <mat-icon>save</mat-icon>
+          Salvar Parceiros
+        </button>
       </mat-card-content>
     </mat-card>
 

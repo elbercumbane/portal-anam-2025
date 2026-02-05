@@ -5,7 +5,7 @@
   width: 100%;
   height: 100vh;
   min-height: 600px;
-  overflow: hidden;
+  overflow: hidden; // Manter hidden para o hero, mas o snow-container terá overflow: visible
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -75,7 +75,7 @@
     );
   }
   
-  // Overlay Vermelho Suave (Missão e Valores - menos carregado)
+  // Overlay Vermelho Suave (Missão - menos carregado)
   &.overlay-red-soft {
     background: linear-gradient(
       to right,
@@ -83,6 +83,17 @@
       rgba(239, 68, 68, 0.3) 30%,
       rgba(239, 68, 68, 0.15) 60%,
       rgba(239, 68, 68, 0) 100%
+    );
+  }
+  
+  // Overlay Rosa Suave para Valores (slide 3)
+  &.overlay-pink-soft {
+    background: linear-gradient(
+      to right,
+      rgba(255, 182, 193, 0.5) 0%,
+      rgba(255, 182, 193, 0.4) 30%,
+      rgba(255, 182, 193, 0.2) 60%,
+      rgba(255, 182, 193, 0) 100%
     );
   }
   
@@ -164,6 +175,12 @@
   margin-bottom: 30px;
   animation: fadeInContent 0.5s ease-out;
   transition: opacity 0.3s ease, transform 0.3s ease;
+  
+  &.valores-badge {
+    background: #4CAF50; // Verde sólido para Valores
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
 }
 
 .hero-title {
@@ -233,6 +250,41 @@
     color: #FFD700;
     font-weight: 600;
   }
+  
+  // Suporte para classe valores-title (pode ser usada em qualquer lugar)
+  ::ng-deep .valores-title {
+    color: #FFD700 !important; // Amarelo
+    font-weight: 600;
+  }
+  
+  // Estilo especial para a lista de valores
+  &.values-subtitle {
+    ::ng-deep .valores-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        margin-bottom: 20px;
+        padding-left: 0;
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.95);
+        position: relative;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        strong.valores-title {
+          color: #FFD700 !important; // Amarelo para os títulos dos valores
+          font-weight: 600;
+          display: block;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
 }
 
 .hero-actions {
@@ -270,6 +322,15 @@
 
     svg {
       transform: translateX(5px);
+    }
+  }
+  
+  // Botão verde para Valores
+  &.valores-button {
+    background-color: #4CAF50 !important;
+    
+    &:hover {
+      background-color: #45a049 !important;
     }
   }
 }
