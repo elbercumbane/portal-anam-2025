@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { STORAGE_KEYS } from './auth.data';
@@ -187,6 +187,166 @@ export class ApiClientService {
       );
   }
 
+  // Supporter registrations (Torne-se Apoiante)
+  createSupporterRegistration(data: {
+    fullName: string;
+    email: string;
+    phone: string;
+    supportType: string;
+    description: string;
+    anonymous: boolean;
+    registrationDevice?: string;
+    registrationBrowser?: string;
+  }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/supporter-registrations`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
+  getSupporterRegistrations(): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/supporter-registrations`, {
+      headers: this.getHeaders(),
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(catchError(this.handleError));
+  }
+
+  getSupporterRegistrationById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/supporter-registrations/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Sympathizer registrations (Torne-se Simpatizante)
+  createSympathizerRegistration(data: {
+    fullName: string;
+    email: string;
+    phone?: string;
+    areaInterest: string;
+    acceptCommunications: boolean;
+    registrationDevice?: string;
+    registrationBrowser?: string;
+  }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/sympathizer-registrations`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
+  getSympathizerRegistrations(): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/sympathizer-registrations`, {
+      headers: this.getHeaders(),
+      observe: 'body',
+      responseType: 'json'
+    }).pipe(catchError(this.handleError));
+  }
+
+  getSympathizerRegistrationById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/sympathizer-registrations/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Event registrations (Inscrições em Eventos)
+  createEventRegistration(data: {
+    eventId: string;
+    eventTitle: string;
+    eventDate?: string;
+    eventLocation?: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    participantType: string;
+    receiveWhatsApp?: boolean;
+    registrationDevice?: string;
+    registrationBrowser?: string;
+  }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/event-registrations`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
+  getEventRegistrations(eventId?: string, participantType?: string): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    let params = new HttpParams();
+    if (eventId && eventId.trim()) {
+      params = params.set('eventId', eventId.trim());
+    }
+    if (participantType && participantType.trim()) {
+      params = params.set('participantType', participantType.trim());
+    }
+    return this.http.get<any[]>(`${apiUrl}/event-registrations`, {
+      headers: this.getHeaders(),
+      params
+    }).pipe(catchError(this.handleError));
+  }
+
+  getEventRegistrationById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/event-registrations/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Events (Gestão de Eventos - lista de eventos com contagem de inscrições)
+  getEvents(): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/events`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  getEventById(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/events/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateEvent(id: string, data: Partial<{
+    title: string;
+    eventDate: string;
+    eventDateStart: string;
+    eventDateEnd: string;
+    endDate: string;
+    location: string;
+    timeSlot: string;
+    description: string;
+    imageUrl: string;
+    levelAccess: string;
+  }>): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(`${apiUrl}/events/${id}`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
+  createEvent(data: {
+    title: string;
+    eventDateStart?: string;
+    eventDateEnd?: string;
+    endDate?: string;
+    location?: string;
+    timeSlot?: string;
+    description?: string;
+    imageUrl?: string;
+    levelAccess?: string;
+  }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/events`, data, {
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
+  cancelEvent(id: string, message: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.request<any>('delete', `${apiUrl}/events/${id}`, {
+      body: { message },
+      headers: { 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
   // Health check
   healthCheck(): Observable<any> {
     const apiUrl = this.getApiUrl();
@@ -198,8 +358,11 @@ export class ApiClientService {
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Erro desconhecido';
-    
-    if (error.error instanceof ErrorEvent) {
+
+    // Ligação recusada ou falha de rede (status 0) = backend não está a correr ou inacessível
+    if (error.status === 0 || error.status == null) {
+      errorMessage = 'Não foi possível ligar ao servidor. Certifique-se de que o backend está a correr (na pasta backend execute: mvnw.cmd spring-boot:run).';
+    } else if (error.error instanceof ErrorEvent) {
       // Erro do lado do cliente
       errorMessage = error.error.message || 'Erro de conexão';
     } else {
@@ -213,14 +376,14 @@ export class ApiClientService {
         errorMessage = `Erro ${error.status}: ${error.statusText || 'Erro desconhecido'}`;
       }
     }
-    
+
     console.error('API Error:', {
       message: errorMessage,
       status: error.status,
       url: error.url,
       error: error.error
     });
-    
+
     return throwError(() => new Error(errorMessage));
   }
 

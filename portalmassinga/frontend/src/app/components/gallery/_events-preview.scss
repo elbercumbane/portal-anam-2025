@@ -70,8 +70,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.5s ease;
   display: block;
+  opacity: 0;
+
+  &.evento-foto-loaded {
+    opacity: 1;
+  }
 }
 
 // Overlay com informações
@@ -89,25 +94,6 @@
 
   @media (max-width: 768px) {
     padding: 20px;
-  }
-}
-
-// Badge da categoria
-.evento-badge {
-  align-self: flex-start;
-
-  .evento-categoria {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 18px;
-    background: #4CAF50;
-    color: #ffffff;
-    border-radius: 25px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
   }
 }
 

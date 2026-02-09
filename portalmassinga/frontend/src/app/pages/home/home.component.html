@@ -8,19 +8,10 @@
            [style.background-image]="'url(' + slide.imagem + ')'">
       </div>
     </div>
-    <div class="hero-overlay" 
-         [class.overlay-yellow-soft]="currentSlide === 0"
-         [class.overlay-red-soft]="currentSlide === 1"
-         [class.overlay-yellow]="currentSlide === 2"
-         [class.overlay-red-soft]="currentSlide === 3"></div>
+    <div class="hero-overlay overlay-green-light"></div>
   </div>
   
   <div class="hero-container" [class.transitioning]="isTransitioning">
-    <div class="hero-badge" *ngIf="currentSlide === 0">Bem-vindo</div>
-    <div class="hero-badge" *ngIf="currentSlide === 1">Missão</div>
-    <div class="hero-badge" *ngIf="currentSlide === 2">Visão</div>
-    <div class="hero-badge" *ngIf="currentSlide === 3">Valores</div>
-    
     <h1 id="hero-title" class="hero-title">
       <span class="hero-title-text" [innerHTML]="getCurrentTitle()"></span>
     </h1>

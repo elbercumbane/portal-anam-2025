@@ -58,6 +58,75 @@
     </div>
   </div>
   
+  <!-- Categoria: Apoio -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="apoioExpanded || activeItem === 'apoio-gestao'"
+       (click)="toggleApoio()">
+      <mat-icon class="nav-icon">volunteer_activism</mat-icon>
+      <span class="nav-text">Apoio</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="apoioExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+  
+  <!-- Submenu Apoio -->
+  <div class="submenu-container" [class.expanded]="apoioExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getApoioItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Categoria: Simpatizantes -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="simpatizantesExpanded || activeItem === 'simpatizantes-gestao'"
+       (click)="toggleSimpatizantes()">
+      <mat-icon class="nav-icon">favorite</mat-icon>
+      <span class="nav-text">Simpatizantes</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="simpatizantesExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+
+  <!-- Submenu Simpatizantes -->
+  <div class="submenu-container" [class.expanded]="simpatizantesExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getSimpatizantesItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Categoria: Eventos -->
+  <div class="nav-item-wrapper">
+    <a class="nav-item expandable"
+       [class.active]="eventosExpanded || activeItem === 'eventos-gestao' || activeItem === 'eventos-inscricoes'"
+       (click)="toggleEventos()">
+      <mat-icon class="nav-icon">event</mat-icon>
+      <span class="nav-text">Eventos</span>
+      <mat-icon class="dropdown-icon" [class.rotated]="eventosExpanded">keyboard_arrow_down</mat-icon>
+    </a>
+  </div>
+
+  <!-- Submenu Eventos -->
+  <div class="submenu-container" [class.expanded]="eventosExpanded">
+    <div class="submenu-item-wrapper" *ngFor="let item of getEventosItems()">
+      <a class="submenu-item"
+         [class.active]="activeItem === item.id"
+         (click)="onNavigationClick(item)">
+        <mat-icon class="submenu-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-text">{{ item.label }}</span>
+      </a>
+    </div>
+  </div>
+  
   <!-- Categoria: Páginas -->
   <div class="nav-item-wrapper">
     <a class="nav-item expandable"

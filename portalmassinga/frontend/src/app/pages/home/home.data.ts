@@ -19,7 +19,7 @@ export const SLIDE_TEXTOS: SlideTexto[] = [
     subtitulo: "Estabelecer Massinga como uma referência nacional em desenvolvimento local, sustentável e participativo, impulsionando um crescimento inclusivo para todos."
   },
   {
-    titulo: "Nossos <span class='highlight-letter-red'>Valores</span>",
+    titulo: "Nossos <span class='highlight-letter-yellow'>Valores</span>",
     subtitulo: "<strong class='highlight-letter-yellow'>Desenvolvimento de Competências:</strong> Força de trabalho qualificada e programas de capacitação.<br><br><strong class='highlight-letter-yellow'>Networking Empresarial:</strong> Conexão com profissionais de alto nível e tomadores de decisão.<br><br><strong class='highlight-letter-yellow'>Oportunidades em Tempo Real:</strong> Projetos em mineração, energia, agricultura e infraestrutura."
   }
 ];

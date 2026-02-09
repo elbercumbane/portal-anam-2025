@@ -34,6 +34,9 @@ export class NavigationComponent implements OnInit, OnChanges {
   serviceExpanded = false;
   projectosExpanded = false;
   membrosExpanded = false;
+  apoioExpanded = false;
+  simpatizantesExpanded = false;
+  eventosExpanded = false;
   paginasExpanded = false;
   tesourariaExpanded = false;
   indicadoresExpanded = false;
@@ -56,6 +59,18 @@ export class NavigationComponent implements OnInit, OnChanges {
 
   toggleMembros(): void {
     this.membrosExpanded = !this.membrosExpanded;
+  }
+
+  toggleApoio(): void {
+    this.apoioExpanded = !this.apoioExpanded;
+  }
+
+  toggleSimpatizantes(): void {
+    this.simpatizantesExpanded = !this.simpatizantesExpanded;
+  }
+
+  toggleEventos(): void {
+    this.eventosExpanded = !this.eventosExpanded;
   }
 
   togglePaginas(): void {
@@ -93,6 +108,18 @@ export class NavigationComponent implements OnInit, OnChanges {
     // Expand membros submenu if any item is active
     const membrosItems = ['membros', 'membros-home', 'membros-gestao', 'membros-cadastro', 'membros-organograma'];
     this.membrosExpanded = membrosItems.includes(this.activeItem);
+
+    // Expand apoio submenu if any item is active
+    const apoioItems = ['apoio-gestao'];
+    this.apoioExpanded = apoioItems.includes(this.activeItem);
+
+    // Expand simpatizantes submenu if any item is active
+    const simpatizantesItems = ['simpatizantes-gestao'];
+    this.simpatizantesExpanded = simpatizantesItems.includes(this.activeItem);
+
+    // Expand eventos submenu if any item is active
+    const eventosItems = ['eventos-gestao', 'eventos-inscricoes'];
+    this.eventosExpanded = eventosItems.includes(this.activeItem);
 
     // Expand tesouraria submenu if any item is active
     const tesourariaItems = ['tesouraria', 'tesouraria-gestao', 'tesouraria-relatorios'];
@@ -246,6 +273,49 @@ export class NavigationComponent implements OnInit, OnChanges {
         label: 'Organograma',
         icon: 'account_tree',
         route: '/dashboard/pages/membros/organograma',
+        active: false
+      }
+    ];
+  }
+
+  getApoioItems(): NavigationItem[] {
+    return [
+      {
+        id: 'apoio-gestao',
+        label: 'Gestão de Apoiantes',
+        icon: 'volunteer_activism',
+        route: '/dashboard/pages/apoio/gestao',
+        active: false
+      }
+    ];
+  }
+
+  getSimpatizantesItems(): NavigationItem[] {
+    return [
+      {
+        id: 'simpatizantes-gestao',
+        label: 'Gestão de Simpatizantes',
+        icon: 'favorite',
+        route: '/dashboard/pages/simpatizantes/gestao',
+        active: false
+      }
+    ];
+  }
+
+  getEventosItems(): NavigationItem[] {
+    return [
+      {
+        id: 'eventos-gestao',
+        label: 'Gestão de Eventos',
+        icon: 'event',
+        route: '/dashboard/pages/eventos/gestao',
+        active: false
+      },
+      {
+        id: 'eventos-inscricoes',
+        label: 'Inscrições em Eventos',
+        icon: 'event_available',
+        route: '/dashboard/pages/eventos/inscricoes',
         active: false
       }
     ];

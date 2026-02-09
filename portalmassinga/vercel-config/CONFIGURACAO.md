@@ -92,6 +92,31 @@ Configure no dashboard do Vercel (Settings → Environment Variables):
 |----------|-----------|---------|
 | `API_URL` | URL da API backend | `https://seu-backend.vercel.app/api` |
 
+## 🔗 Link de Demonstração (só frontend)
+
+Para obter um link público **apenas do frontend** (demonstração da página):
+
+1. **Fazer login na Vercel** (uma vez; abre o browser):
+   ```powershell
+   cd frontend
+   npx vercel login
+   ```
+
+2. **Fazer o deploy** (a partir da pasta `vercel-config`):
+   ```powershell
+   cd vercel-config
+   .\deploy-demo-frontend.ps1
+   ```
+   Ou diretamente no frontend:
+   ```powershell
+   cd frontend
+   npx vercel --yes
+   ```
+
+O link de preview será mostrado no final (ex.: `https://portal-anam-frontend-xxxx.vercel.app`). Para link de produção estável: `npx vercel --prod --yes`.
+
+---
+
 ## 🚀 Processo de Deploy
 
 ### Primeira Vez

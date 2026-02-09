@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface Milestone {
   ano: string;
@@ -13,6 +14,25 @@ interface Milestone {
 interface Galeria {
   titulo: string;
   fotos: string[];
+}
+
+interface PublicoAlvo {
+  iconType: 'rocket' | 'store' | 'agriculture' | 'community';
+  titulo: string;
+  descricao: string;
+}
+
+interface Indicador {
+  valor: string;
+  descricao: string;
+}
+
+interface Depoimento {
+  nome: string;
+  cargo: string;
+  negocio: string;
+  texto: string;
+  avaliacao: number;
 }
 
 @Component({
@@ -29,51 +49,72 @@ export class HistoryComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('testimonialSection', { static: false }) sectionElement!: ElementRef<HTMLElement>;
   
   private intersectionObserver?: IntersectionObserver;
+
+  constructor(private sanitizer: DomSanitizer) {}
+
+  publicosAlvo: PublicoAlvo[] = [
+    { iconType: 'rocket', titulo: 'Jovens Empreendedores', descricao: 'Em fase de ideia ou início de actividade' },
+    { iconType: 'store', titulo: 'Comércio Local', descricao: 'Lojas, mercados e serviços locais' },
+    { iconType: 'agriculture', titulo: 'Agro-Negócio', descricao: 'Iniciativas de pequena e média escala' },
+    { iconType: 'community', titulo: 'Associações Comunitárias', descricao: 'Iniciativas comunitárias organizadas' }
+  ];
+
+  indicadores: Indicador[] = [
+    { valor: '300+', descricao: 'Jovens e Empreendedores Formados' },
+    { valor: '150+', descricao: 'Pequenos Negócios Apoiados' },
+    { valor: '50+', descricao: 'Iniciativas Financiadas' },
+    { valor: '95%', descricao: 'Satisfação' }
+  ];
+
+  depoimentos: Depoimento[] = [
+    { nome: 'Maria João', cargo: 'Empreendedora', negocio: 'Comércio Local', texto: 'A formação em gestão financeira da ANAM transformou completamente o meu negócio. Agora consigo controlar melhor as minhas finanças e o negócio está a crescer de forma sustentável.', avaliacao: 5 },
+    { nome: 'Carlos Muchanga', cargo: 'Agricultor', negocio: 'Agro-Negócio', texto: 'O apoio da ANAM foi fundamental para conseguir financiamento para expandir a minha produção. A mentoria ajudou-me a estruturar melhor o negócio e hoje tenho mais clientes.', avaliacao: 5 },
+    { nome: 'Ana Silva', cargo: 'Jovem Empreendedora', negocio: 'Serviços Digitais', texto: 'Os workshops práticos da ANAM deram-me as ferramentas necessárias para começar o meu negócio online. A rede de contactos que construí através da associação foi essencial.', avaliacao: 5 },
+    { nome: 'João Pedro', cargo: 'Comerciante', negocio: 'Comércio Local', texto: 'A certificação que obtive através da ANAM deu-me mais credibilidade junto dos meus clientes. O reconhecimento no mercado local aumentou significativamente.', avaliacao: 5 }
+  ];
+
+  getIconSvg(iconType: string): SafeHtml {
+    const icons: { [key: string]: string } = {
+      rocket: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>`,
+      store: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path><path d="M2 7h20"></path><path d="M22 7v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7"></path></svg>`,
+      agriculture: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path><path d="M8 12h8"></path><path d="M6 8h12"></path><path d="M6 16h12"></path><circle cx="12" cy="4" r="1"></circle><circle cx="12" cy="20" r="1"></circle></svg>`,
+      community: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+    };
+    return this.sanitizer.bypassSecurityTrustHtml(icons[iconType] || '');
+  }
   
   milestones: Milestone[] = [
-    {
-      ano: '2020',
-      titulo: 'Fundação da ANAM',
-      descricao: 'Um grupo de visionários naturais de Massinga reuniu-se com o sonho de criar uma associação que promovesse o desenvolvimento social, cultural e económico da região. Nascia assim a ANAM, com um grupo de membros fundadores dedicados.',
-      imagem: '/assets/FOTO1 ANAM.jpeg',
-      categoria: 'Fundação'
-    },
-    {
-      ano: '2021',
-      titulo: 'Primeiro Projeto Comunitário',
-      descricao: 'Lançamento do primeiro grande projeto comunitário, estabelecendo a ANAM como uma força ativa no desenvolvimento local de Massinga.',
-      imagem: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80',
-      categoria: 'Início'
-    },
-    {
-      ano: '2022',
-      titulo: 'Expansão de Atividades',
-      descricao: 'A ANAM expandiu suas atividades, criando parcerias estratégicas e aumentando o número de membros e projetos realizados.',
-      imagem: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
-      categoria: 'Crescimento'
-    },
-    {
-      ano: '2023',
-      titulo: 'Transformação Digital',
-      descricao: 'Lançamento da plataforma digital da ANAM, modernizando processos e ampliando o alcance dos serviços. Implementação de sistemas de gestão e comunicação online.',
-      imagem: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80',
-      categoria: 'Inovação'
-    },
-    {
-      ano: '2024',
-      titulo: 'Consolidação e Impacto',
-      descricao: 'Consolidação das atividades e aumento significativo do impacto na comunidade, com mais projetos e membros ativos.',
-      imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
-      categoria: 'Consolidação'
-    },
-    {
-      ano: '2025',
-      titulo: 'Presente e Futuro',
-      descricao: 'Hoje, a ANAM conta com mais de 250 membros ativos, 50+ projetos realizados e uma visão clara de desenvolvimento sustentável para Massinga e região. Continuamos crescendo e impactando vidas.',
-      imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80',
-      categoria: 'Atualidade'
-    }
+    { ano: '2022', titulo: 'Expansão de Atividades', descricao: 'Expansão das atividades, parcerias estratégicas e crescimento do número de membros e projetos.', imagem: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80', categoria: 'Crescimento' },
+    { ano: '2023', titulo: 'Transformação Digital', descricao: 'Plataforma digital da ANAM, modernizando processos e ampliando o alcance dos serviços.', imagem: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80', categoria: 'Inovação' },
+    { ano: '2024', titulo: 'Consolidação e Impacto', descricao: 'Consolidação das atividades e aumento do impacto na comunidade.', imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80', categoria: 'Consolidação' },
+    { ano: '2025', titulo: 'Crescimento e Rede', descricao: 'Mais de 250 membros ativos, 50+ projetos realizados e parcerias reforçadas.', imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80', categoria: 'Expansão' },
+    { ano: '2026', titulo: 'Presente e Futuro', descricao: 'Visão clara de desenvolvimento sustentável para Massinga. A jornada continua.', imagem: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&q=80', categoria: 'Atualidade' }
   ];
+
+  /** Cor por ano: 2022 = vermelho, cresce até verde em 2026 */
+  getMilestoneColor(ano: string): string {
+    const y = parseInt(ano, 10);
+    if (y <= 2022) return '#c0392b';
+    if (y >= 2026) return '#51B155';
+    const t = (y - 2022) / (2026 - 2022);
+    const colors = ['#c0392b', '#d35400', '#f39c12', '#7dce82', '#51B155'];
+    const i = Math.min(Math.floor(t * (colors.length - 1)), colors.length - 2);
+    const ti = (t * (colors.length - 1)) - i;
+    const hex = (r: number, g: number, b: number) =>
+      '#' + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+    const parse = (h: string) => ({
+      r: parseInt(h.slice(1, 3), 16),
+      g: parseInt(h.slice(3, 5), 16),
+      b: parseInt(h.slice(5, 7), 16)
+    });
+    const a = parse(colors[i]);
+    const b = parse(colors[i + 1]);
+    return hex(
+      a.r + (b.r - a.r) * ti,
+      a.g + (b.g - a.g) * ti,
+      a.b + (b.b - a.b) * ti
+    );
+  }
 
   galerias: Galeria[] = [
     {

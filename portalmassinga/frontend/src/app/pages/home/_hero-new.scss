@@ -13,7 +13,6 @@
   // Transições suaves para mudanças de conteúdo
   .hero-title,
   .hero-subtitle,
-  .hero-badge,
   .hero-actions {
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
@@ -64,13 +63,13 @@
   z-index: 2;
   transition: background 0.8s ease;
   
-  // Overlay Amarelo Suave (Bem-vindo - tom reduzido)
+  // Overlay Amarelo Lite (Bem-vindo - tom bem suave)
   &.overlay-yellow-soft {
     background: linear-gradient(
       to right,
-      rgba(255, 215, 0, 0.4) 0%,
-      rgba(255, 215, 0, 0.3) 30%,
-      rgba(255, 215, 0, 0.15) 60%,
+      rgba(255, 215, 0, 0.28) 0%,
+      rgba(255, 215, 0, 0.2) 30%,
+      rgba(255, 215, 0, 0.1) 60%,
       rgba(255, 215, 0, 0) 100%
     );
   }
@@ -86,14 +85,14 @@
     );
   }
   
-  // Overlay Amarelo (Visão)
-  &.overlay-yellow {
+  // Overlay Verde Claro (Visão)
+  &.overlay-green-light {
     background: linear-gradient(
       to right,
-      rgba(255, 215, 0, 0.7) 0%,
-      rgba(255, 215, 0, 0.5) 30%,
-      rgba(255, 215, 0, 0.2) 60%,
-      rgba(255, 215, 0, 0) 100%
+      rgba(129, 199, 132, 0.5) 0%,
+      rgba(129, 199, 132, 0.35) 30%,
+      rgba(129, 199, 132, 0.18) 60%,
+      rgba(129, 199, 132, 0) 100%
     );
   }
 }
@@ -110,7 +109,6 @@
   // Animação suave para mudanças de conteúdo quando muda de slide
   .hero-title-text,
   .hero-subtitle,
-  .hero-badge,
   .hero-actions {
     transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
     animation: fadeInContent 0.8s ease-in-out;
@@ -120,7 +118,6 @@
   &.transitioning {
     .hero-title-text,
     .hero-subtitle,
-    .hero-badge,
     .hero-actions {
       opacity: 0;
       transform: translateY(10px);
@@ -149,21 +146,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.hero-badge {
-  display: inline-block;
-  padding: 10px 24px;
-  background: rgba(34, 139, 34, 0.9);
-  color: white;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 30px;
-  animation: fadeInContent 0.5s ease-out;
-  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .hero-title {
@@ -315,12 +297,6 @@
 
   .hero-container {
     padding: 0 20px;
-  }
-
-  .hero-badge {
-    padding: 8px 18px;
-    font-size: 0.75rem;
-    margin-bottom: 20px;
   }
 
   .hero-title {

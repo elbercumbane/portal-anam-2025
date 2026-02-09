@@ -15,17 +15,16 @@
         *ngFor="let evento of getEventosPreview(); let i = index; trackBy: trackByEventoId"
         (click)="abrirEvento(evento)">
         
-        <!-- Foto do Evento -->
+        <!-- Foto do Evento (slide sequencial e suave, um card de cada vez) -->
         <div class="evento-foto-container">
           <img 
-            [src]="evento.fotos[0]?.src" 
+            [src]="evento.fotos[getCardPhotoIndex(i)]?.src" 
             [alt]="evento.titulo"
             class="evento-foto"
+            [class.evento-foto-loaded]="isCardImageLoaded(i)"
+            (load)="onCardImageLoad(i)"
             loading="lazy">
           <div class="evento-overlay">
-            <div class="evento-badge">
-              <span class="evento-categoria">{{ evento.categoria }}</span>
-            </div>
             <div class="evento-conteudo">
               <h2 class="evento-titulo">{{ evento.titulo }}</h2>
               <span class="evento-data">{{ evento.data }}</span>
@@ -35,7 +34,7 @@
                 <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
                 <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
               </svg>
-              <span>{{ evento.fotos.length }} fotos</span>
+              <span>{{ evento.fotos.length }}</span>
             </div>
           </div>
         </div>

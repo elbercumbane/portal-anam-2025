@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiClientService } from '../../../services/api-client.service';
 
 @Component({
   selector: 'app-become-supporter',
@@ -14,10 +15,12 @@ export class BecomeSupporterComponent implements OnInit {
   supporterForm!: FormGroup;
   showSuccess = false;
   isLoading = false;
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private apiClient: ApiClientService
   ) {}
 
   ngOnInit(): void {
@@ -53,24 +56,29 @@ export class BecomeSupporterComponent implements OnInit {
   onSubmit(): void {
     if (this.supporterForm.valid) {
       this.isLoading = true;
-      
-      const formData = {
-        ...this.supporterForm.value
+      this.errorMessage = '';
+
+      const v = this.supporterForm.value;
+      const payload = {
+        fullName: v.nome,
+        email: v.email,
+        phone: v.contacto,
+        supportType: v.tipoApoio,
+        description: v.descricao,
+        anonymous: v.anonimato === 'sim'
       };
 
-      console.log('📤 Dados do apoiante:', formData);
-
-      // Simular envio (substituir por chamada real à API)
-      setTimeout(() => {
-        this.isLoading = false;
-        this.showSuccess = true;
-        
-        // Simular criação de conta e envio de email
-        console.log('✅ Conta de apoiante criada');
-        console.log('📧 Email enviado com recibo e link de login');
-      }, 2000);
+      this.apiClient.createSupporterRegistration(payload).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.showSuccess = true;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err?.message || 'Erro ao registar. Tente novamente.';
+        }
+      });
     } else {
-      // Marcar todos os campos como touched para mostrar erros
       Object.keys(this.supporterForm.controls).forEach(key => {
         this.supporterForm.get(key)?.markAsTouched();
       });

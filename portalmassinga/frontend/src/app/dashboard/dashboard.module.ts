@@ -90,6 +90,14 @@ import { ApplicationsComponent } from './projects/applications/applications.comp
 import { MembersHomeComponent } from './members/home/home.component';
 import { MembersManagementComponent } from './members/management/management.component';
 import { MembersOrgChartComponent } from './members/org-chart/org-chart.component';
+// Supporters (Apoiantes)
+import { SupportersManagementComponent } from './supporters/management/management.component';
+// Sympathizers (Simpatizantes)
+import { SympathizersManagementComponent } from './sympathizers/management/management.component';
+// Event registrations (Inscrições em Eventos)
+import { EventRegistrationsManagementComponent } from './event-registrations/management/management.component';
+// Events management (Gestão de Eventos)
+import { EventsManagementComponent } from './events-management/management.component';
 // Treasury
 import { PayQuotasComponent } from './treasury/pay-quotas/pay-quotas.component';
 import { TreasuryManagementComponent } from './treasury/management/management.component';
@@ -171,6 +179,10 @@ const routes: Routes = [
     MembersHomeComponent,
     MembersManagementComponent,
     MembersOrgChartComponent,
+    SupportersManagementComponent,
+    SympathizersManagementComponent,
+    EventRegistrationsManagementComponent,
+    EventsManagementComponent,
     // Treasury
     PayQuotasComponent,
     TreasuryManagementComponent,

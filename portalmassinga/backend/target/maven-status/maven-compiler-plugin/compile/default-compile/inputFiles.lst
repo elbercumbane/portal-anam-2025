@@ -1,14 +1,32 @@
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\HomeContentController.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\ApplicationDependent.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\HomeContentRepository.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\config\WebConfig.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\MemberApplication.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\MemberApplicationController.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\config\CorsConfig.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\PortalAnamApplication.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\HomeContent.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\HomeContentDTO.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\RejectApplicationDTO.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\ApplicationDependentRepository.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\MemberApplicationRepository.java
-C:\Users\alarick\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\MemberApplicationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\SupporterRegistrationController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\MemberApplicationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\HomeContentController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\SupporterRegistrationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\SympathizerRegistration.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\EventRegistrationRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\CreateEventDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\SupporterRegistration.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\MemberApplicationRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\EventController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\EventDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\MemberApplicationController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\ApplicationDependent.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\MemberApplication.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\SupporterRegistrationRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\HomeContentRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\EventRegistrationController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\config\CorsConfig.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\controller\SympathizerRegistrationController.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\HomeContentDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\RejectApplicationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\SympathizerRegistrationRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\CancelEventDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\HomeContent.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\EventRegistration.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\PortalAnamApplication.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\SympathizerRegistrationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\ApplicationDependentRepository.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\config\WebConfig.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\dto\EventRegistrationDTO.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\entity\Event.java
+C:\Users\Alarick Guilherme\Documents\projectos\anam2025\portal-anam-2025\portalmassinga\backend\src\main\java\com\anam\repository\EventRepository.java

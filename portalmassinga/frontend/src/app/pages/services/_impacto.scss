@@ -1,11 +1,7 @@
 @import 'variables';
 @import 'animations';
 
-$primary-green: #2C674C;
-$green-medium: #2C674C;
-$cream: #FAF8F5;
-
-// Impacto em Números - Simples
+// Impacto em Números (usa $primary-green de variables) - Simples
 .impacto-section {
   padding: 50px 0;
   background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);

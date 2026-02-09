@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 import { MembersHomeComponent } from './members-home/members-home.component';
 import { OrgChartComponent } from './org-chart/org-chart.component';
 import { RegisterComponent } from './register/register.component';
@@ -29,6 +31,8 @@ const routes: Routes = [
     FormsModule,
     MatIconModule,
     RouterModule.forChild(routes),
+    NavbarComponent,
+    FooterComponent,
     MembersHomeComponent,
     PayQuotasComponent,
     ViewReceiptsComponent

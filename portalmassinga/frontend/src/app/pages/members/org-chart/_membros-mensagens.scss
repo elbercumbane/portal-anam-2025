@@ -1,0 +1,93 @@
+// Mensagens de membros da associação (abaixo do organograma)
+@import 'variables';
+
+.membros-mensagens-section {
+  position: relative;
+  z-index: 2;
+  padding: 56px 24px 64px;
+  background: linear-gradient(180deg, transparent 0%, rgba($green-mint, 0.2) 50%, transparent 100%);
+}
+
+.membros-mensagens-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.membros-mensagens-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  color: $ink;
+  text-align: center;
+  margin: 0 0 12px;
+
+  .highlight {
+    color: $green-medium;
+    font-style: italic;
+  }
+}
+
+.membros-mensagens-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: $ink-muted;
+  margin: 0 0 40px;
+}
+
+.membros-mensagens-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.membro-mensagem-card {
+  background: $white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: $shadow-md;
+  border: 1px solid rgba($green-medium, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.membro-mensagem-texto {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: $ink-muted;
+  margin: 0 0 20px;
+  font-style: italic;
+  border-left: 4px solid $green-medium;
+  padding-left: 20px;
+}
+
+.membro-mensagem-author {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.membro-mensagem-nome {
+  font-weight: 700;
+  color: $green-dark;
+  font-size: 0.95rem;
+}
+
+.membro-mensagem-cargo {
+  font-size: 0.85rem;
+  color: $ink-muted;
+}
+
+@media (max-width: 640px) {
+  .membros-mensagens-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .membro-mensagem-card {
+    padding: 22px 20px;
+  }
+}

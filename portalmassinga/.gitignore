@@ -21,6 +21,9 @@ frontend/.angular/
 backend/dist/
 backend/node_modules/
 backend/build/
+backend/jdk/
+backend/jdk.zip
+backend/jdk_temp/
 
 # IDEs and editors
 .idea/

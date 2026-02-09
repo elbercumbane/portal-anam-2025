@@ -63,6 +63,18 @@
         <app-members-management *ngIf="currentView === 'membros-gestao'" (navigationClick)="onNavigationClick($event)"></app-members-management>
         <app-org-chart *ngIf="currentView === 'membros-organograma'" (navigationClick)="onNavigationClick($event)"></app-org-chart>
         
+        <!-- Apoio / Apoiantes -->
+        <app-supporters-management *ngIf="currentView === 'apoio-gestao'" (navigationClick)="onNavigationClick($event)"></app-supporters-management>
+
+        <!-- Simpatizantes -->
+        <app-sympathizers-management *ngIf="currentView === 'simpatizantes-gestao'" (navigationClick)="onNavigationClick($event)"></app-sympathizers-management>
+
+        <!-- Gestão de Eventos -->
+        <app-events-management *ngIf="currentView === 'eventos-gestao'" (navigationClick)="onNavigationClick($event)"></app-events-management>
+
+        <!-- Inscrições em Eventos -->
+        <app-event-registrations-management *ngIf="currentView === 'eventos-inscricoes'" (navigationClick)="onNavigationClick($event)"></app-event-registrations-management>
+        
         <!-- Tesouraria -->
         <app-treasury-management *ngIf="currentView === 'tesouraria-gestao'" (navigationClick)="onNavigationClick($event)"></app-treasury-management>
         <app-treasury-reports *ngIf="currentView === 'tesouraria-relatorios'" (navigationClick)="onNavigationClick($event)"></app-treasury-reports>

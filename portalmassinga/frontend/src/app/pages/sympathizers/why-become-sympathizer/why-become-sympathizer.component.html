@@ -166,6 +166,11 @@
         </div>
       </div>
 
+      <!-- Mensagem de erro -->
+      <div class="error-message" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+      </div>
+
       <!-- Mensagem de sucesso -->
       <div class="success-message" *ngIf="formSubmitted">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -218,8 +223,8 @@
           </div>
         </div>
 
-        <button type="submit" class="submit-btn" [disabled]="form.invalid">
-          <span>Tornar-me Simpatizante</span>
+        <button type="submit" class="submit-btn" [disabled]="form.invalid || isLoading">
+          <span>{{ isLoading ? 'A registar...' : 'Tornar-me Simpatizante' }}</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>

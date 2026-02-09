@@ -12,6 +12,9 @@
 <section class="form-section">
   <div class="container">
     <div class="form-card">
+      <div class="form-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
       <form [formGroup]="supporterForm" (ngSubmit)="onSubmit()" class="supporter-form">
         <!-- Nome -->
         <div class="form-field">

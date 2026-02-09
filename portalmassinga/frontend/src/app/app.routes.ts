@@ -12,7 +12,8 @@ export const routes: Routes = [
       { path: 'eventos/inscricao', loadComponent: () => import('./pages/events/event-registration/event-registration.component').then(m => m.EventRegistrationComponent) },
       { path: 'eventos/consultar-registro', loadComponent: () => import('./pages/events/event-registration-query/event-registration-query.component').then(m => m.EventRegistrationQueryComponent) },
       { path: 'eventos/meus-eventos', loadComponent: () => import('./pages/events/my-events/my-events.component').then(m => m.MyEventsComponent) },
-      { path: 'historial', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
+      { path: 'sobre-nos', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
+      { path: 'historial', redirectTo: 'sobre-nos', pathMatch: 'full' },
       { path: 'documentacao', loadChildren: () => import('./pages/documentation/documentation.module').then(m => m.DocumentationModule) },
       { path: 'projectos', loadChildren: () => import('./pages/projects/projects.module').then(m => m.ProjectsModule) },
       // Manter rotas existentes

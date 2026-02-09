@@ -1,12 +1,5 @@
 <section class="organograma-page">
-  <!-- Botão Voltar discreto -->
-  <button class="btn-voltar" (click)="voltar()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="19" y1="12" x2="5" y2="12"></line>
-      <polyline points="12 19 5 12 12 5"></polyline>
-    </svg>
-    <span>Voltar</span>
-  </button>
+  <app-navbar appName="ANAM"></app-navbar>
 
   <!-- Overlay de fundo com efeitos -->
   <div class="background-overlay"></div>
@@ -42,266 +35,104 @@
     </div>
   </header>
 
-  <!-- Árvore Organizacional -->
-  <section class="tree-section">
-    <div class="tree-container">
-      <!-- Tronco da Árvore -->
-      <div class="tree-trunk">
-        <div class="trunk-glow"></div>
+  <!-- Mensagem do Presidente da Associação (foto à esquerda, texto à direita) -->
+  <section class="presidente-section">
+    <div class="presidente-container">
+      <div class="presidente-photo">
+        <img src="/assets/Agostinho_PCA.jpg" alt="Presidente da ANAM" width="280" height="280" loading="eager">
       </div>
-      
-      <!-- Raiz - Presidente -->
-      <div class="tree-root">
-        <div class="root-node" 
-             [class.active]="activeNode === 'president'"
-             (mouseenter)="setActiveNode('president')"
-             (mouseleave)="clearActiveNode()">
-          <div class="node-glow"></div>
-          <div class="node-ring"></div>
-          <div class="node-content">
-            <div class="node-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="8" r="5"/>
-                <path d="M20 21v-2a7 7 0 0 0-7-7h-2a7 7 0 0 0-7 7v2"/>
-                <path d="M12 3l1.5 2.5L16 6l-2 2 .5 3-2.5-1.5L9.5 11l.5-3-2-2 2.5-.5L12 3z"/>
-              </svg>
-            </div>
-            <span class="node-tag">Presidência</span>
-            <h3 class="node-title">Presidente</h3>
-            <p class="node-name">Dr. João Silva</p>
-            <a class="node-contact" href="mailto:presidente@anam.org">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="m22 6-10 7L2 6"/>
-              </svg>
-              presidente&#64;anam.org
-            </a>
-          </div>
-        </div>
-        
-        <!-- Ramos principais -->
-        <div class="branch-connector main-connector">
-          <div class="connector-glow"></div>
-        </div>
-      </div>
-
-      <!-- Nível 1 - Vice-Presidente e Conselho -->
-      <div class="tree-level level-1">
-        <!-- Ramo Esquerdo - Vice-Presidente -->
-        <div class="tree-branch branch-left">
-          <div class="branch-line">
-            <div class="branch-glow"></div>
-          </div>
-          <div class="branch-node"
-               [class.active]="activeNode === 'vice'"
-               (mouseenter)="setActiveNode('vice')"
-               (mouseleave)="clearActiveNode()">
-            <div class="node-glow"></div>
-            <div class="node-content">
-              <div class="node-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M6 21v-2a6 6 0 0 1 12 0v2"/>
-                </svg>
-              </div>
-              <span class="node-tag">Direção Executiva</span>
-              <h3 class="node-title">Vice-Presidente</h3>
-              <p class="node-name">Maria Santos</p>
-            </div>
-          </div>
-          
-          <!-- Sub-ramos do Vice-Presidente -->
-          <div class="sub-branches">
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node"
-                   [class.active]="activeNode === 'secretario'"
-                   (mouseenter)="setActiveNode('secretario')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <span class="leaf-tag">Secretaria</span>
-                  <h4>Secretário-Geral</h4>
-                  <p>Carlos Mendes</p>
-                </div>
-              </div>
-            </div>
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node"
-                   [class.active]="activeNode === 'tesoureiro'"
-                   (mouseenter)="setActiveNode('tesoureiro')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <span class="leaf-tag">Finanças</span>
-                  <h4>Tesoureira</h4>
-                  <p>Ana Costa</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ramo Central - Conselho Consultivo -->
-        <div class="tree-branch branch-center">
-          <div class="branch-line">
-            <div class="branch-glow"></div>
-          </div>
-          <div class="branch-node"
-               [class.active]="activeNode === 'conselho'"
-               (mouseenter)="setActiveNode('conselho')"
-               (mouseleave)="clearActiveNode()">
-            <div class="node-glow"></div>
-            <div class="node-content">
-              <div class="node-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-              </div>
-              <span class="node-tag">Conselho Consultivo</span>
-              <h3 class="node-title">Coordenação</h3>
-              <p class="node-name">Comissão de Sábios</p>
-            </div>
-          </div>
-          
-          <!-- Sub-ramo do Conselho -->
-          <div class="sub-branches single">
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node"
-                   [class.active]="activeNode === 'fiscal'"
-                   (mouseenter)="setActiveNode('fiscal')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <span class="leaf-tag">Fiscalização</span>
-                  <h4>Conselho Fiscal</h4>
-                  <p>Painel de Auditoria</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ramo Direito - Comissões -->
-        <div class="tree-branch branch-right">
-          <div class="branch-line">
-            <div class="branch-glow"></div>
-          </div>
-          <div class="branch-node"
-               [class.active]="activeNode === 'comissoes'"
-               (mouseenter)="setActiveNode('comissoes')"
-               (mouseleave)="clearActiveNode()">
-            <div class="node-glow"></div>
-            <div class="node-content">
-              <div class="node-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <rect x="3" y="3" width="7" height="7" rx="1"/>
-                  <rect x="14" y="3" width="7" height="7" rx="1"/>
-                  <rect x="3" y="14" width="7" height="7" rx="1"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1"/>
-                </svg>
-              </div>
-              <span class="node-tag">Comissões</span>
-              <h3 class="node-title">Coordenações Temáticas</h3>
-            </div>
-          </div>
-          
-          <!-- Sub-ramos das Comissões -->
-          <div class="sub-branches four-cols">
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node leaf-eventos"
-                   [class.active]="activeNode === 'eventos'"
-                   (mouseenter)="setActiveNode('eventos')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <div class="leaf-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <rect x="3" y="4" width="18" height="18" rx="2"/>
-                      <path d="M16 2v4M8 2v4M3 10h18"/>
-                    </svg>
-                  </div>
-                  <span class="leaf-tag">Eventos</span>
-                  <h4>Programação</h4>
-                </div>
-              </div>
-            </div>
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node leaf-projectos"
-                   [class.active]="activeNode === 'projectos'"
-                   (mouseenter)="setActiveNode('projectos')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <div class="leaf-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                  </div>
-                  <span class="leaf-tag">Projectos</span>
-                  <h4>Desenvolvimento</h4>
-                </div>
-              </div>
-            </div>
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node leaf-comunicacao"
-                   [class.active]="activeNode === 'comunicacao'"
-                   (mouseenter)="setActiveNode('comunicacao')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <div class="leaf-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    </svg>
-                  </div>
-                  <span class="leaf-tag">Comunicação</span>
-                  <h4>Media</h4>
-                </div>
-              </div>
-            </div>
-            <div class="sub-branch">
-              <div class="sub-branch-line"></div>
-              <div class="leaf-node leaf-inovacao"
-                   [class.active]="activeNode === 'inovacao'"
-                   (mouseenter)="setActiveNode('inovacao')"
-                   (mouseleave)="clearActiveNode()">
-                <div class="leaf-glow"></div>
-                <div class="leaf-content">
-                  <div class="leaf-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                    </svg>
-                  </div>
-                  <span class="leaf-tag">Inovação</span>
-                  <h4>Capacitação</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Raízes decorativas da árvore -->
-      <div class="tree-roots">
-        <div class="root root-1"></div>
-        <div class="root root-2"></div>
-        <div class="root root-3"></div>
+      <div class="presidente-content">
+        <h2 class="presidente-title">Mensagem do presidente da <span class="highlight">ANAM</span></h2>
+        <p class="presidente-texto">
+          É com grande sentido de responsabilidade que lideramos a ANAM na sua missão de promover o desenvolvimento social, cultural e económico de Massinga. A nossa estrutura reflete o compromisso de cada órgão e de cada membro com a comunidade. Juntos, continuamos a construir um futuro mais próspero para o nosso distrito.
+        </p>
+        <p class="presidente-assinatura">Eng. Agostinho Francisco Langa Júnior<br>Presidente da ANAM</p>
       </div>
     </div>
   </section>
 
-  <!-- Rodapé decorativo -->
-  <footer class="organograma-footer">
-    <p>© 2025 ANAM - Unidos pelo Desenvolvimento de Massinga</p>
-  </footer>
+  <!-- Organograma (estrutura da imagem) -->
+  <section class="tree-section organograma-chart">
+    <div class="chart-container">
+      <!-- Nível 1: Director Geral -->
+      <div class="chart-row row-1">
+        <div class="chart-box box-dg">Director Geral</div>
+      </div>
+      <div class="chart-connector-v"></div>
+      <!-- Nível 2: Director Geral Adjunto -->
+      <div class="chart-row row-2">
+        <div class="chart-box box-dga">Director Geral Adjunto</div>
+      </div>
+      <div class="chart-connector-v"></div>
+      <!-- Nível 3: Gabinetes -->
+      <div class="chart-row row-3">
+        <div class="chart-box box-white">Gab. Aud. e Controlo Interno</div>
+        <div class="chart-box box-white">Gab. Ass. Jurídica</div>
+        <div class="chart-box box-white">Delegações Regionais</div>
+      </div>
+      <div class="chart-connector-v"></div>
+      <!-- Nível 4: Conselhos -->
+      <div class="chart-row row-4">
+        <div class="chart-box box-grey">Conselho de Direção</div>
+        <div class="chart-box box-grey">Conselho Técnico</div>
+        <div class="chart-box box-grey">Conselho Fiscal</div>
+        <div class="chart-box box-grey">Conselho Consultivo</div>
+      </div>
+      <div class="chart-connector-v"></div>
+      <!-- Nível 5: Serviços/Departamentos principais -->
+      <div class="chart-row row-5">
+        <div class="chart-box box-green">SCDTC</div>
+        <div class="chart-box box-green">SCAFPE</div>
+        <div class="chart-box box-green">SCEPC</div>
+        <div class="chart-box box-blue">DARH</div>
+      </div>
+      <div class="chart-connector-v"></div>
+      <!-- Nível 6: Subdepartamentos -->
+      <div class="chart-row row-6">
+        <div class="chart-group">
+          <div class="chart-box box-white">Dept. Desenv. Técnico</div>
+          <div class="chart-box box-white">Dept. Competitividade</div>
+        </div>
+        <div class="chart-group">
+          <div class="chart-box box-white">Dept. Assist. Financeira</div>
+          <div class="chart-box box-white">Dept. Tecnologias Informação</div>
+        </div>
+        <div class="chart-group">
+          <div class="chart-box box-white">Dept. Estudos e Planif.</div>
+          <div class="chart-box box-white">Dept. Cooperação</div>
+        </div>
+        <div class="chart-group">
+          <div class="chart-box box-white">Dept. Adm e Finanças</div>
+          <div class="chart-box box-white">Dept. RH</div>
+          <div class="chart-box box-white">Dept. Aquisições</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mensagens de membros da associação -->
+  <section class="membros-mensagens-section">
+    <div class="membros-mensagens-container">
+      <h2 class="membros-mensagens-title">Mensagens de <span class="highlight">Membros do Conselho</span></h2>
+      <p class="membros-mensagens-subtitle">O que dizem alguns membros do conselho da ANAM sobre a associação e o seu impacto em Massinga</p>
+      <div class="membros-mensagens-grid">
+        <article class="membro-mensagem-card" *ngFor="let msg of mensagensMembros">
+          <div class="membro-mensagem-card-inner">
+            <div class="membro-mensagem-foto" *ngIf="msg.foto">
+              <img [src]="msg.foto" [alt]="msg.nome" width="80" height="80" loading="lazy">
+            </div>
+            <div class="membro-mensagem-body">
+              <blockquote class="membro-mensagem-texto">"{{ msg.texto }}"</blockquote>
+              <div class="membro-mensagem-author">
+                <span class="membro-mensagem-nome">{{ msg.nome }}</span>
+                <span class="membro-mensagem-cargo">{{ msg.cargo }}</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
 </section>

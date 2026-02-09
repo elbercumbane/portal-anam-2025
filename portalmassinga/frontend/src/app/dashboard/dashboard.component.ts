@@ -623,6 +623,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       case 'membros-organograma':
         this.currentView = 'membros-organograma';
         break;
+      case 'apoio-gestao':
+        this.currentView = 'apoio-gestao';
+        break;
+      case 'simpatizantes-gestao':
+        this.currentView = 'simpatizantes-gestao';
+        break;
+      case 'eventos-gestao':
+        this.currentView = 'eventos-gestao';
+        break;
+      case 'eventos-inscricoes':
+        this.currentView = 'eventos-inscricoes';
+        break;
       // Tesouraria
       case 'tesouraria-gestao':
         this.currentView = 'tesouraria-gestao';

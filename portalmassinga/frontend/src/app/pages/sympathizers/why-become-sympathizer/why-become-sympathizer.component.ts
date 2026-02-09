@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ApiClientService } from '../../../services/api-client.service';
 
 @Component({
   selector: 'app-why-become-sympathizer',
@@ -16,6 +17,8 @@ export class WhyBecomeSympathizerComponent implements OnInit {
   
   form!: FormGroup;
   formSubmitted = false;
+  isLoading = false;
+  errorMessage = '';
 
   impactStats = [
     { number: '+1.200', label: 'Jovens Beneficiados em 2024', icon: '👥' },
@@ -78,7 +81,11 @@ export class WhyBecomeSympathizerComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private fb: FormBuilder) {}
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private apiClient: ApiClientService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -98,10 +105,27 @@ export class WhyBecomeSympathizerComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      // Aqui você pode adicionar a lógica para enviar os dados
-      console.log('Form submitted:', this.form.value);
-      this.formSubmitted = true;
-      this.form.reset();
+      this.isLoading = true;
+      this.errorMessage = '';
+      const v = this.form.value;
+      const payload = {
+        fullName: v.nome,
+        email: v.email,
+        phone: v.telefone || '',
+        areaInterest: 'Geral',
+        acceptCommunications: !!v.consentimento
+      };
+      this.apiClient.createSympathizerRegistration(payload).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.formSubmitted = true;
+          this.form.reset();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = err?.message || 'Erro ao registar. Tente novamente.';
+        }
+      });
     } else {
       this.form.markAllAsTouched();
     }

@@ -1,19 +1,17 @@
+# Vercel limita upload a 100 MB por ficheiro - node_modules e dist nao podem ser enviados
+# A Vercel corre npm install e npm run build no servidor; o codigo funciona na mesma
 node_modules
+dist
+.angular
 .git
+.vercel
 .vscode
 .idea
 *.log
-*.map
-src
-tsconfig*.json
-angular.json
-karma.conf.js
-e2e
-*.md
 .env*
 .DS_Store
 Thumbs.db
-public/assets/video
-*.mov
-*.mp4
-*.avi
+
+# Nao enviar package-lock.json: foi gerado no Windows e fixa @rollup/rollup-win32-x64-msvc.
+# Na Vercel (Linux) o npm install deve resolver dependencias para Linux.
+package-lock.json
