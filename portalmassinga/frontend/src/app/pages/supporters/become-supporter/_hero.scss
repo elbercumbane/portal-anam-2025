@@ -2,7 +2,7 @@
 // HERO SECTION - APOIO
 // ========================================
 
-@import './variables';
+@import './_variables';
 
 .hero-section {
   position: relative;
@@ -207,7 +207,6 @@
   }
 }
 
-// Responsivo
 @media (max-width: $mobile) {
   .hero-section {
     min-height: 50vh;
@@ -233,4 +232,3 @@
     }
   }
 }
-

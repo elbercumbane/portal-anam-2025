@@ -4,69 +4,68 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navbar-clock',
-  
   template: `
-    <div class="clock-container">
-      <mat-icon class="clock-icon">schedule</mat-icon>
-      <span class="time-display">{{ currentTime }}</span>
+    <div class="datetime-block">
+      <div class="time-line">{{ currentTime }}</div>
+      <div class="date-line">{{ currentDate }}</div>
     </div>
   `,
   styles: [`
-    .clock-container {
+    .datetime-block {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-right: 0.5rem;
-      
-      .clock-icon {
-        color: #05B6D4;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-      }
-      
-      .time-display {
-        color: #05B6D4;
-        font-weight: 600;
-        font-size: 0.9rem;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 0.5px;
-      }
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      margin-right: 0.75rem;
+      text-align: right;
     }
-    
+
+    .time-line {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #059669;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+    }
+
+    .date-line {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #334155;
+      line-height: 1.3;
+      margin-top: 0.1rem;
+    }
+
     @media (max-width: 768px) {
-      .clock-container {
-        margin-right: 0.25rem;
-        gap: 0.4rem;
-        
-        .clock-icon {
-          font-size: 1.1rem;
-        }
-        
-        .time-display {
-          font-size: 0.85rem;
-        }
+      .datetime-block {
+        margin-right: 0.5rem;
+      }
+      .time-line {
+        font-size: 1.1rem;
+      }
+      .date-line {
+        font-size: 0.75rem;
       }
     }
-    
+
     @media (max-width: 480px) {
-      .clock-container {
-        margin-right: 0.15rem;
-        gap: 0.3rem;
-        
-        .clock-icon {
-          font-size: 1rem;
-        }
-        
-        .time-display {
-          font-size: 0.8rem;
-        }
+      .datetime-block {
+        margin-right: 0.35rem;
+      }
+      .time-line {
+        font-size: 1rem;
+      }
+      .date-line {
+        font-size: 0.7rem;
       }
     }
   `]
 })
 export class NavbarClockComponent implements OnInit, OnDestroy {
   currentTime = '';
-  private intervalId: any;
+  currentDate = '';
+  private intervalId: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
     this.updateTime();
@@ -87,5 +86,12 @@ export class NavbarClockComponent implements OnInit, OnDestroy {
       second: '2-digit',
       hour12: false
     });
+    const dateStr = now.toLocaleDateString('pt-MZ', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    this.currentDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   }
 }

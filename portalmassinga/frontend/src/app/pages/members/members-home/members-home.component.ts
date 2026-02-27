@@ -220,6 +220,10 @@ export class MembersHomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const user = this.authService.getCurrentUser();
+    if (user?.mustChangePassword) {
+      this.router.navigate(['/login']);
+      return;
+    }
     if (user) {
       this.userName = user.nome;
       // Carregar dados do membro imediatamente

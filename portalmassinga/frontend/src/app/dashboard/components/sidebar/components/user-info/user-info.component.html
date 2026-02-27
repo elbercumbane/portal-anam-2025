@@ -1,13 +1,6 @@
-<div class="user-session-card">
-  <p class="session-line session-title">
-    Sessão ativa
-  </p>
-  <p class="session-line">
-    <span class="session-label">Nome:</span>
-    <span class="session-value">{{ userInfo.username || 'Usuário' }}</span>
-  </p>
-  <p class="session-line">
-    <span class="session-label">Perfil:</span>
-    <span class="session-value">{{ userInfo.role }}</span>
-  </p>
+<div class="user-profile-card">
+  <div class="profile-avatar">
+    <span class="avatar-initials">{{ getUserInitials() }}</span>
+  </div>
+  <span class="profile-name">{{ userInfo.username || 'Usuário' }}</span>
 </div>

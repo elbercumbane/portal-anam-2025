@@ -19,7 +19,9 @@ export class SidebarComponent {
   @Input() activeNavigationItem = 'dashboard';
   @Input() navigationItems: NavigationItem[] = [];
   @Input() userName = 'Usuário';
-  @Input() userRole = 'Técnico Administrador';
+  @Input() userEmail = '';
+  @Input() userRole = 'Administrador';
+  @Input() pendingMembersCount = 0;
   @Output() toggleSidebar = new EventEmitter<void>();
   @Output() navigationClick = new EventEmitter<NavigationItem>();
   @Output() serviceItemClick = new EventEmitter<ServiceItem>();
@@ -39,6 +41,7 @@ export class SidebarComponent {
   get userInfo(): UserInfo {
     return {
       username: this.userName || 'Usuário',
+      email: this.userEmail || undefined,
       role: this.userRole
     };
   }

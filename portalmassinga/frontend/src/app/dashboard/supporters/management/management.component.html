@@ -1,18 +1,12 @@
 <div class="page-container">
   <div class="page-header">
-    <h1>Gestão de Apoiantes</h1>
-    <p>Registos de "Torne-se Apoiante" (apoio/torne-se-apoiante)</p>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon total">
-        <mat-icon>volunteer_activism</mat-icon>
-      </div>
-      <div class="stat-content">
-        <h3>{{ supporters.length }}</h3>
-        <p>Total de Registos</p>
-      </div>
+    <div class="page-header-content">
+      <h1>Gestão de Apoiantes</h1>
+      <p>Registos de "Torne-se Apoiante" (apoio/torne-se-apoiante)</p>
+    </div>
+    <div class="page-header-stat">
+      <span class="stat-number">{{ filteredSupporters.length }}</span>
+      <span class="stat-label">Total de Registos</span>
     </div>
   </div>
 
@@ -24,6 +18,23 @@
         placeholder="Buscar por nome, email, contacto ou tipo de apoio..."
         [(ngModel)]="searchTerm"
         (input)="onSearchChange()">
+    </div>
+    <div class="filter-row">
+      <select [(ngModel)]="filterQuerAcesso" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">Quer Acesso: Todos</option>
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+      <select [(ngModel)]="filterFundosConfirmados" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">Fundos: Todos</option>
+        <option value="sim">Confirmados</option>
+        <option value="nao">Pendentes</option>
+      </select>
+      <select [(ngModel)]="filterContaCriada" (ngModelChange)="applyFilters()" class="filter-select">
+        <option value="">Conta: Todas</option>
+        <option value="sim">Criada</option>
+        <option value="nao">Não criada</option>
+      </select>
     </div>
   </div>
 
@@ -48,37 +59,79 @@
     <table class="supporters-table">
       <thead>
         <tr>
+          <th class="col-num">#</th>
           <th>Nome</th>
           <th>Email</th>
           <th>Contacto</th>
+          <th title="WhatsApp do contacto principal">WhatsApp</th>
+          <th>Outro contacto</th>
+          <th title="WhatsApp do outro contacto">WhatsApp</th>
           <th>Tipo de Apoio</th>
           <th>Descrição</th>
           <th>Anónimo</th>
+          <th>Quer Acesso</th>
+          <th>Fundos Confirm.</th>
+          <th>Conta Criada</th>
           <th>Data Registo</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let s of filteredSupporters" class="supporter-row">
+        <tr *ngFor="let s of filteredSupporters; let i = index" class="supporter-row">
+          <td class="col-num">{{ i + 1 }}</td>
           <td class="name-cell">{{ s.anonymous ? 'Anónimo' : s.fullName }}</td>
           <td>{{ s.anonymous ? '-' : s.email }}</td>
           <td>{{ s.anonymous ? '-' : s.phone }}</td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.phoneWhatsApp" [class.badge-no]="!s.phoneWhatsApp">
+              {{ s.anonymous ? '-' : (s.phoneWhatsApp ? 'Sim' : 'Não') }}
+            </span>
+          </td>
+          <td>{{ s.anonymous ? '-' : (s.phone2 || '-') }}</td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.phone2WhatsApp" [class.badge-no]="!s.phone2WhatsApp">
+              {{ s.anonymous ? '-' : (s.phone2 ? (s.phone2WhatsApp ? 'Sim' : 'Não') : '-') }}
+            </span>
+          </td>
           <td>{{ getSupportTypeLabel(s.supportType) }}</td>
-          <td class="desc-cell">{{ (s.description || '-').slice(0, 60) }}{{ (s.description || '').length > 60 ? '...' : '' }}</td>
+          <td class="col-desc" [title]="s.description">{{ truncateDesc(s.description, 60) }}</td>
           <td>
             <span class="badge" [class.badge-yes]="s.anonymous" [class.badge-no]="!s.anonymous">
               {{ s.anonymous ? 'Sim' : 'Não' }}
             </span>
           </td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.wantsAccount" [class.badge-no]="!s.wantsAccount">
+              {{ s.wantsAccount ? 'Sim' : 'Não' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.fundsConfirmed" [class.badge-no]="!s.fundsConfirmed">
+              {{ s.fundsConfirmed ? 'Sim' : 'Não' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.accountCreated" [class.badge-no]="!s.accountCreated">
+              {{ s.accountCreated ? 'Sim' : 'Não' }}
+            </span>
+          </td>
           <td>{{ s.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
           <td class="actions-cell">
+            <button class="btn-action btn-confirm" (click)="confirmFunds(s)" title="Confirmar fundos" 
+              [disabled]="s.fundsConfirmed">
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button class="btn-action btn-create" (click)="createAccount(s)" title="Criar conta"
+              [disabled]="!s.fundsConfirmed || s.accountCreated || !s.wantsAccount">
+              <mat-icon>person_add</mat-icon>
+            </button>
             <button class="btn-action btn-view" (click)="viewDetails(s)" title="Ver Detalhes">
               <mat-icon>visibility</mat-icon>
             </button>
           </td>
         </tr>
         <tr *ngIf="filteredSupporters.length === 0 && !isLoading && !errorMessage">
-          <td colspan="8" class="no-data">
+          <td colspan="15" class="no-data">
             <div class="empty-state">
               <mat-icon>volunteer_activism</mat-icon>
               <h3>Nenhum registo de apoiante</h3>
@@ -113,6 +166,18 @@
           <p>{{ selectedSupporter.anonymous ? '-' : selectedSupporter.phone }}</p>
         </div>
         <div class="detail-row">
+          <label>WhatsApp (contacto):</label>
+          <p>{{ selectedSupporter.anonymous ? '-' : (selectedSupporter.phoneWhatsApp ? 'Sim' : 'Não') }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Outro contacto:</label>
+          <p>{{ selectedSupporter.anonymous ? '-' : (selectedSupporter.phone2 || '-') }}</p>
+        </div>
+        <div class="detail-row">
+          <label>WhatsApp (outro contacto):</label>
+          <p>{{ selectedSupporter.anonymous ? '-' : (selectedSupporter.phone2 ? (selectedSupporter.phone2WhatsApp ? 'Sim' : 'Não') : '-') }}</p>
+        </div>
+        <div class="detail-row">
           <label>Tipo de Apoio:</label>
           <p>{{ getSupportTypeLabel(selectedSupporter.supportType) }}</p>
         </div>
@@ -125,11 +190,32 @@
           <p>{{ selectedSupporter.anonymous ? 'Sim' : 'Não' }}</p>
         </div>
         <div class="detail-row">
+          <label>Quer Acesso:</label>
+          <p>{{ selectedSupporter.wantsAccount ? 'Sim' : 'Não' }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Fundos confirmados:</label>
+          <p>{{ selectedSupporter.fundsConfirmed ? 'Sim' : 'Não' }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Conta criada:</label>
+          <p>{{ selectedSupporter.accountCreated ? 'Sim' : 'Não' }}</p>
+        </div>
+        <div class="detail-row">
           <label>Data de Registo:</label>
           <p>{{ selectedSupporter.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
         </div>
       </div>
       <div class="modal-footer">
+        <button class="btn-action-footer btn-confirm" (click)="confirmFunds(selectedSupporter)" 
+          [disabled]="selectedSupporter.fundsConfirmed" *ngIf="selectedSupporter">
+          <mat-icon>check_circle</mat-icon> Confirmar fundos
+        </button>
+        <button class="btn-action-footer btn-create" (click)="createAccount(selectedSupporter)"
+          [disabled]="!selectedSupporter.fundsConfirmed || selectedSupporter.accountCreated || !selectedSupporter.wantsAccount"
+          *ngIf="selectedSupporter">
+          <mat-icon>person_add</mat-icon> Criar conta
+        </button>
         <button class="btn-secondary" (click)="closeDetailsModal()">Fechar</button>
       </div>
     </div>

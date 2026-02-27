@@ -54,6 +54,9 @@ public class MemberApplication {
     @Column(name = "profession", nullable = false, length = 255)
     private String profession;
 
+    @Column(name = "nuit", length = 21)
+    private String nuit; // Número Único de Identidade Tributária (Moçambique)
+
     // Contacts (Required)
     @NotBlank(message = "Celular é obrigatório")
     @Column(name = "mobile_phone", nullable = false, length = 20)

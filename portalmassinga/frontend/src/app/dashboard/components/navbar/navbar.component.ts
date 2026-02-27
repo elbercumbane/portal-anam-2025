@@ -14,12 +14,12 @@ import { NavbarUserProfileComponent } from './components/navbar-user-profile/nav
 
 @Component({
   selector: 'app-navbar',
-  
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
   @Input() isHandset = false;
+  @Input() sidebarOpen = false;
   @Input() title: string = 'ANAM';
   @Input() subtitle: string = 'Associação de Naturais e Amigos de Massinga';
   @Input() notificationCount: number = 3;
@@ -32,6 +32,8 @@ export class NavbarComponent {
   @Output() themeToggle = new EventEmitter<boolean>();
   @Output() notificationsClick = new EventEmitter<void>();
   @Output() profileOptionClick = new EventEmitter<string>();
+
+  ngOnInit(): void {}
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();

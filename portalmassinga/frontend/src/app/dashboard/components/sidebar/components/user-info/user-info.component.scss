@@ -1,40 +1,43 @@
-// User Info Component Styles
-.user-session-card {
-  padding: 0.5rem 0.25rem 1rem 0.25rem;
-  margin: 0 1.5rem 0.5rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+// User Profile - Sidebar (apenas avatar + nome)
+$text-primary: #0f172a;
+$accent: #059669;
+
+.user-profile-card {
+  margin: 1rem 0.75rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  
-  .session-line {
-    margin: 0;
-    display: flex;
-    gap: 0.4rem;
-    font-size: 0.9rem;
-    color: #2c3e50;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(5, 150, 105, 0.15);
 
-    &.session-title {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      font-weight: 600;
-      color: #6c757d;
-  }
-  
-    &.session-date {
-      font-size: 0.8rem;
-      color: #6c757d;
-  }
-  
-    .session-label {
-      font-weight: 600;
-      color: #5b6472;
+  .profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(5, 150, 105, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .avatar-initials {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $accent;
+      letter-spacing: 0.5px;
     }
-    
-    .session-value {
-      font-weight: 500;
-      color: #1f2d3d;
-    }
+  }
+
+  .profile-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $text-primary;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
 }

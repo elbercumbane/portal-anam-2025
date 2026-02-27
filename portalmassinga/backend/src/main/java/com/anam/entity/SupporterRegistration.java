@@ -47,6 +47,24 @@ public class SupporterRegistration {
     @Column(name = "anonymous", nullable = false)
     private Boolean anonymous = false;
 
+    @Column(name = "wants_account", nullable = false)
+    private Boolean wantsAccount = false;
+
+    @Column(name = "funds_confirmed", nullable = false)
+    private Boolean fundsConfirmed = false;
+
+    @Column(name = "account_created", nullable = false)
+    private Boolean accountCreated = false;
+
+    @Column(name = "phone_2", length = 50)
+    private String phone2;
+
+    @Column(name = "phone_whatsapp")
+    private Boolean phoneWhatsApp = false;
+
+    @Column(name = "phone_2_whatsapp")
+    private Boolean phone2WhatsApp = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 

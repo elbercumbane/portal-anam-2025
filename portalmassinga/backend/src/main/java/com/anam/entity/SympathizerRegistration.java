@@ -34,6 +34,9 @@ public class SympathizerRegistration {
     @Column(name = "phone", length = 50)
     private String phone;
 
+    @Column(name = "nuit", length = 21)
+    private String nuit;
+
     @NotBlank(message = "Área de interesse é obrigatória")
     @Column(name = "area_interest", nullable = false, length = 255)
     private String areaInterest;

@@ -1,10 +1,41 @@
 // ========================================
-// WHY SUPPORT COMPONENT
+// WHY SUPPORT COMPONENT (apenas esta página)
 // ========================================
 
-@import '../_hero';
-@import '../_sections';
-@import '../_variables';
+@import './_variables';
+@import './_hero';
+
+// Layout comum da página
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: $ink-900;
+    margin-bottom: 1rem;
+  }
+
+  .highlight-text {
+    color: $green-primary;
+  }
+
+  .section-description {
+    font-size: 1.1rem;
+    color: $ink-500;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+}
 
 // ========================================
 // SECÇÃO: POR QUE APOIAR
@@ -193,10 +224,28 @@
 }
 
 // ========================================
-// SECÇÃO: NÍVEIS DE APOIO (Estilos adicionais)
+// SECÇÃO: NÍVEIS DE APOIO
 // ========================================
 .support-levels-section {
+  padding: 5rem 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+
+  .support-levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
   .support-level-card {
+    background: $white;
+    padding: 2.5rem;
+    border-radius: $border-radius-xl;
+    text-align: center;
+    box-shadow: $shadow-medium;
+    border: 2px solid rgba(76, 175, 80, 0.1);
+    @include smooth-transition;
+
     .medal-icon-large {
       width: 120px;
       height: 120px;
@@ -282,9 +331,12 @@
 }
 
 // ========================================
-// SECÇÃO: CTA FINAL (Estilos adicionais)
+// SECÇÃO: CTA FINAL
 // ========================================
 .final-cta-section {
+  padding: 5rem 0;
+  background: #f8f9fa;
+
   .cta-content {
     background: $white;
     padding: 3rem 2.5rem;
@@ -293,7 +345,8 @@
     border: 2px solid rgba(76, 175, 80, 0.15);
     position: relative;
     overflow: visible;
-    
+    text-align: center;
+
     &::before {
       content: '';
       position: absolute;
@@ -303,6 +356,47 @@
       height: 5px;
       background: linear-gradient(90deg, $green-primary 0%, $blue-primary 100%);
       border-radius: $border-radius-xl $border-radius-xl 0 0;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: $ink-500;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .cta-button-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem 2.5rem;
+      background: linear-gradient(135deg, $green-primary 0%, darken($green-primary, 8%) 100%);
+      color: $white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      @include smooth-transition;
+      box-shadow: 0 6px 24px rgba(76, 175, 80, 0.4);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 32px rgba(76, 175, 80, 0.5);
+      }
+
+      svg {
+        width: 22px;
+        height: 22px;
+      }
     }
   }
 }

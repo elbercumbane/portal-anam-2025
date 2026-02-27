@@ -48,6 +48,7 @@ export class AssociateComponent implements OnInit {
       dataNascimento: ['', Validators.required],
       estadoCivil: ['', Validators.required],
       profissao: ['', Validators.required],
+      nuit: [''], // Número Único de Identidade Tributária (para Pagar Cotas)
 
       // Contatos (Obrigatório)
       celular: ['', [Validators.required]],
@@ -243,6 +244,7 @@ export class AssociateComponent implements OnInit {
       birthDate: formValue.dataNascimento || null,
       maritalStatus: formValue.estadoCivil,
       profession: formValue.profissao,
+      nuit: (formValue.nuit || '').trim() || null,
       mobilePhone: formValue.celular,
       email: formValue.email,
       phone: formValue.telefone || null,

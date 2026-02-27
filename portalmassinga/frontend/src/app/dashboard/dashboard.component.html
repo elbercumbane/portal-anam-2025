@@ -13,7 +13,9 @@
         [activeNavigationItem]="activeNavigationItem"
         [navigationItems]="[]"
         [userName]="userName"
+        [userEmail]="userEmail"
         [userRole]="userRole"
+        [pendingMembersCount]="pendingMembersCount"
         (toggleSidebar)="toggleSidebar()"
         (navigationClick)="onNavigationClick($event)"
         (serviceItemClick)="onServiceItemClick($event)">
@@ -23,13 +25,14 @@
     <mat-sidenav-content class="main-content">
       <app-navbar 
         [isHandset]="isHandset"
+        [sidebarOpen]="sidebarOpen"
         [userName]="userName"
         (toggleSidebar)="toggleSidebar()"
         (refreshDashboard)="refreshDashboard()"
         (profileOptionClick)="onProfileOptionClick($event)">
       </app-navbar>
 
-      <div class="dashboard-content">
+      <div class="dashboard-content" [class.full-width-content]="currentView === 'membros-gestao' || currentView === 'membro-detalhe'">
         <!-- Debug: Verificar se o componente está carregando -->
         <div *ngIf="false" style="padding: 20px; background: yellow; color: black;">
           Debug: currentView = {{ currentView }}, dashboardStats = {{ dashboardStats ? 'loaded' : 'null' }}
@@ -47,6 +50,15 @@
         <app-events *ngIf="currentView === 'eventos'" (navigationClick)="onNavigationClick($event)"></app-events>
         <app-history *ngIf="currentView === 'historial'" (navigationClick)="onNavigationClick($event)"></app-history>
         <app-gallery *ngIf="currentView === 'galeria'" (navigationClick)="onNavigationClick($event)"></app-gallery>
+        <!-- Configurações -->
+        <div *ngIf="currentView === 'config-notificacoes'" class="config-placeholder">
+          <div class="config-placeholder-content">
+            <mat-icon>notifications</mat-icon>
+            <h2>Configurações de Notificações</h2>
+            <p>Gerencie as notificações do sistema.</p>
+            <p class="hint">Esta funcionalidade está em desenvolvimento.</p>
+          </div>
+        </div>
         <app-partners *ngIf="currentView === 'parceiros'" (navigationClick)="onNavigationClick($event)"></app-partners>
         <app-programs *ngIf="currentView === 'programas'" (navigationClick)="onNavigationClick($event)"></app-programs>
         <app-news *ngIf="currentView === 'noticias'" (navigationClick)="onNavigationClick($event)"></app-news>
@@ -60,7 +72,13 @@
         
         <!-- Membros -->
         <app-members-home *ngIf="currentView === 'membros-home'" (navigationClick)="onNavigationClick($event)"></app-members-home>
-        <app-members-management *ngIf="currentView === 'membros-gestao'" (navigationClick)="onNavigationClick($event)"></app-members-management>
+        <app-members-management *ngIf="currentView === 'membros-gestao'" 
+          (navigationClick)="onNavigationClick($event)"
+          (membersUpdated)="loadPendingMembersCount()">
+        </app-members-management>
+        <app-member-detail-page *ngIf="currentView === 'membro-detalhe'"
+          (membersUpdated)="loadPendingMembersCount()">
+        </app-member-detail-page>
         <app-org-chart *ngIf="currentView === 'membros-organograma'" (navigationClick)="onNavigationClick($event)"></app-org-chart>
         
         <!-- Apoio / Apoiantes -->
@@ -76,6 +94,7 @@
         <app-event-registrations-management *ngIf="currentView === 'eventos-inscricoes'" (navigationClick)="onNavigationClick($event)"></app-event-registrations-management>
         
         <!-- Tesouraria -->
+        <app-quotas-management *ngIf="currentView === 'tesouraria-cotas'" (navigationClick)="onNavigationClick($event)"></app-quotas-management>
         <app-treasury-management *ngIf="currentView === 'tesouraria-gestao'" (navigationClick)="onNavigationClick($event)"></app-treasury-management>
         <app-treasury-reports *ngIf="currentView === 'tesouraria-relatorios'" (navigationClick)="onNavigationClick($event)"></app-treasury-reports>
         
@@ -94,8 +113,7 @@
             <!-- Header Card Component -->
             <app-dashboard-header-card
               [greeting]="greeting"
-              [userName]="userName"
-              [currentDate]="currentDate">
+              [userName]="userName">
             </app-dashboard-header-card>
 
           <!-- Cards Principais - Design Moderno -->

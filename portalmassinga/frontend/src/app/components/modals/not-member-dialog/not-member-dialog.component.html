@@ -1,0 +1,23 @@
+<div class="not-member-dialog">
+  <div class="dialog-icon">
+    <mat-icon>person_off</mat-icon>
+  </div>
+  <h2 class="dialog-title">Você não é membro da associação</h2>
+  <p class="dialog-message">
+    O NUIT indicado não está associado a nenhuma conta de membro da ANAM.
+    Para pagar cotas ou consultar recibos, deve registar-se como membro da associação.
+  </p>
+  <div class="dialog-actions">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onRegister()"
+      class="btn-register">
+      <mat-icon>person_add</mat-icon>
+      Clique aqui para se cadastrar
+    </button>
+    <button mat-stroked-button (click)="onClose()" class="btn-close">
+      Fechar
+    </button>
+  </div>
+</div>

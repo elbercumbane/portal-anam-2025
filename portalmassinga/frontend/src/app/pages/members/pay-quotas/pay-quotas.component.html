@@ -51,27 +51,28 @@
   
   <div class="content-section">
   <div class="content-wrapper">
-        <!-- Buscar Membro -->
+        <!-- Buscar Membro por NUIT -->
     <mat-card class="section-card">
       <mat-card-header>
-            <mat-card-title>Buscar Membro</mat-card-title>
+            <mat-card-title>Identificar Membro</mat-card-title>
           </mat-card-header>
           <mat-card-content>
+            <p class="nuit-instruction">Digite o seu NUIT para que o sistema possa buscar os seus dados e permitir o pagamento das cotas.</p>
             <form [formGroup]="memberForm" class="member-search-form">
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Número de Membro</mat-label>
+                <mat-label>NUIT (Número Único de Identidade Tributária)</mat-label>
                 <input 
                   matInput 
                   type="text"
-                  formControlName="numeroMembro"
-                  placeholder="Digite o número do membro"
+                  formControlName="nuit"
+                  placeholder="Digite o seu NUIT"
                   (keyup.enter)="buscarMembro()">
                 <mat-icon matPrefix>badge</mat-icon>
-                <mat-error *ngIf="memberForm.get('numeroMembro')?.hasError('required')">
-                  Número de membro é obrigatório
+                <mat-error *ngIf="memberForm.get('nuit')?.hasError('required')">
+                  NUIT é obrigatório
                 </mat-error>
-                <mat-error *ngIf="memberForm.get('numeroMembro')?.hasError('pattern')">
-                  Digite apenas números
+                <mat-error *ngIf="memberForm.get('nuit')?.hasError('pattern')">
+                  Digite um NUIT válido (apenas números, até 21 dígitos)
                 </mat-error>
               </mat-form-field>
               <button 
@@ -88,10 +89,9 @@
 
             <!-- Informações do Membro -->
             <div *ngIf="member && !memberLoading" class="member-info">
-              <mat-divider></mat-divider>
               <div class="member-details">
                 <h3>{{ member.nome }}</h3>
-                <p><strong>Número:</strong> {{ member.numero }}</p>
+                <p><strong>NUIT:</strong> {{ member.numero }}</p>
                 <p><strong>Email:</strong> {{ member.email }}</p>
                 <p><strong>Telefone:</strong> {{ member.telefone }}</p>
               </div>
@@ -149,7 +149,7 @@
 
             <!-- Seleção de Meses (apenas para mensal) -->
             <div *ngIf="tipoPagamento === 'mensal'" class="meses-section">
-              <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+              <div class="form-divider"></div>
               <div class="meses-header">
               <h4>Selecionar Meses</h4>
                 <div class="meses-counter" *ngIf="quantidadeMeses > 0">
@@ -180,15 +180,6 @@
           </mat-card-content>
         </mat-card>
 
-        <!-- Seleção de Meses (quando não há tipo de pagamento selecionado) -->
-        <mat-card class="section-card" *ngIf="!member">
-          <mat-card-header>
-            <mat-card-title>Selecionar Meses</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="info-message">Por favor, busque um membro primeiro para continuar.</p>
-      </mat-card-content>
-    </mat-card>
 
     <!-- Resumo e Método de Pagamento -->
     <mat-card class="section-card" *ngIf="quantidadeMeses > 0">
@@ -227,7 +218,7 @@
           </div>
         </div>
 
-        <mat-divider style="margin: 1.5rem 0;"></mat-divider>
+        <div class="form-divider"></div>
 
         <!-- Método de Pagamento -->
         <form [formGroup]="paymentForm" class="payment-form">

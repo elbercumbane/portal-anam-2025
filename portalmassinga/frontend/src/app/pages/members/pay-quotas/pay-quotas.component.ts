@@ -20,7 +20,9 @@ import { MemberConfirmationDialogComponent, MemberConfirmationData } from '../..
 import { PinConfirmationDialogComponent } from '../../../components/modals/pin-confirmation-dialog/pin-confirmation-dialog.component';
 import { PaymentReceiptDialogComponent, PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
 import { BeneficiosDialogComponent } from '../../../components/modals/beneficios-dialog/beneficios-dialog.component';
+import { NotMemberDialogComponent } from '../../../components/modals/not-member-dialog/not-member-dialog.component';
 import { MESES, VALOR_COTA, validateMpesaNumber, validateEmolaNumber, calcularValorTotal, formatarMesesSelecionados, Mes } from './pay-quotas.helpers';
+import { ApiClientService } from '../../../services/api-client.service';
 
 @Component({
   selector: 'app-pay-quotas',
@@ -67,12 +69,13 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
-    public router: Router
+    public router: Router,
+    private apiClient: ApiClientService
   ) {}
 
   ngOnInit(): void {
     this.memberForm = this.fb.group({
-      numeroMembro: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+      nuit: ['', [Validators.required, Validators.pattern(/^[0-9]{9,21}$/)]]
     });
     
     this.paymentForm = this.fb.group({
@@ -155,37 +158,29 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     
-    const numero = this.memberForm.value.numeroMembro;
+    const nuit = (this.memberForm.value.nuit || '').trim();
     this.memberLoading = true;
     
-    // Buscar dados do membro do localStorage ou API
-    // Primeiro tentar buscar do localStorage (dados de cadastro)
-    const stored = localStorage.getItem('anam_applications');
-    if (stored) {
-      try {
-        const members: any[] = JSON.parse(stored);
-        const member = members.find(m => m.id === numero || m.numero === numero);
-        
-        if (member) {
-          this.member = {
-            numero: member.id || member.numero || numero,
-            nome: member.nome || '',
-            email: member.email || '',
-            telefone: member.celular || member.telefone || ''
-          };
-          this.memberLoading = false;
-          return;
-        }
-      } catch (error) {
-        console.error('Erro ao buscar membro:', error);
+    this.apiClient.getApplicationByNuit(nuit).subscribe({
+      next: (app: any) => {
+        this.member = {
+          numero: app.nuit || nuit,
+          nome: app.fullName || app.nome || '',
+          email: app.email || '',
+          telefone: app.mobilePhone || app.celular || app.telefone || ''
+        };
+        this.memberLoading = false;
+      },
+      error: () => {
+        this.memberLoading = false;
+        this.member = null;
+        this.dialog.open(NotMemberDialogComponent, {
+          width: '440px',
+          maxWidth: '95vw',
+          panelClass: 'not-member-dialog-panel'
+        });
       }
-    }
-    
-    // Se não encontrou, mostrar mensagem
-    setTimeout(() => {
-      this.memberLoading = false;
-      this.snackBar.open('Membro não encontrado. Verifique o número do membro.', 'Fechar', { duration: 3000 });
-    }, 500);
+    });
   }
 
   selecionarTipoPagamento(tipo: 'mensal' | 'anual'): void {

@@ -1,0 +1,184 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gestão de Cotas</h1>
+    <p>Membros com dívidas não têm acesso à área de membros. Consulte nome, contacto e situação financeira.</p>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="stats-grid">
+    <div class="stat-card total">
+      <div class="stat-icon">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ members.length }}</h3>
+        <p>Total de Membros</p>
+      </div>
+    </div>
+    <div class="stat-card dividas">
+      <div class="stat-icon">
+        <mat-icon>warning</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getCountDividas() }}</h3>
+        <p>Com Dívidas</p>
+        <span class="stat-hint">Sem acesso à área</span>
+      </div>
+    </div>
+    <div class="stat-card em-dia">
+      <div class="stat-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getCountEmDia() }}</h3>
+        <p>Em Dia</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros e Tabs -->
+  <div class="filters-section">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar por nome, email, celular ou NUIT..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()">
+    </div>
+    <div class="tabs-filter">
+      <button class="tab-btn" [class.active]="activeTab === 'todos'" (click)="onTabChange('todos')">
+        Todos
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'dividas'" (click)="onTabChange('dividas')">
+        Com Dívidas
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'em-dia'" (click)="onTabChange('em-dia')">
+        Em Dia
+      </button>
+    </div>
+  </div>
+
+  <!-- Erro -->
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <mat-icon>error</mat-icon>
+    <div>
+      <h3>Erro ao carregar</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadMembers()">
+        <mat-icon>refresh</mat-icon>
+        Tentar Novamente
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando membros...</p>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-container" *ngIf="!isLoading && !errorMessage">
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Contacto</th>
+          <th>Situação Financeira</th>
+          <th>Dívida</th>
+          <th>Último Pagamento</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of filteredMembers" class="member-row">
+          <td class="name-cell">{{ m.nome }}</td>
+          <td>
+            <div class="contact-cell">
+              <span *ngIf="m.celular">{{ m.celular }}</span>
+              <span *ngIf="m.email" class="email">{{ m.email }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="situacao-badge" [ngClass]="getSituacaoClass(m.situacaoFinanceira)">
+              {{ getSituacaoLabel(m.situacaoFinanceira) }}
+            </span>
+          </td>
+          <td>
+            <span *ngIf="m.situacaoFinanceira === 'COM_DIVIDAS'" class="divida-value">
+              {{ formatCurrency(m.valorEmDivida) }} ({{ m.mesesEmDivida }} {{ m.mesesEmDivida === 1 ? 'mês' : 'meses' }})
+            </span>
+            <span *ngIf="m.situacaoFinanceira === 'EM_DIA'" class="em-dia-text">—</span>
+          </td>
+          <td>{{ m.ultimoMesPago || '—' }}</td>
+          <td>
+            <button class="btn-action btn-statement" (click)="viewStatement(m)" title="Ver extrato">
+              <mat-icon>receipt_long</mat-icon>
+              Extrato
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredMembers.length === 0 && !isLoading">
+          <td colspan="6" class="no-data">
+            <div class="empty-state">
+              <mat-icon>people_outline</mat-icon>
+              <h3>Nenhum membro encontrado</h3>
+              <p *ngIf="activeTab !== 'todos'">Nenhum membro com esta situação.</p>
+              <p *ngIf="activeTab === 'todos'">Não há membros aprovados com registo de cotas.</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Extrato -->
+  <div class="modal-overlay" *ngIf="showStatementModal" (click)="closeStatementModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Extrato de Pagamentos</h2>
+        <button class="btn-close" (click)="closeStatementModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="selectedMemberForStatement">
+        <div class="member-info-bar">
+          <strong>{{ selectedMemberForStatement.nome }}</strong>
+          <span>{{ selectedMemberForStatement.email }}</span>
+          <span>{{ selectedMemberForStatement.celular }}</span>
+        </div>
+        <div *ngIf="statementLoading" class="statement-loading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Carregando extrato...</p>
+        </div>
+        <div *ngIf="!statementLoading && statementPayments.length === 0" class="no-statement">
+          <mat-icon>info</mat-icon>
+          <p>Nenhum pagamento registado.</p>
+        </div>
+        <div *ngIf="!statementLoading && statementPayments.length > 0" class="statement-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th>Mês</th>
+                <th>Valor</th>
+                <th>Data Pagamento</th>
+                <th>Método</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of statementPayments">
+                <td>{{ p.year }}</td>
+                <td>{{ getMonthName(p.month) }}</td>
+                <td>{{ formatCurrency(p.amount) }}</td>
+                <td>{{ p.paymentDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ p.paymentMethod || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

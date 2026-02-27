@@ -16,59 +16,45 @@ import { MatButtonModule } from '@angular/material/button';
   `,
   styles: [`
     .menu-btn {
-      color: #0891B2;
-      margin-right: 1rem;
+      color: #059669;
+      margin-right: 0.5rem;
       transition: all 0.3s ease;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(8px);
-      
-      &:hover {
-        color: #05B6D4;
-        background: rgba(5, 182, 212, 0.12);
-        transform: translateY(-2px) scale(1.05);
-        box-shadow: 0 4px 12px rgba(5, 182, 212, 0.2);
-      }
-      
-      &:active {
-        transform: translateY(0) scale(0.98);
-      }
-      
-      .menu-icon {
-        color: #0891B2;
-        font-size: 1.4rem;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          animation: rotate 0.3s ease-in-out;
-          color: #05B6D4;
-        }
-      }
     }
-    
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(90deg); }
+    .menu-btn:hover {
+      color: #047857;
+      background: rgba(5, 150, 105, 0.12);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
     }
-    
-    // Responsive
+    .menu-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+    .menu-btn .menu-icon {
+      color: #059669;
+      font-size: 1.65rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      transition: all 0.3s ease;
+    }
+    .menu-btn:hover .menu-icon {
+      color: #047857;
+    }
     @media (max-width: 768px) {
-      .menu-btn {
-        margin-right: 0.75rem;
-        
-        .menu-icon {
-          font-size: 1.2rem;
-        }
+      .menu-btn { margin-right: 0.4rem; }
+      .menu-btn .menu-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
-    
     @media (max-width: 480px) {
-      .menu-btn {
-        margin-right: 0.5rem;
-        
-        .menu-icon {
-          font-size: 1.1rem;
-        }
+      .menu-btn .menu-icon {
+        font-size: 1.4rem;
+        width: 1.4rem;
+        height: 1.4rem;
       }
     }
   `]

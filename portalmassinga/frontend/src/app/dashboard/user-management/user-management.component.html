@@ -45,20 +45,13 @@
                    class="filter-input" 
                    [(ngModel)]="searchTerm" 
                    (ngModelChange)="onSearchChange()"
-                   placeholder="Email, nome, função, departamento ou província">
+                   placeholder="Email, nome ou função">
           </div>
           <div class="filter-group">
             <label class="filter-label">Função</label>
             <select class="filter-select" [(ngModel)]="roleFilter" (ngModelChange)="onRoleFilterChange()">
               <option value="">Todas</option>
               <option *ngFor="let role of roles" [value]="role">{{ getRoleLabel(role) }}</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label class="filter-label">Departamento</label>
-            <select class="filter-select" [(ngModel)]="departmentFilter" (ngModelChange)="onDepartmentFilterChange()">
-              <option value="">Todos</option>
-              <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
             </select>
           </div>
         </div>
@@ -110,8 +103,6 @@
           <tr>
             <th>Email</th>
             <th>Nome Completo</th>
-            <th>Departamento</th>
-            <th>Província</th>
             <th>Função</th>
             <th>Status</th>
             <th>Criado em</th>
@@ -122,17 +113,10 @@
           <tr *ngFor="let user of paginatedUsers">
             <td>{{ user.email }}</td>
             <td>{{ user.fullName || '-' }}</td>
-            <td>{{ getDepartmentLabel(user.department) }}</td>
-            <td>
-              <span *ngIf="user.province; else noProvince" class="province-badge">{{ user.province }}</span>
-              <ng-template #noProvince>
-                <span class="no-data">-</span>
-              </ng-template>
-          </td>
             <td>
               <span class="role-badge" 
                     [class.role-tecnico]="user.role === 'tecnico'" 
-                    [class.role-administrador]="user.role === 'administrador'" 
+                    [class.role-administrador]="user.role === 'administrador' || user.role === 'admin'" 
                     [class.role-super-administrador]="user.role === 'super-administrador'">
               {{ getRoleLabel(user.role) }}
             </span>
@@ -206,23 +190,20 @@
 
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <div class="form-content">
+          <mat-form-field appearance="outline" class="full-width nuit-field">
+            <mat-label>NUIT (opcional - para membro)</mat-label>
+            <input matInput formControlName="nuit" placeholder="Digite o NUIT para buscar dados do membro">
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-hint>Primeiro campo. Se for membro, preencha e os dados serão carregados. Senha padrão: anam{{ currentYear }}</mat-hint>
+          </mat-form-field>
+
           <mat-form-field appearance="outline" class="full-width email-field">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" placeholder="usuario@cedsif.gov.mz">
+            <input matInput formControlName="email" placeholder="usuario@exemplo.com">
             <mat-icon matPrefix>email</mat-icon>
             <mat-error *ngIf="userForm.get('email')?.touched">
               {{ getErrorMessage('email') }}
             </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width password-field">
-            <mat-label>Senha</mat-label>
-            <input matInput type="password" formControlName="password" [placeholder]="isEditMode ? 'Deixe em branco para manter a senha atual' : 'Mínimo 6 caracteres'">
-            <mat-icon matPrefix>lock</mat-icon>
-            <mat-error *ngIf="userForm.get('password')?.touched">
-              {{ getErrorMessage('password') }}
-            </mat-error>
-            <mat-hint *ngIf="isEditMode">Deixe em branco para manter a senha atual</mat-hint>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width fullname-field">
@@ -231,33 +212,7 @@
             <mat-icon matPrefix>person</mat-icon>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width department-field">
-            <mat-label>Departamento</mat-label>
-            <mat-select formControlName="department">
-              <mat-option *ngFor="let dept of departments" [value]="dept">
-                {{ dept }}
-              </mat-option>
-            </mat-select>
-            <mat-icon matPrefix>business</mat-icon>
-            <mat-error *ngIf="userForm.get('department')?.touched">
-              {{ getErrorMessage('department') }}
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width province-field" *ngIf="showProvinceField">
-            <mat-label>Província</mat-label>
-            <mat-select formControlName="province">
-              <mat-option *ngFor="let province of provinces" [value]="province">
-                {{ province }}
-              </mat-option>
-            </mat-select>
-            <mat-icon matPrefix>location_on</mat-icon>
-            <mat-error *ngIf="userForm.get('province')?.touched">
-              {{ getErrorMessage('province') }}
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width role-field">
+          <mat-form-field appearance="outline" class="full-width role-field" *ngIf="isEditMode">
             <mat-label>Permissão</mat-label>
             <mat-select formControlName="role">
               <mat-option *ngFor="let role of roles" [value]="role">
@@ -269,8 +224,7 @@
               {{ getErrorMessage('role') }}
             </mat-error>
             <mat-hint>
-              <span *ngIf="userForm.get('role')?.value === 'tecnico'">Vê informações padrões</span>
-              <span *ngIf="userForm.get('role')?.value === 'administrador'">Acesso administrativo completo</span>
+              <span *ngIf="userForm.get('role')?.value === 'administrador'">Acesso administrativo</span>
               <span *ngIf="userForm.get('role')?.value === 'super-administrador'">Acesso total ao sistema</span>
             </mat-hint>
           </mat-form-field>

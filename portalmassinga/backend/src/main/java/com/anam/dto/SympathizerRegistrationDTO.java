@@ -21,6 +21,8 @@ public class SympathizerRegistrationDTO {
 
     private String phone;
 
+    private String nuit;
+
     @NotBlank(message = "Área de interesse é obrigatória")
     private String areaInterest;
 

@@ -34,8 +34,8 @@ export const routes: Routes = [
       { path: 'membros', loadChildren: () => import('./pages/members/members.module').then(m => m.MembersModule) },
       // Rotas de apoiante - fora do shell para não ter navbar
       { path: 'apoio/area-apoiante', loadComponent: () => import('./pages/supporters/supporter-area/supporter-area.component').then(m => m.SupporterAreaComponent) },
-      // Rotas de simpatizante - fora do shell para não ter navbar
-      { path: 'simpatizantes/area-simpatizante', loadComponent: () => import('./pages/sympathizers/sympathizer-area/sympathizer-area.component').then(m => m.SympathizerAreaComponent) },
+      // Área de Simpatizante desativada por enquanto (só registo). Reativar quando necessário:
+      // { path: 'simpatizantes/area-simpatizante', loadComponent: () => import('./pages/sympathizers/sympathizer-area/sympathizer-area.component').then(m => m.SympathizerAreaComponent) },
   { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: '**', redirectTo: '' },
 ];

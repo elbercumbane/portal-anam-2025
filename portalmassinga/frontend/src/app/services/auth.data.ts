@@ -6,6 +6,7 @@ export interface Usuario {
   nome: string;
   role: string;
   memberId?: string;
+  mustChangePassword?: boolean;
   cotasEmFalta?: {
     meses: number;
     dataVencimento: string;
@@ -60,6 +61,7 @@ export const STORAGE_KEYS = {
   USUARIO_ATUAL: 'currentUser',
   TOKEN_AUTH: 'authToken',
   DADOS_MEMBRO: 'currentMemberData',
-  APLICACOES: 'anam_applications'
+  APLICACOES: 'anam_applications',
+  LOGIN_TIMESTAMP: 'loginTimestamp'
 };
 

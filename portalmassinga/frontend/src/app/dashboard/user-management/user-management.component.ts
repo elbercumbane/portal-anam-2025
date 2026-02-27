@@ -2,13 +2,12 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-// ApiService removido - sem backend
+import { takeUntil, debounceTime, filter } from 'rxjs/operators';
+import { ApiClientService } from '../../services/api-client.service';
 
 export interface User {
-  id?: number;
+  id?: string;
   email: string;
   password?: string;
   fullName?: string;
@@ -34,11 +33,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Form
   userForm: FormGroup;
   isEditMode = false;
-  editingUserId: number | null = null;
+  editingUserId: string | null = null;
   showUserForm = false;
   
   // Table
-  displayedColumns: string[] = ['email', 'fullName', 'department', 'province', 'role', 'active', 'createdAt', 'actions'];
+  displayedColumns: string[] = ['email', 'fullName', 'role', 'active', 'createdAt', 'actions'];
   users: User[] = [];
   filteredUsers: User[] = [];
   
@@ -51,7 +50,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Search and Filter
   searchTerm = '';
   roleFilter = '';
-  departmentFilter = '';
   activeFilter: boolean | null = null;
   
   // Loading
@@ -60,34 +58,13 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   // Filters visibility
   filtrosVisiveis = false;
   
-  // Roles (3 níveis de permissão)
-  roles = ['tecnico', 'administrador', 'super-administrador'];
-  
-  // Departamentos
-  departments = ['Delegados', 'DSI', 'SPII', 'Sobreloja', 'DAU'];
-  
-  // Províncias de Moçambique
-  provinces = [
-    'Maputo Cidade',
-    'Maputo Província',
-    'Gaza',
-    'Inhambane',
-    'Sofala',
-    'Manica',
-    'Tete',
-    'Zambézia',
-    'Nampula',
-    'Niassa',
-    'Cabo Delgado'
-  ];
-  
-  // Flag para mostrar campo de província
-  showProvinceField = false;
-  readonly centralDepartments = ['DSI', 'DAU', 'Sobreloja'];
+  // Roles (2 perfis: super-admin cria administradores)
+  roles = ['administrador', 'super-administrador'];
+  currentYear = new Date().getFullYear();
   
   constructor(
     private fb: FormBuilder,
-    // ApiService removido
+    private apiClient: ApiClientService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
@@ -100,9 +77,11 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
   
   private setupFormListeners(): void {
-    // Escutar mudanças no campo department
-    this.userForm.get('department')?.valueChanges.subscribe((department: string) => {
-      this.onDepartmentChange();
+    this.userForm.get('nuit')?.valueChanges.pipe(
+      debounceTime(600),
+      filter((n: string) => !!n && /^\d{9,}$/.test((n || '').trim()))
+    ).subscribe((nuit: string) => {
+      this.fetchMemberByNuit(nuit.trim());
     });
   }
   
@@ -113,88 +92,80 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   
   private createForm(): FormGroup {
     return this.fb.group({
-      email: ['', [Validators.required, Validators.email, this.cedsifEmailValidator]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      nuit: [''],
+      email: ['', [Validators.email]],
       fullName: [''],
-      department: ['', Validators.required],
-      province: [''],
-      role: ['tecnico', Validators.required],
+      role: ['administrador', Validators.required],
       active: [true]
     });
   }
   
-  private updateFormForEdit(): void {
-    // No modo de edição, senha é opcional
-    // Se houver valor, valida apenas o comprimento mínimo
-    // Se estiver vazia, não valida nada
-    const passwordControl = this.userForm.get('password');
-    if (passwordControl) {
-      if (passwordControl.value && passwordControl.value.trim() !== '') {
-        // Se houver senha, valida apenas comprimento mínimo
-        passwordControl.setValidators([Validators.minLength(6)]);
-      } else {
-        // Se estiver vazia, remove todas as validações
-        passwordControl.clearValidators();
+  fetchMemberByNuit(nuit: string): void {
+    if (!nuit || !/^\d+$/.test(nuit)) return;
+    this.apiClient.getApplicationByNuit(nuit).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (m: any) => {
+        if (m && m.status === 'Approved') {
+          this.userForm.patchValue({
+            email: m.email || '',
+            fullName: m.fullName || ''
+          }, { emitEvent: false });
+          this.snackBar.open('Dados do membro carregados. Pode editar se necessário.', 'Fechar', { duration: 2500 });
+        } else {
+          this.snackBar.open('Membro não encontrado ou não aprovado', 'Fechar', { duration: 2000 });
+        }
+      },
+      error: () => {
+        this.snackBar.open('NUIT não encontrado', 'Fechar', { duration: 2000 });
       }
-      passwordControl.updateValueAndValidity();
-    }
-  }
-  
-  private updateFormForCreate(): void {
-    // No modo de criação, senha é obrigatória
-    this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
-    this.userForm.get('password')?.updateValueAndValidity();
-  }
-  
-  private cedsifEmailValidator(control: any): { [key: string]: any } | null {
-    if (!control.value) {
-      return null;
-    }
-    const email = control.value.toLowerCase();
-    if (!email.endsWith('@cedsif.gov.mz')) {
-      return { invalidDomain: true };
-    }
-    return null;
+    });
   }
   
   loadUsers(): void {
     this.isLoading = true;
-    Promise.resolve([]) // Sem backend - dados vazios
-      .then((users: User[]) => {
-        this.users = users || [];
-        this.applyFilters();
-        this.isLoading = false;
-      })
-      .catch((error) => {
-        console.error('Error loading users:', error);
-        this.snackBar.open('Erro ao carregar usuários', 'Fechar', { duration: 3000 });
-        this.isLoading = false;
+    this.apiClient.getUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          const arr = Array.isArray(res) ? res : (res?.data || res || []);
+          this.users = (arr || []).map((u: any) => this.mapApiUserToUi(u));
+          this.applyFilters();
+          this.isLoading = false;
+        },
+        error: (err: unknown) => {
+          console.error('Error loading users:', err);
+          this.snackBar.open((err as Error)?.message || 'Erro ao carregar usuários', 'Fechar', { duration: 3000 });
+          this.isLoading = false;
+        }
       });
+  }
+
+  private mapApiUserToUi(u: any): User {
+    return {
+      id: u.id,
+      email: u.email || '',
+      fullName: u.fullName || '',
+      role: u.role || 'tecnico',
+      department: u.department || '',
+      province: u.province || '',
+      active: u.active !== false,
+      createdAt: u.createdAt
+    };
   }
   
   applyFilters(): void {
     let filtered = [...this.users];
     
-    // Search filter
     if (this.searchTerm) {
       const search = this.searchTerm.toLowerCase();
       filtered = filtered.filter(user =>
         user.email?.toLowerCase().includes(search) ||
         user.fullName?.toLowerCase().includes(search) ||
-        user.role?.toLowerCase().includes(search) ||
-        user.department?.toLowerCase().includes(search) ||
-        user.province?.toLowerCase().includes(search)
+        user.role?.toLowerCase().includes(search)
       );
     }
     
-    // Role filter
     if (this.roleFilter) {
       filtered = filtered.filter(user => user.role === this.roleFilter);
-    }
-    
-    // Department filter
-    if (this.departmentFilter) {
-      filtered = filtered.filter(user => user.department === this.departmentFilter);
     }
     
     // Active filter
@@ -212,10 +183,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   }
   
   onRoleFilterChange(): void {
-    this.applyFilters();
-  }
-  
-  onDepartmentFilterChange(): void {
     this.applyFilters();
   }
   
@@ -243,82 +210,45 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   limparFiltros(): void {
     this.searchTerm = '';
     this.roleFilter = '';
-    this.departmentFilter = '';
     this.activeFilter = null;
     this.applyFilters();
-  }
-  
-  onDepartmentChange(): void {
-    const department = this.userForm.get('department')?.value;
-    const provinceControl = this.userForm.get('province');
-    
-    if (!provinceControl) {
-      return;
-    }
-    
-    this.showProvinceField = department === 'Delegados';
-    const forceCentralProvince = this.centralDepartments.includes(department);
-    
-    if (this.showProvinceField) {
-      provinceControl.enable({ emitEvent: false });
-      provinceControl.setValidators([Validators.required]);
-    } else {
-      provinceControl.clearValidators();
-      if (forceCentralProvince) {
-        provinceControl.setValue('Central', { emitEvent: false });
-        provinceControl.disable({ emitEvent: false });
-      } else {
-        provinceControl.enable({ emitEvent: false });
-        provinceControl.setValue('', { emitEvent: false });
-    }
-    }
-    
-    provinceControl.updateValueAndValidity();
   }
   
   openCreateForm(): void {
     this.isEditMode = false;
     this.editingUserId = null;
-    this.showProvinceField = false;
+    this.userForm.get('email')?.clearValidators();
+    this.userForm.get('fullName')?.clearValidators();
+    this.userForm.get('email')?.setValidators([Validators.email]);
+    this.userForm.get('email')?.updateValueAndValidity();
+    this.userForm.get('fullName')?.updateValueAndValidity();
     this.userForm.reset({
+      nuit: '',
       email: '',
-      password: '',
       fullName: '',
-      department: '',
-      province: '',
-      role: 'tecnico',
+      role: 'administrador',
       active: true
     });
-    this.userForm.get('province')?.enable({ emitEvent: false });
-    this.updateFormForCreate(); // Senha obrigatória no modo de criação
-    this.userForm.get('province')?.clearValidators();
-    this.userForm.get('province')?.updateValueAndValidity();
+    this.userForm.get('nuit')?.enable({ emitEvent: false });
     this.showUserForm = true;
   }
   
   openEditForm(user: User): void {
     this.isEditMode = true;
     this.editingUserId = user.id || null;
-    const department = user.department || '';
-    this.showProvinceField = department === 'Delegados';
-    
-    const isCentralDepartment = this.centralDepartments.includes(department);
+    this.userForm.get('email')?.setValidators([Validators.required, Validators.email]);
+    this.userForm.get('fullName')?.setValidators([Validators.required]);
+    this.userForm.get('email')?.updateValueAndValidity();
+    this.userForm.get('fullName')?.updateValueAndValidity();
+    const roleForForm = (user.role === 'admin' || user.role === 'super-admin') ? 'super-administrador' : (user.role || 'administrador');
     this.userForm.patchValue({
+      nuit: '',
       email: user.email,
-      password: '', // Don't show password
       fullName: user.fullName || '',
-      department: department,
-      province: isCentralDepartment ? (user.province || 'Central') : (user.province || ''),
-      role: user.role || 'tecnico',
+      role: roleForForm,
       active: user.active !== undefined ? user.active : true
     });
-    
-    // Senha opcional no modo de edição
-    this.updateFormForEdit();
-    
-    // Configure province field validators
-    this.onDepartmentChange();
-    
+    this.userForm.get('nuit')?.disable({ emitEvent: false });
     this.showUserForm = true;
   }
   
@@ -326,105 +256,108 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.showUserForm = false;
     this.isEditMode = false;
     this.editingUserId = null;
-    this.showProvinceField = false;
     this.userForm.reset();
-    // Restore password validation for create mode
-    this.updateFormForCreate();
-    // Clear province validators
-    this.userForm.get('province')?.clearValidators();
-    this.userForm.get('province')?.enable({ emitEvent: false });
-    this.userForm.get('province')?.updateValueAndValidity();
+    this.userForm.get('nuit')?.enable({ emitEvent: false });
   }
   
   onSubmit(): void {
-    // No modo de edição, garantir que a senha seja opcional
-    if (this.isEditMode) {
-      const passwordControl = this.userForm.get('password');
-      if (passwordControl) {
-        const passwordValue = passwordControl.value;
-        if (!passwordValue || passwordValue.trim() === '') {
-          // Se estiver vazia, remover todas as validações
-          passwordControl.clearValidators();
-          passwordControl.updateValueAndValidity();
-        } else {
-          // Se houver senha, validar apenas comprimento mínimo
-          passwordControl.setValidators([Validators.minLength(6)]);
-          passwordControl.updateValueAndValidity();
-        }
-      }
-    }
+    const raw = this.userForm.getRawValue();
+    const nuit = (raw.nuit || '').trim();
     
-    if (this.userForm.valid) {
-      const userData = { ...this.userForm.getRawValue() };
-      
-      // Remove password if empty in edit mode
-      if (this.isEditMode && (!userData.password || userData.password.trim() === '')) {
-        delete userData.password;
-      }
-      
-      if (this.isEditMode && this.editingUserId) {
-        this.updateUser(this.editingUserId, userData);
+    if (this.isEditMode && this.editingUserId) {
+      if (raw.email && raw.fullName) {
+        this.updateUser(this.editingUserId, raw);
       } else {
-        this.createUser(userData);
+        this.markFormGroupTouched();
+        this.snackBar.open('Email e nome são obrigatórios', 'Fechar', { duration: 3000 });
       }
-    } else {
-      this.markFormGroupTouched();
-      this.snackBar.open('Por favor, preencha todos os campos obrigatórios', 'Fechar', { duration: 3000 });
-    }
-  }
-  
-  createUser(userData: User): void {
-    this.isLoading = true;
-    Promise.resolve({ id: Date.now(), ...userData }) // Sem backend - simulado
-      .then((user: User) => {
-        this.snackBar.open('Usuário criado com sucesso!', 'Fechar', { duration: 3000 });
-        this.closeForm();
-        this.loadUsers();
-        this.syncCurrentUserDetails(user);
-      })
-      .catch((error) => {
-        console.error('Error creating user:', error);
-        const errorMessage = error?.error?.message || 'Erro ao criar usuário';
-        this.snackBar.open(errorMessage, 'Fechar', { duration: 3000 });
-        this.isLoading = false;
-      });
-  }
-  
-  updateUser(id: number, userData: User): void {
-    this.isLoading = true;
-    Promise.resolve({ id, ...userData }) // Sem backend - simulado
-      .then((user: User) => {
-        this.snackBar.open('Usuário atualizado com sucesso!', 'Fechar', { duration: 3000 });
-        this.closeForm();
-        this.loadUsers();
-        this.syncCurrentUserDetails(user);
-      })
-      .catch((error) => {
-        console.error('Error updating user:', error);
-        const errorMessage = error?.error?.message || 'Erro ao atualizar usuário';
-        this.snackBar.open(errorMessage, 'Fechar', { duration: 3000 });
-        this.isLoading = false;
-      });
-  }
-  
-  deleteUser(user: User): void {
-    if (!user.id) {
       return;
     }
     
+    if (nuit) {
+      if (!/^\d+$/.test(nuit)) {
+        this.snackBar.open('NUIT deve conter apenas números', 'Fechar', { duration: 2000 });
+        return;
+      }
+      this.createUser({ nuit });
+    } else {
+      if (!raw.email || !raw.fullName) {
+        this.markFormGroupTouched();
+        this.snackBar.open('Para administrador: preencha NUIT (membro) ou email e nome', 'Fechar', { duration: 3000 });
+        return;
+      }
+      if (!raw.email.includes('@')) {
+        this.snackBar.open('Email inválido', 'Fechar', { duration: 2000 });
+        return;
+      }
+      this.createUser({ email: raw.email, fullName: raw.fullName, role: 'administrador' });
+    }
+  }
+  
+  createUser(payload: { nuit?: string; email?: string; fullName?: string; role?: string }): void {
+    this.isLoading = true;
+    this.apiClient.createUser(payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          this.snackBar.open('Usuário criado com sucesso!', 'Fechar', { duration: 3000 });
+          this.closeForm();
+          this.loadUsers();
+          this.syncCurrentUserDetails(this.mapApiUserToUi(res));
+        },
+        error: (err: unknown) => {
+          this.snackBar.open((err as Error)?.message || 'Erro ao criar usuário', 'Fechar', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
+  }
+
+  updateUser(id: string, userData: any): void {
+    this.isLoading = true;
+    const payload: any = {
+      email: userData.email,
+      fullName: userData.fullName || '',
+      role: this.mapRoleToBackend(userData.role)
+    };
+    this.apiClient.updateUser(id, payload)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: any) => {
+          this.snackBar.open('Usuário atualizado com sucesso!', 'Fechar', { duration: 3000 });
+          this.closeForm();
+          this.loadUsers();
+          this.syncCurrentUserDetails(this.mapApiUserToUi(res));
+        },
+        error: (err: unknown) => {
+          this.snackBar.open((err as Error)?.message || 'Erro ao atualizar usuário', 'Fechar', { duration: 3000 });
+          this.isLoading = false;
+        }
+      });
+  }
+
+  deleteUser(user: User): void {
+    if (!user.id) return;
     if (confirm(`Tem certeza que deseja excluir o usuário ${user.email}?`)) {
       this.isLoading = true;
-      Promise.resolve({}) // Sem backend - simulado
-        .then(() => {
-          this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
-          this.loadUsers();
-        })
-        .catch((error) => {
-          console.error('Error deleting user:', error);
-          this.snackBar.open('Erro ao excluir usuário', 'Fechar', { duration: 3000 });
-          this.isLoading = false;
+      this.apiClient.deleteUser(user.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.snackBar.open('Usuário excluído com sucesso!', 'Fechar', { duration: 3000 });
+            this.loadUsers();
+          },
+          error: (err: unknown) => {
+            this.snackBar.open((err as Error)?.message || 'Erro ao excluir usuário', 'Fechar', { duration: 3000 });
+            this.isLoading = false;
+          }
         });
     }
+  }
+
+  private mapRoleToBackend(role: string): string {
+    if (role === 'super-administrador') return 'super-admin';
+    if (role === 'administrador') return 'administrador';
+    return role || 'administrador';
   }
   
   toggleUserActive(user: User): void {
@@ -440,28 +373,23 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     const colors: { [key: string]: string } = {
       'tecnico': 'accent',
       'administrador': 'primary',
-      'super-administrador': 'warn'
+      'super-administrador': 'warn',
+      'admin': 'primary',
+      'membro': ''
     };
-    return colors[role] || '';
+    return colors[role?.toLowerCase?.() || role] || '';
   }
   
   getRoleLabel(role: string): string {
     const labels: { [key: string]: string } = {
       'tecnico': 'Técnico',
       'administrador': 'Administrador',
-      'super-administrador': 'Super Administrador'
+      'super-administrador': 'Super Administrador',
+      'admin': 'Administrador',
+      'membro': 'Membro'
     };
     const normalizedRole = role?.toLowerCase?.() || role;
     return labels[normalizedRole] || role?.replace(/(^|\s|-)\w/g, match => match.toUpperCase()) || '-';
-  }
-  
-  getDepartmentLabel(department: string | undefined): string {
-    if (!department) return '';
-    return department || '-';
-  }
-  
-  getProvinceLabel(province: string): string {
-    return province || '-';
   }
   
   formatDate(dateString?: string): string {
@@ -532,9 +460,6 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     if (control?.hasError('email')) {
       return 'Email inválido';
     }
-    if (control?.hasError('invalidDomain')) {
-      return 'Apenas emails do domínio @cedsif.gov.mz são permitidos';
-    }
     if (control?.hasError('minlength')) {
       return `Mínimo de ${control.errors?.['minlength'].requiredLength} caracteres`;
     }
@@ -547,38 +472,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   private syncCurrentUserDetails(user: User): void {
     const savedEmail = localStorage.getItem('savedEmail');
-    if (!savedEmail || !user.email) {
-      return;
-    }
+    if (!savedEmail || !user.email) return;
+    if (savedEmail.toLowerCase().trim() !== user.email.toLowerCase().trim()) return;
 
-    const targetEmail = savedEmail.toLowerCase().trim();
-    const updatedEmail = user.email.toLowerCase().trim();
-    if (targetEmail !== updatedEmail) {
-      return;
-    }
-
-    if (user.fullName && user.fullName.trim() !== '') {
+    if (user.fullName?.trim()) {
       localStorage.setItem('userFullName', user.fullName.trim());
       localStorage.setItem('userName', user.fullName.trim());
     }
-
-    if (user.department && user.department.trim() !== '') {
-      localStorage.setItem('userDepartment', user.department.trim());
-    } else {
-      localStorage.removeItem('userDepartment');
-    }
-
-    if (user.province && user.province.trim() !== '') {
-      localStorage.setItem('userProvince', user.province.trim());
-    } else {
-      localStorage.removeItem('userProvince');
-    }
-
-    if (user.role && user.role.trim() !== '') {
-      localStorage.setItem('userRole', user.role.trim());
-    } else {
-      localStorage.removeItem('userRole');
-    }
+    if (user.role?.trim()) localStorage.setItem('userRole', user.role.trim());
   }
 }
 

@@ -1,68 +1,103 @@
-<!-- Secção A: Hero Emocional -->
-<section class="hero-section">
+<!-- Hero Section -->
+<section class="hero-section hero-compact">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <h1 class="hero-title">
-      Obrigado por Apoiar esta <span class="highlight">Missão</span>
-    </h1>
+    <h1 class="hero-title">Registe o Seu <span class="highlight">Apoio</span></h1>
   </div>
 </section>
 
-<!-- Secção B: Formulário -->
+<!-- Form Section -->
 <section class="form-section">
   <div class="container">
     <div class="form-card">
-      <div class="form-error" *ngIf="errorMessage">
-        {{ errorMessage }}
+      <!-- Título do formulário -->
+      <div class="form-card-header">
+        <mat-icon class="form-header-icon">edit_note</mat-icon>
+        <h2 class="form-card-title">Formulário de Apoio</h2>
       </div>
+      
+      <div class="form-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      
       <form [formGroup]="supporterForm" (ngSubmit)="onSubmit()" class="supporter-form">
         <!-- Nome -->
         <div class="form-field">
-          <label>Nome Completo <span class="required">*</span></label>
-          <input 
-            type="text" 
-            formControlName="nome" 
-            placeholder="O teu nome completo"
+          <label>Nome <span class="required">*</span></label>
+          <input type="text" formControlName="nome" placeholder="O teu nome completo"
             [class.error]="supporterForm.get('nome')?.invalid && supporterForm.get('nome')?.touched">
-          <span class="field-error" *ngIf="supporterForm.get('nome')?.invalid && supporterForm.get('nome')?.touched">
-            Campo obrigatório
-          </span>
         </div>
 
         <!-- Email -->
         <div class="form-field">
           <label>Email <span class="required">*</span></label>
-          <input 
-            type="email" 
-            formControlName="email" 
-            placeholder="teu@email.com"
+          <input type="email" formControlName="email" placeholder="teu@email.com"
             [class.error]="supporterForm.get('email')?.invalid && supporterForm.get('email')?.touched">
-          <span class="field-error" *ngIf="supporterForm.get('email')?.invalid && supporterForm.get('email')?.touched">
+          <span class="field-error" *ngIf="supporterForm.get('email')?.invalid && supporterForm.get('email')?.touched && supporterForm.get('email')?.errors?.['email']">
             Email inválido
           </span>
         </div>
 
-        <!-- Contacto -->
-        <div class="form-field">
-          <label>Contacto <span class="required">*</span></label>
-          <input 
-            type="tel" 
-            formControlName="contacto" 
-            placeholder="258841234567"
-            (keypress)="onContactoKeyPress($event)"
-            (paste)="onContactoPaste($event)"
-            [class.error]="supporterForm.get('contacto')?.invalid && supporterForm.get('contacto')?.touched">
-          <span class="field-error" *ngIf="supporterForm.get('contacto')?.invalid && supporterForm.get('contacto')?.touched">
-            <span *ngIf="supporterForm.get('contacto')?.errors?.['required']">Campo obrigatório</span>
-            <span *ngIf="supporterForm.get('contacto')?.errors?.['pattern']">Apenas números são permitidos</span>
-          </span>
+        <!-- Contactos -->
+        <div class="contacts-section">
+          <div class="contact-group">
+            <div class="contact-group-header">
+              <label>Contacto <span class="required">*</span></label>
+            </div>
+            <div class="contact-group-body">
+              <input type="tel" formControlName="contacto1" placeholder="258841234567"
+                (keypress)="onContactoKeyPress($event, 'contacto1')"
+                (paste)="onContactoPaste($event, 'contacto1')"
+                [class.error]="supporterForm.get('contacto1')?.invalid && supporterForm.get('contacto1')?.touched">
+              <p class="contact-whatsapp-label">Esse número tem WhatsApp?</p>
+              <div class="radio-inline">
+                <label class="radio-inline-option">
+                  <input type="radio" formControlName="contacto1WhatsApp" value="sim">
+                  <span class="radio-marker"></span>
+                  <span>Sim</span>
+                </label>
+                <label class="radio-inline-option">
+                  <input type="radio" formControlName="contacto1WhatsApp" value="nao">
+                  <span class="radio-marker"></span>
+                  <span>Não</span>
+                </label>
+              </div>
+            </div>
+            <span class="field-error" *ngIf="supporterForm.get('contacto1')?.invalid && supporterForm.get('contacto1')?.touched && supporterForm.get('contacto1')?.errors?.['pattern']">
+              Formato inválido
+            </span>
+          </div>
+          <div class="contact-group">
+            <div class="contact-group-header">
+              <label>Outro contacto <small>(Opcional)</small></label>
+            </div>
+            <div class="contact-group-body">
+              <input type="tel" formControlName="contacto2" placeholder="258841234567"
+                (keypress)="onContactoKeyPress($event, 'contacto2')"
+                (paste)="onContactoPaste($event, 'contacto2')"
+                [class.error]="supporterForm.get('contacto2')?.invalid && supporterForm.get('contacto2')?.touched">
+              <p class="contact-whatsapp-label">Esse número tem WhatsApp?</p>
+              <div class="radio-inline">
+                <label class="radio-inline-option">
+                  <input type="radio" formControlName="contacto2WhatsApp" value="sim">
+                  <span class="radio-marker"></span>
+                  <span>Sim</span>
+                </label>
+                <label class="radio-inline-option">
+                  <input type="radio" formControlName="contacto2WhatsApp" value="nao">
+                  <span class="radio-marker"></span>
+                  <span>Não</span>
+                </label>
+              </div>
+            </div>
+            <span class="field-error" *ngIf="supporterForm.get('contacto2')?.invalid && supporterForm.get('contacto2')?.touched && supporterForm.get('contacto2')?.errors?.['pattern']">
+              Formato inválido
+            </span>
+          </div>
         </div>
 
-        <!-- O que vai apoiar -->
+        <!-- Tipo de Apoio -->
         <div class="form-field">
-          <label>O que vai apoiar <span class="required">*</span></label>
-          <select 
-            formControlName="tipoApoio"
+          <label>Tipo de Apoio <span class="required">*</span></label>
+          <select formControlName="tipoApoio"
             [class.error]="supporterForm.get('tipoApoio')?.invalid && supporterForm.get('tipoApoio')?.touched">
             <option value="">Selecciona uma opção</option>
             <option value="valores-monetarios">Valores Monetários</option>
@@ -71,75 +106,109 @@
             <option value="servicos">Serviços</option>
             <option value="outros">Outros</option>
           </select>
-          <span class="field-error" *ngIf="supporterForm.get('tipoApoio')?.invalid && supporterForm.get('tipoApoio')?.touched">
-            Selecciona uma opção
-          </span>
         </div>
 
         <!-- Descrição -->
-        <div class="form-field">
+        <div class="form-field description-field" *ngIf="supporterForm.get('tipoApoio')?.value">
           <label>Descrição <span class="required">*</span></label>
-          <textarea 
-            formControlName="descricao" 
-            placeholder="Descreve o que vais oferecer..."
-            rows="5"
-            [class.error]="supporterForm.get('descricao')?.invalid && supporterForm.get('descricao')?.touched">
-          </textarea>
-          <span class="field-error" *ngIf="supporterForm.get('descricao')?.invalid && supporterForm.get('descricao')?.touched">
-            Campo obrigatório
-          </span>
+          <textarea formControlName="descricao" placeholder="Descreve o que vais oferecer..." rows="5"
+            [class.error]="supporterForm.get('descricao')?.invalid && supporterForm.get('descricao')?.touched"></textarea>
         </div>
 
-        <!-- Anonimato -->
-        <div class="form-field">
-          <label>Deseja que seu apoio fique em anônimo? <span class="required">*</span></label>
-          <div class="frequency-options">
+        <!-- Anonimato (estado: na tabela do dashboard os dados aparecem como Anónimo / - quando sim) -->
+        <div class="form-field anonimato-field">
+          <label>Deseja que seu apoio fique anónimo? <span class="required">*</span></label>
+          <div class="frequency-options frequency-horizontal">
             <label class="frequency-option">
-              <input 
-                type="radio" 
-                formControlName="anonimato" 
-                value="sim">
-              <span class="radio-custom"></span>
+              <input type="radio" formControlName="anonimato" value="sim">
               <span class="radio-label">Sim</span>
             </label>
             <label class="frequency-option">
-              <input 
-                type="radio" 
-                formControlName="anonimato" 
-                value="nao">
-              <span class="radio-custom"></span>
+              <input type="radio" formControlName="anonimato" value="nao">
               <span class="radio-label">Não</span>
             </label>
           </div>
-          <span class="field-error" *ngIf="supporterForm.get('anonimato')?.invalid && supporterForm.get('anonimato')?.touched">
-            Selecciona uma opção
-          </span>
         </div>
 
-        <!-- Botão de Submissão -->
-        <button 
-          type="submit" 
-          class="submit-button" 
-          [disabled]="supporterForm.invalid || isLoading">
-          <span *ngIf="!isLoading">Submeter Apoio</span>
-          <span *ngIf="isLoading">A processar...</span>
-          <svg *ngIf="!isLoading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-          <svg *ngIf="isLoading" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" stroke-dasharray="31.416" stroke-dashoffset="31.416">
-              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
-              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416;-31.416" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </button>
+        <!-- Quer Acesso (igual à coluna do dashboard) -->
+        <div class="form-field account-pref-field">
+          <div class="account-pref-header">
+            <p class="account-pref-question">Quer acesso à Área do Apoiante?</p>
+            <button type="button" class="btn-info-inline" (click)="openInfoModal()" title="O que é criar conta para Área do Apoiante?">
+              <mat-icon>info</mat-icon>
+            </button>
+          </div>
+          <div class="frequency-options frequency-horizontal">
+            <label class="frequency-option">
+              <input type="radio" formControlName="criarConta" value="sim" (change)="onCriarContaChoice('sim')">
+              <span class="radio-label">Sim</span>
+            </label>
+            <label class="frequency-option">
+              <input type="radio" formControlName="criarConta" value="nao" (change)="onCriarContaChoice('nao')">
+              <span class="radio-label">Não</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Botão Submissão -->
+        <div class="submit-button-wrapper">
+          <button type="submit" class="submit-button" [disabled]="supporterForm.invalid || isLoading">
+            <span>{{ isLoading ? 'A processar...' : 'Submeter Apoio' }}</span>
+            <svg *ngIf="!isLoading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+            <svg *ngIf="isLoading" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416;0 31.416" repeatCount="indefinite"/>
+                <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416;-31.416" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </button>
+        </div>
       </form>
     </div>
   </div>
 </section>
 
-<!-- Secção C: Mensagem de Sucesso -->
+<!-- Info Modal (Área do Apoiante) -->
+<div class="info-modal-overlay" *ngIf="showInfoModal" (click)="closeInfoModal()">
+  <div class="info-modal-container" (click)="$event.stopPropagation()">
+    <div class="info-modal-header">
+      <div class="info-modal-icon-wrap">
+        <mat-icon class="info-modal-icon">workspace_premium</mat-icon>
+      </div>
+      <div class="info-modal-header-text">
+        <h2>Área do Apoiante</h2>
+        <p>O que é criar conta para acesso?</p>
+      </div>
+      <button class="info-modal-close" (click)="closeInfoModal()" title="Fechar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="info-modal-body">
+      <p class="info-modal-intro">Espaço exclusivo onde poderá:</p>
+      <ul class="info-modal-list">
+        <li><mat-icon>attach_money</mat-icon> Ver valor total e histórico de apoio</li>
+        <li><mat-icon>star</mat-icon> Ver o seu nível (Bronze, Prata, Ouro)</li>
+        <li><mat-icon>description</mat-icon> Obter certificado oficial</li>
+        <li><mat-icon>assessment</mat-icon> Acompanhar o impacto do seu contributo</li>
+      </ul>
+      <div class="info-modal-notice">
+        <mat-icon>info</mat-icon>
+        <p>O acesso será criado <strong>após a confirmação da entrega do seu apoio</strong> pela associação.</p>
+      </div>
+    </div>
+    <div class="info-modal-footer">
+      <button class="btn-info-close" (click)="closeInfoModal()">
+        <mat-icon>check</mat-icon>
+        Entendi
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
 <div class="success-modal" *ngIf="showSuccess">
   <div class="success-content">
     <div class="success-icon">
@@ -148,26 +217,11 @@
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
     </div>
-    <h2>Obrigado pelo Teu Apoio!</h2>
-    <p>
-      A tua contribuição foi registada com sucesso. Enviámos um email para <strong>{{ supporterForm.get('email')?.value }}</strong> com:
-    </p>
-    <ul>
-      <li>✓ Estatística de apoio</li>
-      <li>✓ Link para acessar a Área do Apoiante</li>
-      <li>✓ Resumo do impacto do teu apoio</li>
-    </ul>
-    <p class="area-message">
-      Foi criada uma área de apoiante para ti. Desejas aceder agora?
-    </p>
+    <h2>O seu apoio foi registado com sucesso.</h2>
+    <p class="success-main">A associação entrará em contacto brevemente para dar seguimento ao processo de canalização do apoio.</p>
+    <p class="success-secondary">Após a confirmação da doação, será criado o acesso à Área do Apoiante, onde poderá consultar o relatório detalhado de todos os contributos efetuados à associação.</p>
     <div class="success-actions">
-      <button class="btn-success btn-yes" (click)="goToSupporterArea()">
-        Sim
-      </button>
-      <button class="btn-success btn-no" (click)="closeSuccessModal()">
-        Não
-      </button>
+      <button class="btn-success-close" (click)="closeSuccessModal()">Fechar</button>
     </div>
   </div>
 </div>
-

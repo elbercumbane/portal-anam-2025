@@ -1,153 +1,97 @@
 // ============ FORMULÁRIOS ============
 @import 'variables';
 
-// Buscar Membro
+$accent: #0d9488;
+
+.nuit-instruction {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(20, 184, 166, 0.05) 100%);
+  border-left: 4px solid $accent;
+  border-radius: 16px;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 .member-search-form {
   display: flex;
   gap: 1rem;
   align-items: flex-start;
-  max-width: 600px;
+  flex-wrap: wrap;
   
   .full-width {
     flex: 1;
+    min-width: 220px;
     
     ::ng-deep {
-      .mat-mdc-form-field {
-        font-size: 0.875rem;
-      }
-      
+      .mat-mdc-form-field { font-size: 0.9rem; }
       .mat-mdc-text-field-wrapper {
         padding-bottom: 0;
-        border-radius: $border-radius-large !important;
-        background: rgba(255, 255, 255, 0.9);
-        transition: $transition-normal;
-        
-        &:hover {
-          background: rgba(255, 255, 255, 1);
-          box-shadow: $shadow-small;
-        }
+        border-radius: 16px !important;
+        background: #f8fafc !important;
       }
-      
-      .mdc-text-field--outlined {
-        .mdc-notched-outline {
-          border-radius: $border-radius-large !important;
-          border-width: 2px;
-          border-color: rgba(139, 120, 95, 0.3);
-          transition: $transition-normal;
-        }
-        
-        &.mdc-text-field--focused .mdc-notched-outline {
-          border-color: $primary-green;
-          border-width: 2px;
-        }
+      .mdc-text-field--outlined .mdc-notched-outline {
+        border-radius: 16px !important;
+        border-width: 1.5px;
+        border-color: #e2e8f0;
       }
-      
+      .mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline {
+        border-color: $accent !important;
+        border-width: 2px;
+      }
       .mat-mdc-input-element {
-        font-size: 0.9rem;
-        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        padding: 0.85rem 1rem;
       }
-      
-      mat-icon[matPrefix] {
-        color: $primary-green !important;
-      }
+      mat-icon[matPrefix] { color: $accent !important; }
     }
   }
   
   button {
-    margin-top: 0.5rem;
-    min-width: 120px;
-    border-radius: $border-radius-large;
-    height: 48px;
-    
-    mat-icon {
-      color: $primary-green !important;
-    }
+    margin-top: 0.25rem;
+    min-width: 130px;
+    height: 52px;
+    border-radius: 16px;
+    font-weight: 600;
   }
   
-  .inline-spinner {
-    display: inline-block;
-    margin-left: 0.5rem;
-  }
+  .inline-spinner { margin-left: 0.5rem; }
+}
+
+.form-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 1.5rem 0;
 }
 
 .payment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  
   h4 {
     font-size: 1rem;
     font-weight: 600;
-    color: $text-dark;
-    margin: 0 0 1rem 0;
-  }
-  
-  ::ng-deep {
-    mat-icon[matPrefix] {
-      color: #2196f3 !important;
-    }
+    color: #0f172a;
+    margin: 0 0 1rem;
   }
 }
 
 .form-field-wrapper {
   margin-top: 1rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
   
-  .full-width {
-    width: 100%;
-    
-    ::ng-deep {
-      .mat-mdc-form-field {
-        font-size: 0.875rem;
-      }
-      
-      .mat-mdc-text-field-wrapper {
-        padding-bottom: 0;
-        border-radius: $border-radius-large !important;
-        background: rgba(255, 255, 255, 0.9);
-        transition: $transition-normal;
-        
-        &:hover {
-          background: rgba(255, 255, 255, 1);
-          box-shadow: $shadow-small;
-        }
-      }
-      
-      .mdc-text-field--outlined {
-        .mdc-notched-outline {
-          border-radius: $border-radius-large !important;
-          border-width: 2px;
-          border-color: rgba(139, 120, 95, 0.3);
-          transition: $transition-normal;
-        }
-        
-        &.mdc-text-field--focused .mdc-notched-outline {
-          border-color: #2196f3;
-          border-width: 2px;
-        }
-      }
-      
-      .mat-mdc-input-element {
-        font-size: 0.9rem;
-        padding: 0.75rem 1rem;
-      }
-      
-      .mat-mdc-form-field-subscript-wrapper {
-        margin-top: 0.25rem;
-      }
-      
-      .phone-prefix {
-        color: $primary-green;
-        font-weight: 600;
-        margin-right: 0.5rem;
-        font-size: 0.95rem;
-      }
-      
-      .mat-mdc-form-field-icon-suffix {
-        color: #2196f3 !important;
-      }
+  .full-width ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      border-radius: 16px !important;
+      background: #f8fafc !important;
+    }
+    .mdc-text-field--outlined .mdc-notched-outline {
+      border-radius: 16px !important;
+      border-color: #e2e8f0;
+    }
+    .mdc-text-field--outlined.mdc-text-field--focused .mdc-notched-outline {
+      border-color: $accent !important;
+    }
+    .phone-prefix {
+      color: $accent;
+      font-weight: 600;
     }
   }
   
@@ -156,114 +100,50 @@
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
-    padding: 0.75rem;
-    background: #d4edda;
-    border-left: 4px solid $primary-green;
-    border-radius: $border-radius-medium;
-    color: #155724;
+    padding: 0.75rem 1rem;
+    background: rgba(13, 148, 136, 0.08);
+    border-radius: 12px;
+    color: #0f766e;
     font-size: 0.875rem;
     
-    mat-icon {
-      color: $primary-green;
-      font-size: 1.2rem;
-      width: 1.2rem;
-      height: 1.2rem;
-    }
-  }
-  
-  .phone-warning {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    padding: 0.75rem;
-    background: #fff3cd;
-    border-left: 4px solid $gold;
-    border-radius: $border-radius-small;
-    color: #856404;
-    font-size: 0.875rem;
-    
-    mat-icon {
-      color: $gold;
-      font-size: 1.2rem;
-      width: 1.2rem;
-      height: 1.2rem;
-    }
+    mat-icon { color: $accent; }
   }
 }
 
 .action-buttons {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  margin-top: 1rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
   
   button {
-    flex: 1;
-    min-width: 180px;
-    height: 48px;
-    font-size: 0.9rem;
+    min-width: 160px;
+    height: 52px;
+    font-size: 0.95rem;
     font-weight: 600;
-    border-radius: $border-radius-large;
-    transition: $transition-slow;
+    border-radius: 16px;
     
-    mat-icon {
-      margin-right: 0.5rem;
-    }
+    mat-icon { margin-right: 0.5rem; }
   }
   
   .btn-confirmar {
-    background: $gradient-green-button;
-    color: $white;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    
-    mat-icon {
-      color: $white !important;
-    }
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
+    color: white !important;
     
     &:hover:not(:disabled) {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-      background: linear-gradient(135deg, $primary-green-light 0%, $primary-green 100%);
-    }
-    
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
     }
   }
   
   .btn-cancelar {
-    border-color: $gray-medium;
-    border-radius: $border-radius-large;
-    color: $gray-medium;
-    transition: $transition-slow;
-    
-    mat-icon {
-      color: $gray-medium !important;
-    }
+    border-radius: 16px;
+    color: #64748b;
     
     &:hover {
-      background: rgba(108, 117, 125, 0.1);
-      border-color: #495057;
-      color: #495057;
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
-      
-      mat-icon {
-        color: #495057 !important;
-      }
+      background: #f1f5f9 !important;
+      color: #334155;
     }
   }
 }
-
-.info-message {
-  text-align: center;
-  padding: 2rem;
-  color: $text-medium;
-  font-size: 1rem;
-}
-

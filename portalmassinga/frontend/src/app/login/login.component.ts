@@ -4,9 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../services/auth.service';
 import { CotasPendentesDialogComponent, CotasPendentesData } from '../components/modals/cotas-pendentes-dialog/cotas-pendentes-dialog.component';
 import { ChooseDestinationDialogComponent, ChooseDestinationData } from '../components/modals/choose-destination-dialog/choose-destination-dialog.component';
+import { ChangePasswordDialogComponent } from '../components/modals/change-password-dialog/change-password-dialog.component';
+import { AdminCotasAvisoDialogComponent, AdminCotasAvisoData } from '../components/modals/admin-cotas-aviso-dialog/admin-cotas-aviso-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -30,23 +33,29 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      emailOrNuit: ['', [Validators.required, this.emailOrNuitValidator]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
     });
 
-    // Se já estiver autenticado, verificar cotas em falta
+    // Se já estiver autenticado, verificar primeiro login e cotas
     if (this.authService.isAuthenticated()) {
       const user = this.authService.getCurrentUser();
-      if (user?.cotasEmFalta) {
-        // Mostrar modal de cotas pendentes
+      const role = (user?.role || '').toLowerCase();
+      const isAdmin = role === 'admin' || role === 'super-admin' || role === 'administrador';
+
+      if (user?.mustChangePassword) {
+        this.abrirModalAlterarSenha(() => this.redirectAfterLogin());
+      } else if (user?.cotasEmFalta && isAdmin) {
+        this.abrirModalAdminCotasAviso(user.nome, user.cotasEmFalta);
+      } else if (user?.cotasEmFalta) {
         this.abrirModalCotasPendentes(user.cotasEmFalta, user.nome);
       } else {
-        // Sem cotas em falta, redirecionar
         this.redirectAfterLogin();
       }
     }
@@ -54,6 +63,22 @@ export class LoginComponent implements OnInit {
 
   togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
+  }
+
+  private mostrarLoginSucessoEDepois(callback: () => void): void {
+    this.snackBar.open('Login efetuado com sucesso!', undefined, {
+      duration: 2500,
+      panelClass: ['snackbar-success']
+    });
+    setTimeout(callback, 600);
+  }
+
+  private emailOrNuitValidator(control: { value?: string }): { [key: string]: boolean } | null {
+    const v = (control?.value || '').trim();
+    if (!v) return null;
+    if (/^\d+$/.test(v)) return null; // NUIT: apenas dígitos
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRe.test(v) ? null : { invalidEmailOrNuit: true };
   }
 
   login(event?: Event): void {
@@ -64,30 +89,49 @@ export class LoginComponent implements OnInit {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      if (this.form.get('emailOrNuit')?.hasError('invalidEmailOrNuit')) {
+        this.errorMessage = 'Introduza um email válido ou o seu NUIT (apenas números)';
+      }
       return;
     }
     
     this.isLoading = true;
     this.errorMessage = '';
     
-    const { email, senha } = this.form.value;
+    const { emailOrNuit, senha } = this.form.value;
     
-    this.authService.login(email, senha).subscribe({
+    this.authService.login(emailOrNuit, senha).subscribe({
       next: (response) => {
-        console.log('✅ Resposta do login:', response);
         if (response.success && response.user) {
-          // Verificar se há cotas em falta
-          if (response.user.cotasEmFalta) {
-            this.isLoading = false;
-            // Mostrar modal de cotas pendentes
-            this.abrirModalCotasPendentes(response.user.cotasEmFalta, response.user.nome);
-          } else {
-            // Sem cotas em falta, redirecionar normalmente
-            console.log('✅ Login bem-sucedido, redirecionando...');
-            this.redirectAfterLogin();
-          }
+          this.mostrarLoginSucessoEDepois(() => {
+            const role = (response.user!.role || '').toLowerCase();
+            const isAdmin = role === 'admin' || role === 'super-admin' || role === 'administrador';
+            const onContinue = () => {
+              if (isAdmin) {
+                if (response.user?.cotasEmFalta) {
+                  this.isLoading = false;
+                  this.abrirModalAdminCotasAviso(response.user.nome, response.user.cotasEmFalta);
+                  return;
+                }
+                this.redirectAfterLogin();
+              } else if (response.user?.cotasEmFalta) {
+                this.isLoading = false;
+                this.abrirModalCotasPendentes(response.user.cotasEmFalta, response.user.nome);
+              } else {
+                this.redirectAfterLogin();
+              }
+            };
+            if (response.user?.mustChangePassword) {
+              this.isLoading = false;
+              this.abrirModalAlterarSenha(onContinue);
+            } else {
+              onContinue();
+            }
+          });
+        } else if (response.user?.cotasEmFalta) {
+          this.isLoading = false;
+          this.abrirModalCotasPendentes(response.user.cotasEmFalta, response.user.nome);
         } else {
-          console.error('❌ Login falhou:', response);
           this.errorMessage = response.message || 'Erro ao fazer login';
           this.isLoading = false;
         }
@@ -96,6 +140,22 @@ export class LoginComponent implements OnInit {
         console.error('❌ Erro no subscribe do login:', error);
         this.errorMessage = error.message || 'Erro ao conectar. Tente novamente.';
         this.isLoading = false;
+      }
+    });
+  }
+
+  private abrirModalAlterarSenha(onSuccess: () => void): void {
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '400px',
+      maxWidth: '90vw',
+      disableClose: true,
+      panelClass: 'change-password-dialog-panel'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'success') {
+        onSuccess();
+      } else {
+        this.authService.logout();
       }
     });
   }
@@ -127,11 +187,36 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  private abrirModalAdminCotasAviso(nome: string, cotasEmFalta?: { meses: number; dataVencimento: string; valorTotal: number }): void {
+    const data: AdminCotasAvisoData = {
+      userName: nome || 'Administrador',
+      cotasEmFalta
+    };
+
+    const dialogRef = this.dialog.open(AdminCotasAvisoDialogComponent, {
+      width: '520px',
+      maxWidth: '90vw',
+      data,
+      disableClose: false,
+      panelClass: 'admin-cotas-aviso-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'pagar') {
+        this.router.navigate(['/membros/pagar-cotas']);
+      } else {
+        // 'continuar' ou fechar: prosseguir para o painel
+        this.redirectAfterLogin();
+      }
+    });
+  }
+
   private redirectAfterLogin(): void {
     const user = this.authService.getCurrentUser();
-    
+    const role = (user?.role || '').toLowerCase();
+    const isAdmin = role === 'admin' || role === 'super-admin' || role === 'administrador';
     // Se for admin, perguntar para onde quer ir
-    if (user && user.role === 'admin') {
+    if (user && isAdmin) {
       this.showDestinationDialog(user.nome || 'Administrador');
     } else {
       // Se não for admin, redirecionar normalmente para área de membros

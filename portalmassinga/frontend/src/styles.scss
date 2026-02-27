@@ -133,3 +133,19 @@ $tablet-max: 1023px;
   background-color: #2196f3;
   transition: all 0.3s ease;
 }
+
+/* SnackBar customizado - estilo approve-member (feedback bonito) */
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: #10b981;
+  --mdc-snackbar-supporting-text-color: white;
+  --mat-snack-bar-button-color: white;
+  .mat-mdc-snack-bar-label {
+    font-weight: 500;
+    font-size: 1rem;
+  }
+}
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: #dc2626;
+  --mdc-snackbar-supporting-text-color: white;
+  --mat-snack-bar-button-color: white;
+}

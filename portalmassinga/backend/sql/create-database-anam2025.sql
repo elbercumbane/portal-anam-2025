@@ -169,3 +169,6 @@ ON CONFLICT (id) DO NOTHING;
 CREATE INDEX IF NOT EXISTS idx_events_event_date ON events(event_date);
 CREATE INDEX IF NOT EXISTS idx_events_end_date ON events(end_date);
 CREATE INDEX IF NOT EXISTS idx_events_is_cancelled ON events(is_cancelled);
+
+-- Tabelas adicionais: execute também create-table-quota-payments.sql e create-table-users.sql
+-- Ou deixe o Hibernate criar automaticamente (ddl-auto=update)

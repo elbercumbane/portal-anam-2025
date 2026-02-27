@@ -12,24 +12,5 @@ import { MatButtonModule } from '@angular/material/button';
 export class DashboardHeaderCardComponent {
   @Input() greeting: string = 'Boa tarde';
   @Input() userName: string = 'Usuário';
-  @Input() currentDate: Date = new Date();
-
-  getFormattedDate(): string {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    };
-    return this.currentDate.toLocaleDateString('pt-MZ', options);
-  }
-
-  getFormattedTime(): string {
-    const options: Intl.DateTimeFormatOptions = {
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return this.currentDate.toLocaleTimeString('pt-MZ', options);
-  }
 }
 

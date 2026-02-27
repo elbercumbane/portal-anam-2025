@@ -79,12 +79,14 @@
       </a>
       <div class="dropdown-menu" [class.show]="showSimpatizantesSubmenu">
         <a mat-button routerLink="/simpatizantes/porque-tornar-se" routerLinkActive="active" class="dropdown-item highlight">Torne-se Simpatizante</a>
-        <a mat-button routerLink="/simpatizantes/area-simpatizante" routerLinkActive="active" class="dropdown-item">Área de Simpatizante</a>
+        <!-- Área de Simpatizante desativada por enquanto. Reativar quando necessário: -->
+        <!-- <a mat-button routerLink="/simpatizantes/area-simpatizante" routerLinkActive="active" class="dropdown-item">Área de Simpatizante</a> -->
       </div>
     </div>
     
-    <!-- Marketplace Link -->
+    <!-- Marketplace e Pagar Cotas -->
     <a mat-button routerLink="/marketplace" routerLinkActive="active" class="nav-link">Marketplace</a>
+    <a mat-button routerLink="/membros/pagar-cotas" routerLinkActive="active" class="nav-link">Pagar Cotas</a>
   </nav>
   
   <button mat-icon-button class="mobile-menu-trigger" aria-label="Menu" (click)="toggleMobileMenu()">
@@ -161,12 +163,14 @@
     <div class="mobile-section">
       <div class="mobile-section-title">Simpatizantes</div>
       <a mat-button routerLink="/simpatizantes/porque-tornar-se" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link highlight">Torne-se Simpatizante</a>
-      <a mat-button routerLink="/simpatizantes/area-simpatizante" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Área do Simpatizante</a>
+      <!-- Área de Simpatizante desativada por enquanto. Reativar quando necessário: -->
+      <!-- <a mat-button routerLink="/simpatizantes/area-simpatizante" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Área do Simpatizante</a> -->
     </div>
 
     <div class="mobile-divider"></div>
 
     <a mat-button routerLink="/marketplace" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Marketplace</a>
+    <a mat-button routerLink="/membros/pagar-cotas" routerLinkActive="active" (click)="closeMobileMenu()" class="mobile-nav-link">Pagar Cotas</a>
 
     <div class="mobile-divider"></div>
 

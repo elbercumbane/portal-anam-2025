@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DashboardStatsService } from './services/dashboard-stats.service';
 import { ChartDataService, ProvinciaData, PerformanceData, MonthlyFormData, ProvinceEvaluationData } from './services/chart-data.service';
 import { SatisfactionService, SatisfactionData } from './services/satisfaction.service';
+import { ApiClientService } from '../services/api-client.service';
+import { AuthService } from '../services/auth.service';
 
 // Import types
 import { NavigationItem } from './components/sidebar/components/navigation/navigation.component';
@@ -33,8 +35,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentView = 'dashboard'; // Para controlar qual view está ativa
   greeting = 'Boa noite';
   userName = '';
+  userEmail = '';
   userRole = '';
   activeNavigationItem = 'dashboard'; // Para controlar qual item do sidebar está ativo
+  pendingMembersCount = 0; // Membros pendentes de aprovação (badge no sidebar)
   
   // Propriedades do sistema de filtros
   showFilterModal = false;
@@ -89,21 +93,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router,
+    private route: ActivatedRoute,
     private dashboardStatsService: DashboardStatsService,
     private chartDataService: ChartDataService,
-    private satisfactionService: SatisfactionService
+    private satisfactionService: SatisfactionService,
+    private apiClient: ApiClientService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     try {
+    const user = this.authService.getCurrentUser();
+    if (user?.mustChangePassword) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.setupResponsiveLayout();
     this.loadDashboardData();
     this.updateGreeting();
     this.loadUserName();
     void this.loadUserDetails();
+    this.setupMemberDetailRouting();
     } catch (error) {
       console.error('Erro no ngOnInit do dashboard:', error);
     }
+  }
+
+  private setupMemberDetailRouting(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const view = params['view'];
+      const memberId = params['memberId'];
+      if (view === 'membro' && memberId) {
+        this.currentView = 'membro-detalhe';
+        this.activeNavigationItem = 'membros-gestao';
+      } else if (this.currentView === 'membro-detalhe') {
+        // Usuário clicou Voltar - voltar para gestão de membros
+        this.currentView = 'membros-gestao';
+        this.activeNavigationItem = 'membros-gestao';
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -135,9 +163,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   private async loadRealData(): Promise<void> {
     try {
+      // Carregar contagem de membros pendentes
+      this.loadPendingMembersCount();
       // Carregar dados da associação
       this.loadAssociationData();
-      
+
       // Carregar dados da tesouraria
       this.loadTreasuryData();
       
@@ -336,6 +366,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getActivityColor(activity: RecentActivity): string {
     return activity.color;
+  }
+
+  loadPendingMembersCount(): void {
+    this.apiClient.getPendingApplicationsCount().subscribe({
+      next: (count) => {
+        this.pendingMembersCount = count;
+      },
+      error: () => {
+        this.pendingMembersCount = 0;
+      }
+    });
   }
 
   // Carregar dados da associação
@@ -636,6 +677,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentView = 'eventos-inscricoes';
         break;
       // Tesouraria
+      case 'tesouraria-cotas':
+        this.currentView = 'tesouraria-cotas';
+        break;
       case 'tesouraria-gestao':
         this.currentView = 'tesouraria-gestao';
         break;
@@ -654,6 +698,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         break;
       case 'indicadores-metricas':
         this.currentView = 'indicadores-metricas';
+        break;
+      // Configurações
+      case 'config-notificacoes':
+        this.currentView = 'config-notificacoes';
+        break;
+      case 'config-galeria':
+        this.currentView = 'galeria';  // Reutiliza componente de galeria
         break;
       default:
         this.currentView = 'dashboard';
@@ -825,18 +876,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    // Remover token e informações de sessão
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('savedEmail');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userFullName');
-    localStorage.removeItem('userDepartment');
-    localStorage.removeItem('userProvince');
-    localStorage.removeItem('userRole');
-    
-    // Redirecionamento removido - não redireciona para login
-    // this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   updateGreeting(): void {
@@ -851,33 +891,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadUserName(): void {
-    // Tentar obter o nome do usuário do localStorage
+    // Prioridade 1: AuthService (currentUser)
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser?.nome && currentUser.nome.trim() !== '') {
+      this.userName = currentUser.nome;
+      return;
+    }
+    // Prioridade 2: localStorage legado
     const savedUserFullName = localStorage.getItem('userFullName');
     const savedUserName = localStorage.getItem('userName');
     const savedEmail = localStorage.getItem('savedEmail');
-    
     if (savedUserFullName && savedUserFullName.trim() !== '') {
-      // Prioridade 1: Nome completo salvo
       this.userName = savedUserFullName;
     } else if (savedUserName && savedUserName.trim() !== '') {
-      // Prioridade 2: Nome do usuário salvo
       this.userName = savedUserName;
     } else if (savedEmail) {
-      // Prioridade 3: Extrair do email salvo
       const emailParts = savedEmail.split('@');
       if (emailParts.length > 0 && emailParts[0].trim() !== '') {
-        const nameFromEmail = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
-        this.userName = nameFromEmail;
-        // Salvar para uso futuro
-        localStorage.setItem('userName', nameFromEmail);
+        this.userName = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
       } else {
         this.userName = 'Usuário';
       }
     } else {
-      // Fallback: Usuário genérico
       this.userName = 'Usuário';
     }
     
+    // Carregar email e role do utilizador (para Detalhes da Sessão)
+    try {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        const u = JSON.parse(currentUser);
+        this.userEmail = u?.email || '';
+        if (u?.role) {
+          this.userRole = this.formatRoleLabel(u.role);
+        }
+      }
+    } catch (_) {}
     console.log('Nome do usuário carregado:', this.userName);
   }
 
@@ -892,7 +941,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const departmentLabel = hasDepartment ? department!.trim() : 'Departamento não definido';
     const provinceLabel = hasProvince ? province!.trim() : 'Província não definida';
-    this.userRole = hasRole ? role!.trim() : 'Técnico Administrador';
+    if (hasRole && !this.userRole) this.userRole = this.formatRoleLabel(role!.trim());
 
     await this.fetchUserDetailsFromApi({
       forceUpdate: true,
@@ -900,6 +949,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       skipProvince: hasProvince,
       skipRole: hasRole
     });
+  }
+
+  formatRoleLabel(role: string): string {
+    const r = (role || '').toLowerCase();
+    if (r === 'super-admin') return 'Super Administrador';
+    if (r === 'admin' || r === 'administrador') return 'Administrador';
+    if (r === 'membro') return 'Membro';
+    return role;
   }
 
   private async fetchUserDetailsFromApi(options: {

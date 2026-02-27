@@ -49,17 +49,21 @@
       width: 56px;
       height: 56px;
       border-radius: 14px;
-      background: linear-gradient(135deg, #05B6D4 0%, #0891B2 100%);
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
       display: grid;
       place-items: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(5, 182, 212, 0.3);
-      animation: wave 2s ease-in-out infinite;
+      box-shadow: 0 4px 16px rgba(5, 150, 105, 0.25);
+      animation: welcome-hand 6s ease-in-out 1 forwards;
 
-      @keyframes wave {
-        0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(20deg); }
-        75% { transform: rotate(-20deg); }
+      @keyframes welcome-hand {
+        0% { transform: scale(1) rotate(-5deg); }
+        15% { transform: scale(1.08) rotate(5deg); }
+        30% { transform: scale(1) rotate(-5deg); }
+        45% { transform: scale(1.08) rotate(5deg); }
+        60% { transform: scale(1) rotate(-5deg); }
+        75% { transform: scale(1.05) rotate(2deg); }
+        100% { transform: scale(1) rotate(0deg); }
       }
 
       mat-icon {
@@ -102,64 +106,6 @@
         color: var(--ink-600, #4B5563);
         line-height: 1.5;
         max-width: 600px;
-      }
-    }
-  }
-
-  .date-time-section {
-    display: flex;
-    gap: 1rem;
-    flex-shrink: 0;
-
-    @media (max-width: 768px) {
-      width: 100%;
-      justify-content: space-between;
-    }
-
-    .date-time-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      border: 1px solid rgba(5, 182, 212, 0.1);
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.9);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(5, 182, 212, 0.15);
-      }
-
-      mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        color: #05B6D4;
-        flex-shrink: 0;
-      }
-
-      .date-time-content {
-        display: flex;
-        flex-direction: column;
-        gap: 0.125rem;
-
-        .date-time-label {
-          font-size: 0.625rem;
-          color: var(--ink-500, #6B7280);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-weight: 600;
-        }
-
-        .date-time-value {
-          font-size: 0.875rem;
-          color: var(--ink-900, #111827);
-          font-weight: 600;
-          white-space: nowrap;
-        }
       }
     }
   }
@@ -250,16 +196,6 @@
         }
       }
 
-      .date-time-section {
-        flex-direction: column;
-        width: 100%;
-        gap: 0.75rem;
-
-        .date-time-item {
-          width: 100%;
-          justify-content: flex-start;
-        }
-      }
     }
   }
 }

@@ -76,10 +76,10 @@ export class ApiClientService {
     console.log('🔧 API Client Service inicializado. URL:', apiUrl);
   }
 
-  // Auth endpoints
-  login(email: string, password: string): Observable<any> {
+  // Auth endpoints (login com email ou NUIT + senha)
+  login(emailOrNuit: string, password: string): Observable<any> {
     const apiUrl = this.getApiUrl();
-    return this.http.post(`${apiUrl}/auth/login`, { email, password })
+    return this.http.post(`${apiUrl}/auth/login`, { emailOrNuit: emailOrNuit.trim(), password })
       .pipe(
         catchError(this.handleError)
       );
@@ -91,6 +91,12 @@ export class ApiClientService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  changePassword(newPassword: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/auth/change-password`, { newPassword }, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
   }
 
   // Member Application endpoints
@@ -125,9 +131,12 @@ export class ApiClientService {
       );
   }
 
-  getApplications(): Observable<any> {
+  getApplications(status?: string): Observable<any> {
     const apiUrl = this.getApiUrl();
-    const url = `${apiUrl}/member-applications`;
+    let url = `${apiUrl}/member-applications`;
+    if (status) {
+      url += `?status=${encodeURIComponent(status)}`;
+    }
     const headers = this.getHeaders();
     
     return this.http.get<any[]>(url, { 
@@ -139,9 +148,32 @@ export class ApiClientService {
     );
   }
 
+  /** Conta candidaturas pendentes de aprovação */
+  getPendingApplicationsCount(): Observable<number> {
+    return this.getApplications('Pending').pipe(
+      map((res: any) => {
+        const arr = Array.isArray(res) ? res : (res?.data || res?.body || []);
+        return Array.isArray(arr) ? arr.length : 0;
+      })
+    );
+  }
+
   getApplicationById(id: string): Observable<any> {
     const apiUrl = this.getApiUrl();
     return this.http.get(`${apiUrl}/member-applications/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /** Busca candidatura por NUIT (para página Pagar Cotas) - endpoint público */
+  getApplicationByNuit(nuit: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const trimmed = (nuit || '').trim();
+    if (!trimmed) {
+      return throwError(() => new Error('NUIT é obrigatório'));
+    }
+    return this.http.get(`${apiUrl}/member-applications/by-nuit/${encodeURIComponent(trimmed)}`)
       .pipe(
         catchError(this.handleError)
       );
@@ -164,6 +196,30 @@ export class ApiClientService {
     return this.http.put(
       `${apiUrl}/member-applications/${applicationId}/reject`,
       body,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /** Desativa uma candidatura/membro (soft delete) */
+  deactivateMemberApplication(applicationId: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/member-applications/${applicationId}/deactivate`,
+      {},
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /** Atualiza uma candidatura (edição) */
+  updateApplication(applicationId: string, data: Record<string, unknown>): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/member-applications/${applicationId}`,
+      data,
       { headers: this.getHeaders() }
     ).pipe(
       catchError(this.handleError)
@@ -195,6 +251,10 @@ export class ApiClientService {
     supportType: string;
     description: string;
     anonymous: boolean;
+    wantsAccount?: boolean;
+    phone2?: string;
+    phoneWhatsApp?: boolean;
+    phone2WhatsApp?: boolean;
     registrationDevice?: string;
     registrationBrowser?: string;
   }): Observable<any> {
@@ -219,11 +279,19 @@ export class ApiClientService {
       .pipe(catchError(this.handleError));
   }
 
+  patchSupporterRegistration(id: string, data: { fundsConfirmed?: boolean; accountCreated?: boolean }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.patch(`${apiUrl}/supporter-registrations/${id}`, data, {
+      headers: { ...this.getHeaders(), 'Content-Type': 'application/json' }
+    }).pipe(catchError(this.handleError));
+  }
+
   // Sympathizer registrations (Torne-se Simpatizante)
   createSympathizerRegistration(data: {
     fullName: string;
     email: string;
     phone?: string;
+    nuit?: string;
     areaInterest: string;
     acceptCommunications: boolean;
     registrationDevice?: string;
@@ -347,6 +415,31 @@ export class ApiClientService {
     }).pipe(catchError(this.handleError));
   }
 
+  // Users (Gestão de Usuários)
+  getUsers(): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/users`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  createUser(data: { nuit?: string; email?: string; fullName?: string; role?: string }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/users`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  updateUser(id: string, data: { email?: string; password?: string; fullName?: string; role?: string; active?: boolean }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(`${apiUrl}/users/${id}`, data, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteUser(id: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.delete(`${apiUrl}/users/${id}`, { headers: this.getHeaders() })
+      .pipe(catchError(this.handleError));
+  }
+
   // Health check
   healthCheck(): Observable<any> {
     const apiUrl = this.getApiUrl();
@@ -423,6 +516,44 @@ export class ApiClientService {
     const apiUrl = this.getApiUrl();
     return this.http.delete(`${apiUrl}/home-content/${id}`, { headers: this.getHeaders() })
       .pipe(catchError(this.handleError));
+  }
+
+  // Quota payments (Gestão de Cotas)
+  getMembersQuotaSummary(situacao?: 'COM_DIVIDAS' | 'EM_DIA', search?: string): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    const params = new URLSearchParams();
+    if (situacao) params.set('situacao', situacao);
+    if (search && search.trim()) params.set('search', search.trim());
+    const query = params.toString();
+    const url = `${apiUrl}/quota-payments/members-summary${query ? '?' + query : ''}`;
+    return this.http.get<any[]>(url, { headers: this.getHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getMemberQuotaStatement(memberId: string): Observable<any[]> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<any[]>(`${apiUrl}/quota-payments/member/${memberId}/statement`, {
+      headers: this.getHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createQuotaPayment(data: {
+    memberApplicationId: string;
+    year: number;
+    months: number[];
+    paymentDate?: string;
+    paymentMethod: string;
+    reference?: string;
+  }): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.post(`${apiUrl}/quota-payments`, data, {
+      headers: this.getHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getHomeContentByPrefix(prefix: string): Observable<any[]> {

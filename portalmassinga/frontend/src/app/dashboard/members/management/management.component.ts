@@ -1,7 +1,14 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiClientService } from '../../../services/api-client.service';
+import { MemberDetailStateService } from '../member-detail-state.service';
+import { ApproveMemberDialogComponent } from '../modals/approve-member-dialog/approve-member-dialog.component';
+import { RejectMemberDialogComponent } from '../modals/reject-member-dialog/reject-member-dialog.component';
+import { DeactivateMemberDialogComponent } from '../modals/deactivate-member-dialog/deactivate-member-dialog.component';
 
 interface Member {
   id: string;
@@ -11,6 +18,7 @@ interface Member {
   dataNascimento?: string;
   estadoCivil?: string;
   profissao?: string;
+  nuit?: string;
   celular?: string;
   email?: string;
   telefone?: string;
@@ -50,19 +58,22 @@ interface Member {
 })
 export class MembersManagementComponent implements OnInit {
   @Output() navigationClick = new EventEmitter<any>();
+  @Output() membersUpdated = new EventEmitter<void>();  // Emitido quando aprovar/rejeitar/desativar
 
   members: Member[] = [];
   filteredMembers: Member[] = [];
-  selectedMember: Member | null = null;
-  editedMember: Member | null = null; // Cópia para edição
-  showDetailsModal = false;
-  isEditing = false;
   searchTerm = '';
   statusFilter = 'all'; // all, pendente, aprovado, rejeitado
   isLoading = false;
   errorMessage = '';
 
-  constructor(private apiClient: ApiClientService) {}
+  constructor(
+    private apiClient: ApiClientService,
+    private dialog: MatDialog,
+    private router: Router,
+    private memberDetailState: MemberDetailStateService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadMembers();
@@ -120,7 +131,8 @@ export class MembersManagementComponent implements OnInit {
           const statusMap: { [key: string]: string } = {
             'Pending': 'Pendente',
             'Approved': 'Aprovado',
-            'Rejected': 'Rejeitado'
+            'Rejected': 'Rejeitado',
+            'Inactive': 'Inativo'
           };
           const backendStatus = app.status || 'Pending';
           const status = statusMap[backendStatus] || backendStatus;
@@ -141,6 +153,7 @@ export class MembersManagementComponent implements OnInit {
             dataNascimento: app.birthDate || app.dataNascimento || app.data_nascimento,
             estadoCivil: app.maritalStatus || app.estadoCivil || app.estado_civil,
             profissao: app.profession || app.profissao,
+            nuit: app.nuit,
             celular: app.mobilePhone || app.celular,
             email: app.email,
             telefone: app.phone || app.telefone,
@@ -212,43 +225,8 @@ export class MembersManagementComponent implements OnInit {
   }
 
   viewMemberDetails(member: Member): void {
-    this.selectedMember = member;
-    this.editedMember = JSON.parse(JSON.stringify(member)); // Cópia profunda
-    this.isEditing = false;
-    this.showDetailsModal = true;
-  }
-
-  closeDetailsModal(): void {
-    this.showDetailsModal = false;
-    this.selectedMember = null;
-    this.editedMember = null;
-    this.isEditing = false;
-  }
-
-  toggleEditMode(): void {
-    this.isEditing = !this.isEditing;
-    if (!this.isEditing && this.editedMember) {
-      // Se cancelar edição, restaurar dados originais
-      this.editedMember = JSON.parse(JSON.stringify(this.selectedMember!));
-    }
-  }
-
-  saveMemberChanges(): void {
-    if (!this.editedMember || !this.selectedMember) return;
-    
-    // Validar campos obrigatórios
-    if (!this.editedMember.nome || !this.editedMember.nomePai || !this.editedMember.nomeMae ||
-        !this.editedMember.dataNascimento || !this.editedMember.estadoCivil || !this.editedMember.profissao ||
-        !this.editedMember.celular || !this.editedMember.email || !this.editedMember.rua ||
-        !this.editedMember.bairro || !this.editedMember.cidade) {
-      alert('Por favor, preencha todos os campos obrigatórios.');
-      return;
-    }
-    
-    // Nota: A edição de candidaturas não está implementada no backend
-    // Por enquanto, apenas atualizamos localmente
-    alert('Nota: A edição de candidaturas ainda não está disponível no backend. As alterações não foram salvas.');
-    this.isEditing = false;
+    this.memberDetailState.setMember(member);
+    this.router.navigate(['/dashboard'], { queryParams: { view: 'membro', memberId: member.id } });
   }
 
   updateMemberStatus(memberId: string, newStatus: string): void {
@@ -257,68 +235,111 @@ export class MembersManagementComponent implements OnInit {
     } else if (newStatus === 'Rejeitado') {
       this.rejectApplication(memberId);
     }
-    // Fechar modal após ação
-    if (this.showDetailsModal) {
-      setTimeout(() => {
-        this.closeDetailsModal();
-      }, 100);
-    }
   }
 
   approveApplication(applicationId: string): void {
     const member = this.members.find(m => m.id === applicationId);
-    const memberEmail = member?.email || 'o email cadastrado';
-    
-    const confirmMessage = `Tem certeza que deseja aprovar esta candidatura?\n\n` +
-      `Isso irá:\n` +
-      `✅ Atualizar o status da candidatura para "Aprovado"\n\n` +
-      `📧 Email: ${memberEmail}`;
+    const memberEmail = member?.email || '';
+    const memberName = member?.nome || '';
 
-    if (!confirm(confirmMessage)) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ApproveMemberDialogComponent, {
+      width: '420px',
+      data: { memberName, memberEmail },
+      disableClose: false
+    });
 
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.executeApprove(applicationId, memberEmail);
+    });
+  }
+
+  private executeApprove(applicationId: string, memberEmail: string): void {
     this.isLoading = true;
     this.apiClient.approveApplication(applicationId).subscribe({
       next: (response: any) => {
-        const successMessage = `✅ Candidatura aprovada com sucesso!\n\n` +
-          `O status foi atualizado para "Aprovado".\n\n` +
-          `📧 Email: ${memberEmail}`;
-        
-        alert(successMessage);
-        // Recarregar lista para atualizar status
+        this.snackBar.open('Candidatura aprovada com sucesso!', 'Fechar', {
+          duration: 3000,
+          panelClass: ['snackbar-success']
+        });
         this.loadMembers();
+        this.membersUpdated.emit();
       },
       error: (error) => {
-        alert('Erro ao aprovar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'));
+        this.snackBar.open('Erro ao aprovar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'), 'Fechar', {
+          duration: 4000,
+          panelClass: ['snackbar-error']
+        });
         this.isLoading = false;
       }
     });
   }
 
   rejectApplication(applicationId: string): void {
-    const observacoes = prompt('Digite as observações para a rejeição (opcional):');
-    
+    const member = this.members.find(m => m.id === applicationId);
+    const dialogRef = this.dialog.open(RejectMemberDialogComponent, {
+      width: '440px',
+      data: {
+        memberName: member?.nome || '',
+        memberEmail: member?.email || ''
+      },
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(observacoes => {
+      if (observacoes === null) return; // Cancelou
+      this.executeReject(applicationId, observacoes);
+    });
+  }
+
+  private executeReject(applicationId: string, observacoes?: string): void {
     this.isLoading = true;
     // O backend espera um objeto com "observations" no body
     this.apiClient.rejectApplication(applicationId, observacoes || undefined).subscribe({
       next: (response: any) => {
-        alert('Candidatura rejeitada com sucesso.');
-        // Recarregar lista para atualizar status
+        this.snackBar.open('Candidatura rejeitada com sucesso.', 'Fechar', {
+          duration: 3000,
+          panelClass: ['snackbar-success']
+        });
         this.loadMembers();
+        this.membersUpdated.emit();
       },
       error: (error) => {
-        alert('Erro ao rejeitar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'));
+        this.snackBar.open('Erro ao rejeitar candidatura: ' + (error.error?.message || error.message || 'Erro desconhecido'), 'Fechar', {
+          duration: 4000,
+          panelClass: ['snackbar-error']
+        });
         this.isLoading = false;
       }
     });
   }
 
-  deleteMember(memberId: string): void {
-    if (confirm('Tem certeza que deseja excluir esta candidatura?')) {
-      // Nota: A exclusão de candidaturas não está implementada no backend
-      alert('Nota: A exclusão de candidaturas ainda não está disponível no backend.');
-    }
+  deactivateMember(member: Member): void {
+    const dialogRef = this.dialog.open(DeactivateMemberDialogComponent, {
+      width: '400px',
+      data: { memberName: member.nome },
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (!confirmed) return;
+      this.executeDeactivate(member.id);
+    });
+  }
+
+  private executeDeactivate(memberId: string): void {
+    this.apiClient.deactivateMemberApplication(memberId).subscribe({
+      next: () => {
+        this.loadMembers();
+        this.membersUpdated.emit();
+      },
+      error: (err) => {
+        this.snackBar.open('Erro ao desativar: ' + (err.message || 'Erro desconhecido'), 'Fechar', {
+          duration: 4000,
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
   }
 
   getStatusBadgeClass(status: string): string {
@@ -327,6 +348,8 @@ export class MembersManagementComponent implements OnInit {
         return 'status-approved';
       case 'Rejeitado':
         return 'status-rejected';
+      case 'Inativo':
+        return 'status-inactive';
       case 'Pendente':
       default:
         return 'status-pending';
@@ -343,28 +366,6 @@ export class MembersManagementComponent implements OnInit {
 
   getApprovedMembers(): number {
     return this.members.filter(m => m.status === 'Aprovado').length;
-  }
-
-  getEstadoCivilLabel(value: string | undefined): string {
-    if (!value) return '-';
-    const labels: { [key: string]: string } = {
-      'solteiro': 'Solteiro(a)',
-      'casado': 'Casado(a)',
-      'uniao_marital': 'União Marital',
-      'viuvo': 'Viúvo(a)',
-      'divorciado': 'Divorciado(a)'
-    };
-    return labels[value.toLowerCase()] || value;
-  }
-
-  getParentescoLabel(value: string | undefined): string {
-    if (!value) return '-';
-    const labels: { [key: string]: string } = {
-      'filho': 'Filho(a)',
-      'enteado': 'Enteado(a)',
-      'outro': 'Outro'
-    };
-    return labels[value] || value;
   }
 }
 

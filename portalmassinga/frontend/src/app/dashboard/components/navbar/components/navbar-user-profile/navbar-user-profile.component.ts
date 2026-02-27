@@ -1,22 +1,22 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-navbar-user-profile',
   styleUrls: ['./navbar-user-profile.component.scss'],
   template: `
     <button 
-      mat-icon-button 
-      class="action-btn user-profile" 
-      matTooltip="Perfil do Usuário"
+      mat-button 
+      class="user-dropdown-trigger"
       [matMenuTriggerFor]="profileMenu">
-      <mat-icon class="profile-icon">account_circle</mat-icon>
+      <span class="user-name">{{ userName }}</span>
+      <mat-icon class="dropdown-arrow">expand_more</mat-icon>
     </button>
     
     <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
@@ -60,18 +60,23 @@ export class NavbarUserProfileComponent implements OnInit {
   @Input() userRole: string = 'Administrador';
   @Output() profileOptionClick = new EventEmitter<string>();
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Obter nome completo do localStorage se disponível e se userName não foi passado
+    // Obter nome do usuário: prioridade AuthService > localStorage > input
     if (!this.userName || this.userName === 'Usuário' || this.userName === 'DSI') {
-      const savedFullName = localStorage.getItem('userFullName');
-      if (savedFullName) {
-        this.userName = savedFullName;
+      const currentUser = this.authService.getCurrentUser();
+      if (currentUser?.nome) {
+        this.userName = currentUser.nome;
       } else {
-        const savedUserName = localStorage.getItem('userName');
-        if (savedUserName) {
-          this.userName = savedUserName;
+        const savedFullName = localStorage.getItem('userFullName');
+        if (savedFullName) {
+          this.userName = savedFullName;
+        } else {
+          const savedUserName = localStorage.getItem('userName');
+          if (savedUserName) {
+            this.userName = savedUserName;
+          }
         }
       }
     }
@@ -96,21 +101,9 @@ export class NavbarUserProfileComponent implements OnInit {
 
   onProfileOption(option: string): void {
     if (option === 'logout') {
-      this.logout();
+      this.authService.logout();
     } else {
       this.profileOptionClick.emit(option);
     }
-  }
-  
-  private logout(): void {
-    // Remover token e informações de sessão
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('savedEmail');
-    localStorage.removeItem('userFullName');
-    localStorage.removeItem('userName');
-    
-    // Redirecionamento removido - não redireciona para login
-    // this.router.navigate(['/login']);
   }
 }

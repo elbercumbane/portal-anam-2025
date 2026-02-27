@@ -27,6 +27,7 @@ public class SympathizerRegistrationController {
             entity.setFullName(dto.getFullName());
             entity.setEmail(dto.getEmail());
             entity.setPhone(dto.getPhone());
+            entity.setNuit(dto.getNuit() != null && !dto.getNuit().isBlank() ? dto.getNuit().trim() : null);
             entity.setAreaInterest(dto.getAreaInterest());
             entity.setAcceptCommunications(dto.getAcceptCommunications() != null && dto.getAcceptCommunications());
 

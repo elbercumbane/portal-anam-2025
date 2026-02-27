@@ -4,7 +4,9 @@ import com.anam.dto.MemberApplicationDTO;
 import com.anam.dto.RejectApplicationDTO;
 import com.anam.entity.ApplicationDependent;
 import com.anam.entity.MemberApplication;
+import com.anam.entity.User;
 import com.anam.repository.MemberApplicationRepository;
+import com.anam.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,12 @@ public class MemberApplicationController {
 
     @Autowired
     private MemberApplicationRepository repository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<?> createApplication(@Valid @RequestBody MemberApplicationDTO dto,
@@ -109,15 +117,43 @@ public class MemberApplicationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /** Busca candidatura por NUIT (público - para página Pagar Cotas) */
+    @GetMapping("/by-nuit/{nuit}")
+    public ResponseEntity<MemberApplication> getApplicationByNuit(@PathVariable String nuit) {
+        if (nuit == null || nuit.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return repository.findByNuitIgnoreCase(nuit.trim())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PutMapping("/{id}/approve")
     public ResponseEntity<?> approveApplication(@PathVariable UUID id) {
         return repository.findById(id)
                 .map(application -> {
                     application.setStatus("Approved");
                     application.setApprovedAt(java.time.LocalDateTime.now());
-                    return ResponseEntity.ok(repository.save(application));
+                    MemberApplication saved = repository.save(application);
+                    // Criar conta de utilizador para o membro (senha padrão: membro123)
+                    createMemberUserIfNotExists(saved);
+                    return ResponseEntity.ok(saved);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    private void createMemberUserIfNotExists(MemberApplication app) {
+        if (app.getEmail() == null || app.getEmail().isBlank()) return;
+        if (userRepository.existsByEmailIgnoreCase(app.getEmail())) return;
+        String defaultPassword = "anam" + java.time.Year.now().getValue();
+        User user = new User();
+        user.setEmail(app.getEmail().trim().toLowerCase());
+        user.setFullName(app.getFullName());
+        user.setPasswordHash(passwordEncoder.encode(defaultPassword));
+        user.setRole("membro");
+        user.setMemberApplicationId(app.getId());
+        user.setMustChangePassword(true);
+        userRepository.save(user);
     }
 
     @PutMapping("/{id}/reject")
@@ -134,6 +170,69 @@ public class MemberApplicationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /** Desativa um membro (soft delete - status Inactive) */
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<?> deactivateApplication(@PathVariable UUID id) {
+        return repository.findById(id)
+                .map(application -> {
+                    application.setStatus("Inactive");
+                    return ResponseEntity.ok(repository.save(application));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /** Atualiza uma candidatura (edição) */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateApplication(@PathVariable UUID id,
+                                               @Valid @RequestBody MemberApplicationDTO dto) {
+        return repository.findById(id)
+                .map(existing -> {
+                    updateEntityFromDto(existing, dto);
+                    return ResponseEntity.ok(repository.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    private void updateEntityFromDto(MemberApplication app, MemberApplicationDTO dto) {
+        app.setPhoto(dto.getPhoto());
+        app.setFullName(dto.getFullName());
+        app.setFatherName(dto.getFatherName());
+        app.setMotherName(dto.getMotherName());
+        app.setBirthDate(dto.getBirthDate());
+        app.setMaritalStatus(dto.getMaritalStatus());
+        app.setProfession(dto.getProfession());
+        app.setNuit(dto.getNuit());
+        app.setMobilePhone(dto.getMobilePhone());
+        app.setEmail(dto.getEmail());
+        app.setPhone(dto.getPhone());
+        app.setStreet(dto.getStreet());
+        app.setNeighborhood(dto.getNeighborhood());
+        app.setCity(dto.getCity());
+        app.setSpouseName(dto.getSpouseName());
+        app.setSpouseBirthDate(dto.getSpouseBirthDate());
+        app.setSpouseFatherName(dto.getSpouseFatherName());
+        app.setSpouseMotherName(dto.getSpouseMotherName());
+        app.setWorkplace(dto.getWorkplace());
+        app.setPosition(dto.getPosition());
+        app.setWorkAddress(dto.getWorkAddress());
+        app.setWorkPhone(dto.getWorkPhone());
+        app.setAdditionalInformation(dto.getAdditionalInformation());
+        app.setAcceptsTerms(dto.getAcceptsTerms() != null ? dto.getAcceptsTerms() : false);
+        // Dependentes: remover antigos e adicionar novos
+        app.getDependents().clear();
+        if (dto.getDependents() != null && !dto.getDependents().isEmpty()) {
+            for (MemberApplicationDTO.DependentDTO depDto : dto.getDependents()) {
+                ApplicationDependent dep = new ApplicationDependent();
+                dep.setApplication(app);
+                dep.setName(depDto.getName());
+                dep.setRelationship(depDto.getRelationship());
+                dep.setProfession(depDto.getProfession());
+                dep.setAge(depDto.getAge());
+                app.getDependents().add(dep);
+            }
+        }
+    }
+
     private MemberApplication convertToEntity(MemberApplicationDTO dto) {
         MemberApplication application = new MemberApplication();
         
@@ -145,6 +244,7 @@ public class MemberApplicationController {
         application.setBirthDate(dto.getBirthDate());
         application.setMaritalStatus(dto.getMaritalStatus());
         application.setProfession(dto.getProfession());
+        application.setNuit(dto.getNuit());
         
         // Contacts
         application.setMobilePhone(dto.getMobilePhone());

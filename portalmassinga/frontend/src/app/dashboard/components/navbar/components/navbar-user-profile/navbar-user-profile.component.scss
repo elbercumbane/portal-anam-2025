@@ -1,54 +1,50 @@
-.user-profile {
-  color: #0891B2;
-  transition: all 0.3s ease;
-  position: relative;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-  padding: 0.5rem;
-  
+.user-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+
   &:hover {
-    color: #05B6D4;
-    background: rgba(5, 182, 212, 0.12);
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 16px rgba(5, 182, 212, 0.25);
+    background-color: rgba(5, 150, 105, 0.08);
+    color: #047857;
   }
-  
-  &:active {
-    transform: translateY(0) scale(0.98);
+
+  .user-name {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  
-  .profile-icon {
-    color: #05B6D4;
-    font-size: 1.4rem;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      animation: pulse 0.6s ease-in-out;
-    }
+
+  .dropdown-arrow {
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #64748b;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover .dropdown-arrow {
+    color: #047857;
   }
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-// Responsive
 @media (max-width: 768px) {
-  .user-profile {
-    .profile-icon {
-      font-size: 1.2rem;
-    }
+  .user-dropdown-trigger .user-name {
+    max-width: 100px;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
-  .user-profile {
-    .profile-icon {
-      font-size: 1.1rem;
-    }
+  .user-dropdown-trigger .user-name {
+    max-width: 80px;
+    font-size: 0.85rem;
   }
 }
 

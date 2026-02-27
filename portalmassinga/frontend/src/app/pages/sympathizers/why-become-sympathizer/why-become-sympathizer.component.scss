@@ -238,3 +238,108 @@
   margin-bottom: 16px;
   font-size: 0.95rem;
 }
+
+// Hint ao lado do label (ex.: NUIT)
+.label-hint {
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: $ink-500;
+}
+
+// Popup de sucesso (igual ao da página apoio)
+.success-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.5rem;
+  animation: successFadeIn 0.3s ease;
+
+  .success-content {
+    background: $white;
+    padding: 3rem;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: successSlideUp 0.3s ease;
+
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(11, 47, 65, 0.15) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid $green-success;
+
+      svg {
+        width: 50px;
+        height: 50px;
+        stroke: $green-success;
+      }
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: $ink-900;
+      margin-bottom: 1rem;
+    }
+
+    .success-main {
+      font-weight: 500;
+      color: $ink-700;
+      margin-bottom: 1rem;
+    }
+
+    .success-secondary {
+      font-size: 0.95rem;
+      color: $ink-500;
+      line-height: 1.5;
+    }
+
+    .success-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+  }
+}
+
+.btn-success-close {
+  padding: 0.875rem 2rem;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  }
+}
+
+@keyframes successFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes successSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,22 @@
+// ========================================
+// VARIÁVEIS - PORQUE APOIAR (apenas esta página)
+// ========================================
+
+$green-primary: #10B981;
+$white: #FFFFFF;
+$blue-primary: #0B2F41;
+
+$ink-900: #0F172A;
+$ink-600: #334155;
+$ink-500: #475569;
+$ink-400: #64748B;
+
+$border-radius-xl: 20px;
+$mobile: 768px;
+
+$shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+$shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.12);
+
+@mixin smooth-transition($duration: 0.4s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
+}

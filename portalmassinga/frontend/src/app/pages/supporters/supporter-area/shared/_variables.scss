@@ -32,6 +32,8 @@ $info: #14B8A6;
 $warning: #F59E0B;
 $error: #EF4444;
 
+$gold-accent: #FFD700;
+
 $gradient-primary: linear-gradient(135deg, #10B981 0%, #059669 50%, #14B8A6 100%);
 $gradient-secondary: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 100%);
 
@@ -41,4 +43,9 @@ $border-radius-medium: 12px;
 $border-radius-large: 16px;
 $border-radius-xl: 20px;
 $border-radius-xxl: 24px;
+
+// Mixins
+@mixin smooth-transition($duration: 0.4s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
+}
 

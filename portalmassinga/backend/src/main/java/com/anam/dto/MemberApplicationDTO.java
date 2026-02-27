@@ -34,6 +34,8 @@ public class MemberApplicationDTO {
     @NotBlank(message = "Profissão é obrigatória")
     private String profession;
 
+    private String nuit; // Número Único de Identidade Tributária (Moçambique)
+
     // Contacts (Required)
     @NotBlank(message = "Celular é obrigatório")
     private String mobilePhone;

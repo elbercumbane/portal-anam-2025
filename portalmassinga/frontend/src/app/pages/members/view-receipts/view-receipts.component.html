@@ -36,7 +36,6 @@
 
 <!-- Conteúdo Principal -->
 <div class="consultar-recibos-container">
-  <!-- Efeitos de fundo animados -->
   <div class="background-effects">
     <div class="animated-overlay"></div>
     <div class="floating-particles">
@@ -52,100 +51,84 @@
   <div class="content-section">
     <mat-card class="section-card consult-card">
       <mat-card-header>
-        <mat-card-title class="consult-title">CONSULTAR RECIBO</mat-card-title>
+        <mat-card-title class="consult-title">Consultar Recibos</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p class="instruction-text">Seleccione o método para consulta do recibo</p>
-        
         <form [formGroup]="consultReceiptForm" class="consult-form">
-          <!-- Toggle Switches -->
-          <div class="method-selection">
-            <div class="method-option" [class.active]="metodoConsulta === 'contacto'">
-              <div class="method-info">
-                <span class="method-label">Contacto</span>
-                <span class="method-description">Enviamos um código de login para o número que você escolher</span>
-              </div>
-              <div class="toggle-switch" (click)="toggleMetodoConsulta('contacto')">
-                <div class="toggle-slider" [class.active]="metodoConsulta === 'contacto'"></div>
-              </div>
-            </div>
-            
-            <div class="method-option" [class.active]="metodoConsulta === 'email'">
-              <div class="method-info">
-                <span class="method-label">E-mail</span>
-                <span class="method-description">Enviamos um código de login para o email que você escolher</span>
-              </div>
-              <div class="toggle-switch" (click)="toggleMetodoConsulta('email')">
-                <div class="toggle-slider" [class.active]="metodoConsulta === 'email'"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Campo Referência -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Referência</mat-label>
-            <input 
-              matInput 
-              type="text"
-              formControlName="referencia"
-              placeholder="Digite a referência"
-              [disabled]="tokenSent">
-            <mat-icon matPrefix>description</mat-icon>
-            <mat-hint>Número do recibo ou número de membro</mat-hint>
-          </mat-form-field>
-
-          <!-- Campo Contacto ou Email -->
-          <mat-form-field appearance="outline" class="full-width" *ngIf="metodoConsulta === 'contacto'">
-            <mat-label>Telefone</mat-label>
-            <input 
-              matInput 
-              type="tel"
-              formControlName="contacto"
-              placeholder="Digite o telefone"
-              maxlength="9"
-              [disabled]="tokenSent">
-            <mat-icon matPrefix>phone</mat-icon>
-            <mat-error *ngIf="consultReceiptForm.get('contacto')?.hasError('required')">
-              Telefone é obrigatório
-            </mat-error>
-            <mat-error *ngIf="consultReceiptForm.get('contacto')?.hasError('pattern')">
-              Digite um telefone válido (9 dígitos)
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width" *ngIf="metodoConsulta === 'email'">
-            <mat-label>E-mail</mat-label>
-            <input 
-              matInput 
-              type="email"
-              formControlName="email"
-              placeholder="Digite o email"
-              [disabled]="tokenSent">
-            <mat-icon matPrefix>email</mat-icon>
-            <mat-error *ngIf="consultReceiptForm.get('email')?.hasError('required')">
-              Email é obrigatório
-            </mat-error>
-            <mat-error *ngIf="consultReceiptForm.get('email')?.hasError('email')">
-              Digite um email válido
-            </mat-error>
-          </mat-form-field>
-
-          <!-- Campo Token (quando token foi enviado) -->
-          <div *ngIf="tokenSent && !tokenVerified" class="token-section">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Código de Login</mat-label>
+          
+          <!-- Passo 1: NUIT -->
+          <div *ngIf="step === 1" class="step-block">
+            <p class="instruction-text">Digite o seu NUIT para identificar a sua conta de membro.</p>
+            <mat-form-field appearance="outline" class="full-width field-rounded">
+              <mat-label>NUIT</mat-label>
               <input 
                 matInput 
                 type="text"
-                formControlName="token"
-                placeholder="Digite o código recebido"
-                maxlength="6">
+                formControlName="nuit"
+                placeholder="Digite o seu NUIT"
+                (keyup.enter)="buscarPorNuit()">
+              <mat-icon matPrefix>badge</mat-icon>
+              <mat-error *ngIf="consultReceiptForm.get('nuit')?.hasError('required')">
+                NUIT é obrigatório
+              </mat-error>
+              <mat-error *ngIf="consultReceiptForm.get('nuit')?.hasError('pattern')">
+                Digite um NUIT válido (9 a 21 dígitos)
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Passo 2: Confirmar número (parcial) -->
+          <div *ngIf="step === 2" class="step-block">
+            <p class="partial-number-info">
+              <mat-icon>phone</mat-icon>
+              O número de telefone associado ao seu NUIT termina em <strong>{{ phoneSuffix }}</strong>
+            </p>
+            <p class="instruction-text">Complete o número de telefone para confirmar a sua identidade.</p>
+            <mat-form-field appearance="outline" class="full-width field-rounded">
+              <mat-label>Número de Telefone</mat-label>
+              <span matPrefix class="phone-prefix">+258</span>
+              <input 
+                matInput 
+                type="tel"
+                formControlName="telefone"
+                placeholder="84 123 4567"
+                maxlength="9"
+                (input)="onTelefoneInput($event)">
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('required')">
+                Telefone é obrigatório
+              </mat-error>
+              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('pattern')">
+                Digite 9 dígitos
+              </mat-error>
+              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('nomatch')">
+                O número não corresponde ao associado ao seu NUIT
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Passo 3: Código OTP -->
+          <div *ngIf="step === 3" class="step-block">
+            <p class="otp-info">
+              <mat-icon>sms</mat-icon>
+              Código enviado para <strong>{{ telefoneMascarado }}</strong>
+            </p>
+            <p class="instruction-text">Digite o código de 6 dígitos que recebeu.</p>
+            <mat-form-field appearance="outline" class="full-width field-rounded otp-field">
+              <mat-label>Código de Verificação</mat-label>
+              <input 
+                matInput 
+                type="text"
+                formControlName="otp"
+                placeholder="000000"
+                maxlength="6"
+                (keyup.enter)="verificarOtp()">
               <mat-icon matPrefix>vpn_key</mat-icon>
-              <mat-error *ngIf="consultReceiptForm.get('token')?.hasError('required')">
+              <mat-error *ngIf="consultReceiptForm.get('otp')?.hasError('required')">
                 Código é obrigatório
               </mat-error>
-              <mat-error *ngIf="consultReceiptForm.get('token')?.hasError('pattern')">
-                Código deve ter 6 dígitos
+              <mat-error *ngIf="consultReceiptForm.get('otp')?.hasError('pattern')">
+                Digite 6 dígitos
               </mat-error>
             </mat-form-field>
           </div>
@@ -153,27 +136,49 @@
           <!-- Botões de Ação -->
           <div class="action-buttons">
             <button 
-              *ngIf="!tokenSent"
+              *ngIf="step === 1"
               mat-raised-button 
               class="btn-consultar"
               type="button"
-              (click)="solicitarToken()"
-              [disabled]="consultReceiptForm.invalid || consultLoading">
+              (click)="buscarPorNuit()"
+              [disabled]="consultReceiptForm.get('nuit')?.invalid || consultLoading">
               <mat-icon>search</mat-icon>
-              <span>CONSULTAR RECIBO</span>
+              <span>Buscar</span>
               <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
             </button>
 
             <button 
-              *ngIf="tokenSent && !tokenVerified"
+              *ngIf="step === 2"
               mat-raised-button 
               class="btn-consultar"
               type="button"
-              (click)="verificarToken()"
-              [disabled]="consultReceiptForm.get('token')?.invalid || consultLoading">
-              <mat-icon>verified</mat-icon>
-              <span>VERIFICAR CÓDIGO</span>
+              (click)="confirmarTelefone()"
+              [disabled]="consultReceiptForm.get('telefone')?.invalid || consultLoading">
+              <mat-icon>arrow_forward</mat-icon>
+              <span>Continuar</span>
               <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
+            </button>
+
+            <button 
+              *ngIf="step === 3"
+              mat-raised-button 
+              class="btn-consultar"
+              type="button"
+              (click)="verificarOtp()"
+              [disabled]="consultReceiptForm.get('otp')?.invalid || consultLoading">
+              <mat-icon>verified</mat-icon>
+              <span>Verificar Código</span>
+              <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
+            </button>
+
+            <button 
+              *ngIf="step < 3"
+              mat-stroked-button 
+              class="btn-voltar"
+              type="button"
+              (click)="voltar()">
+              <mat-icon>arrow_back</mat-icon>
+              <span>Voltar</span>
             </button>
 
             <button 
@@ -181,37 +186,14 @@
               class="btn-voltar"
               routerLink="/membros"
               type="button">
-              <mat-icon>arrow_back</mat-icon>
-              <span>VOLTAR</span>
+              <mat-icon>home</mat-icon>
+              <span>Página Membros</span>
             </button>
           </div>
         </form>
 
-        <!-- Filtro de Recibos -->
-        <div *ngIf="tokenVerified && filteredReceipts.length > 0" class="filter-section">
-          <mat-divider style="margin: 1.5rem 0;"></mat-divider>
-          <div class="filter-controls">
-            <mat-form-field appearance="outline" class="filter-input">
-              <mat-label>Filtrar recibos</mat-label>
-              <input 
-                matInput 
-                type="text"
-                [(ngModel)]="searchFilter"
-                (input)="aplicarFiltro()"
-                placeholder="Buscar por nome, mês, método...">
-              <mat-icon matPrefix>search</mat-icon>
-            </mat-form-field>
-            <button 
-              mat-icon-button 
-              (click)="limparFiltro()"
-              *ngIf="searchFilter">
-              <mat-icon>clear</mat-icon>
-            </button>
-          </div>
-        </div>
-
         <!-- Lista de Recibos -->
-        <div *ngIf="tokenVerified" class="receipts-list">
+        <div *ngIf="step === 4" class="receipts-list">
           <div *ngIf="filteredReceipts.length === 0" class="no-receipts">
             <mat-icon>receipt_long</mat-icon>
             <p>Nenhum recibo encontrado</p>
@@ -229,11 +211,10 @@
             </div>
             <div class="receipt-body">
               <div class="receipt-info">
-                <p><strong>Membro:</strong> {{ receipt.nomeMembro }} ({{ receipt.numeroMembro }})</p>
+                <p><strong>Membro:</strong> {{ receipt.nomeMembro }}</p>
                 <p><strong>Data:</strong> {{ receipt.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</p>
                 <p><strong>Meses:</strong> {{ receipt.meses.join(', ') }}</p>
                 <p><strong>Método:</strong> {{ receipt.metodoPagamento }}</p>
-                <p><strong>Telefone:</strong> {{ receipt.numeroTelefone }}</p>
               </div>
               <div class="receipt-total">
                 <span class="total-label">Total Pago</span>

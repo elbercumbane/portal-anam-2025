@@ -1,0 +1,59 @@
+.not-member-dialog {
+  padding: 1.5rem;
+  text-align: center;
+  max-width: 420px;
+}
+
+.dialog-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.25rem;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #dc2626;
+  }
+}
+
+.dialog-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.dialog-message {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .btn-register {
+    border-radius: 14px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+
+    mat-icon {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  }
+
+  .btn-close {
+    border-radius: 14px;
+    color: #6b7280;
+  }
+}

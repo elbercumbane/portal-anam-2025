@@ -18,55 +18,49 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   `,
   styles: [`
     .theme-toggle-btn {
-      color: #0891B2;
+      color: #475569;
       transition: all 0.3s ease;
       position: relative;
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.6);
       backdrop-filter: blur(8px);
-      
-      &:hover {
-        color: #05B6D4;
-        background: rgba(5, 182, 212, 0.12);
-        transform: translateY(-2px) scale(1.05);
-        box-shadow: 0 4px 12px rgba(5, 182, 212, 0.2);
-      }
-      
-      &:active {
-        transform: translateY(0) scale(0.98);
-      }
-      
-      .theme-icon {
-        color: #0891B2;
-        font-size: 1.4rem;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          animation: rotate 0.5s ease-in-out;
-          color: #05B6D4;
-        }
-      }
     }
-    
-    @keyframes rotate {
+    .theme-toggle-btn:hover {
+      color: #334155;
+      background: rgba(100, 116, 139, 0.1);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(71, 85, 105, 0.15);
+    }
+    .theme-toggle-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+    .theme-toggle-btn .theme-icon {
+      color: #475569;
+      font-size: 1.65rem;
+      width: 1.65rem;
+      height: 1.65rem;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle-btn:hover .theme-icon {
+      animation: theme-rotate 0.5s ease-in-out;
+      color: #334155;
+    }
+    @keyframes theme-rotate {
       from { transform: rotate(0deg); }
       to { transform: rotate(180deg); }
     }
-    
-    // Responsive
     @media (max-width: 768px) {
-      .theme-toggle-btn {
-        .theme-icon {
-          font-size: 1.2rem;
-        }
+      .theme-toggle-btn .theme-icon {
+        font-size: 1.4rem;
+        width: 1.4rem;
+        height: 1.4rem;
       }
     }
-    
     @media (max-width: 480px) {
-      .theme-toggle-btn {
-        .theme-icon {
-          font-size: 1.1rem;
-        }
+      .theme-toggle-btn .theme-icon {
+        font-size: 1.35rem;
+        width: 1.35rem;
+        height: 1.35rem;
       }
     }
   `]

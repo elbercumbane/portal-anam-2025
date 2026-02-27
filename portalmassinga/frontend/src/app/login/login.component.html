@@ -58,8 +58,8 @@
 
       <!-- Formulário -->
       <form [formGroup]="form" (ngSubmit)="login($event)" class="login-form">
-        <!-- Campo Email -->
-        <div class="input-group" [class.focused]="emailFocused" [class.has-value]="form.get('email')?.value">
+        <!-- Campo Email ou NUIT -->
+        <div class="input-group" [class.focused]="emailFocused" [class.has-value]="form.get('emailOrNuit')?.value">
           <div class="input-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -68,13 +68,14 @@
           </div>
           <div class="input-wrapper">
             <input 
-              type="email" 
-              formControlName="email"
-              id="email"
-              autocomplete="email"
+              type="text" 
+              formControlName="emailOrNuit"
+              id="emailOrNuit"
+              autocomplete="username"
+              placeholder="Email ou NUIT"
               (focus)="emailFocused = true"
               (blur)="emailFocused = false">
-            <label for="email">Email</label>
+            <label for="emailOrNuit">Email ou NUIT</label>
             <div class="input-border"></div>
           </div>
         </div>

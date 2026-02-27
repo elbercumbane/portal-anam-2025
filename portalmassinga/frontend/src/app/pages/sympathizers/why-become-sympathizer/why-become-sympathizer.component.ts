@@ -17,6 +17,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
   
   form!: FormGroup;
   formSubmitted = false;
+  showSuccess = false;
   isLoading = false;
   errorMessage = '';
 
@@ -92,6 +93,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
       nome: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', [Validators.required]],
+      nuit: ['', []],
       consentimento: [false, [Validators.requiredTrue]]
     });
   }
@@ -103,6 +105,11 @@ export class WhyBecomeSympathizerComponent implements OnInit {
     }
   }
 
+  closeSuccessModal(): void {
+    this.showSuccess = false;
+    this.formSubmitted = false; // Mostrar formulário limpo para novo registo
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
@@ -112,6 +119,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
         fullName: v.nome,
         email: v.email,
         phone: v.telefone || '',
+        nuit: (v.nuit || '').trim() || undefined,
         areaInterest: 'Geral',
         acceptCommunications: !!v.consentimento
       };
@@ -120,6 +128,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
           this.isLoading = false;
           this.formSubmitted = true;
           this.form.reset();
+          this.showSuccess = true;
         },
         error: (err) => {
           this.isLoading = false;

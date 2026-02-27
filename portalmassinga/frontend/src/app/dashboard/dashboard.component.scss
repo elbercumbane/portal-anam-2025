@@ -4,7 +4,7 @@
 
 .dashboard-container {
   min-height: 100vh;
-  background: #f5f7fa;
+  background: linear-gradient(160deg, #f0f9ff 0%, #f8fafc 35%, #ecfeff 60%, #f1f5f9 100%);
 }
 
 .sidenav-container {
@@ -36,30 +36,38 @@
   }
 }
 
+// Sidenav: tema escuro aplicado pelo componente app-sidebar (sidebar.component.scss)
+// Aqui apenas garantir que não sobrescrevemos o fundo
 .sidenav {
-  width: 280px;
-  border-right: 1px solid #e9ecef;
-  background: #fff;
-  
-  // Ocultar scrollbar do sidenav
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  
+  width: 300px;
+  background: transparent;
+  border: none;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
     width: 0;
     height: 0;
   }
 }
 
 .main-content {
-  background: #f5f7fa;
+  background: linear-gradient(165deg, #f0f9ff 0%, #f8fafc 40%, #ecfeff 70%, #f1f5f9 100%);
+  min-height: 100vh;
 }
 
 .dashboard-content {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+
+  &.full-width-content {
+    max-width: none;
+    width: 100%;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 .dashboard-main {
@@ -367,6 +375,54 @@
     p {
       margin: 0;
       font-size: 0.875rem;
+    }
+  }
+}
+
+// ============================================
+// CONFIG PLACEHOLDER (Notificações, etc.)
+// ============================================
+
+.config-placeholder {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+
+  .config-placeholder-content {
+    text-align: center;
+    padding: 3rem;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #0891b2;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #6b7280;
+      margin: 0 0 0.5rem 0;
+
+      &.hint {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        font-style: italic;
+        margin-top: 1rem;
+      }
     }
   }
 }

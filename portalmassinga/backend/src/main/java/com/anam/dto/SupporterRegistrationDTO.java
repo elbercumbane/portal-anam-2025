@@ -31,6 +31,10 @@ public class SupporterRegistrationDTO {
     @NotNull(message = "Anonimato é obrigatório")
     private Boolean anonymous;
 
+    private Boolean wantsAccount;
+    private String phone2;
+    private Boolean phoneWhatsApp;
+    private Boolean phone2WhatsApp;
     private String registrationDevice;
     private String registrationBrowser;
 }

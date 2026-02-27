@@ -1,0 +1,130 @@
+/* Estilo approve-member: limpo, check_circle verde, fundo cinza */
+.admin-cotas-aviso-dialog {
+  padding: 0.5rem;
+  min-width: 380px;
+  max-width: 520px;
+}
+
+.dialog-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  .header-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.5rem;
+
+    &.success {
+      color: #10b981;
+    }
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.dialog-body {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+
+  .info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    mat-icon {
+      color: #10b981;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #374151;
+      line-height: 1.5;
+    }
+  }
+
+  .reminder-card {
+    padding: 0.75rem;
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 4px solid #d97706;
+    border-radius: 8px;
+
+    .reminder-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #92400e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .reminder-text {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #374151;
+      line-height: 1.5;
+
+      strong {
+        color: #92400e;
+      }
+    }
+
+    .cotas-detalhes {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(146, 64, 14, 0.2);
+      display: flex;
+      justify-content: space-between;
+
+      .label { font-weight: 600; color: #6b7280; font-size: 0.9rem; }
+      .valor { font-weight: 700; color: #d97706; font-size: 1.1rem; }
+    }
+
+    &.simple .reminder-text {
+      margin: 0;
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+
+  button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+}
+
+@media (max-width: 560px) {
+  .dialog-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

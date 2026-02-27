@@ -17,6 +17,7 @@ export interface NavigationItem {
   active: boolean;
   hasSubmenu?: boolean;
   submenuItems?: NavigationItem[];
+  badgeCount?: number;  // Contador para badge (ex: membros pendentes)
 }
 
 @Component({
@@ -28,6 +29,7 @@ export interface NavigationItem {
 export class NavigationComponent implements OnInit, OnChanges {
   @Input() navigationItems: NavigationItem[] = [];
   @Input() activeItem: string = 'dashboard';
+  @Input() pendingMembersCount = 0;  // Número de membros a aguardar aprovação
   @Output() navigationClick = new EventEmitter<NavigationItem>();
   @Output() serviceItemClick = new EventEmitter<ServiceItem>();
 
@@ -38,6 +40,7 @@ export class NavigationComponent implements OnInit, OnChanges {
   simpatizantesExpanded = false;
   eventosExpanded = false;
   paginasExpanded = false;
+  configuracoesExpanded = false;
   tesourariaExpanded = false;
   indicadoresExpanded = false;
 
@@ -77,6 +80,10 @@ export class NavigationComponent implements OnInit, OnChanges {
     this.paginasExpanded = !this.paginasExpanded;
   }
 
+  toggleConfiguracoes(): void {
+    this.configuracoesExpanded = !this.configuracoesExpanded;
+  }
+
   toggleTesouraria(): void {
     this.tesourariaExpanded = !this.tesourariaExpanded;
   }
@@ -97,9 +104,9 @@ export class NavigationComponent implements OnInit, OnChanges {
   }
 
   private updateSubmenuStates(): void {
-    // Expand paginas submenu if any item is active
-    const paginasItems = ['home', 'sobre', 'documentacao', 'servicos', 'eventos', 'historial', 'parceiros', 'programas', 'noticias', 'associar', 'contato'];
-    this.paginasExpanded = paginasItems.includes(this.activeItem);
+    // Expand configuracoes submenu if any item is active
+    const configItems = ['home', 'sobre', 'documentacao', 'servicos', 'eventos', 'historial', 'parceiros', 'programas', 'noticias', 'associar', 'contato', 'config-notificacoes', 'config-galeria'];
+    this.configuracoesExpanded = configItems.includes(this.activeItem);
 
     // Expand projectos submenu if any item is active
     const projectosItems = ['projectos', 'projectos-home', 'projectos-ativos', 'projectos-realizados', 'candidaturas'];
@@ -122,7 +129,7 @@ export class NavigationComponent implements OnInit, OnChanges {
     this.eventosExpanded = eventosItems.includes(this.activeItem);
 
     // Expand tesouraria submenu if any item is active
-    const tesourariaItems = ['tesouraria', 'tesouraria-gestao', 'tesouraria-relatorios'];
+    const tesourariaItems = ['tesouraria', 'tesouraria-cotas', 'tesouraria-gestao', 'tesouraria-relatorios'];
     this.tesourariaExpanded = tesourariaItems.includes(this.activeItem);
 
     // Expand indicadores submenu if any item is active
@@ -143,7 +150,28 @@ export class NavigationComponent implements OnInit, OnChanges {
     ];
   }
 
-  // Categorias do Portal (similar ao navbar)
+  /** Itens de Configurações: Páginas do site + Notificações + Galeria */
+  getConfiguracoesItems(): NavigationItem[] {
+    return [
+      ...this.getPaginasItems(),
+      {
+        id: 'config-notificacoes',
+        label: 'Notificações',
+        icon: 'notifications',
+        route: '/dashboard/config/notificacoes',
+        active: false
+      },
+      {
+        id: 'config-galeria',
+        label: 'Imagens da Galeria',
+        icon: 'collections',
+        route: '/dashboard/config/galeria',
+        active: false
+      }
+    ];
+  }
+
+  // Páginas do site (usado dentro de Configurações)
   getPaginasItems(): NavigationItem[] {
     return [
       {
@@ -156,35 +184,35 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'documentacao',
         label: 'Documentação',
-        icon: 'folder_open',
+        icon: 'description',
         route: '/dashboard/pages/documentacao',
         active: false
       },
       {
         id: 'servicos',
         label: 'Serviços',
-        icon: 'room_service',
+        icon: 'miscellaneous_services',
         route: '/dashboard/pages/servicos',
         active: false
       },
       {
         id: 'eventos',
         label: 'Eventos',
-        icon: 'event',
+        icon: 'celebration',
         route: '/dashboard/pages/eventos',
         active: false
       },
       {
         id: 'historial',
         label: 'Historial',
-        icon: 'history',
+        icon: 'history_edu',
         route: '/dashboard/pages/historial',
         active: false
       },
       {
         id: 'galeria',
         label: 'Galeria',
-        icon: 'photo_library',
+        icon: 'collections',
         route: '/dashboard/pages/galeria',
         active: false
       },
@@ -198,28 +226,28 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'programas',
         label: 'Programas',
-        icon: 'event_note',
+        icon: 'assignment',
         route: '/dashboard/pages/programas',
         active: false
       },
       {
         id: 'noticias',
         label: 'Notícias',
-        icon: 'article',
+        icon: 'newspaper',
         route: '/dashboard/pages/noticias',
         active: false
       },
       {
         id: 'associar',
         label: 'Associar-se',
-        icon: 'person_add_alt',
+        icon: 'person_add',
         route: '/dashboard/pages/associar',
         active: false
       },
       {
         id: 'contato',
         label: 'Contato',
-        icon: 'contact_mail',
+        icon: 'contact_support',
         route: '/dashboard/pages/contato',
         active: false
       }
@@ -231,21 +259,21 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'projectos-ativos',
         label: 'Projectos em Execução',
-        icon: 'play_circle',
+        icon: 'play_circle_filled',
         route: '/dashboard/pages/projectos/ativos',
         active: false
       },
       {
         id: 'projectos-realizados',
         label: 'Projetos Realizados',
-        icon: 'check_circle',
+        icon: 'task_alt',
         route: '/dashboard/pages/projectos/realizados',
         active: false
       },
       {
         id: 'candidaturas',
         label: 'Projectos a serem realizados',
-        icon: 'description',
+        icon: 'pending_actions',
         route: '/dashboard/pages/projectos/candidaturas',
         active: false
       }
@@ -257,14 +285,14 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'membros-home',
         label: 'Área de Membros',
-        icon: 'people',
+        icon: 'group_work',
         route: '/dashboard/pages/membros/home',
         active: false
       },
       {
         id: 'membros-gestao',
         label: 'Gestão de Membros',
-        icon: 'manage_accounts',
+        icon: 'admin_panel_settings',
         route: '/dashboard/pages/membros/gestao',
         active: false
       },
@@ -283,7 +311,7 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'apoio-gestao',
         label: 'Gestão de Apoiantes',
-        icon: 'volunteer_activism',
+        icon: 'handshake',
         route: '/dashboard/pages/apoio/gestao',
         active: false
       }
@@ -295,11 +323,40 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'simpatizantes-gestao',
         label: 'Gestão de Simpatizantes',
-        icon: 'favorite',
+        icon: 'thumb_up',
         route: '/dashboard/pages/simpatizantes/gestao',
         active: false
       }
     ];
+  }
+
+  getMembrosGestaoItem(): NavigationItem {
+    return {
+      id: 'membros-gestao',
+      label: 'Gestão de Membros',
+      icon: 'admin_panel_settings',
+      route: '/dashboard/pages/membros/gestao',
+      active: false,
+      badgeCount: this.pendingMembersCount
+    };
+  }
+
+  getSairItem(): NavigationItem {
+    return {
+      id: 'sair',
+      label: 'Sair',
+      icon: 'logout',
+      route: '/login',
+      active: false
+    };
+  }
+
+  getApoioGestaoItem(): NavigationItem {
+    return this.getApoioItems()[0];
+  }
+
+  getSimpatizantesGestaoItem(): NavigationItem {
+    return this.getSimpatizantesItems()[0];
   }
 
   getEventosItems(): NavigationItem[] {
@@ -307,14 +364,14 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'eventos-gestao',
         label: 'Gestão de Eventos',
-        icon: 'event',
+        icon: 'event_note',
         route: '/dashboard/pages/eventos/gestao',
         active: false
       },
       {
         id: 'eventos-inscricoes',
         label: 'Inscrições em Eventos',
-        icon: 'event_available',
+        icon: 'how_to_reg',
         route: '/dashboard/pages/eventos/inscricoes',
         active: false
       }
@@ -323,6 +380,13 @@ export class NavigationComponent implements OnInit, OnChanges {
 
   getTesourariaItems(): NavigationItem[] {
     return [
+      {
+        id: 'tesouraria-cotas',
+        label: 'Gestão de Cotas',
+        icon: 'payments',
+        route: '/dashboard/tesouraria/cotas',
+        active: false
+      },
       {
         id: 'tesouraria-gestao',
         label: 'Gestão Financeira',
@@ -333,7 +397,7 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'tesouraria-relatorios',
         label: 'Relatórios',
-        icon: 'assessment',
+        icon: 'summarize',
         route: '/dashboard/pages/tesouraria/relatorios',
         active: false
       }
@@ -345,7 +409,7 @@ export class NavigationComponent implements OnInit, OnChanges {
       {
         id: 'indicadores-geral',
         label: 'Visão Geral',
-        icon: 'dashboard',
+        icon: 'insights',
         route: '/dashboard/indicadores/geral',
         active: false
       },

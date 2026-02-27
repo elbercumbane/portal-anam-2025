@@ -1,12 +1,8 @@
 <!-- Professional Top Navbar -->
 <mat-toolbar class="top-navbar">
-  <!-- Left Section: Menu & Title -->
+  <!-- Left Section: Menu (só abre; fechar fica no sidebar) + Título ANAM -->
   <div class="navbar-left">
-    <app-navbar-menu-button (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
-    <app-navbar-title 
-      [title]="title" 
-      [subtitle]="subtitle">
-    </app-navbar-title>
+    <app-navbar-menu-button *ngIf="!isHandset || !sidebarOpen" (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
   </div>
   
   <!-- Center Section: Search -->
@@ -14,36 +10,12 @@
     <app-navbar-search (search)="onSearch($event)"></app-navbar-search>
   </div>
   
-  <!-- Right Section: Actions & Profile -->
+  <!-- Right Section: Data/Hora + Actions & Profile -->
   <div class="navbar-right">
-    <!-- System Status Indicator -->
-    <div class="system-status" matTooltip="Sistema Online">
-      <div class="status-dot"></div>
-      <span class="status-text">Online</span>
-    </div>
-    
-    <!-- Clock -->
+    <!-- Data e Hora (como área de membros: hora em cima verde, data em baixo) -->
     <app-navbar-clock></app-navbar-clock>
-    
+
     <app-navbar-actions>
-      <!-- Refresh Button -->
-      <button 
-        mat-icon-button 
-        class="action-btn refresh-btn"
-        matTooltip="Atualizar Dashboard"
-        (click)="onRefreshDashboard()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-      
-      <!-- Divider -->
-      <div class="action-divider"></div>
-      
-      <!-- Theme Toggle -->
-      <app-navbar-theme-toggle (themeToggle)="onThemeToggle($event)"></app-navbar-theme-toggle>
-      
-      <!-- Divider -->
-      <div class="action-divider"></div>
-      
       <!-- Notifications -->
       <app-navbar-notifications 
         [notificationCount]="notificationCount"

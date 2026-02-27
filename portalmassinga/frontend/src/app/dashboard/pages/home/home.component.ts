@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiClientService } from '../../../services/api-client.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -120,7 +121,10 @@ export class HomeComponent implements OnInit {
   errorMessage = '';
   private contentCache: Map<string, HomeContent> = new Map();
 
-  constructor(private apiClient: ApiClientService) {}
+  constructor(
+    private apiClient: ApiClientService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -367,12 +371,12 @@ export class HomeComponent implements OnInit {
     
     Promise.all(savePromises).then(() => {
       this.isLoading = false;
-      alert('Dados salvos com sucesso na base de dados!');
+      this.snackBar.open('Dados salvos com sucesso na base de dados!', 'Fechar', { duration: 3000, panelClass: ['snackbar-success'] });
       this.loadData(); // Recarregar para atualizar cache
     }).catch((error) => {
       this.isLoading = false;
       this.errorMessage = 'Erro ao salvar: ' + (error.message || 'Erro desconhecido');
-      alert('Erro ao salvar dados: ' + this.errorMessage);
+      this.snackBar.open('Erro ao salvar dados: ' + this.errorMessage, 'Fechar', { duration: 4000, panelClass: ['snackbar-error'] });
       console.error('Erro ao salvar dados:', error);
     });
   }
@@ -479,7 +483,7 @@ export class HomeComponent implements OnInit {
           if (error.status === 404) {
             this.createChristmasConfig(christmasData);
           } else {
-            alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+            this.snackBar.open('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'), 'Fechar', { duration: 4000, panelClass: ['snackbar-error'] });
           }
         });
     } else {
@@ -494,7 +498,7 @@ export class HomeComponent implements OnInit {
               })
               .catch((error) => {
                 console.error('Erro ao atualizar configurações de Natal:', error);
-                alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+                this.snackBar.open('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'), 'Fechar', { duration: 4000, panelClass: ['snackbar-error'] });
               });
           } else {
             // Não existe, criar
@@ -535,13 +539,13 @@ export class HomeComponent implements OnInit {
                     this.contentCache.set('christmas_config', response);
                   })
                   .catch((err) => {
-                    alert('Erro ao atualizar configurações: ' + (err.error || err.message || 'Erro desconhecido'));
+                    this.snackBar.open('Erro ao atualizar configurações: ' + (err.error || err.message || 'Erro desconhecido'), 'Fechar', { duration: 4000, panelClass: ['snackbar-error'] });
                   });
               }
             }
           });
         } else {
-          alert('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'));
+          this.snackBar.open('Erro ao salvar configurações: ' + (error.error || error.message || 'Erro desconhecido'), 'Fechar', { duration: 4000, panelClass: ['snackbar-error'] });
         }
       });
   }
