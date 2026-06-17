@@ -1,11 +1,12 @@
 <section class="info-section reports-section">
   <div class="section-header">
     <h3>
-      <mat-icon>assessment</mat-icon>
-      Relatórios Internos
+      <mat-icon>folder_open</mat-icon>
+      Documentos da Área de Membros
     </h3>
-    <p class="section-subtitle">Acesse relatórios e documentos da associação</p>
+    <p class="section-subtitle">Aceda e transfira os documentos exclusivos para membros da ANAM</p>
   </div>
+
   <div class="reports-grid">
     <div class="report-card" *ngFor="let report of reports">
       <div class="report-card-icon">
@@ -15,14 +16,16 @@
         <h4>{{ report.title }}</h4>
         <p>{{ report.description }}</p>
         <div class="report-card-footer">
-          <span class="report-date">{{ report.date }}</span>
-          <a [href]="report.link" class="report-download-btn">
+          <span class="report-badge">
+            <mat-icon>picture_as_pdf</mat-icon>
+            PDF
+          </span>
+          <button class="btn-baixar" (click)="baixarPdf(report.link, report.title)" type="button">
             <mat-icon>download</mat-icon>
-            Download
-          </a>
+            <span>Baixar</span>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </section>
-

@@ -119,36 +119,46 @@ export class MembersHomeComponent implements OnInit, OnDestroy {
 
   reports = [
     {
-      icon: 'description',
-      iconType: 'mat',
-      title: 'Relatório Anual 2024',
-      description: 'Relatório completo das atividades e resultados do ano de 2024',
-      date: '15 Jan 2025',
-      link: '#'
+      icon: 'account_balance_wallet',
+      title: 'Controle de Dinheiro em Posse de Ergimino',
+      description: 'Documento de controlo financeiro referente aos valores em posse do membro Ergimino.',
+      date: '2025',
+      link: 'assets/docs-membros/controle-dinheiro-ergimino.pdf'
     },
     {
-      icon: 'account_balance',
-      iconType: 'mat',
-      title: 'Relatório Financeiro Q4 2024',
-      description: 'Análise financeira do último trimestre de 2024',
-      date: '10 Jan 2025',
-      link: '#'
+      icon: 'account_balance_wallet',
+      title: 'Controle de Dinheiro em Posse de Ergimino (2)',
+      description: 'Segunda versão do documento de controlo financeiro referente aos valores em posse do membro Ergimino.',
+      date: '2025',
+      link: 'assets/docs-membros/controle-dinheiro-ergimino-2.pdf'
     },
     {
-      icon: 'trending_up',
-      iconType: 'mat',
-      title: 'Relatório de Projetos',
-      description: 'Status e progresso de todos os projetos em execução',
-      date: '05 Jan 2025',
-      link: '#'
+      icon: 'credit_card',
+      title: 'Número de Conta para Membros da ANAM',
+      description: 'Informações bancárias e número de conta oficial para pagamentos e transferências dos membros da ANAM.',
+      date: '2025',
+      link: 'assets/docs-membros/nr-conta-membros-anam.pdf'
     },
     {
       icon: 'people',
-      iconType: 'mat',
-      title: 'Relatório de Membros',
-      description: 'Estatísticas e informações sobre o quadro de membros',
-      date: '01 Jan 2025',
-      link: '#'
+      title: 'Lista de Candidatos a Membros da ANAM',
+      description: 'Listagem oficial dos candidatos a membros da Associação Nacional de Armadores de Moçambique.',
+      date: '2025',
+      link: 'assets/docs-membros/lista-candidatos-membros.pdf'
+    },
+    {
+      icon: 'person',
+      title: 'Ergimino Mucale',
+      description: 'Documento oficial referente ao membro Ergimino Mucale da ANAM.',
+      date: '2025',
+      link: 'assets/docs-membros/ergimino-mucale.pdf'
+    },
+    {
+      icon: 'person',
+      title: 'Mario Sevene',
+      description: 'Documento oficial referente ao membro Mario Sevene da ANAM.',
+      date: '2025',
+      link: 'assets/docs-membros/mario-sevene.pdf'
     }
   ];
 
@@ -219,13 +229,35 @@ export class MembersHomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // =====================================================================
+    // DEV MODE: bypass de autenticação para testes sem login
+    // Para repor o login: remover este bloco até ao comentário DEV MODE END
+    // =====================================================================
+    const DEV_MODE = true;
+    if (DEV_MODE && !this.authService.getCurrentUser()) {
+      const devUser = { email: 'dev@anam.mz', nome: 'Utilizador de Teste', role: 'membro' };
+      localStorage.setItem('currentUser', JSON.stringify(devUser));
+      localStorage.setItem('authToken', 'dev-token');
+      this.memberData = {
+        id: 'dev-001',
+        nome: 'Utilizador de Teste',
+        email: 'dev@anam.mz',
+        profissao: 'Desenvolvimento',
+        cidade: 'Massinga',
+        status: 'Aprovado'
+      };
+      this.userName = devUser.nome;
+    }
+    // =====================================================================
+    // DEV MODE END
+    // =====================================================================
+
     const user = this.authService.getCurrentUser();
     if (user) {
       this.userName = user.nome;
-      // Carregar dados do membro imediatamente
       this.loadMemberData();
     }
-    
+
     // Inicializar data e hora
     this.updateDateTime();
     // Atualizar a cada segundo
@@ -340,6 +372,7 @@ export class MembersHomeComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
+    this.router.navigate(['/']);
   }
   
 

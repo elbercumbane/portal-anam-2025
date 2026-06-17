@@ -11,6 +11,7 @@ import { ViewReceiptsComponent } from './view-receipts/view-receipts.component';
 
 const routes: Routes = [
   { path: '', component: MembersHomeComponent },
+  { path: 'lista', loadComponent: () => import('./members-list/members-list.component').then(m => m.MembersListComponent) },
   { path: 'organograma', component: OrgChartComponent }, // Página pública
   { path: 'cadastro', component: RegisterComponent },
   { path: 'pagar-cotas', component: PayQuotasComponent },

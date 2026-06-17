@@ -187,12 +187,37 @@ export class ApiClientService {
       );
   }
 
-  getMembers(): Observable<any> {
+  getMembers(status?: string): Observable<any> {
     const apiUrl = this.getApiUrl();
-    return this.http.get(`${apiUrl}/membros`, { headers: this.getHeaders() })
+    const url = status
+      ? `${apiUrl}/membros?status=${encodeURIComponent(status)}`
+      : `${apiUrl}/membros`;
+    return this.http.get(url, { headers: this.getHeaders() })
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  approveMember(memberId: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/membros/${memberId}/aprovar`,
+      {},
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  rejectMember(memberId: string, observacoes?: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/membros/${memberId}/rejeitar`,
+      observacoes || null,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getMemberById(id: string): Observable<any> {
@@ -201,6 +226,22 @@ export class ApiClientService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  // PDF member extraction
+  uploadPdfMembers(file: File): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    // Only set Authorization header — let browser set Content-Type with multipart boundary
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
+    const headers = token
+      ? new HttpHeaders({ 'Authorization': `Bearer ${token}` })
+      : new HttpHeaders();
+
+    return this.http.post(`${apiUrl}/membros/upload-pdf`, formData, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   // Health check

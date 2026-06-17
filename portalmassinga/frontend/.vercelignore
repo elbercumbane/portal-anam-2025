@@ -1,10 +1,10 @@
 node_modules
+.angular
 .git
 .vscode
 .idea
 *.log
-*.map
-src
+dist
 tsconfig*.json
 angular.json
 karma.conf.js

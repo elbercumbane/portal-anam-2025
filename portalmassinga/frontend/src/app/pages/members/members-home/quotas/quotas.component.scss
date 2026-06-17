@@ -105,6 +105,13 @@
         width: 20px;
         height: 20px;
       }
+
+      @media (max-width: 480px) {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.25rem;
+        font-size: 0.95rem;
+      }
     }
   }
 }
@@ -165,6 +172,10 @@
     border: 1px solid rgba($green-primary, 0.1);
     transition: all 0.2s ease;
 
+    @media (max-width: 480px) {
+      padding: 1rem;
+    }
+
     &:hover {
       background: white;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -178,6 +189,13 @@
       margin-bottom: 1rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid rgba($green-primary, 0.1);
+      gap: 0.75rem;
+      flex-wrap: wrap;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
       .receipt-info {
         .receipt-number {
@@ -250,6 +268,18 @@
       .receipt-actions {
         display: flex;
         gap: 1rem;
+        flex-wrap: wrap;
+
+        @media (max-width: 480px) {
+          flex-direction: column;
+          width: 100%;
+
+          .btn-view-receipt,
+          .btn-download-receipt {
+            width: 100%;
+            justify-content: center;
+          }
+        }
 
         .btn-view-receipt,
         .btn-download-receipt {

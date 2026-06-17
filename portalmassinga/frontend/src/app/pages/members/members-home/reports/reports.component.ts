@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -7,10 +7,15 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './reports.component.html',
-  styleUrl: './reports.component.scss',
-  encapsulation: ViewEncapsulation.None
+  styleUrl: './reports.component.scss'
 })
 export class ReportsComponent {
   @Input() reports: any[] = [];
-}
 
+  baixarPdf(url: string, titulo: string): void {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = titulo + '.pdf';
+    a.click();
+  }
+}

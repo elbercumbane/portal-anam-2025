@@ -1,0 +1,240 @@
+<section class="members-list-page">
+  <div class="background-overlay"></div>
+
+  <div class="page-inner">
+    <button class="btn-voltar" (click)="voltar()" type="button">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Voltar à Área de Membros</span>
+    </button>
+
+    <header class="hero">
+      <div class="hero-badge">
+        <mat-icon>groups</mat-icon>
+        <span>Associação ANAM</span>
+      </div>
+      <h1>Lista de <span class="highlight">Membros</span></h1>
+      <p>Consulte os associados aprovados da Associação de Naturais e Amigos de Massinga.</p>
+
+      <div class="stats-row" *ngIf="!isLoading && !errorMessage">
+        <div class="stat-card">
+          <mat-icon>verified</mat-icon>
+          <div>
+            <strong>{{ totalMembers }}</strong>
+            <span>Membros aprovados</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <mat-icon>filter_list</mat-icon>
+          <div>
+            <strong>{{ visibleCount }}</strong>
+            <span>A mostrar agora</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <mat-icon>location_city</mat-icon>
+          <div>
+            <strong>{{ availableCities.length }}</strong>
+            <span>Cidades representadas</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="toolbar" *ngIf="!isLoading && !errorMessage">
+      <div class="search-box">
+        <mat-icon>search</mat-icon>
+        <input
+          type="text"
+          placeholder="Pesquisar por nome, profissão, cidade ou contacto..."
+          [(ngModel)]="searchTerm"
+          (input)="onFiltersChange()">
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-btn"
+          (click)="searchTerm = ''; onFiltersChange()"
+          aria-label="Limpar pesquisa">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="toolbar-actions">
+        <label class="filter-select">
+          <mat-icon>location_on</mat-icon>
+          <select [(ngModel)]="cityFilter" (change)="onFiltersChange()">
+            <option value="all">Todas as cidades</option>
+            <option *ngFor="let city of availableCities" [value]="city">{{ city }}</option>
+          </select>
+        </label>
+
+        <label class="filter-select">
+          <mat-icon>sort</mat-icon>
+          <select [(ngModel)]="sortBy" (change)="onFiltersChange()">
+            <option value="nome-asc">Nome (A–Z)</option>
+            <option value="nome-desc">Nome (Z–A)</option>
+            <option value="cidade-asc">Cidade</option>
+          </select>
+        </label>
+
+        <div class="view-toggle">
+          <button
+            type="button"
+            [class.active]="viewMode === 'grid'"
+            (click)="viewMode = 'grid'"
+            aria-label="Vista em grelha">
+            <mat-icon>grid_view</mat-icon>
+          </button>
+          <button
+            type="button"
+            [class.active]="viewMode === 'list'"
+            (click)="viewMode = 'list'"
+            aria-label="Vista em lista">
+            <mat-icon>view_list</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="state-box error">
+      <mat-icon>error_outline</mat-icon>
+      <h3>Não foi possível carregar os membros</h3>
+      <p>{{ errorMessage }}</p>
+      <button type="button" (click)="loadMembers()">
+        <mat-icon>refresh</mat-icon>
+        Tentar novamente
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && filteredMembers.length === 0" class="state-box empty">
+      <mat-icon>person_search</mat-icon>
+      <h3>Nenhum membro encontrado</h3>
+      <p>Tente ajustar a pesquisa ou limpar os filtros aplicados.</p>
+      <button type="button" (click)="clearSearch()">Limpar filtros</button>
+    </div>
+
+    <div
+      *ngIf="!isLoading && !errorMessage && filteredMembers.length > 0"
+      [class.members-grid]="viewMode === 'grid'"
+      [class.members-list-view]="viewMode === 'list'">
+
+      <article
+        class="member-card"
+        *ngFor="let member of filteredMembers"
+        (click)="openMember(member)"
+        tabindex="0"
+        (keyup.enter)="openMember(member)">
+        <div class="card-top">
+          <div
+            class="avatar"
+            *ngIf="!member.foto"
+            [style.background]="getAvatarColor(member.nome)">
+            {{ getInitials(member.nome) }}
+          </div>
+          <img *ngIf="member.foto" [src]="member.foto" [alt]="member.nome" class="avatar-img">
+
+          <div class="card-title">
+            <h3>{{ member.nome }}</h3>
+            <span class="status-pill">
+              <mat-icon>check_circle</mat-icon>
+              {{ member.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="info-row">
+            <mat-icon>work</mat-icon>
+            <span>{{ member.profissao }}</span>
+          </div>
+          <div class="info-row">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ member.cidade }}<ng-container *ngIf="member.bairro"> · {{ member.bairro }}</ng-container></span>
+          </div>
+          <div class="info-row" *ngIf="hasValidEmail(member.email)">
+            <mat-icon>email</mat-icon>
+            <span>{{ member.email }}</span>
+          </div>
+          <div class="info-row" *ngIf="hasValidPhone(member.celular)">
+            <mat-icon>phone</mat-icon>
+            <span>{{ formatPhone(member.celular) }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span>Ver detalhes</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="selectedMember" (click)="closeMember()">
+    <div class="modal-panel" (click)="$event.stopPropagation()" *ngIf="selectedMember">
+      <button class="modal-close" type="button" (click)="closeMember()" aria-label="Fechar">
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <div class="modal-header">
+        <div
+          class="avatar large"
+          *ngIf="!selectedMember.foto"
+          [style.background]="getAvatarColor(selectedMember.nome)">
+          {{ getInitials(selectedMember.nome) }}
+        </div>
+        <img
+          *ngIf="selectedMember.foto"
+          [src]="selectedMember.foto"
+          [alt]="selectedMember.nome"
+          class="avatar-img large">
+
+        <div>
+          <h2>{{ selectedMember.nome }}</h2>
+          <span class="status-pill">
+            <mat-icon>verified</mat-icon>
+            Membro {{ selectedMember.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-block">
+          <label>Profissão</label>
+          <p>{{ selectedMember.profissao }}</p>
+        </div>
+        <div class="detail-block">
+          <label>Localização</label>
+          <p>
+            {{ selectedMember.cidade }}
+            <ng-container *ngIf="selectedMember.bairro"> — {{ selectedMember.bairro }}</ng-container>
+          </p>
+        </div>
+        <div class="detail-block" *ngIf="selectedMember.estadoCivil">
+          <label>Estado civil</label>
+          <p>{{ selectedMember.estadoCivil }}</p>
+        </div>
+        <div class="detail-block" *ngIf="hasValidEmail(selectedMember.email)">
+          <label>Email</label>
+          <p>
+            <a [href]="'mailto:' + selectedMember.email">{{ selectedMember.email }}</a>
+          </p>
+        </div>
+        <div class="detail-block" *ngIf="hasValidPhone(selectedMember.celular)">
+          <label>Celular</label>
+          <p>
+            <a [href]="'tel:' + selectedMember.celular">{{ formatPhone(selectedMember.celular) }}</a>
+          </p>
+        </div>
+        <div class="detail-block" *ngIf="hasValidPhone(selectedMember.telefone || '')">
+          <label>Telefone</label>
+          <p>{{ formatPhone(selectedMember.telefone!) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

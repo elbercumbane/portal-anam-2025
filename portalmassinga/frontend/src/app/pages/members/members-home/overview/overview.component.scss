@@ -9,15 +9,24 @@
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 }
 
 .member-contributions-section {
   grid-column: 1;
+
+  @media (max-width: 768px) {
+    grid-column: 1 / -1;
+  }
 }
 
 .association-summary-section {
   grid-column: 2;
+
+  @media (max-width: 768px) {
+    grid-column: 1 / -1;
+  }
 }
 
 .association-growth-section {
@@ -63,6 +72,11 @@
     background: $gray-50;
     border-radius: 12px;
     padding: 1rem;
+
+    @media (max-width: 768px) {
+      height: 160px;
+      padding: 0.5rem;
+    }
   }
 }
 
@@ -128,6 +142,11 @@
     align-items: center;
     justify-content: center;
     position: relative;
+
+    @media (max-width: 768px) {
+      height: 240px;
+      padding: 0.75rem;
+    }
 
     canvas {
       width: 100% !important;

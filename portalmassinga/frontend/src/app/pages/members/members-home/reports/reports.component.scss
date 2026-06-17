@@ -6,6 +6,11 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 
   .report-card {
@@ -16,6 +21,11 @@
     transition: all 0.2s ease;
     display: flex;
     gap: 1rem;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      padding: 1.15rem;
+    }
 
     &:hover {
       background: white;
@@ -62,37 +72,52 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
 
-        .report-date {
-          font-size: 0.75rem;
-          color: $ink-500;
+        @media (max-width: 480px) {
+          flex-direction: column;
+          align-items: stretch;
+
+          .btn-baixar {
+            width: 100%;
+            justify-content: center;
+          }
         }
 
-        .report-download-btn {
+        .report-badge {
           display: inline-flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 1rem;
+          gap: 4px;
+          font-size: 0.75rem;
+          color: #e53935;
+          font-weight: 600;
+          background: rgba(229, 57, 53, 0.08);
+          border-radius: 6px;
+          padding: 3px 8px;
+
+          mat-icon { font-size: 14px; width: 14px; height: 14px; }
+        }
+
+        .btn-baixar {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.45rem 1rem;
           background: rgba($green-primary, 0.1);
           color: $green-primary;
-          text-decoration: none;
+          border: none;
           border-radius: 8px;
-          font-size: 0.875rem;
+          font-size: 0.85rem;
           font-weight: 600;
+          cursor: pointer;
           transition: all 0.2s ease;
 
-          &:hover {
-            background: rgba($green-primary, 0.2);
-          }
+          mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
-          mat-icon {
-            font-size: 18px;
-            width: 18px;
-            height: 18px;
-          }
+          &:hover { background: rgba($green-primary, 0.2); }
         }
       }
     }
   }
 }
-
