@@ -1,29 +1,15 @@
+@use '../../management-layout' as mgmt;
 @import '../../pages/_shared-styles.scss';
 
 // Tema: Tesouraria (Laranja)
 @include category-theme($color-tesouraria, $color-tesouraria-secondary);
 
-.page-container {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+:host {
+  @include mgmt.host-block;
 }
 
-.page-header {
-  margin-bottom: 32px;
-  
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 8px 0;
-  }
-  
-  p {
-    font-size: 1rem;
-    color: #6b7280;
-    margin: 0;
-  }
+.page-container {
+  @include mgmt.page-root;
 }
 
 // Situação Atual da Associação

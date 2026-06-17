@@ -1,99 +1,85 @@
 <div class="dialog-container receipt-dialog">
   <div class="receipt-print">
-    <!-- Cabeçalho da Associação -->
-    <div class="receipt-association-header">
-      <div class="association-logo">
-        <h1>ANAM</h1>
-        <p class="association-name">Associação de Naturais e Amigos de Massinga</p>
+    <!-- Cabeçalho ANAM -->
+    <header class="receipt-brand-header">
+      <div class="brand-accent"></div>
+      <div class="brand-content">
+        <div class="brand-left">
+          <h1 class="brand-name">ANAM</h1>
+          <p class="brand-full">Associação de Naturais e Amigos de Massinga</p>
+          <p class="brand-location">Massinga · Inhambane · Moçambique</p>
+        </div>
+        <div class="brand-right">
+          <span class="receipt-type">Recibo de Cota</span>
+          <span class="receipt-ref">Nº {{ data.id }}</span>
+          <span class="receipt-date">{{ data.dataPagamento | date:'dd/MM/yyyy' }}</span>
+          <span class="status-pill" [class.pago]="data.status === 'pago'">
+            {{ data.status === 'pago' ? 'PAGO' : 'PENDENTE' }}
+          </span>
+        </div>
       </div>
-      <div class="receipt-title-section">
-        <h2>Recibo de Pagamento</h2>
-        <div class="receipt-id-print">Referência: {{ data.id }}</div>
-      </div>
-    </div>
-    
+    </header>
+
     <div class="receipt-body-print">
-      <!-- Informações da Associação -->
-      <div class="receipt-section association-info">
-        <div class="info-grid">
-          <div class="info-item">
-            <span class="info-label">Endereço:</span>
-            <span class="info-value">Av. Principal, Massinga, Inhambane, Moçambique</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Telefone:</span>
-            <span class="info-value">+258 84 000 0000</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Email:</span>
-            <span class="info-value">geral&#64;anam.org</span>
-          </div>
+      <!-- Cards Membro + Pagamento -->
+      <div class="info-cards">
+        <div class="info-card">
+          <span class="card-label">Membro</span>
+          <strong>{{ data.nomeMembro }}</strong>
+          <span class="card-meta">NUIT: {{ data.numeroMembro }}</span>
+        </div>
+        <div class="info-card">
+          <span class="card-label">Pagamento</span>
+          <strong>{{ data.metodoPagamento }}</strong>
+          <span class="card-meta">{{ data.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span class="card-meta" *ngIf="data.numeroTelefone">+258 {{ data.numeroTelefone }}</span>
         </div>
       </div>
-      
-      <mat-divider></mat-divider>
-      
-      <!-- Dados do Membro -->
-      <div class="receipt-section">
-        <h3>Dados do Membro</h3>
-        <div class="member-details-grid">
-          <div class="detail-item">
-            <span class="detail-label">Nome:</span>
-            <span class="detail-value">{{ data.nomeMembro }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Número de Membro:</span>
-            <span class="detail-value">{{ data.numeroMembro }}</span>
-          </div>
-        </div>
+
+      <!-- Tabela de cotas -->
+      <div class="items-section">
+        <h3>Detalhes das cotas</h3>
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Descrição</th>
+              <th>Preço unit.</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of mesesLista; let i = index">
+              <td class="col-num">{{ i + 1 }}</td>
+              <td>Cota — {{ m }}</td>
+              <td>{{ precoUnitario | number:'1.2-2' }} MT</td>
+              <td><strong>{{ precoUnitario | number:'1.2-2' }} MT</strong></td>
+            </tr>
+            <tr class="summary-row">
+              <td colspan="3">Total ({{ mesesLista.length }} cotas)</td>
+              <td><strong>{{ data.valorTotal | number:'1.2-2' }} MT</strong></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      
-      <!-- Detalhes do Pagamento -->
-      <div class="receipt-section">
-        <h3>Detalhes do Pagamento</h3>
-        <div class="payment-details-grid">
-          <div class="detail-item">
-            <span class="detail-label">Data:</span>
-            <span class="detail-value">{{ data.dataPagamento | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Hora:</span>
-            <span class="detail-value">{{ data.dataPagamento | date:'HH:mm' }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Meses Pagos:</span>
-            <span class="detail-value">{{ data.meses.join(', ') }}</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Método de Pagamento:</span>
-            <span class="detail-value">{{ data.metodoPagamento }}</span>
-          </div>
-          <div class="detail-item" *ngIf="data.numeroTelefone">
-            <span class="detail-label">Número de Telefone:</span>
-            <span class="detail-value">{{ data.numeroTelefone }}</span>
-          </div>
-        </div>
-      </div>
-      
+
       <!-- Total -->
-      <div class="receipt-section total-section">
-        <div class="total-row">
-          <span class="total-label-print">Total Pago:</span>
-          <span class="total-value-print">{{ data.valorTotal | number }} MT</span>
-        </div>
+      <div class="total-banner">
+        <span>Total pago</span>
+        <strong>{{ data.valorTotal | number:'1.2-2' }} MT</strong>
       </div>
-      
-      <!-- Rodapé do Recibo -->
-      <div class="receipt-footer">
-        <div class="status-badge" [class.pago]="data.status === 'pago'">
-          <span class="status-text">{{ data.status === 'pago' ? 'PAGO' : 'PENDENTE' }}</span>
+
+      <!-- Rodapé -->
+      <footer class="receipt-footer">
+        <div class="footer-brand">
+          <strong>ANAM</strong>
+          <span>Av. Principal, Massinga · +258 84 000 0000 · geral&#64;anam.org</span>
         </div>
-        <p class="receipt-note">Este é um recibo gerado automaticamente. Guarde-o para seus registos.</p>
-        <p class="receipt-date">Emitido em {{ data.dataPagamento | date:'dd/MM/yyyy às HH:mm' }}</p>
-      </div>
+        <p class="receipt-note">Documento gerado electronicamente. Guarde este recibo para seus registos.</p>
+      </footer>
     </div>
   </div>
-  
+
   <div class="dialog-actions">
     <button mat-stroked-button (click)="onPrint()">
       <mat-icon>print</mat-icon>
@@ -105,4 +91,3 @@
     </button>
   </div>
 </div>
-

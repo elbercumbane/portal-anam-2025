@@ -1,196 +1,281 @@
+$primary: #0f766e;
+$primary-dark: #0d5d56;
+$accent: #ffd700;
+$ink: #0f172a;
+$muted: #64748b;
+$border: #e2e8f0;
+$surface: #f8fafc;
+
 .dialog-container {
-  max-width: 600px;
+  max-width: 640px;
   width: 100%;
 }
 
 .receipt-print {
-  padding: 2rem;
   background: #fff;
-  
-  .receipt-association-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 3px solid #8b785f;
-    
-    .association-logo {
-      margin-bottom: 1.5rem;
-      
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 900;
-        color: #8b785f;
-        margin: 0 0 0.5rem 0;
-        letter-spacing: 2px;
-      }
-      
-      .association-name {
-        font-size: 0.95rem;
-        color: #6c5e58;
-        margin: 0;
-        font-weight: 500;
-      }
-    }
-    
-    .receipt-title-section {
-      h2 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #211712;
-        margin: 0 0 0.5rem 0;
-      }
-      
-      .receipt-id-print {
-        font-size: 0.9rem;
-        color: #6c5e58;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid $border;
+}
+
+.receipt-brand-header {
+  position: relative;
+  background: linear-gradient(135deg, $primary-dark, $primary);
+  color: white;
+  overflow: hidden;
+
+  .brand-accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: $accent;
+  }
+
+  .brand-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+  }
+
+  .brand-name {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+  }
+
+  .brand-full {
+    margin: 0.35rem 0 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.95;
+    max-width: 280px;
+    line-height: 1.35;
+  }
+
+  .brand-location {
+    margin: 0.25rem 0 0;
+    font-size: 0.7rem;
+    opacity: 0.75;
+  }
+
+  .brand-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+    text-align: right;
+  }
+
+  .receipt-type {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .receipt-ref {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .receipt-date {
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .status-pill {
+    margin-top: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    background: rgba(255, 255, 255, 0.2);
+
+    &.pago {
+      background: #059669;
     }
   }
-  
-  .receipt-body-print {
-    .receipt-section {
-      margin-bottom: 2rem;
-      
-      &.association-info {
-        background: rgba(139, 120, 95, 0.05);
-        padding: 1.5rem;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        
-        .info-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 1rem;
-          
-          .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            
-            .info-label {
-              font-size: 0.85rem;
-              color: #6c5e58;
-              font-weight: 600;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            
-            .info-value {
-              font-size: 0.95rem;
-              color: #211712;
-              font-weight: 500;
-            }
-          }
-        }
-      }
-      
-      h3 {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #211712;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid rgba(139, 120, 95, 0.2);
-      }
-      
-      .member-details-grid,
-      .payment-details-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        
-        .detail-item {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-          
-          .detail-label {
-            font-size: 0.85rem;
-            color: #6c5e58;
-            font-weight: 600;
-          }
-          
-          .detail-value {
-            font-size: 1rem;
-            color: #211712;
-            font-weight: 600;
-          }
-        }
-      }
+}
+
+.receipt-body-print {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  border-top: 3px solid $primary;
+
+  .card-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $primary;
+    margin-bottom: 0.35rem;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.9rem;
+    color: $ink;
+    margin-bottom: 0.2rem;
+  }
+
+  .card-meta {
+    display: block;
+    font-size: 0.78rem;
+    color: $muted;
+    line-height: 1.4;
+  }
+}
+
+.items-section {
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0 0 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $primary;
+  }
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid $border;
+  font-size: 0.82rem;
+
+  thead {
+    background: $primary-dark;
+    color: white;
+
+    th {
+      padding: 0.55rem 0.65rem;
+      text-align: left;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+
+      &:first-child { width: 36px; text-align: center; }
+      &:nth-child(3), &:nth-child(4) { width: 100px; white-space: nowrap; }
     }
-    
-    .total-section {
-      background: linear-gradient(135deg, rgba(139, 120, 95, 0.15) 0%, rgba(139, 120, 95, 0.05) 100%);
-      padding: 2rem;
-      border-radius: 12px;
-      margin-top: 2rem;
-      border: 2px solid rgba(139, 120, 95, 0.2);
-      
-      .total-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        
-        .total-label-print {
-          font-size: 1.4rem;
-          font-weight: 700;
-          color: #211712;
-        }
-        
-        .total-value-print {
-          font-size: 2.2rem;
-          font-weight: 900;
-          color: #8b785f;
-        }
-      }
-    }
-    
-    .receipt-footer {
-      margin-top: 2.5rem;
-      padding-top: 2rem;
-      border-top: 2px solid #e0e0e0;
+  }
+
+  tbody td {
+    padding: 0.55rem 0.65rem;
+    background: $surface;
+    color: $ink;
+    vertical-align: middle;
+    border-top: 1px solid $border;
+    font-size: 0.8rem;
+
+    &.col-num {
       text-align: center;
-      
-      .status-badge {
-        display: inline-block;
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        background: #ff9800;
-        margin-bottom: 1rem;
-        
-        &.pago {
-          background: #4caf50;
-        }
-        
-        .status-text {
-          color: #fff;
-          font-weight: 700;
-          font-size: 0.9rem;
-          letter-spacing: 1px;
-        }
-      }
-      
-      p {
-        margin: 0.75rem 0;
-        color: #6c5e58;
-        font-size: 0.9rem;
-      }
-      
-      .receipt-note {
-        font-style: italic;
-        font-size: 0.85rem;
-        margin-top: 1rem;
-        color: #999;
-      }
-      
-      .receipt-date {
-        font-size: 0.8rem;
-        color: #999;
-        margin-top: 0.5rem;
-      }
+      color: $muted;
+      font-weight: 600;
     }
+
+    &:nth-child(3), &:nth-child(4) {
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  tbody tr:nth-child(even) td {
+    background: #fff;
+  }
+
+  tbody tr.summary-row td {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: $primary-dark;
+    border-top: 2px solid $border;
+  }
+}
+
+.total-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.15rem;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1px solid #6ee7b7;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+
+  span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $primary-dark;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  strong {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $primary;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.receipt-footer {
+  padding-top: 1rem;
+  border-top: 1px solid $border;
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin-bottom: 0.5rem;
+
+    strong {
+      font-size: 0.85rem;
+      color: $primary;
+      letter-spacing: 0.04em;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: $muted;
+    }
+  }
+
+  .receipt-note {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-style: italic;
   }
 }
 
@@ -198,41 +283,31 @@
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
-  padding: 1.5rem;
-  border-top: 1px solid #e0e0e0;
-  
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid $border;
+
   button {
-    min-width: 140px;
-    
-    mat-icon {
-      margin-right: 0.5rem;
-    }
+    min-width: 130px;
+
+    mat-icon { margin-right: 0.4rem; }
   }
 }
 
 @media (max-width: 768px) {
-  .dialog-container {
-    max-width: 100%;
-    margin: 1rem;
-  }
-  
+  .dialog-container { max-width: 100%; }
+
   .dialog-actions {
     flex-direction: column;
-    
-    button {
-      width: 100%;
-    }
+
+    button { width: 100%; }
   }
 }
 
-// Print styles
 @media print {
-  .dialog-actions {
-    display: none;
-  }
-  
+  .dialog-actions { display: none; }
+
   .receipt-print {
-    padding: 0;
+    border: none;
+    border-radius: 0;
   }
 }
-

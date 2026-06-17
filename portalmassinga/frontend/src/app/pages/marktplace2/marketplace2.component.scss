@@ -12,6 +12,8 @@
 @import 'main-content';
 @import 'responsive';
 @import 'animations';
+@import 'footer';
+@import 'popup';
 
 // ============ PÁGINA BASE ============
 .marketplace2-page {
@@ -19,5 +21,18 @@
   background: $main-bg;
   position: relative;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+
+  // Área abaixo do header: hero + layout (sidebar + main)
+  .marketplace-layout {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+  }
 }
 

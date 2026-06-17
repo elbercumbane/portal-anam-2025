@@ -13,7 +13,9 @@
         [activeNavigationItem]="activeNavigationItem"
         [navigationItems]="[]"
         [userName]="userName"
+        [userEmail]="userEmail"
         [userRole]="userRole"
+        [pendingMembersCount]="pendingMembersCount"
         (toggleSidebar)="toggleSidebar()"
         (navigationClick)="onNavigationClick($event)"
         (serviceItemClick)="onServiceItemClick($event)">
@@ -23,13 +25,16 @@
     <mat-sidenav-content class="main-content">
       <app-navbar 
         [isHandset]="isHandset"
+        [sidebarOpen]="sidebarOpen"
         [userName]="userName"
+        [userRole]="userRole"
+        [userEmail]="userEmail"
         (toggleSidebar)="toggleSidebar()"
         (refreshDashboard)="refreshDashboard()"
         (profileOptionClick)="onProfileOptionClick($event)">
       </app-navbar>
 
-      <div class="dashboard-content">
+      <div class="dashboard-content" [class.full-width-content]="isFullWidthContent">
         <!-- Debug: Verificar se o componente está carregando -->
         <div *ngIf="false" style="padding: 20px; background: yellow; color: black;">
           Debug: currentView = {{ currentView }}, dashboardStats = {{ dashboardStats ? 'loaded' : 'null' }}
@@ -47,6 +52,15 @@
         <app-events *ngIf="currentView === 'eventos'" (navigationClick)="onNavigationClick($event)"></app-events>
         <app-history *ngIf="currentView === 'historial'" (navigationClick)="onNavigationClick($event)"></app-history>
         <app-gallery *ngIf="currentView === 'galeria'" (navigationClick)="onNavigationClick($event)"></app-gallery>
+        <!-- Configurações -->
+        <div *ngIf="currentView === 'config-notificacoes'" class="config-placeholder">
+          <div class="config-placeholder-content">
+            <mat-icon>notifications</mat-icon>
+            <h2>Configurações de Notificações</h2>
+            <p>Gerencie as notificações do sistema.</p>
+            <p class="hint">Esta funcionalidade está em desenvolvimento.</p>
+          </div>
+        </div>
         <app-partners *ngIf="currentView === 'parceiros'" (navigationClick)="onNavigationClick($event)"></app-partners>
         <app-programs *ngIf="currentView === 'programas'" (navigationClick)="onNavigationClick($event)"></app-programs>
         <app-news *ngIf="currentView === 'noticias'" (navigationClick)="onNavigationClick($event)"></app-news>
@@ -60,11 +74,29 @@
         
         <!-- Membros -->
         <app-members-home *ngIf="currentView === 'membros-home'" (navigationClick)="onNavigationClick($event)"></app-members-home>
-        <app-members-management *ngIf="currentView === 'membros-gestao'" (navigationClick)="onNavigationClick($event)"></app-members-management>
+        <app-members-management *ngIf="currentView === 'membros-gestao'" 
+          (navigationClick)="onNavigationClick($event)"
+          (membersUpdated)="loadPendingMembersCount()">
+        </app-members-management>
+        <app-member-detail-page *ngIf="currentView === 'membro-detalhe'"
+          (membersUpdated)="loadPendingMembersCount()">
+        </app-member-detail-page>
         <app-org-chart *ngIf="currentView === 'membros-organograma'" (navigationClick)="onNavigationClick($event)"></app-org-chart>
-        <app-members-pdf-registration *ngIf="currentView === 'membros-pdf-registration'"></app-members-pdf-registration>
+        
+        <!-- Apoio / Apoiantes -->
+        <app-supporters-management *ngIf="currentView === 'apoio-gestao'" (navigationClick)="onNavigationClick($event)"></app-supporters-management>
 
+        <!-- Simpatizantes -->
+        <app-sympathizers-management *ngIf="currentView === 'simpatizantes-gestao'" (navigationClick)="onNavigationClick($event)"></app-sympathizers-management>
+
+        <!-- Gestão de Eventos -->
+        <app-events-management *ngIf="currentView === 'eventos-gestao'" (navigationClick)="onNavigationClick($event)"></app-events-management>
+
+        <!-- Inscrições em Eventos -->
+        <app-event-registrations-management *ngIf="currentView === 'eventos-inscricoes'" (navigationClick)="onNavigationClick($event)"></app-event-registrations-management>
+        
         <!-- Tesouraria -->
+        <app-quotas-management *ngIf="currentView === 'tesouraria-cotas'" (navigationClick)="onNavigationClick($event)"></app-quotas-management>
         <app-treasury-management *ngIf="currentView === 'tesouraria-gestao'" (navigationClick)="onNavigationClick($event)"></app-treasury-management>
         <app-treasury-reports *ngIf="currentView === 'tesouraria-relatorios'" (navigationClick)="onNavigationClick($event)"></app-treasury-reports>
         
@@ -83,26 +115,78 @@
             <!-- Header Card Component -->
             <app-dashboard-header-card
               [greeting]="greeting"
-              [userName]="userName"
-              [currentDate]="currentDate">
+              [userName]="userName">
             </app-dashboard-header-card>
 
-          <!-- Cards Principais - Design Moderno -->
+          <!-- KPIs rápidos -->
+          <div class="kpi-strip">
+            <div class="kpi-item">
+              <div class="kpi-icon members"><mat-icon>groups</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ associationStats.totalMembros }}</span>
+                <span class="kpi-label">Membros</span>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-icon supporters"><mat-icon>volunteer_activism</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ supportersStats.total }}</span>
+                <span class="kpi-label">Apoiantes</span>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-icon sympathizers"><mat-icon>favorite</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ sympathizersStats.total }}</span>
+                <span class="kpi-label">Simpatizantes</span>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-icon quotas"><mat-icon>payments</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ formatCurrency(treasuryStats.receitas) }}</span>
+                <span class="kpi-label">Cotas recebidas (mês)</span>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-icon events"><mat-icon>event</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ eventStats.proximos }}</span>
+                <span class="kpi-label">Eventos agendados</span>
+              </div>
+            </div>
+            <div class="kpi-item">
+              <div class="kpi-icon pending"><mat-icon>pending_actions</mat-icon></div>
+              <div class="kpi-data">
+                <span class="kpi-value">{{ pendingMembersCount }}</span>
+                <span class="kpi-label">Membros pendentes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards Principais -->
           <div class="modern-cards-grid">
-            <!-- Card de Membros -->
             <app-members-card 
               [stats]="associationStats"
-              (cardClick)="navigateToView('membros')">
+              (cardClick)="navigateToView('membros-gestao')">
             </app-members-card>
 
-            <!-- Card de Tesouraria -->
+            <app-supporters-card
+              [stats]="supportersStats"
+              (cardClick)="navigateToView('apoio-gestao')">
+            </app-supporters-card>
+
+            <app-sympathizers-card
+              [stats]="sympathizersStats"
+              (cardClick)="navigateToView('simpatizantes-gestao')">
+            </app-sympathizers-card>
+
             <app-treasury-card 
               [stats]="treasuryStats"
               [formatCurrency]="formatCurrency"
-              (cardClick)="navigateToView('tesouraria')">
+              (cardClick)="navigateToView('tesouraria-gestao')">
             </app-treasury-card>
 
-            <!-- Card de Parceiros -->
             <app-partners-card 
               [partners]="partners"
               (cardClick)="navigateToView('parceiros')">
@@ -127,8 +211,8 @@
                   <svg viewBox="0 0 800 300" class="growth-chart-svg">
                     <defs>
                       <linearGradient id="growthGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#05B6D4;stop-opacity:0.3" />
-                        <stop offset="100%" style="stop-color:#05B6D4;stop-opacity:0" />
+                        <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.15" />
+                        <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0" />
                       </linearGradient>
                     </defs>
                     <!-- Grid -->
@@ -149,15 +233,15 @@
                     <!-- Line -->
                     <path [attr.d]="getGrowthLinePath()" 
                           fill="none" 
-                          stroke="#05B6D4" 
-                          stroke-width="3" 
+                          stroke="#1e40af" 
+                          stroke-width="2.5" 
                           stroke-linecap="round"/>
                     <!-- Points -->
                     <circle *ngFor="let point of getGrowthPoints(); let i = index"
                             [attr.cx]="point.x"
                             [attr.cy]="point.y"
-                            r="5"
-                            fill="#05B6D4"
+                            r="4"
+                            fill="#1e40af"
                             stroke="#fff"
                             stroke-width="2"/>
                     <!-- Labels -->
@@ -206,15 +290,15 @@
                             [attr.y]="260 - (data.receitas / treasuryChartMax * 240)"
                             width="40"
                             [attr.height]="data.receitas / treasuryChartMax * 240"
-                            fill="#05B6D4"
-                            rx="4"/>
+                            fill="#1e40af"
+                            rx="3"/>
                       <!-- Despesas bar -->
                       <rect [attr.x]="80 + (i * 110) + 55"
                             [attr.y]="260 - (data.despesas / treasuryChartMax * 240)"
                             width="40"
                             [attr.height]="data.despesas / treasuryChartMax * 240"
-                            fill="#8B5CF6"
-                            rx="4"/>
+                            fill="#94a3b8"
+                            rx="3"/>
                       <!-- Labels -->
                       <text [attr.x]="80 + (i * 110) + 70"
                             y="285"
@@ -223,9 +307,9 @@
                     </g>
                     <!-- Legend -->
                     <g class="legend" transform="translate(600, 30)">
-                      <rect x="0" y="0" width="12" height="12" fill="#05B6D4" rx="2"/>
+                      <rect x="0" y="0" width="12" height="12" fill="#1e40af" rx="2"/>
                       <text x="18" y="10" class="legend-text">Receitas</text>
-                      <rect x="0" y="20" width="12" height="12" fill="#8B5CF6" rx="2"/>
+                      <rect x="0" y="20" width="12" height="12" fill="#94a3b8" rx="2"/>
                       <text x="18" y="30" class="legend-text">Despesas</text>
                     </g>
                   </svg>

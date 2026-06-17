@@ -34,6 +34,8 @@ public class MemberApplicationDTO {
     @NotBlank(message = "Profissão é obrigatória")
     private String profession;
 
+    private String nuit; // Número Único de Identidade Tributária (Moçambique)
+
     // Contacts (Required)
     @NotBlank(message = "Celular é obrigatório")
     private String mobilePhone;
@@ -75,6 +77,10 @@ public class MemberApplicationDTO {
     // Honor Commitment
     @NotNull(message = "Aceitar termos é obrigatório")
     private Boolean acceptsTerms;
+
+    // Registo: dispositivo e navegador (opcional; pode ser enviado pelo frontend ou inferido do User-Agent)
+    private String registrationDevice;
+    private String registrationBrowser;
 
     @Data
     public static class DependentDTO {

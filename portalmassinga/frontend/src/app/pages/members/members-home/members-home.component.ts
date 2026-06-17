@@ -253,6 +253,10 @@ export class MembersHomeComponent implements OnInit, OnDestroy {
     // =====================================================================
 
     const user = this.authService.getCurrentUser();
+    if (user?.mustChangePassword) {
+      this.router.navigate(['/login']);
+      return;
+    }
     if (user) {
       this.userName = user.nome;
       this.loadMemberData();

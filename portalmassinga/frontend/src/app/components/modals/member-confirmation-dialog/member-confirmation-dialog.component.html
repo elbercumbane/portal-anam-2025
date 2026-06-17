@@ -1,57 +1,57 @@
 <div class="dialog-container">
   <div class="dialog-header">
-    <h2>Confirmar Dados do Membro</h2>
-    <button mat-icon-button (click)="onCancel()" class="close-button">
+    <div class="header-icon"><mat-icon>fact_check</mat-icon></div>
+    <div>
+      <h2>Confirmar pagamento</h2>
+      <p>Verifique os dados antes de continuar</p>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="close-button" type="button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  
+
   <div class="dialog-body">
-    <div class="member-confirm-info">
-      <div class="info-item">
-        <span class="label">Nome:</span>
-        <span class="value">{{ data.member.nome }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Número de Membro:</span>
-        <span class="value">{{ data.member.numero }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Email:</span>
-        <span class="value">{{ data.member.email }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Contacto:</span>
-        <span class="value">{{ data.telefone }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Tipo de Pagamento:</span>
-        <span class="value">{{ data.tipoPagamento === 'anual' ? 'Anual' : 'Mensal' }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Meses:</span>
-        <span class="value">{{ data.meses.join(', ') }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Método:</span>
-        <span class="value">{{ metodoNome }}</span>
-      </div>
-      <div class="info-item total">
-        <span class="label">Total a Pagar:</span>
-        <span class="value">{{ data.valorTotal | number }} MT</span>
+    <div class="member-card">
+      <div class="member-avatar"><mat-icon>person</mat-icon></div>
+      <div>
+        <strong>{{ data.member.nome }}</strong>
+        <span>NUIT {{ data.member.numero }}</span>
       </div>
     </div>
+
+    <div class="info-grid">
+      <div class="info-cell">
+        <mat-icon>email</mat-icon>
+        <div><span class="lbl">Email</span><span class="val">{{ data.member.email }}</span></div>
+      </div>
+      <div class="info-cell">
+        <mat-icon>phone</mat-icon>
+        <div><span class="lbl">Telefone pagamento</span><span class="val">{{ data.telefone || '—' }}</span></div>
+      </div>
+      <div class="info-cell">
+        <mat-icon>calendar_month</mat-icon>
+        <div><span class="lbl">Meses</span><span class="val">{{ data.meses.join(', ') }}</span></div>
+      </div>
+      <div class="info-cell">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <div><span class="lbl">Método</span><span class="val">{{ metodoNome }}</span></div>
+      </div>
+    </div>
+
+    <div class="total-bar">
+      <span>Total a pagar</span>
+      <strong>{{ data.valorTotal | number }} MT</strong>
+    </div>
   </div>
-  
+
   <div class="dialog-actions">
-    <button mat-stroked-button (click)="onEdit()">
+    <button mat-stroked-button type="button" (click)="onEdit()" class="btn-edit">
       <mat-icon>edit</mat-icon>
-      <span>Editar Informação</span>
+      Editar
     </button>
-    <button mat-raised-button color="primary" (click)="onPay()">
-      <mat-icon>payment</mat-icon>
-      <span>Pagar</span>
+    <button mat-raised-button type="button" (click)="onPay()" class="btn-pay">
+      <mat-icon>lock</mat-icon>
+      Confirmar e pagar
     </button>
   </div>
 </div>
-

@@ -1,0 +1,368 @@
+@import 'pay-quotas/variables';
+
+$accent: #0d9488;
+
+// ---- Hero unificado (Pagar Cotas + Consultar Recibos) ----
+.quota-page-hero {
+  position: relative;
+  width: 100%;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 40%, #134e4a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(88px + 4rem) 1.5rem 2.5rem;
+  min-height: 340px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .page-back-link {
+    position: absolute;
+    top: 1rem;
+    left: 1.25rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.45rem 0.85rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: background 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: white;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    max-width: 720px;
+    width: 100%;
+    padding-top: 1rem;
+
+    h1 {
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      font-weight: 700;
+      margin: 0 0 0.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin: 0 0 1.5rem;
+      opacity: 0.92;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      .hero-btn {
+        min-width: 170px;
+        height: 48px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 14px;
+
+        mat-icon {
+          margin-right: 0.4rem;
+          font-size: 1.15rem;
+          width: 1.15rem;
+          height: 1.15rem;
+          color: inherit;
+        }
+
+        &.hero-btn-primary {
+          background: white;
+          color: #0f766e;
+        }
+
+        &.hero-btn-secondary {
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.35);
+        }
+
+        &.active.hero-btn-secondary {
+          background: white;
+          color: #0f766e;
+          border-color: white;
+        }
+      }
+    }
+  }
+
+  .hero-benefits {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.5rem;
+    z-index: 2;
+
+    .benefits-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: white;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-height: 300px;
+    padding: calc(76px + 3rem) 1rem 2rem;
+
+    .page-back-link {
+      top: 0.75rem;
+      left: 0.75rem;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.65rem;
+    }
+
+    .hero-actions { flex-direction: column; }
+    .hero-actions .hero-btn { width: 100%; min-width: unset; }
+
+    .hero-benefits {
+      position: static;
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+  }
+}
+
+// ---- Painel demo ----
+.demo-panel {
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 14px;
+
+  .demo-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #92400e;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.6rem;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: #d97706;
+    }
+  }
+
+  .demo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .demo-chip {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    border: 1.5px solid #fde68a;
+    background: white;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    transition: all 0.2s ease;
+
+    .chip-nuit {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chip-desc {
+      font-size: 0.72rem;
+      color: #78716c;
+    }
+
+    .chip-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      margin-top: 0.15rem;
+
+      &.em-dia { background: #d1fae5; color: #047857; }
+      &.dividas { background: #fef3c7; color: #b45309; }
+      &.nao-membro { background: #fee2e2; color: #b91c1c; }
+    }
+
+    &.demo-chip-warn {
+      border-color: #fecaca;
+      &:hover { border-color: #f87171; box-shadow: 0 2px 8px rgba(248, 113, 113, 0.15); }
+    }
+
+    &:hover {
+      border-color: $accent;
+      box-shadow: 0 2px 8px rgba(13, 148, 136, 0.15);
+    }
+  }
+
+  &.login-demo .demo-chip {
+    min-width: 140px;
+  }
+}
+
+// ---- Campo NUIT customizado ----
+.quota-form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.4rem;
+
+    .required { color: #dc2626; }
+  }
+
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .field-icon {
+      position: absolute;
+      left: 14px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: $accent;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.75rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #0f172a;
+      background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+
+      &::placeholder { color: #94a3b8; }
+
+      &:focus {
+        outline: none;
+        border-color: $accent;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+        background: white;
+      }
+
+      &.error {
+        border-color: #f87171;
+        background: #fef2f2;
+      }
+    }
+  }
+
+  .field-error {
+    display: block;
+    font-size: 0.78rem;
+    color: #dc2626;
+    margin-top: 0.35rem;
+  }
+
+  &.has-error .form-input {
+    border-color: #f87171;
+  }
+}
+
+.btn-primary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 1.5rem;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s, transform 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}

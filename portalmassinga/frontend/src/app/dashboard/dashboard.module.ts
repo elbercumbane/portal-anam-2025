@@ -64,6 +64,8 @@ import { StatsCardsComponent } from './components/stats-cards/stats-cards.compon
 import { MembersCardComponent } from './components/cards/members-card/members-card.component';
 import { TreasuryCardComponent } from './components/cards/treasury-card/treasury-card.component';
 import { PartnersCardComponent } from './components/cards/partners-card/partners-card.component';
+import { SupportersCardComponent } from './components/cards/supporters-card/supporters-card.component';
+import { SympathizersCardComponent } from './components/cards/sympathizers-card/sympathizers-card.component';
 import { DashboardHeaderCardComponent } from './components/cards/dashboard-header-card/dashboard-header-card.component';
 // Attendance lists
 import { AttendanceUploadComponent } from './attendance-lists/upload/attendance-upload.component';
@@ -89,10 +91,19 @@ import { ApplicationsComponent } from './projects/applications/applications.comp
 // Members
 import { MembersHomeComponent } from './members/home/home.component';
 import { MembersManagementComponent } from './members/management/management.component';
+import { MemberDetailPageComponent } from './members/member-detail-page/member-detail-page.component';
 import { MembersOrgChartComponent } from './members/org-chart/org-chart.component';
-import { MembersPdfRegistrationComponent } from './members/pdf-registration/pdf-registration.component';
+// Supporters (Apoiantes)
+import { SupportersManagementComponent } from './supporters/management/management.component';
+// Sympathizers (Simpatizantes)
+import { SympathizersManagementComponent } from './sympathizers/management/management.component';
+// Event registrations (Inscrições em Eventos)
+import { EventRegistrationsManagementComponent } from './event-registrations/management/management.component';
+// Events management (Gestão de Eventos)
+import { EventsManagementComponent } from './events-management/management.component';
 // Treasury
 import { PayQuotasComponent } from './treasury/pay-quotas/pay-quotas.component';
+import { QuotasManagementComponent } from './treasury/quotas-management/quotas-management.component';
 import { TreasuryManagementComponent } from './treasury/management/management.component';
 import { TreasuryReportsComponent } from './treasury/reports/reports.component';
 // Indicators
@@ -146,6 +157,8 @@ const routes: Routes = [
     MembersCardComponent,
     TreasuryCardComponent,
     PartnersCardComponent,
+    SupportersCardComponent,
+    SympathizersCardComponent,
     DashboardHeaderCardComponent,
     // Attendance lists
     AttendanceUploadComponent,
@@ -171,10 +184,15 @@ const routes: Routes = [
     // Members
     MembersHomeComponent,
     MembersManagementComponent,
+    MemberDetailPageComponent,
     MembersOrgChartComponent,
-    MembersPdfRegistrationComponent,
+    SupportersManagementComponent,
+    SympathizersManagementComponent,
+    EventRegistrationsManagementComponent,
+    EventsManagementComponent,
     // Treasury
     PayQuotasComponent,
+    QuotasManagementComponent,
     TreasuryManagementComponent,
     TreasuryReportsComponent,
     // Indicators

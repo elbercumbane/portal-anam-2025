@@ -6,6 +6,94 @@ export interface Mes {
   selected: boolean;
 }
 
+export interface QuotaMonthItem {
+  key: string;
+  year: number;
+  month: number;
+  label: string;
+  selected: boolean;
+  paid: boolean;
+}
+
+export interface QuotaStatus {
+  memberApplicationId: string;
+  nome: string;
+  email: string;
+  celular: string;
+  nuit: string;
+  situacaoFinanceira: 'EM_DIA' | 'COM_DIVIDAS';
+  mesesEmDivida: number;
+  valorEmDivida: number;
+  ultimoMesPago: string | null;
+  mesesEmFalta: string[];
+  mesesPagos: string[];
+}
+
+const NOMES_MESES = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+];
+
+export function formatYearMonthLabel(key: string): string {
+  const [y, m] = key.split('-').map(Number);
+  if (!y || !m) return key;
+  return `${NOMES_MESES[m - 1]} ${y}`;
+}
+
+export function parseYearMonth(key: string): { year: number; month: number } {
+  const [y, m] = key.split('-').map(Number);
+  return { year: y, month: m };
+}
+
+export function buildQuotaMonthItems(status: QuotaStatus): QuotaMonthItem[] {
+  const unpaid = (status.mesesEmFalta || []).map(key => ({
+    key,
+    ...parseYearMonth(key),
+    label: formatYearMonthLabel(key),
+    selected: false,
+    paid: false
+  }));
+  const paid = (status.mesesPagos || []).map(key => ({
+    key,
+    ...parseYearMonth(key),
+    label: formatYearMonthLabel(key),
+    selected: false,
+    paid: true
+  }));
+  return [...unpaid, ...paid].sort((a, b) => a.key.localeCompare(b.key));
+}
+
+export function groupSelectedByYear(items: QuotaMonthItem[]): Map<number, number[]> {
+  const map = new Map<number, number[]>();
+  for (const item of items.filter(i => i.selected && !i.paid)) {
+    if (!map.has(item.year)) map.set(item.year, []);
+    map.get(item.year)!.push(item.month);
+  }
+  for (const [, months] of map) {
+    months.sort((a, b) => a - b);
+  }
+  return map;
+}
+
+/** Selecção contígua a partir do mês em falta mais antigo */
+export function toggleSequentialMonth(unpaid: QuotaMonthItem[], item: QuotaMonthItem): void {
+  const idx = unpaid.findIndex(m => m.key === item.key);
+  if (idx < 0) return;
+  if (item.selected) {
+    for (let i = idx; i < unpaid.length; i++) unpaid[i].selected = false;
+  } else {
+    for (let i = 0; i <= idx; i++) unpaid[i].selected = true;
+  }
+}
+
+export function selectAllUnpaidPrefix(unpaid: QuotaMonthItem[]): void {
+  unpaid.forEach(m => { m.selected = true; });
+}
+
+export function clearUnpaidSelection(unpaid: QuotaMonthItem[]): void {
+  unpaid.forEach(m => { m.selected = false; });
+}
+
 export const MESES: Mes[] = [
   { value: 1, label: 'Janeiro', selected: false },
   { value: 2, label: 'Fevereiro', selected: false },

@@ -1,0 +1,38 @@
+<div class="not-member-dialog">
+  <div class="dialog-icon">
+    <mat-icon>person_search</mat-icon>
+  </div>
+  <h2 class="dialog-title">Ainda não é membro da ANAM</h2>
+  <p class="dialog-message">
+    O NUIT introduzido não corresponde a nenhum membro <strong>aprovado</strong>.
+    Só membros registados podem pagar cotas nesta página.
+  </p>
+
+  <div class="steps-box">
+    <p class="steps-title">O que fazer agora?</p>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">1</span>
+        <span>Candidate-se a membro em <strong>Associar-se</strong></span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Aguarde a aprovação da sua candidatura pela ANAM</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Volte aqui com o seu NUIT para pagar as cotas</span>
+      </li>
+    </ol>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-raised-button color="primary" (click)="onRegister()" class="btn-register" type="button">
+      <mat-icon>person_add</mat-icon>
+      Associar-me agora
+    </button>
+    <button mat-stroked-button (click)="onClose()" class="btn-close" type="button">
+      Fechar
+    </button>
+  </div>
+</div>

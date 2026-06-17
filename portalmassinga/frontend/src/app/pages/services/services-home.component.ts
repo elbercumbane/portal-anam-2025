@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ServiceCardComponent } from './sections/service-card.component';
@@ -10,26 +10,7 @@ interface Servico {
   subtitulo: string;
   beneficios: string[];
   cor: string;
-}
-
-interface PublicoAlvo {
-  iconType: 'rocket' | 'store' | 'agriculture' | 'community';
-  titulo: string;
-  descricao: string;
-}
-
-interface Indicador {
-  valor: string;
-  descricao: string;
-}
-
-interface Depoimento {
-  nome: string;
-  cargo: string;
-  negocio: string;
   imagem?: string;
-  texto: string;
-  avaliacao: number;
 }
 
 @Component({
@@ -40,32 +21,28 @@ interface Depoimento {
 })
 export class ServicesHomeComponent implements OnInit, OnDestroy {
 
+  servicoSelecionado: Servico | null = null;
+  modalServicoAberto = false;
+
   constructor(private sanitizer: DomSanitizer) {}
 
-  // Públicos-alvo da ANAM
-  publicosAlvo: PublicoAlvo[] = [
-    {
-      iconType: 'rocket',
-      titulo: 'Jovens Empreendedores',
-      descricao: 'Em fase de ideia ou início de actividade'
-    },
-    {
-      iconType: 'store',
-      titulo: 'Comércio Local',
-      descricao: 'Lojas, mercados e serviços locais'
-    },
-    {
-      iconType: 'agriculture',
-      titulo: 'Agro-Negócio',
-      descricao: 'Iniciativas de pequena e média escala'
-    },
-    {
-      iconType: 'community',
-      titulo: 'Associações Comunitárias',
-      descricao: 'Iniciativas comunitárias organizadas'
-    }
-  ];
-  
+  openServicoModal(servico: Servico): void {
+    this.servicoSelecionado = servico;
+    this.modalServicoAberto = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeServicoModal(): void {
+    this.modalServicoAberto = false;
+    this.servicoSelecionado = null;
+    document.body.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.modalServicoAberto) this.closeServicoModal();
+  }
+
   // Método para obter o SVG do ícone
   getIconSvg(iconType: string): SafeHtml {
     const icons: { [key: string]: string } = {
@@ -146,7 +123,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Planeamento simples de negócios',
         'Introdução à transformação digital'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80'
     },
     {
       iconType: 'tools',
@@ -159,7 +137,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Gestão de pequenas equipas',
         'Produtividade e organização'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80'
     },
     {
       iconType: 'handshake',
@@ -172,7 +151,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Acompanhamento no terreno',
         'Suporte personalizado para cada negócio'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80'
     },
     {
       iconType: 'check',
@@ -185,7 +165,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Validação de competências',
         'Reconhecimento no mercado local'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80'
     },
     {
       iconType: 'money',
@@ -198,7 +179,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Conexão com instituições financeiras',
         'Acompanhamento no processo de financiamento'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80'
     },
     {
       iconType: 'network',
@@ -211,7 +193,8 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
         'Parcerias entre membros',
         'Acesso a fornecedores e clientes'
       ],
-      cor: '#2C674C'
+      cor: '#51B155',
+      imagem: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80'
     }
   ];
   
@@ -224,51 +207,12 @@ export class ServicesHomeComponent implements OnInit, OnDestroy {
     return this.servicosPrincipais.slice(3, 6);
   }
 
-  // Indicadores de Impacto (2022–2024)
-  indicadores: Indicador[] = [
-    { valor: '300+', descricao: 'Jovens e Empreendedores Formados' },
-    { valor: '150+', descricao: 'Pequenos Negócios Apoiados' },
-    { valor: '50+', descricao: 'Iniciativas Financiadas' },
-    { valor: '95%', descricao: 'Satisfação' }
-  ];
-  
-  // Depoimentos
-  depoimentos: Depoimento[] = [
-    {
-      nome: 'Maria João',
-      cargo: 'Empreendedora',
-      negocio: 'Comércio Local',
-      texto: 'A formação em gestão financeira da ANAM transformou completamente o meu negócio. Agora consigo controlar melhor as minhas finanças e o negócio está a crescer de forma sustentável.',
-      avaliacao: 5
-    },
-    {
-      nome: 'Carlos Muchanga',
-      cargo: 'Agricultor',
-      negocio: 'Agro-Negócio',
-      texto: 'O apoio da ANAM foi fundamental para conseguir financiamento para expandir a minha produção. A mentoria ajudou-me a estruturar melhor o negócio e hoje tenho mais clientes.',
-      avaliacao: 5
-    },
-    {
-      nome: 'Ana Silva',
-      cargo: 'Jovem Empreendedora',
-      negocio: 'Serviços Digitais',
-      texto: 'Os workshops práticos da ANAM deram-me as ferramentas necessárias para começar o meu negócio online. A rede de contactos que construí através da associação foi essencial.',
-      avaliacao: 5
-    },
-    {
-      nome: 'João Pedro',
-      cargo: 'Comerciante',
-      negocio: 'Comércio Local',
-      texto: 'A certificação que obtive através da ANAM deu-me mais credibilidade junto dos meus clientes. O reconhecimento no mercado local aumentou significativamente.',
-      avaliacao: 5
-    }
-  ];
-  
   ngOnInit() {
     document.body.classList.add('navbar-solid');
   }
 
   ngOnDestroy() {
     document.body.classList.remove('navbar-solid');
+    document.body.style.overflow = '';
   }
 }

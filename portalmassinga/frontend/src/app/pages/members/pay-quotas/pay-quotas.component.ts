@@ -7,20 +7,36 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { DecimalPipe } from '@angular/common';
 import { gsap } from 'gsap';
+import { forkJoin } from 'rxjs';
 import { MemberConfirmationDialogComponent, MemberConfirmationData } from '../../../components/modals/member-confirmation-dialog/member-confirmation-dialog.component';
 import { PinConfirmationDialogComponent } from '../../../components/modals/pin-confirmation-dialog/pin-confirmation-dialog.component';
-import { PaymentReceiptDialogComponent, PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
+import { PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
 import { BeneficiosDialogComponent } from '../../../components/modals/beneficios-dialog/beneficios-dialog.component';
-import { MESES, VALOR_COTA, validateMpesaNumber, validateEmolaNumber, calcularValorTotal, formatarMesesSelecionados, Mes } from './pay-quotas.helpers';
+import { NotMemberDialogComponent } from '../../../components/modals/not-member-dialog/not-member-dialog.component';
+import {
+  VALOR_COTA,
+  validateMpesaNumber,
+  validateEmolaNumber,
+  QuotaStatus,
+  QuotaMonthItem,
+  buildQuotaMonthItems,
+  groupSelectedByYear,
+  formatYearMonthLabel,
+  toggleSequentialMonth,
+  selectAllUnpaidPrefix,
+  clearUnpaidSelection
+} from './pay-quotas.helpers';
+import { DEMO_NUITS, DEMO_NUIT_NAO_MEMBRO, buildDemoQuotaStatus, isNonMemberDemoNuit } from '../quota-demo.data';
+import { NavbarComponent } from '../../../components/navbar/navbar.component';
+import { ApiClientService } from '../../../services/api-client.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-pay-quotas',
@@ -35,13 +51,12 @@ import { MESES, VALOR_COTA, validateMpesaNumber, validateEmolaNumber, calcularVa
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatRadioModule,
     MatCheckboxModule,
-    MatSelectModule,
     MatDividerModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    DecimalPipe
+    DecimalPipe,
+    NavbarComponent
   ],
   templateUrl: './pay-quotas.component.html',
   styleUrls: ['./pay-quotas.component.scss']
@@ -49,51 +64,98 @@ import { MESES, VALOR_COTA, validateMpesaNumber, validateEmolaNumber, calcularVa
 export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
   memberForm!: FormGroup;
   paymentForm!: FormGroup;
-  
-  // Dados do membro
-  member: { numero: string; nome: string; email: string; telefone: string } | null = null;
+
+  quotaStatus: QuotaStatus | null = null;
+  quotaMonths: QuotaMonthItem[] = [];
   memberLoading = false;
-  
+  paymentSubmitting = false;
+  lookupError: string | null = null;
+  autoLoaded = false;
+
   valorCota = VALOR_COTA;
-  tipoPagamento: 'mensal' | 'anual' = 'mensal';
-  mesesSelecionados: number[] = [];
   metodoPagamento: 'mpesa' | 'emola' | 'visa' | '' = '';
   particles = Array.from({ length: 15 }, (_, i) => i + 1);
+  demoNuits = DEMO_NUITS;
+  demoNaoMembro = DEMO_NUIT_NAO_MEMBRO;
   private animations: gsap.core.Tween[] = [];
-  
-  meses: Mes[] = MESES.map(m => ({ ...m }));
 
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
-    public router: Router
+    public router: Router,
+    private apiClient: ApiClientService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    document.body.classList.add('navbar-solid');
+
     this.memberForm = this.fb.group({
-      numeroMembro: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]]
+      nuit: ['', [Validators.required, Validators.pattern(/^[0-9]{9,21}$/)]]
     });
-    
+
     this.paymentForm = this.fb.group({
       metodoPagamento: ['', Validators.required],
       telefone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]]
     });
+
+    const user = this.authService.getCurrentUser();
+    if (user?.memberId) {
+      this.autoLoaded = true;
+      this.loadQuotaStatusByMemberId(user.memberId);
+    }
   }
 
   ngAfterViewInit(): void {
-    // Pequeno delay para garantir que os elementos estejam renderizados
-    setTimeout(() => {
-      this.initializeAnimations();
-    }, 100);
+    setTimeout(() => this.initializeAnimations(), 100);
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('navbar-solid');
     this.animations.forEach(anim => anim.kill());
   }
 
+  get isLoggedIn(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  get currentStep(): number {
+    if (!this.quotaStatus) return 1;
+    if (this.quantidadeMesesSelecionados === 0) return 2;
+    return 3;
+  }
+
+  get quantidadeMesesSelecionados(): number {
+    return this.quotaMonths.filter(m => m.selected && !m.paid).length;
+  }
+
+  get valorTotal(): number {
+    return this.valorCota * this.quantidadeMesesSelecionados;
+  }
+
+  get mesesSelecionadosLabels(): string {
+    const selected = this.quotaMonths.filter(m => m.selected && !m.paid);
+    if (selected.length === 0) return '';
+    if (selected.length <= 3) {
+      return selected.map(m => m.label).join(', ');
+    }
+    return `${selected.length} meses (${selected[0].label} — ${selected[selected.length - 1].label})`;
+  }
+
+  get unpaidMonths(): QuotaMonthItem[] {
+    return this.quotaMonths.filter(m => !m.paid);
+  }
+
+  get paidMonths(): QuotaMonthItem[] {
+    return this.quotaMonths.filter(m => m.paid);
+  }
+
+  get loginReturnUrl(): string {
+    return '/membros/pagar-cotas';
+  }
+
   private initializeAnimations(): void {
-    // Animação do overlay de fundo
     const overlay = document.querySelector('.animated-overlay');
     if (overlay) {
       const anim = gsap.to(overlay, {
@@ -107,9 +169,7 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       this.animations.push(anim);
     }
 
-    // Animações das partículas
-    const particles = document.querySelectorAll('.particle');
-    particles.forEach((particle, index) => {
+    document.querySelectorAll('.particle').forEach((particle, index) => {
       const anim = gsap.to(particle, {
         y: -window.innerHeight - 100,
         x: `+=${(Math.random() - 0.5) * 200}`,
@@ -123,9 +183,7 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       this.animations.push(anim);
     });
 
-    // Animações dos elementos decorativos
-    const elements = document.querySelectorAll('.element');
-    elements.forEach((element, index) => {
+    document.querySelectorAll('.element').forEach((element, index) => {
       const anim = gsap.to(element, {
         rotation: 360,
         scale: 1.2,
@@ -136,14 +194,12 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       this.animations.push(anim);
     });
 
-    // Animação de entrada dos cards
-    const cards = document.querySelectorAll('.section-card');
-    cards.forEach((card, index) => {
+    document.querySelectorAll('.query-card').forEach((card, index) => {
       gsap.from(card, {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
-        delay: index * 0.1,
+        y: 24,
+        duration: 0.7,
+        delay: index * 0.08,
         ease: 'power3.out'
       });
     });
@@ -154,208 +210,190 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       this.memberForm.markAllAsTouched();
       return;
     }
-    
-    const numero = this.memberForm.value.numeroMembro;
-    this.memberLoading = true;
-    
-    // Buscar dados do membro do localStorage ou API
-    // Primeiro tentar buscar do localStorage (dados de cadastro)
-    const stored = localStorage.getItem('anam_applications');
-    if (stored) {
-      try {
-        const members: any[] = JSON.parse(stored);
-        const member = members.find(m => m.id === numero || m.numero === numero);
-        
-        if (member) {
-          this.member = {
-            numero: member.id || member.numero || numero,
-            nome: member.nome || '',
-            email: member.email || '',
-            telefone: member.celular || member.telefone || ''
-          };
-          this.memberLoading = false;
-          return;
-        }
-      } catch (error) {
-        console.error('Erro ao buscar membro:', error);
-      }
-    }
-    
-    // Se não encontrou, mostrar mensagem
-    setTimeout(() => {
+    const nuit = (this.memberForm.value.nuit || '').trim();
+    this.loadQuotaStatusByNuit(nuit);
+  }
+
+  usarNuitDemo(nuit: string): void {
+    this.memberForm.patchValue({ nuit });
+    this.loadQuotaStatusByNuit(nuit);
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const ctrl = this.memberForm.get(field);
+    return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  }
+
+  loadQuotaStatusByNuit(nuit: string): void {
+    const trimmed = (nuit || '').trim();
+    if (isNonMemberDemoNuit(trimmed)) {
       this.memberLoading = false;
-      this.snackBar.open('Membro não encontrado. Verifique o número do membro.', 'Fechar', { duration: 3000 });
-    }, 500);
-  }
-
-  selecionarTipoPagamento(tipo: 'mensal' | 'anual'): void {
-    this.tipoPagamento = tipo;
-    if (tipo === 'anual') {
-      // Selecionar todos os meses
-      this.meses.forEach(m => m.selected = true);
-      this.atualizarMesesSelecionados();
-    } else {
-      // Limpar seleção
-      this.meses.forEach(m => m.selected = false);
-      this.mesesSelecionados = [];
-    }
-  }
-
-  toggleMes(mesValue: number): void {
-    if (this.tipoPagamento === 'anual') {
-      this.snackBar.open('Para pagamento anual, todos os meses são selecionados automaticamente', 'Fechar', { duration: 3000 });
+      this.quotaStatus = null;
+      this.abrirDialogNaoMembro();
       return;
     }
-    
-    const mes = this.meses.find(m => m.value === mesValue);
-    if (mes) {
-      mes.selected = !mes.selected;
-      this.atualizarMesesSelecionados();
+
+    this.memberLoading = true;
+    this.lookupError = null;
+    this.quotaStatus = null;
+    this.quotaMonths = [];
+
+    this.apiClient.getQuotaStatusByNuit(trimmed).subscribe({
+      next: (status: QuotaStatus) => this.applyQuotaStatus(status),
+      error: (err) => {
+        const demoStatus = buildDemoQuotaStatus(trimmed);
+        if (demoStatus && (err?.status === 404 || err?.status === 0)) {
+          this.applyQuotaStatus(demoStatus);
+          return;
+        }
+        this.memberLoading = false;
+        this.quotaStatus = null;
+        if (err?.status === 404) {
+          this.abrirDialogNaoMembro();
+        } else if (demoStatus) {
+          this.applyQuotaStatus(demoStatus);
+        } else {
+          this.lookupError = err?.error?.message || 'Não foi possível consultar a situação de cotas.';
+        }
+      }
+    });
+  }
+
+  private abrirDialogNaoMembro(): void {
+    this.dialog.open(NotMemberDialogComponent, {
+      width: '460px',
+      maxWidth: '95vw',
+      panelClass: 'not-member-dialog-panel'
+    });
+  }
+
+  loadQuotaStatusByMemberId(memberId: string): void {
+    this.memberLoading = true;
+    this.lookupError = null;
+
+    this.apiClient.getQuotaStatusByMemberId(memberId).subscribe({
+      next: (status: QuotaStatus) => {
+        this.applyQuotaStatus(status);
+        if (status.nuit) {
+          this.memberForm.patchValue({ nuit: status.nuit });
+        }
+      },
+      error: (err) => {
+        this.memberLoading = false;
+        this.autoLoaded = false;
+        this.lookupError = err?.error?.message || 'Não foi possível carregar a sua situação de cotas.';
+      }
+    });
+  }
+
+  private applyQuotaStatus(status: QuotaStatus): void {
+    this.memberLoading = false;
+    this.quotaStatus = {
+      ...status,
+      memberApplicationId: String(status.memberApplicationId),
+      valorEmDivida: Number(status.valorEmDivida ?? 0)
+    };
+    this.quotaMonths = buildQuotaMonthItems(this.quotaStatus);
+    if (this.unpaidMonths.length > 0) {
+      this.unpaidMonths[0].selected = true;
     }
+    this.lookupError = null;
   }
 
-  atualizarMesesSelecionados(): void {
-    this.mesesSelecionados = this.meses
-      .filter(m => m.selected)
-      .map(m => m.value)
-      .sort((a, b) => a - b);
+  toggleMonth(item: QuotaMonthItem): void {
+    if (item.paid) return;
+    toggleSequentialMonth(this.unpaidMonths, item);
   }
 
-  get quantidadeMeses(): number {
-    if (this.tipoPagamento === 'anual') {
-      return 12;
+  selecionarTodosEmFalta(): void {
+    selectAllUnpaidPrefix(this.unpaidMonths);
+  }
+
+  limparSelecao(): void {
+    clearUnpaidSelection(this.unpaidMonths);
+  }
+
+  isMonthBlocked(item: QuotaMonthItem): boolean {
+    if (item.paid || item.selected) return false;
+    const unpaid = this.unpaidMonths;
+    const idx = unpaid.findIndex(m => m.key === item.key);
+    if (idx <= 0) return false;
+    const lastSelectedIdx = unpaid.reduce((max, m, i) => (m.selected ? i : max), -1);
+    return idx > lastSelectedIdx + 1;
+  }
+
+  novaConsulta(): void {
+    this.quotaStatus = null;
+    this.quotaMonths = [];
+    this.lookupError = null;
+    this.autoLoaded = false;
+    this.resetarPagamento();
+    if (!this.isLoggedIn) {
+      this.memberForm.reset();
     }
-    return this.mesesSelecionados.length;
-  }
-
-  get valorTotal(): number {
-    return calcularValorTotal(this.tipoPagamento, this.quantidadeMeses, this.valorCota);
-  }
-
-  get mesesSelecionadosLabels(): string {
-    return formatarMesesSelecionados(this.meses, this.mesesSelecionados, this.tipoPagamento);
-  }
-
-  get calculoDetalhado(): string {
-    if (this.quantidadeMeses === 0) return '';
-    if (this.quantidadeMeses === 1) {
-      return `${this.valorCota.toLocaleString('pt-MZ')} MT`;
-    }
-    return `${this.quantidadeMeses} × ${this.valorCota.toLocaleString('pt-MZ')} MT = ${this.valorTotal.toLocaleString('pt-MZ')} MT`;
   }
 
   selecionarMetodoPagamento(metodo: 'mpesa' | 'emola' | 'visa'): void {
     this.metodoPagamento = metodo;
     this.paymentForm.patchValue({ metodoPagamento: metodo });
-    
-    // Limpar telefone ao mudar método
     this.paymentForm.patchValue({ telefone: '' });
-    
-    // Visa não precisa de telefone
+
+    const telefoneControl = this.paymentForm.get('telefone');
     if (metodo === 'visa') {
-      this.paymentForm.get('telefone')?.clearValidators();
-      this.paymentForm.get('telefone')?.updateValueAndValidity();
-    } else {
-      // Validação específica por método
-      const telefoneControl = this.paymentForm.get('telefone');
-      if (metodo === 'mpesa') {
-        telefoneControl?.setValidators([
-          Validators.required, 
-          Validators.pattern(/^[0-9]{9}$/),
-          validateMpesaNumber
-        ]);
-      } else if (metodo === 'emola') {
-        telefoneControl?.setValidators([
-          Validators.required, 
-          Validators.pattern(/^[0-9]{9}$/),
-          validateEmolaNumber
-        ]);
-      }
-      telefoneControl?.updateValueAndValidity();
+      telefoneControl?.clearValidators();
+    } else if (metodo === 'mpesa') {
+      telefoneControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]{9}$/),
+        validateMpesaNumber
+      ]);
+    } else if (metodo === 'emola') {
+      telefoneControl?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]{9}$/),
+        validateEmolaNumber
+      ]);
     }
+    telefoneControl?.updateValueAndValidity();
   }
 
-  onTelefoneInput(event: any): void {
-    const input = event.target;
-    const cursorPosition = input.selectionStart;
-    let value = input.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+  onTelefoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart ?? 0;
+    let value = input.value.replace(/\D/g, '');
     const oldValue = this.paymentForm.get('telefone')?.value || '';
-    
-    // Limitar a 9 dígitos
-    if (value.length > 9) {
-      value = value.substring(0, 9);
-    }
-    
-    // Validar prefixo baseado no método
+
+    if (value.length > 9) value = value.substring(0, 9);
+
     if (this.metodoPagamento === 'mpesa') {
-      // Se já tem 1 dígito, verificar se é 8
-      if (value.length === 1 && value !== '8') {
-        value = oldValue; // Manter valor anterior
-      }
-      // Se já tem 2 dígitos, verificar se é 84 ou 85
-      else if (value.length === 2) {
-        if (value !== '84' && value !== '85') {
-          // Se não é 84 ou 85, manter apenas o 8
-          value = '8';
-        }
-      }
-      // Se já tem 3 ou mais dígitos, verificar se começa com 84 ou 85
-      else if (value.length >= 3) {
-        if (!value.startsWith('84') && !value.startsWith('85')) {
-          // Se não começa com 84 ou 85, manter apenas os dígitos válidos
-          value = oldValue;
-        }
-      }
+      if (value.length === 1 && value !== '8') value = oldValue;
+      else if (value.length === 2 && value !== '84' && value !== '85') value = '8';
+      else if (value.length >= 3 && !value.startsWith('84') && !value.startsWith('85')) value = oldValue;
     } else if (this.metodoPagamento === 'emola') {
-      // Se já tem 1 dígito, verificar se é 8
-      if (value.length === 1 && value !== '8') {
-        value = oldValue; // Manter valor anterior
-      }
-      // Se já tem 2 dígitos, verificar se é 87 ou 86
-      else if (value.length === 2) {
-        if (value !== '87' && value !== '86') {
-          // Se não é 87 ou 86, manter apenas o 8
-          value = '8';
-        }
-      }
-      // Se já tem 3 ou mais dígitos, verificar se começa com 87 ou 86
-      else if (value.length >= 3) {
-        if (!value.startsWith('87') && !value.startsWith('86')) {
-          // Se não começa com 87 ou 86, manter apenas os dígitos válidos
-          value = oldValue;
-        }
-      }
+      if (value.length === 1 && value !== '8') value = oldValue;
+      else if (value.length === 2 && value !== '87' && value !== '86') value = '8';
+      else if (value.length >= 3 && !value.startsWith('87') && !value.startsWith('86')) value = oldValue;
     }
-    
-    // Atualizar o valor do campo
+
     this.paymentForm.patchValue({ telefone: value }, { emitEvent: false });
     input.value = value;
-    
-    // Restaurar posição do cursor
-    setTimeout(() => {
-      input.setSelectionRange(cursorPosition, cursorPosition);
-    }, 0);
-    
+    setTimeout(() => input.setSelectionRange(cursorPosition, cursorPosition), 0);
     this.paymentForm.get('telefone')?.updateValueAndValidity();
   }
-
 
   get telefoneValue(): string {
     return this.paymentForm.get('telefone')?.value || '';
   }
 
-
   get showMpesaInfo(): boolean {
     if (this.metodoPagamento !== 'mpesa') return false;
     const value = this.telefoneValue;
-    // Mostrar informação quando o usuário começar a digitar (84 ou 85)
     return value.length > 0 && (value.startsWith('84') || value.startsWith('85')) && value.length < 9;
   }
 
   get showEmolaInfo(): boolean {
     if (this.metodoPagamento !== 'emola') return false;
     const value = this.telefoneValue;
-    // Mostrar informação quando o usuário começar a digitar (87 ou 86)
     return value.length > 0 && (value.startsWith('87') || value.startsWith('86')) && value.length < 9;
   }
 
@@ -364,97 +402,122 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
       this.paymentForm.markAllAsTouched();
       return;
     }
-
-    if (this.mesesSelecionados.length === 0) {
-      this.snackBar.open('Por favor, selecione pelo menos um mês para pagar.', 'Fechar', { duration: 3000 });
+    if (this.quantidadeMesesSelecionados === 0) {
+      this.snackBar.open('Selecione pelo menos um mês em falta.', 'Fechar', { duration: 3000 });
       return;
     }
+    if (!this.quotaStatus) return;
 
-    if (!this.metodoPagamento) {
-      this.snackBar.open('Por favor, selecione um método de pagamento.', 'Fechar', { duration: 3000 });
-      return;
-    }
-
-    if (!this.member) {
-      this.snackBar.open('Por favor, busque um membro primeiro', 'Fechar', { duration: 3000 });
-      return;
-    }
-
-    // Preparar dados para o dialog
     const confirmationData: MemberConfirmationData = {
-      member: this.member,
+      member: {
+        numero: this.quotaStatus.nuit,
+        nome: this.quotaStatus.nome,
+        email: this.quotaStatus.email,
+        telefone: this.quotaStatus.celular
+      },
       telefone: this.paymentForm.value.telefone || '',
-      tipoPagamento: this.tipoPagamento,
-      meses: this.tipoPagamento === 'anual' 
-        ? ['Ano completo'] 
-        : this.mesesSelecionados.map(m => this.meses.find(ms => ms.value === m)?.label || ''),
+      tipoPagamento: 'mensal',
+      meses: this.quotaMonths.filter(m => m.selected && !m.paid).map(m => m.label),
       metodo: this.metodoPagamento as 'mpesa' | 'emola' | 'visa',
       valorTotal: this.valorTotal
     };
 
-    // Abrir dialog de confirmação
     const dialogRef = this.dialog.open(MemberConfirmationDialogComponent, {
-      width: '600px',
+      width: '520px',
+      maxWidth: '95vw',
+      panelClass: 'quota-dialog-panel',
       data: confirmationData
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'pay') {
-        this.abrirDialogPin();
-      } else if (result === 'edit') {
-        // Permitir edição (já está no formulário)
-        this.snackBar.open('Pode editar os dados no formulário', 'Fechar', { duration: 3000 });
-      }
+      if (result === 'pay') this.abrirDialogPin();
     });
   }
 
   abrirDialogPin(): void {
     const dialogRef = this.dialog.open(PinConfirmationDialogComponent, {
-      width: '500px',
-      disableClose: true
+      width: '480px',
+      maxWidth: '95vw',
+      disableClose: true,
+      panelClass: 'quota-dialog-panel'
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result?.confirmed) {
-        this.finalizarPagamento();
-      } else if (result?.cancelled) {
+      if (result?.confirmed) this.finalizarPagamento();
+      else if (result?.cancelled) {
         this.snackBar.open('Pagamento cancelado', 'Fechar', { duration: 3000 });
       }
     });
   }
 
+  private getPaymentMethodLabel(): string {
+    if (this.metodoPagamento === 'mpesa') return 'M-Pesa';
+    if (this.metodoPagamento === 'emola') return 'Emola';
+    return 'Visa';
+  }
+
   finalizarPagamento(): void {
-    if (!this.member) return;
-    
-    // Criar recibo
-    const receipt: PaymentReceiptData = {
-      id: 'REC-' + Date.now(),
-      numeroMembro: this.member.numero,
-      nomeMembro: this.member.nome,
-      emailMembro: this.member.email,
-      dataPagamento: new Date(),
-      meses: this.tipoPagamento === 'anual' 
-        ? ['Ano completo'] 
-        : this.mesesSelecionados.map(m => this.meses.find(ms => ms.value === m)?.label || ''),
-      valorTotal: this.valorTotal,
-      metodoPagamento: this.metodoPagamento === 'mpesa' ? 'M-Pesa' : this.metodoPagamento === 'emola' ? 'Emola' : 'Visa',
-      numeroTelefone: this.paymentForm.value.telefone || '',
-      status: 'pago'
-    };
+    if (!this.quotaStatus || this.paymentSubmitting) return;
 
-    // Salvar recibo no localStorage
-    this.salvarRecibo(receipt);
+    const groups = groupSelectedByYear(this.quotaMonths);
+    if (groups.size === 0) return;
 
-    // Fechar todos os dialogs abertos
-    this.dialog.closeAll();
+    this.paymentSubmitting = true;
+    const reference = `PAY-${Date.now()}`;
+    const paymentDate = new Date().toISOString().split('T')[0];
+    const paymentMethod = this.getPaymentMethodLabel();
+    const memberId = this.quotaStatus.memberApplicationId;
 
-    // Redirecionar para página de confirmação
-    this.router.navigate(['/membros/pagamento-confirmado'], {
-      queryParams: { receiptId: receipt.id }
+    const calls = Array.from(groups.entries()).map(([year, months]) =>
+      this.apiClient.createQuotaPayment({
+        memberApplicationId: memberId,
+        year,
+        months,
+        paymentMethod,
+        reference,
+        paymentDate
+      })
+    );
+
+    forkJoin(calls).subscribe({
+      next: () => {
+        this.paymentSubmitting = false;
+        const selectedLabels = this.quotaMonths
+          .filter(m => m.selected && !m.paid)
+          .map(m => m.label);
+
+        const mesesPagosAgora = this.quantidadeMesesSelecionados;
+        const dividaRestante = Math.max(0, (this.quotaStatus!.mesesEmDivida || 0) - mesesPagosAgora);
+
+        const receipt: PaymentReceiptData = {
+          id: reference,
+          numeroMembro: this.quotaStatus!.nuit,
+          nomeMembro: this.quotaStatus!.nome,
+          emailMembro: this.quotaStatus!.email,
+          celularMembro: this.quotaStatus!.celular,
+          dataPagamento: new Date(),
+          meses: selectedLabels,
+          valorTotal: this.valorTotal,
+          metodoPagamento: paymentMethod,
+          numeroTelefone: this.paymentForm.value.telefone || '',
+          status: 'pago',
+          mesesEmDividaRestantes: dividaRestante,
+          valorDividaRestante: dividaRestante * this.valorCota
+        };
+
+        this.salvarRecibo(receipt);
+        this.dialog.closeAll();
+        this.router.navigate(['/membros/pagamento-confirmado'], {
+          queryParams: { receiptId: receipt.id }
+        });
+        this.resetarPagamento();
+      },
+      error: (err) => {
+        this.paymentSubmitting = false;
+        const msg = err?.error?.message || 'Erro ao registar pagamento. Tente novamente.';
+        this.snackBar.open(msg, 'Fechar', { duration: 5000 });
+      }
     });
-    
-    // Resetar formulário após pagamento
-    this.resetarFormulario();
   }
 
   salvarRecibo(receipt: PaymentReceiptData): void {
@@ -468,27 +531,27 @@ export class PayQuotasComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  resetarFormulario(): void {
-    this.meses.forEach(m => m.selected = false);
-    this.mesesSelecionados = [];
+  resetarPagamento(): void {
     this.metodoPagamento = '';
-    this.tipoPagamento = 'mensal';
     this.paymentForm.reset();
   }
 
   get textoBotaoPagamento(): string {
-    if (this.valorTotal > 0) {
-      return `Pagar ${this.valorTotal.toLocaleString('pt-MZ')} MT`;
-    }
+    if (this.paymentSubmitting) return 'A processar...';
+    if (this.valorTotal > 0) return `Pagar ${this.valorTotal.toLocaleString('pt-MZ')} MT`;
     return 'Pagar';
+  }
+
+  formatUltimoMes(key: string | null): string {
+    if (!key) return '—';
+    return formatYearMonthLabel(key);
   }
 
   abrirDialogBeneficios(): void {
     this.dialog.open(BeneficiosDialogComponent, {
-      width: '700px',
+      width: '420px',
       maxWidth: '90vw',
       panelClass: 'beneficios-dialog'
     });
   }
 }
-

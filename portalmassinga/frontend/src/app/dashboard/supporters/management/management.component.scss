@@ -1,0 +1,470 @@
+@use '../../management-layout' as mgmt;
+
+$color-apoio: #0d9488;
+$color-apoio-secondary: #0f766e;
+
+:host {
+  @include mgmt.host-block;
+}
+
+.page-container {
+  @include mgmt.page-root;
+}
+
+.page-header {
+  @include mgmt.legacy-page-header($color-apoio, $color-apoio-secondary);
+}
+
+// Escondido - total movido para header
+.stats-grid {
+  display: none;
+
+  .stat-card {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $color-apoio 0%, $color-apoio-secondary 100%);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, $color-apoio 0%, $color-apoio-secondary 100%);
+      color: white;
+      flex-shrink: 0;
+
+      ::ng-deep mat-icon,
+      .mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .stat-content h3 {
+      margin: 0;
+      font-size: 1.75rem;
+      color: #1f2937;
+    }
+
+    .stat-content p {
+      margin: 4px 0 0 0;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  }
+}
+
+.filters-section {
+  @include mgmt.toolbar-card-base;
+  margin-bottom: 20px;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 260px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 14px;
+
+    .mat-icon {
+      color: #9ca3af;
+      flex-shrink: 0;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 0.95rem;
+      background: transparent;
+    }
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    
+    .filter-select {
+      padding: 10px 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
+      min-width: 140px;
+      
+      &:hover, &:focus { 
+        border-color: $color-apoio;
+        outline: none;
+      }
+    }
+  }
+}
+
+.error-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  .mat-icon {
+    color: #dc2626;
+    flex-shrink: 0;
+  }
+
+  .error-content h3 {
+    margin: 0 0 8px 0;
+    color: #991b1b;
+  }
+
+  .btn-retry {
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+
+  p {
+    margin-top: 16px;
+    color: #6b7280;
+  }
+}
+
+.table-container {
+  @include mgmt.table-card-base;
+}
+
+.supporters-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: #f8fafc;
+
+    th {
+      text-align: left;
+      padding: 14px 16px;
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .col-num {
+      width: 44px;
+      text-align: center;
+    }
+  }
+
+  tbody .supporter-row {
+    border-bottom: 1px solid #f1f5f9;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      color: #475569;
+      vertical-align: middle;
+    }
+
+    .col-num {
+      text-align: center;
+      font-weight: 600;
+      color: #9ca3af;
+    }
+    
+    .name-cell {
+      font-weight: 500;
+      color: #1f2937;
+    }
+
+    .desc-cell,
+    .col-desc {
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .badge-yes {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-no {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+  }
+
+  .no-data {
+    padding: 48px 24px;
+    text-align: center;
+    color: #6b7280;
+
+    .empty-state .mat-icon,
+    .empty-state mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: #9ca3af;
+      margin-bottom: 16px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 8px 0;
+      color: #4b5563;
+    }
+
+    .empty-state p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  
+  .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    color: #6b7280;
+    background: #f9fafb;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &.btn-confirm {
+      &:hover:not(:disabled) {
+        background: #d1fae5;
+        border-color: #059669;
+        color: #059669;
+      }
+    }
+    &.btn-create {
+      &:hover:not(:disabled) {
+        background: #dbeafe;
+        border-color: #0284c7;
+        color: #0284c7;
+      }
+    }
+    &.btn-view {
+      &:hover:not(:disabled) {
+        background: #e0e7ff;
+        border-color: #6366f1;
+        color: #6366f1;
+      }
+    }
+
+    .mat-icon,
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #1f2937;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: #6b7280;
+
+      &:hover {
+        color: #1f2937;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 24px;
+
+    .detail-row {
+      margin-bottom: 16px;
+
+      label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 4px;
+      }
+
+      p {
+        margin: 0;
+        color: #1f2937;
+      }
+    }
+
+    .text-content {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+
+    .btn-action-footer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &.btn-confirm {
+        background: #d1fae5;
+        color: #065f46;
+        &:hover:not(:disabled) { background: #a7f3d0; }
+      }
+
+      &.btn-create {
+        background: #dbeafe;
+        color: #1e40af;
+        &:hover:not(:disabled) { background: #bfdbfe; }
+      }
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      border-radius: 8px;
+      background: #e5e7eb;
+      color: #374151;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+    }
+  }
+}

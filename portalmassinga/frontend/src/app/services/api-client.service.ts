@@ -170,6 +170,28 @@ export class ApiClientService {
     );
   }
 
+  deactivateMemberApplication(applicationId: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/member-applications/${applicationId}/deactivate`,
+      {},
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateApplication(applicationId: string, data: Record<string, unknown>): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.put(
+      `${apiUrl}/member-applications/${applicationId}`,
+      data,
+      { headers: this.getHeaders() }
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Member endpoints (tabela membros)
   criarMembro(data: any): Observable<any> {
     const apiUrl = this.getApiUrl();

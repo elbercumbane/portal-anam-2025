@@ -1,0 +1,38 @@
+<div class="admin-cotas-aviso-dialog">
+  <div class="dialog-header">
+    <mat-icon class="header-icon success">verified_user</mat-icon>
+    <h2>{{ getGreeting() }}, {{ data.userName }}!</h2>
+    <p class="subtitle">Acesso concedido com privilégios de administrador</p>
+  </div>
+
+  <div class="dialog-body">
+    <div class="info-card success">
+      <mat-icon>check_circle</mat-icon>
+      <p>Pode continuar para o painel. Os seus privilégios de administrador foram reconhecidos.</p>
+    </div>
+
+    <div class="reminder-card" *ngIf="data.cotasEmFalta">
+      <p class="reminder-title">Lembrete: cotas em atraso</p>
+      <p class="reminder-text">Tem <strong>{{ data.cotasEmFalta.meses }} {{ data.cotasEmFalta.meses === 1 ? 'mês' : 'meses' }}</strong> de cotas por pagar. Pague quando possível para manter a regularidade.</p>
+      <div class="cotas-detalhes" *ngIf="data.cotasEmFalta.valorTotal">
+        <span class="label">Valor total:</span>
+        <span class="valor">{{ data.cotasEmFalta.valorTotal.toLocaleString('pt-MZ') }} MT</span>
+      </div>
+    </div>
+
+    <div class="reminder-card simple" *ngIf="!data.cotasEmFalta">
+      <p class="reminder-text">Lembrete: pague as cotas em atraso quando possível para manter a regularidade.</p>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-button (click)="onPagar()" *ngIf="data.cotasEmFalta">
+      <mat-icon>payment</mat-icon>
+      Pagar cotas
+    </button>
+    <button mat-flat-button color="primary" (click)="onContinuar()">
+      <mat-icon>arrow_forward</mat-icon>
+      Continuar para o painel
+    </button>
+  </div>
+</div>

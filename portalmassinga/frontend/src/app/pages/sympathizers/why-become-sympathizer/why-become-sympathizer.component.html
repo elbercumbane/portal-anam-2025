@@ -166,19 +166,22 @@
         </div>
       </div>
 
-      <!-- Mensagem de sucesso -->
-      <div class="success-message" *ngIf="formSubmitted">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        <div>
-          <h3>Obrigado! És agora simpatizante oficial.</h3>
-          <p>Receberás as próximas novidades por email.</p>
-        </div>
+      <!-- Mensagem de erro -->
+      <div class="error-message" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
       </div>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="sympathizer-form" *ngIf="!formSubmitted">
+        <div class="form-row">
+          <div class="form-field">
+            <label>NUIT <span class="label-hint">(Número Único de Identidade Tributária)</span></label>
+            <input type="text" formControlName="nuit" placeholder="Número Único de Identidade Tributária" maxlength="21">
+            <span class="field-error" *ngIf="form.get('nuit')?.invalid && form.get('nuit')?.touched">
+              NUIT inválido
+            </span>
+          </div>
+        </div>
+
         <div class="form-row">
           <div class="form-field">
             <label>Nome Completo <span class="required">*</span></label>
@@ -219,9 +222,8 @@
         </div>
 
         <button type="submit" class="submit-btn" [disabled]="form.invalid || isLoading">
-          <span *ngIf="!isLoading">Tornar-me Simpatizante</span>
-          <span *ngIf="isLoading">A processar...</span>
-          <svg *ngIf="!isLoading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <span>{{ isLoading ? 'A registar...' : 'Tornar-me Simpatizante' }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
@@ -231,22 +233,20 @@
   </div>
 </section>
 
-<!-- Modal de Erro -->
-<div class="error-modal" *ngIf="showError">
-  <div class="error-content">
-    <div class="error-icon">
+<!-- Popup de sucesso (igual ao da página apoio) -->
+<div class="success-modal" *ngIf="showSuccess">
+  <div class="success-content">
+    <div class="success-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
     </div>
-    <h2>Erro ao Cadastrar</h2>
-    <p>{{ errorMessage }}</p>
-    <div class="error-actions">
-      <button class="btn-error" (click)="closeErrorModal()">
-        Fechar
-      </button>
+    <h2>O seu registo foi feito com sucesso.</h2>
+    <p class="success-main">A associação entrará em contacto brevemente.</p>
+    <p class="success-secondary">Receberás as próximas novidades por email.</p>
+    <div class="success-actions">
+      <button class="btn-success-close" (click)="closeSuccessModal()">Fechar</button>
     </div>
   </div>
 </div>

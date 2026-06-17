@@ -1,4 +1,4 @@
-@import 'variables';
+﻿@import 'variables';
 
 // Query Section (Telefone e Token)
 .query-section {
@@ -230,3 +230,68 @@
   }
 }
 
+// Painel OTP (simulação)
+.otp-sim-panel {
+  background: rgba($green-primary, 0.08);
+  border: 1px dashed rgba($green-primary, 0.35);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+
+  .otp-sim-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $green-700;
+    margin: 0 0 0.5rem;
+  }
+
+  .otp-sim-text {
+    font-size: 0.9rem;
+    color: $ink-600;
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+
+    .otp-code {
+      font-family: 'Courier New', monospace;
+      font-size: 1.25rem;
+      letter-spacing: 0.15em;
+      color: $green-700;
+    }
+  }
+
+  .otp-sim-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-copy-otp,
+  .btn-fill-otp {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-copy-otp {
+    background: $green-primary;
+    color: $white;
+
+    &:hover { background: $green-700; }
+  }
+
+  .btn-fill-otp {
+    background: $white;
+    color: $green-700;
+    border: 1px solid rgba($green-primary, 0.3);
+
+    &:hover { background: $green-50; }
+  }
+}

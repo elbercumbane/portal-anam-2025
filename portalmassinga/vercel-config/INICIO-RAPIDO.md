@@ -50,10 +50,28 @@ https://vercel.com/dashboard
 - [ ] Faça novo deploy: `deploy-auto.ps1 --prod`
 - [ ] Teste a aplicação
 
+## 🔗 Link de demonstração (só frontend)
+
+Para obter um link público **apenas do frontend** (demonstração da página):
+
+1. **Uma vez:** fazer login na Vercel (abre o browser):
+   ```powershell
+   cd frontend
+   npx vercel login
+   ```
+2. **Deploy:** na pasta `vercel-config` execute:
+   ```powershell
+   .\deploy-demo-frontend.ps1
+   ```
+   Ou use o ficheiro `DEPLOY-DEMO-FRONTEND.bat` (duplo clique).
+
+---
+
 ## 🎯 Scripts Disponíveis
 
 | Script | Descrição |
 |--------|-----------|
+| `deploy-demo-frontend.ps1` | Deploy **só frontend** (link de demonstração) |
 | `setup-completo-auto.ps1` | Setup completo automático (primeira vez) |
 | `deploy-auto.ps1` | Deploy rápido automático |
 | `configurar-variaveis.ps1` | Configurar variáveis de ambiente |

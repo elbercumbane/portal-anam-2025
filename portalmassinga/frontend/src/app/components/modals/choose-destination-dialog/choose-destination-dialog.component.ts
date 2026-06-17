@@ -21,6 +21,13 @@ export class ChooseDestinationDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ChooseDestinationData
   ) {}
 
+  getGreeting(): string {
+    const h = new Date().getHours();
+    if (h >= 5 && h < 12) return 'Bom dia';
+    if (h >= 12 && h < 18) return 'Boa tarde';
+    return 'Boa noite';
+  }
+
   goToDashboard(): void {
     this.dialogRef.close('dashboard');
   }

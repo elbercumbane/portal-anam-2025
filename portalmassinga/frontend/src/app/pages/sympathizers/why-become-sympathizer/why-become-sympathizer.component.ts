@@ -17,9 +17,9 @@ export class WhyBecomeSympathizerComponent implements OnInit {
   
   form!: FormGroup;
   formSubmitted = false;
-  showError = false;
-  errorMessage = '';
+  showSuccess = false;
   isLoading = false;
+  errorMessage = '';
 
   impactStats = [
     { number: '+1.200', label: 'Jovens Beneficiados em 2024', icon: '👥' },
@@ -83,7 +83,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
   ];
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private fb: FormBuilder,
     private apiClient: ApiClientService
   ) {}
@@ -93,6 +93,7 @@ export class WhyBecomeSympathizerComponent implements OnInit {
       nome: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', [Validators.required]],
+      nuit: ['', []],
       consentimento: [false, [Validators.requiredTrue]]
     });
   }
@@ -104,45 +105,39 @@ export class WhyBecomeSympathizerComponent implements OnInit {
     }
   }
 
+  closeSuccessModal(): void {
+    this.showSuccess = false;
+    this.formSubmitted = false; // Mostrar formulário limpo para novo registo
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
       this.isLoading = true;
-      this.showError = false;
-      this.formSubmitted = false;
-      
-      // Preparar dados no formato esperado pelo backend
-      const formData = {
-        nomeCompleto: this.form.value.nome,
-        email: this.form.value.email,
-        telefone: this.form.value.telefone,
-        consentimento: this.form.value.consentimento
+      this.errorMessage = '';
+      const v = this.form.value;
+      const payload = {
+        fullName: v.nome,
+        email: v.email,
+        phone: v.telefone || '',
+        nuit: (v.nuit || '').trim() || undefined,
+        areaInterest: 'Geral',
+        acceptCommunications: !!v.consentimento
       };
-
-      console.log('📤 Dados do simpatizante:', formData);
-
-      // Enviar para o backend
-      this.apiClient.criarSimpatizante(formData).subscribe({
-        next: (response) => {
-          console.log('✅ Simpatizante criado com sucesso:', response);
+      this.apiClient.createSympathizerRegistration(payload).subscribe({
+        next: () => {
           this.isLoading = false;
           this.formSubmitted = true;
           this.form.reset();
+          this.showSuccess = true;
         },
-        error: (error) => {
-          console.error('❌ Erro ao criar simpatizante:', error);
+        error: (err) => {
           this.isLoading = false;
-          this.showError = true;
-          this.errorMessage = error.message || 'Erro ao cadastrar simpatizante. Por favor, tente novamente.';
+          this.errorMessage = err?.message || 'Erro ao registar. Tente novamente.';
         }
       });
     } else {
       this.form.markAllAsTouched();
     }
-  }
-
-  closeErrorModal(): void {
-    this.showError = false;
-    this.errorMessage = '';
   }
 }
 

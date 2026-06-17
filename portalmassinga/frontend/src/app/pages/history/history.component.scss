@@ -1,11 +1,12 @@
-// Arquivo principal do Historial
-// Importa todos os módulos organizados
-
+// Arquivo principal - Sobre Nós (ex-Historial)
 @import 'variables';
 @import 'animations';
 @import 'navbar-override';
 @import 'hero-section';
 @import 'intro-section';
+@import 'section-header';
+@import '../services/impacto';
+@import '../services/depoimentos';
 @import 'stats-section';
 @import 'timeline-section';
 @import 'gallery-section';

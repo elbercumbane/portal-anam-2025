@@ -1,12 +1,10 @@
 <div class="sidebar-content">
-  <div class="sidebar-header">
-    <div class="logo-section">
-      <div class="logo-text">
-        <h2>ANAM</h2>
-        <span>Associação de Naturais e Amigos de Massinga</span>
-      </div>
-    </div>
-    <button mat-icon-button (click)="onToggleSidebar()" class="close-btn" *ngIf="isHandset">
+  <div class="sidebar-brand">
+    <span class="brand-name">ANAM</span>
+    <span class="brand-desc">Associação de Naturais e Amigos de Massinga</span>
+  </div>
+  <div class="sidebar-header" *ngIf="isHandset">
+    <button mat-icon-button (click)="onToggleSidebar()" class="close-btn">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -18,6 +16,7 @@
   <app-navigation 
     [navigationItems]="navigationItems"
     [activeItem]="activeNavigationItem"
+    [pendingMembersCount]="pendingMembersCount"
     (navigationClick)="onNavigationClick($event)"
     (serviceItemClick)="onServiceItemClick($event)">
   </app-navigation>

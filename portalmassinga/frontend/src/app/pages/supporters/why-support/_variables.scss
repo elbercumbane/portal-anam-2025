@@ -1,0 +1,20 @@
+// Variáveis — paleta ANAM
+$green-primary: #4CAF50;
+$green-dark: #388E3C;
+$green-light: #E8F5E9;
+$white: #FFFFFF;
+
+$ink-900: #1a1a1a;
+$ink-600: #444;
+$ink-500: #666;
+$ink-400: #888;
+
+$border-radius-xl: 20px;
+$mobile: 768px;
+
+$shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.07);
+$shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.1);
+
+@mixin smooth-transition($duration: 0.3s) {
+  transition: all $duration cubic-bezier(0.4, 0, 0.2, 1);
+}

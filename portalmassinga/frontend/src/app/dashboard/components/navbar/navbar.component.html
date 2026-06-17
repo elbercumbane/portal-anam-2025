@@ -1,62 +1,45 @@
-<!-- Professional Top Navbar -->
 <mat-toolbar class="top-navbar">
-  <!-- Left Section: Menu & Title -->
   <div class="navbar-left">
-    <app-navbar-menu-button (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
-    <app-navbar-title 
-      [title]="title" 
-      [subtitle]="subtitle">
-    </app-navbar-title>
+    <app-navbar-menu-button *ngIf="!isHandset || !sidebarOpen" (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
+
+    <div class="navbar-brand">
+      <div class="brand-row">
+        <span class="brand-acronym">ANAM</span>
+        <span class="brand-badge">Painel Admin</span>
+      </div>
+      <span class="brand-subtitle">{{ subtitle }}</span>
+    </div>
   </div>
-  
-  <!-- Center Section: Search -->
+
   <div class="navbar-center">
     <app-navbar-search (search)="onSearch($event)"></app-navbar-search>
   </div>
-  
-  <!-- Right Section: Actions & Profile -->
+
   <div class="navbar-right">
-    <!-- System Status Indicator -->
-    <div class="system-status" matTooltip="Sistema Online">
-      <div class="status-dot"></div>
-      <span class="status-text">Online</span>
-    </div>
-    
-    <!-- Clock -->
     <app-navbar-clock></app-navbar-clock>
-    
+
+    <div class="navbar-divider"></div>
+
     <app-navbar-actions>
-      <!-- Refresh Button -->
-      <button 
-        mat-icon-button 
+      <button
+        mat-icon-button
         class="action-btn refresh-btn"
-        matTooltip="Atualizar Dashboard"
+        matTooltip="Actualizar dashboard"
         (click)="onRefreshDashboard()">
         <mat-icon>refresh</mat-icon>
       </button>
-      
-      <!-- Divider -->
-      <div class="action-divider"></div>
-      
-      <!-- Theme Toggle -->
-      <app-navbar-theme-toggle (themeToggle)="onThemeToggle($event)"></app-navbar-theme-toggle>
-      
-      <!-- Divider -->
-      <div class="action-divider"></div>
-      
-      <!-- Notifications -->
-      <app-navbar-notifications 
+
+      <app-navbar-notifications
         [notificationCount]="notificationCount"
         (notificationsClick)="onNotificationsClick()">
       </app-navbar-notifications>
-      
-      <!-- Divider -->
+
       <div class="action-divider"></div>
-      
-      <!-- User Profile -->
-      <app-navbar-user-profile 
+
+      <app-navbar-user-profile
         [userName]="userName"
         [userRole]="userRole"
+        [userEmail]="userEmail"
         (profileOptionClick)="onProfileOptionClick($event)">
       </app-navbar-user-profile>
     </app-navbar-actions>

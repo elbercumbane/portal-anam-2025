@@ -31,37 +31,36 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string): Observable<{ success: boolean; message?: string; user?: Usuario }> {
-    return this.apiClient.login(email.trim().toLowerCase(), password).pipe(
+  login(emailOrNuit: string, password: string): Observable<{ success: boolean; message?: string; user?: Usuario }> {
+    return this.apiClient.login(emailOrNuit, password).pipe(
       map((response: any) => {
         if (response.success && response.token && response.user) {
           // Salvar token
           localStorage.setItem(STORAGE_KEYS.TOKEN_AUTH, response.token);
-          
-          // Criar objeto Usuario
+          localStorage.setItem(STORAGE_KEYS.LOGIN_TIMESTAMP, Date.now().toString());
           const usuario: Usuario = {
             email: response.user.email,
             nome: response.user.nome || response.user.full_name,
             role: response.user.role || 'membro',
-            memberId: response.user.memberId || response.user.member_id
+            memberId: response.user.memberId || response.user.member_id,
+            mustChangePassword: response.user.mustChangePassword === true,
+            cotasEmFalta: response.user.cotasEmFalta
           };
-          
-          // Salvar usuário
           localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
           this.currentUserSubject.next(usuario);
-          
-          // Tentar buscar dados completos do membro (não bloqueia o login)
-          if (usuario.memberId) {
-            this.loadMemberData(usuario.memberId);
-          }
-          
+          if (usuario.memberId) this.loadMemberData(usuario.memberId);
           return { success: true, user: usuario };
-        } else {
-          return { 
-            success: false, 
-            message: response.message || 'Erro ao fazer login' 
-          };
         }
+        // success=false (ex: membro com cotas em atraso)
+        const usuario = response.user ? {
+          email: response.user.email,
+          nome: response.user.nome || response.user.full_name,
+          role: response.user.role || 'membro',
+          memberId: response.user.memberId || response.user.member_id,
+          mustChangePassword: response.user.mustChangePassword === true,
+          cotasEmFalta: response.user.cotasEmFalta
+        } as Usuario : undefined;
+        return { success: false, message: response.message || 'Erro ao fazer login', user: usuario };
       }),
       catchError((error) => {
         let errorMessage = 'Erro ao conectar com o servidor';
@@ -82,22 +81,27 @@ export class AuthService {
   }
 
   private validateToken(): void {
-    this.apiClient.getCurrentUser().subscribe({
-      next: (response: any) => {
-        if (response.success && response.user) {
-          const usuario: Usuario = {
-            email: response.user.email,
-            nome: response.user.nome || response.user.full_name,
-            role: response.user.role || 'membro',
-            memberId: response.user.memberId || response.user.member_id
-          };
-          this.currentUserSubject.next(usuario);
-          localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
+    this.apiClient.validateSession().subscribe({
+      next: (result) => {
+        if (!result.valid) {
+          this.logout();
+          return;
         }
-      },
-      error: () => {
-        // Token inválido, fazer logout
-        this.logout();
+
+        const user = result.user;
+        if (!user) {
+          return;
+        }
+
+        const usuario: Usuario = {
+          email: user.email,
+          nome: user.nome || user.full_name || user.fullName,
+          role: user.role || 'membro',
+          memberId: user.memberId || user.member_id,
+          mustChangePassword: user.mustChangePassword === true
+        };
+        this.currentUserSubject.next(usuario);
+        localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
       }
     });
   }
@@ -158,8 +162,16 @@ export class AuthService {
     localStorage.removeItem(STORAGE_KEYS.USUARIO_ATUAL);
     localStorage.removeItem(STORAGE_KEYS.TOKEN_AUTH);
     localStorage.removeItem(STORAGE_KEYS.DADOS_MEMBRO);
+    localStorage.removeItem(STORAGE_KEYS.LOGIN_TIMESTAMP);
+    localStorage.removeItem('userFullName');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('rememberMe');
+    localStorage.removeItem('savedEmail');
+    localStorage.removeItem('userDepartment');
+    localStorage.removeItem('userProvince');
+    localStorage.removeItem('userRole');
     this.currentUserSubject.next(null);
-    // Redirecionamento removido - não redireciona para login
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
@@ -167,10 +179,47 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.currentUserSubject.value !== null;
+    if (this.currentUserSubject.value !== null) {
+      return true;
+    }
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
+    const usuarioSalvo = localStorage.getItem(STORAGE_KEYS.USUARIO_ATUAL);
+    return !!(token && usuarioSalvo);
   }
 
   getCurrentUser(): Usuario | null {
-    return this.currentUserSubject.value;
+    if (this.currentUserSubject.value) {
+      return this.currentUserSubject.value;
+    }
+
+    const usuarioSalvo = localStorage.getItem(STORAGE_KEYS.USUARIO_ATUAL);
+    if (!usuarioSalvo) {
+      return null;
+    }
+
+    try {
+      const usuario = JSON.parse(usuarioSalvo) as Usuario;
+      this.currentUserSubject.next(usuario);
+      return usuario;
+    } catch {
+      return null;
+    }
+  }
+
+  changePassword(newPassword: string): Observable<{ success: boolean; message?: string }> {
+    return this.apiClient.changePassword(newPassword).pipe(
+      map((res: any) => {
+        if (res?.success !== false) {
+          const user = this.getCurrentUser();
+          if (user) {
+            const updated = { ...user, mustChangePassword: false };
+            localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(updated));
+            this.currentUserSubject.next(updated);
+          }
+        }
+        return { success: res?.success !== false, message: res?.message };
+      }),
+      catchError((err) => throwError(() => ({ success: false, message: err?.message || 'Erro ao alterar senha' })))
+    );
   }
 }

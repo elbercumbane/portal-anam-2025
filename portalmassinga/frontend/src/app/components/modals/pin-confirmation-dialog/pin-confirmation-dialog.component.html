@@ -1,39 +1,40 @@
 <div class="dialog-container">
   <div class="dialog-header">
-    <h2>Confirmação de Pagamento</h2>
-    <button mat-icon-button (click)="onCancel()" class="close-button" *ngIf="!processing">
+    <div class="header-icon"><mat-icon>phonelink_lock</mat-icon></div>
+    <div>
+      <h2>Confirmação de pagamento</h2>
+      <p>Aguarde no seu telemóvel</p>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="close-button" *ngIf="!processing" type="button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  
+
   <div class="dialog-body">
     <div class="payment-notification" *ngIf="processing">
-      <div class="notification-icon">
-        <mat-icon class="phone-icon">phone_android</mat-icon>
-        <div class="notification-pulse"></div>
+      <div class="phone-visual">
+        <mat-icon>smartphone</mat-icon>
+        <div class="pulse-ring"></div>
       </div>
       <h3>Confirme no seu telefone</h3>
-      <p>Você receberá uma notificação no seu telemóvel.</p>
-      <p class="instruction">Digite o PIN da sua conta no telefone para confirmar o pagamento.</p>
-      
-      <div class="processing-indicator">
-        <mat-spinner diameter="50"></mat-spinner>
-        <p class="processing-text">Aguardando confirmação...</p>
+      <p>Receberá uma notificação no telemóvel associado ao pagamento.</p>
+      <p class="instruction">Digite o PIN da sua conta M-Pesa / E-Mola para autorizar.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-bar" [style.width.%]="progressPercent"></div>
+      </div>
+      <p class="countdown">{{ secondsLeft }}s restantes</p>
+
+      <div class="processing-row">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>Aguardando confirmação...</span>
       </div>
     </div>
-    
+
     <div class="payment-success" *ngIf="!processing">
       <mat-icon class="success-icon">check_circle</mat-icon>
-      <h3>Pagamento Confirmado!</h3>
-      <p>O pagamento foi processado com sucesso.</p>
+      <h3>Pagamento autorizado!</h3>
+      <p>A transação foi confirmada com sucesso.</p>
     </div>
   </div>
-  
-  <div class="dialog-actions" *ngIf="!processing">
-    <button mat-raised-button color="primary" (click)="onCancel()">
-      <mat-icon>check</mat-icon>
-      <span>Continuar</span>
-    </button>
-  </div>
 </div>
-

@@ -15,6 +15,8 @@ public interface MemberApplicationRepository extends JpaRepository<MemberApplica
     
     Optional<MemberApplication> findByEmail(String email);
     
+    Optional<MemberApplication> findByNuitIgnoreCase(String nuit);
+    
     List<MemberApplication> findByStatusOrderByCreatedAtDesc(String status);
 }
 

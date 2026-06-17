@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { ReceiptPdfService } from '../../../services/receipt-pdf.service';
 import { PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
+import { NavbarComponent } from '../../../components/navbar/navbar.component';
+import { VALOR_COTA } from '../pay-quotas/pay-quotas.helpers';
 
 @Component({
   selector: 'app-pagamento-confirmado',
@@ -14,16 +15,16 @@ import { PaymentReceiptData } from '../../../components/modals/payment-receipt-d
   imports: [
     CommonModule,
     RouterModule,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
+    NavbarComponent,
     DatePipe,
     DecimalPipe
   ],
   templateUrl: './payment-confirmed.component.html',
   styleUrls: ['./payment-confirmed.component.scss']
 })
-export class PaymentConfirmedComponent implements OnInit {
+export class PaymentConfirmedComponent implements OnInit, OnDestroy {
   receiptData: PaymentReceiptData | null = null;
   receiptId: string | null = null;
 
@@ -34,17 +35,20 @@ export class PaymentConfirmedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obter dados do recibo da query string ou do localStorage
+    document.body.classList.add('navbar-solid');
+
     this.route.queryParams.subscribe(params => {
       this.receiptId = params['receiptId'] || null;
-      
       if (this.receiptId) {
         this.loadReceiptData();
       } else {
-        // Se não houver receiptId, redirecionar para pagar-cotas
         this.router.navigate(['/membros/pagar-cotas']);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    document.body.classList.remove('navbar-solid');
   }
 
   loadReceiptData(): void {
@@ -52,22 +56,17 @@ export class PaymentConfirmedComponent implements OnInit {
       const stored = localStorage.getItem('payment_receipts');
       if (stored) {
         const receipts: PaymentReceiptData[] = JSON.parse(stored);
-        // Converter strings de data para Date objects
-        const receiptsWithDates = receipts.map(r => ({
-          ...r,
-          dataPagamento: new Date(r.dataPagamento)
-        }));
-        
-        this.receiptData = receiptsWithDates.find(r => r.id === this.receiptId) || null;
-        
+        this.receiptData = receipts
+          .map(r => ({ ...r, dataPagamento: new Date(r.dataPagamento) }))
+          .find(r => r.id === this.receiptId) || null;
+
         if (!this.receiptData) {
           this.router.navigate(['/membros/pagar-cotas']);
         }
       } else {
         this.router.navigate(['/membros/pagar-cotas']);
       }
-    } catch (e) {
-      console.error('Erro ao carregar dados do recibo:', e);
+    } catch {
       this.router.navigate(['/membros/pagar-cotas']);
     }
   }
@@ -77,5 +76,16 @@ export class PaymentConfirmedComponent implements OnInit {
       this.receiptPdfService.generateReceiptPdf(this.receiptData);
     }
   }
-}
 
+  get mesesLista(): string[] {
+    if (!this.receiptData) return [];
+    if (this.receiptData.meses.includes('Ano completo')) {
+      return Array.from({ length: 12 }, (_, i) => `Mês ${i + 1}`);
+    }
+    return this.receiptData.meses;
+  }
+
+  get precoUnitario(): number {
+    return VALOR_COTA;
+  }
+}

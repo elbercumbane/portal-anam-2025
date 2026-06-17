@@ -1,417 +1,462 @@
-// ========================================
-// WHY SUPPORT COMPONENT
-// ========================================
+@import './_variables';
+@import './_hero';
 
-@import '../_hero';
-@import '../_sections';
-@import '../_variables';
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
 
-// ========================================
-// SECÇÃO: POR QUE APOIAR
-// ========================================
-.why-support-section {
-  padding: 5rem 0;
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
-  
-  .why-support-content {
-    margin-top: 3rem;
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+
+  .section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: $green-light;
+    color: $green-dark;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+
+    &--light {
+      background: rgba(255, 255, 255, 0.15);
+      color: #a5d6a7;
+    }
   }
-  
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    font-weight: 800;
+    color: $ink-900;
+    margin: 0 0 14px;
+  }
+
+  .highlight-text {
+    color: $green-primary;
+  }
+
+  .section-description {
+    font-size: 1.05rem;
+    color: $ink-500;
+    line-height: 1.7;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  &--light h2,
+  &--light .section-description {
+    color: $white;
+  }
+
+  &--light .section-description {
+    opacity: 0.9;
+  }
+}
+
+// Por que Apoiar
+.why-support-section {
+  padding: 80px 0;
+  background: #fafbfa;
+
   .why-support-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
-  
+
   .why-support-card {
     background: $white;
-    padding: 2.5rem;
+    padding: 32px 28px;
     border-radius: $border-radius-xl;
-    text-align: center;
+    border: 1px solid rgba(76, 175, 80, 0.12);
     box-shadow: $shadow-medium;
-    border: 2px solid rgba(76, 175, 80, 0.1);
-    @include smooth-transition;
     position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, $green-primary 0%, $blue-primary 100%);
-      transform: scaleX(0);
-      transition: transform 0.4s ease;
-    }
-    
+    @include smooth-transition;
+
     &:hover {
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       box-shadow: $shadow-xl;
-      border-color: rgba(76, 175, 80, 0.3);
-      
-      &::before {
-        transform: scaleX(1);
-      }
-      
-      .why-icon {
-        transform: scale(1.1) rotate(5deg);
-      }
+      border-color: rgba(76, 175, 80, 0.25);
     }
-    
+
+    .card-number {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: rgba(76, 175, 80, 0.1);
+      line-height: 1;
+    }
+
     .why-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 1.5rem;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
-      border-radius: 50%;
-      @include smooth-transition;
-      
+      background: $green-light;
+      border-radius: 14px;
+
       svg {
-        width: 40px;
-        height: 40px;
+        width: 28px;
+        height: 28px;
       }
-      
-      &.heart-icon {
+
+      &.heart-icon svg {
         animation: heartbeat 2s ease infinite;
       }
     }
-    
+
     h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.75rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: $ink-900;
-      margin-bottom: 1rem;
+      margin: 0 0 10px;
     }
-    
+
     p {
-      color: $ink-400;
-      line-height: 1.7;
-      font-size: 1.05rem;
+      color: $ink-500;
+      line-height: 1.65;
+      font-size: 0.95rem;
       margin: 0;
     }
   }
 }
 
 @keyframes heartbeat {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
 }
 
-// ========================================
-// SECÇÃO: FORMAS DE APOIO
-// ========================================
+// Formas de Apoio
 .support-ways-section {
-  padding: 5rem 0;
-  background: $white;
-  
+  padding: 80px 0;
+  background: linear-gradient(160deg, #1b4332 0%, #2d6a4f 50%, #388E3C 100%);
+
   .support-ways-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
-  
+
   .support-way-card {
-    background: $white;
-    padding: 2.5rem;
-    border-radius: $border-radius-xl;
-    text-align: center;
-    box-shadow: $shadow-medium;
-    border: 2px solid rgba(76, 175, 80, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: left;
+    backdrop-filter: blur(8px);
     @include smooth-transition;
-    position: relative;
-    overflow: hidden;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(76, 175, 80, 0.08) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    
+
     &:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: $shadow-xl;
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-4px);
       border-color: rgba(76, 175, 80, 0.4);
-      
-      &::after {
-        opacity: 1;
-      }
-      
-      .way-icon {
-        transform: scale(1.15) rotate(5deg);
-      }
     }
-    
+
     .way-icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 1.5rem;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(11, 47, 65, 0.1) 100%);
-      border-radius: 50%;
-      @include smooth-transition;
-      
+      background: rgba(76, 175, 80, 0.2);
+      border-radius: 12px;
+
       svg {
-        width: 35px;
-        height: 35px;
+        width: 24px;
+        height: 24px;
+        stroke: $green-primary;
       }
     }
-    
+
     h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      color: $ink-900;
-      margin-bottom: 1rem;
+      color: $white;
+      margin: 0 0 8px;
     }
-    
+
     p {
-      color: $ink-400;
-      line-height: 1.7;
-      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      line-height: 1.6;
       margin: 0;
     }
   }
 }
 
-// ========================================
-// SECÇÃO: NÍVEIS DE APOIO (Estilos adicionais)
-// ========================================
+// Níveis de Apoio
 .support-levels-section {
+  padding: 80px 0;
+  background: $white;
+
+  .support-levels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
   .support-level-card {
+    background: $white;
+    border-radius: $border-radius-xl;
+    padding: 32px 28px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: $shadow-medium;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    @include smooth-transition;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: $shadow-xl;
+    }
+
+    .level-tag {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 16px;
+      background: $green-primary;
+      color: $white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    &.level-featured {
+      border-color: $green-primary;
+      box-shadow: 0 12px 40px rgba(76, 175, 80, 0.2);
+      transform: scale(1.03);
+
+      &:hover {
+        transform: scale(1.03) translateY(-6px);
+      }
+    }
+
     .medal-icon-large {
-      width: 120px;
-      height: 120px;
-      margin: 0 auto 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+
       svg {
         width: 100%;
         height: 100%;
       }
     }
-    
+
     h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 800;
       color: $ink-900;
-      margin-bottom: 1rem;
+      margin: 0 0 8px;
     }
-    
+
     .level-description {
       color: $ink-500;
-      font-size: 1.1rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
+      font-size: 0.9rem;
+      margin: 0 0 20px;
+      line-height: 1.5;
     }
-    
+
     .level-benefits {
       list-style: none;
       padding: 0;
-      margin: 0;
+      margin: 0 0 24px;
       text-align: left;
-      
+      flex: 1;
+
       li {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem 0;
+        gap: 10px;
+        padding: 8px 0;
+        font-size: 0.88rem;
         color: $ink-600;
-        font-size: 1rem;
-        line-height: 1.6;
-        
+        line-height: 1.5;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
         svg {
-          width: 20px;
-          height: 20px;
+          width: 18px;
+          height: 18px;
           flex-shrink: 0;
-          margin-top: 0.2rem;
+          margin-top: 2px;
           color: $green-primary;
         }
       }
     }
-    
-    // Estilos específicos por nível
+
+    .level-cta {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(76, 175, 80, 0.3);
+      background: transparent;
+      color: $green-dark;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: inherit;
+      @include smooth-transition;
+
+      &:hover {
+        background: $green-primary;
+        border-color: $green-primary;
+        color: $white;
+      }
+    }
+
+    &.level-featured .level-cta {
+      background: $green-primary;
+      border-color: $green-primary;
+      color: $white;
+
+      &:hover {
+        background: $green-dark;
+      }
+    }
+
     &.level-platinum {
-      background: linear-gradient(135deg, rgba(229, 228, 226, 0.2) 0%, rgba(192, 192, 192, 0.2) 100%);
-      border-color: rgba(192, 192, 192, 0.3);
-      
-      &:hover {
-        border-color: rgba(192, 192, 192, 0.6);
-      }
+      border-top: 4px solid #c0c0c0;
     }
-    
+
     &.level-gold {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
-      border-color: rgba(255, 215, 0, 0.3);
-      
-      &:hover {
-        border-color: rgba(255, 215, 0, 0.6);
-      }
+      border-top: 4px solid #d4a017;
     }
-    
+
     &.level-diamond {
-      background: linear-gradient(135deg, rgba(185, 242, 255, 0.2) 0%, rgba(135, 206, 235, 0.2) 100%);
-      border-color: rgba(135, 206, 235, 0.3);
-      
-      &:hover {
-        border-color: rgba(135, 206, 235, 0.6);
-      }
+      border-top: 4px solid #5bc0de;
     }
   }
 }
 
-// ========================================
-// SECÇÃO: CTA FINAL (Estilos adicionais)
-// ========================================
+// CTA Final
 .final-cta-section {
-  .cta-content {
+  padding: 80px 0;
+  background: $green-light;
+
+  .cta-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
     background: $white;
-    padding: 3rem 2.5rem;
+    padding: 48px;
     border-radius: $border-radius-xl;
+    border: 1px solid rgba(76, 175, 80, 0.15);
     box-shadow: $shadow-medium;
-    border: 2px solid rgba(76, 175, 80, 0.15);
-    position: relative;
-    overflow: visible;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, $green-primary 0%, $blue-primary 100%);
-      border-radius: $border-radius-xl $border-radius-xl 0 0;
+
+    .cta-text {
+      flex: 1;
+
+      h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 800;
+        color: $ink-900;
+        margin: 0 0 12px;
+      }
+
+      p {
+        color: $ink-500;
+        line-height: 1.7;
+        margin: 0;
+        font-size: 1rem;
+        max-width: 520px;
+      }
+    }
+
+    .cta-button-large {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 36px;
+      background: $green-primary;
+      color: $white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(76, 175, 80, 0.35);
+      @include smooth-transition;
+
+      &:hover {
+        background: $green-dark;
+        transform: translateY(-2px);
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }
 
-// ========================================
-// RESPONSIVO
-// ========================================
+@media (max-width: 992px) {
+  .why-support-section .why-support-grid,
+  .support-ways-section .support-ways-grid,
+  .support-levels-section .support-levels-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .support-levels-section .support-level-card.level-featured {
+    transform: none;
+
+    &:hover {
+      transform: translateY(-6px);
+    }
+  }
+}
+
 @media (max-width: $mobile) {
-  .why-support-section {
-    padding: 3rem 0;
-    
-    .why-support-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    
-    .why-support-card {
-      padding: 2rem;
-      
-      .why-icon {
-        width: 60px;
-        height: 60px;
-        
-        svg {
-          width: 30px;
-          height: 30px;
-        }
-      }
-      
-      h3 {
-        font-size: 1.5rem;
-      }
-    }
-  }
-  
-  .support-ways-section {
-    padding: 3rem 0;
-    
-    .support-ways-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    
-    .support-way-card {
-      padding: 2rem;
-      
-      .way-icon {
-        width: 60px;
-        height: 60px;
-        
-        svg {
-          width: 30px;
-          height: 30px;
-        }
-      }
-      
-      h3 {
-        font-size: 1.25rem;
-      }
-    }
-  }
-  
-  .support-levels-section {
-    padding: 3rem 0;
-    
-    .support-levels-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    
-    .support-level-card {
-      padding: 2rem;
-      
-      .medal-icon-large {
-        width: 100px;
-        height: 100px;
-      }
-      
-      h3 {
-        font-size: 1.75rem;
-      }
-      
-      .level-benefits {
-        li {
-          font-size: 0.95rem;
-        }
-      }
-    }
-  }
-  
+  .why-support-section,
+  .support-ways-section,
+  .support-levels-section,
   .final-cta-section {
-    padding: 3rem 0;
-    
-    .cta-content {
-      padding: 2.5rem 2rem;
-      
-      h2 {
-        font-size: 1.75rem;
-      }
-      
-      p {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-      }
-      
-      .cta-button-large {
-        padding: 1.25rem 2.5rem;
-        font-size: 1.1rem;
-      }
+    padding: 56px 0;
+  }
+
+  .final-cta-section .cta-panel {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 24px;
+
+    .cta-text p {
+      max-width: none;
+    }
+
+    .cta-button-large {
+      width: 100%;
+      justify-content: center;
     }
   }
 }

@@ -1,25 +1,36 @@
-// Navbar Component Styles - Melhorias Visuais Modernas
+$green: #059669;
+$green-dark: #047857;
+$green-light: rgba(5, 150, 105, 0.1);
+$navy: #0f172a;
+$slate: #64748b;
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
 .top-navbar {
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.98) 0%, 
-    rgba(248, 250, 252, 0.95) 50%,
-    rgba(255, 255, 255, 0.98) 100%);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(5, 182, 212, 0.15);
-  box-shadow: 
-    0 4px 20px rgba(5, 182, 212, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.9) inset;
-  padding: 0 2rem;
-  height: 72px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-bottom: 1px solid rgba(5, 150, 105, 0.15);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 4px 24px rgba(15, 23, 42, 0.06);
+  padding: 0 1.75rem;
+  height: 76px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  position: relative;
+  gap: 1.25rem;
+  position: sticky;
+  top: 0;
   z-index: 1000;
-  
-  // Gradiente sutil no topo - usando #05B6D4 e cor complementar
+
   &::before {
     content: '';
     position: absolute;
@@ -27,104 +38,107 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, 
-      #05B6D4 0%, 
-      #8B5CF6 50%,
-      #05B6D4 100%);
-    opacity: 0.6;
+    background: linear-gradient(90deg, $green 0%, #1e40af 50%, $green 100%);
   }
-  
-  // Left Section: Menu & Title
+
   .navbar-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
     flex-shrink: 0;
     min-width: 0;
   }
-  
-  // Center Section: Search
+
+  .navbar-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba($green, 0.25);
+    min-width: 0;
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .brand-acronym {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: $green;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+
+    .brand-badge {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #1e40af;
+      background: rgba(30, 64, 175, 0.08);
+      border: 1px solid rgba(30, 64, 175, 0.15);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      font-size: 0.7rem;
+      color: $slate;
+      font-weight: 500;
+      line-height: 1.3;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   .navbar-center {
     display: flex;
     align-items: center;
     flex: 1;
     justify-content: center;
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
+    min-width: 0;
   }
-  
-  // Right Section: Actions & Profile
+
   .navbar-right {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    gap: 1rem;
-  }
-
-  // System Status Indicator
-  .system-status {
-    display: flex;
-    align-items: center;
+    min-width: 0;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(5, 182, 212, 0.1);
-    border-radius: 20px;
-    border: 1px solid rgba(5, 182, 212, 0.2);
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(5, 182, 212, 0.15);
-      transform: translateY(-1px);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #05B6D4;
-      box-shadow: 0 0 8px rgba(5, 182, 212, 0.6);
-      animation: pulse-dot 2s infinite;
-    }
-
-    .status-text {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #05B6D4;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    overflow: visible;
+    padding-right: 0.25rem;
   }
 
-  @keyframes pulse-dot {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(1.2);
-    }
+  .navbar-divider {
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(to bottom, transparent, rgba($green, 0.25), transparent);
+    margin: 0 0.25rem;
+    flex-shrink: 0;
   }
 }
 
-
-// Responsive Design
 @media (max-width: 1200px) {
-  .top-navbar {
-    .navbar-center {
-      max-width: 400px;
-    }
+  .top-navbar .navbar-center {
+    max-width: 380px;
   }
 }
 
 @media (max-width: 1024px) {
   .top-navbar {
     padding: 0 1.25rem;
-    height: 65px;
-    gap: 1rem;
-    
-    .navbar-center {
-      max-width: 350px;
+    height: 68px;
+
+    .navbar-brand .brand-subtitle {
+      max-width: 160px;
     }
   }
 }
@@ -132,80 +146,41 @@
 @media (max-width: 768px) {
   .top-navbar {
     padding: 0 1rem;
-    height: 60px;
+    height: 64px;
     gap: 0.75rem;
-    
-    .navbar-left {
-      gap: 0.75rem;
-    }
-    
-    .navbar-center {
-      max-width: 250px;
-    }
-    
-    .navbar-right {
-      gap: 0.25rem;
 
-      .system-status {
-        .status-text {
-          display: none;
-        }
-        padding: 0.4rem 0.6rem;
+    .navbar-brand {
+      padding-left: 0.5rem;
+
+      .brand-acronym {
+        font-size: 1.15rem;
       }
-    }
-    
-  }
-}
 
-@media (max-width: 600px) {
-  .top-navbar {
-    padding: 0 0.75rem;
-    height: 60px;
-    gap: 0.5rem;
-    
-    .navbar-left {
-      gap: 0.5rem;
-    }
-    
-    .navbar-center {
-      max-width: 200px;
-    }
-    
-    .navbar-right {
-      gap: 0.15rem;
+      .brand-badge {
+        display: none;
+      }
 
-      .system-status {
+      .brand-subtitle {
         display: none;
       }
     }
-    
+
+    .navbar-center {
+      max-width: 200px;
+    }
+
+    .navbar-divider {
+      display: none;
+    }
   }
 }
 
 @media (max-width: 480px) {
   .top-navbar {
     padding: 0 0.75rem;
-    height: 55px;
-    gap: 0.5rem;
-    
-    .navbar-center {
-      display: none; // Hide search on mobile
-    }
-    
-    .navbar-right {
-      gap: 0.1rem;
-    }
-  }
-}
 
-@media (max-width: 320px) {
-  .top-navbar {
-    padding: 0 0.5rem;
-    height: 50px;
-    min-height: 50px;
-    
-    .navbar-left {
-      gap: 0.25rem;
+    .navbar-center {
+      display: none;
     }
   }
 }

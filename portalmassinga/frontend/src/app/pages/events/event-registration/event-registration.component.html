@@ -29,11 +29,15 @@
     <!-- Step 1: Registration Form -->
     <div class="registration-section" *ngIf="step === 'registration'">
       <div class="evento-info-card" *ngIf="eventoAtual; else noEvento">
-        <div class="evento-header">
+        <div class="evento-cancelled-msg" *ngIf="eventoAtual.isCancelled">
+          <strong>Evento cancelado</strong>
+          <p>{{ eventoAtual.cancelledMessage || 'Este evento foi cancelado.' }}</p>
+        </div>
+        <div class="evento-header" *ngIf="!eventoAtual.isCancelled">
           <h2>{{ eventoAtual.titulo }}</h2>
           <span class="evento-data">{{ eventoAtual.data }}</span>
         </div>
-        <div class="evento-details">
+        <div class="evento-details" *ngIf="!eventoAtual.isCancelled">
           <div class="detail-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -58,7 +62,7 @@
         </div>
       </ng-template>
 
-      <form [formGroup]="registrationForm" (ngSubmit)="onSubmitRegistration()" class="registration-form">
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmitRegistration()" class="registration-form" *ngIf="!eventoAtual?.isCancelled">
         <h3>Dados de Inscrição</h3>
         
         <div class="form-group">

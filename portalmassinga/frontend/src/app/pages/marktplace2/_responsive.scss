@@ -7,12 +7,14 @@
 // Tablets
 @media (max-width: 1024px) {
   .marketplace-sidebar {
-    width: 280px;
+    width: $sidebar-width;
+    max-width: $sidebar-width;
   }
 
   .marketplace-main {
-    margin-left: 280px;
+    margin-left: $sidebar-width;
     padding: 24px;
+    padding-bottom: 40px;
   }
 
   .products-grid {
@@ -32,6 +34,10 @@
 
 // Tablets pequenos e mobile grande
 @media (max-width: 768px) {
+  .header-menu-btn {
+    display: flex;
+  }
+
   .marketplace-header {
     height: auto;
     min-height: $header-height;
@@ -48,6 +54,10 @@
     width: 100%;
     justify-content: space-between;
     min-width: auto;
+  }
+
+  .header-nav {
+    display: none;
   }
 
   .header-search {
@@ -69,11 +79,18 @@
     margin-top: 0;
     margin-left: 0;
     padding: 16px;
+    padding-bottom: 32px;
+  }
+
+  .marketplace-footer {
+    margin-left: 0;
+    padding: 12px 16px;
   }
 
   .marketplace-sidebar {
     transform: translateX(-100%);
-    width: 280px;
+    width: $sidebar-width;
+    max-width: $sidebar-width;
     box-shadow: $shadow-xl;
 
     &.open {
@@ -88,6 +105,12 @@
 
   .results-bar {
     padding: 12px 16px;
+
+    .sort-select { min-width: 130px; }
+  }
+
+  .featured-scroll .product-card {
+    min-width: 260px;
   }
 
   .sidebar-content {

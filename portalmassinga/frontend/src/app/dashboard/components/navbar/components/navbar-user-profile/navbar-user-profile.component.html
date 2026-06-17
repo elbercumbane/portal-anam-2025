@@ -1,0 +1,66 @@
+<button
+  type="button"
+  class="user-dropdown-trigger"
+  [matMenuTriggerFor]="profileMenu"
+  #menuTrigger="matMenuTrigger"
+  [class.menu-open]="menuTrigger.menuOpen">
+  <span class="user-avatar-chip">
+    <span class="avatar-initials">{{ getUserInitials() }}</span>
+    <span class="avatar-status"></span>
+  </span>
+  <span class="dropdown-chevron">
+    <mat-icon>expand_more</mat-icon>
+  </span>
+</button>
+
+<mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
+  <div class="profile-menu-header" (click)="$event.stopPropagation()">
+    <div class="header-bg"></div>
+    <div class="header-content">
+      <div class="profile-avatar-large">
+        <span class="avatar-text">{{ getUserInitials() }}</span>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">{{ userName }}</div>
+        <div class="profile-role-chip">{{ userRole }}</div>
+        <div class="profile-email" *ngIf="userEmail">{{ userEmail }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-menu-body">
+    <button mat-menu-item class="menu-item-rich" (click)="onProfileOption('profile')">
+      <mat-icon>person</mat-icon>
+      <span class="item-content">
+        <span class="item-label">Meu Perfil</span>
+        <span class="item-desc">Dados pessoais e conta</span>
+      </span>
+    </button>
+
+    <button mat-menu-item class="menu-item-rich" (click)="onProfileOption('users')">
+      <mat-icon>group</mat-icon>
+      <span class="item-content">
+        <span class="item-label">Gestão de Usuários</span>
+        <span class="item-desc">Permissões e acessos</span>
+      </span>
+    </button>
+
+    <button mat-menu-item class="menu-item-rich" (click)="onProfileOption('settings')">
+      <mat-icon>settings</mat-icon>
+      <span class="item-content">
+        <span class="item-label">Configurações</span>
+        <span class="item-desc">Preferências do sistema</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="profile-menu-footer">
+    <button mat-menu-item class="menu-item-rich logout-item" (click)="onProfileOption('logout')">
+      <mat-icon>logout</mat-icon>
+      <span class="item-content">
+        <span class="item-label">Terminar Sessão</span>
+        <span class="item-desc">Sair do painel administrativo</span>
+      </span>
+    </button>
+  </div>
+</mat-menu>

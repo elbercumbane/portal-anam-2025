@@ -21,6 +21,13 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body.marketplace-page {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Material Icons - Garantir renderização correta */
@@ -125,4 +132,20 @@ $tablet-max: 1023px;
   height: 2px;
   background-color: #2196f3;
   transition: all 0.3s ease;
+}
+
+/* SnackBar customizado - estilo approve-member (feedback bonito) */
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: #10b981;
+  --mdc-snackbar-supporting-text-color: white;
+  --mat-snack-bar-button-color: white;
+  .mat-mdc-snack-bar-label {
+    font-weight: 500;
+    font-size: 1rem;
+  }
+}
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: #dc2626;
+  --mdc-snackbar-supporting-text-color: white;
+  --mat-snack-bar-button-color: white;
 }

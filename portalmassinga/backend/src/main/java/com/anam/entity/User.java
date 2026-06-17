@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * Entidade para gerenciar usuários e senhas dos membros
- */
 @Entity
 @Table(name = "users")
 @Data
@@ -22,41 +19,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "membro_id", nullable = false, unique = true)
-    private UUID membroId;
-
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "senha", nullable = false)
-    private String senha; // Hash da senha (usar BCrypt em produção)
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
 
-    @Column(name = "role", length = 50, nullable = false)
-    private String role = "membro"; // membro, admin
+    @Column(name = "full_name", nullable = false, length = 255)
+    private String fullName;
 
-    @Column(name = "ativo", nullable = false)
-    private Boolean ativo = true;
+    @Column(name = "role", nullable = false, length = 50)
+    private String role = "membro"; // admin | membro
+
+    @Column(name = "member_application_id")
+    private UUID memberApplicationId;
+
+    @Column(name = "must_change_password", nullable = false)
+    private boolean mustChangePassword = true;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @PrePersist
     protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-        if (ativo == null) {
-            ativo = true;
-        }
-        if (role == null) {
-            role = "membro";
-        }
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (updatedAt == null) updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate

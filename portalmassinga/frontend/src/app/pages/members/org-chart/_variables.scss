@@ -1,18 +1,35 @@
-// Variáveis do Organograma
-$green-dark: #1B4332;
-$green-medium: #2D6A4F;
-$green-light: #40916C;
-$brown-trunk: #5D4037;
-$brown-bark: #3E2723;
-$gold-primary: #C9A850;
-$gold-light: #D4B86A;
-$gold-shine: #CFAA4A;
-$gold-dark: #A68A3A;
-$copper: #B8956A;
-$cream: #FDF8F0;
+// Variáveis do Organograma — design moderno
+$green-dark: #0d3b2a;
+$green-medium: #1a5c3e;
+$green-light: #2d8a5e;
+$green-mint: #e8f5f0;
+$brown-trunk: #4a3728;
+$brown-bark: #2d1f18;
+$gold-primary: #c9a227;
+$gold-light: #e5c65c;
+$gold-shine: #f0d878;
+$gold-dark: #9a7b1a;
+$copper: #b8956a;
+$cream: #fafbfc;
+$ink: #0f172a;
+$ink-muted: #475569;
+$white: #ffffff;
 
-// Gradientes (mais suaves)
-$gradient-gold: linear-gradient(135deg, rgba($gold-dark, 0.6) 0%, rgba($gold-primary, 0.5) 50%, rgba($gold-light, 0.4) 100%);
-$gradient-trunk: linear-gradient(180deg, $brown-bark 0%, $brown-trunk 50%, darken($brown-trunk, 10%) 100%);
-$gradient-leaf: linear-gradient(135deg, rgba($green-medium, 0.9) 0%, rgba($green-dark, 0.95) 100%);
+// Gradientes modernos
+$gradient-gold: linear-gradient(135deg, rgba($gold-dark, 0.25) 0%, rgba($gold-primary, 0.2) 50%, rgba($gold-light, 0.15) 100%);
+$gradient-trunk: linear-gradient(180deg, $brown-bark 0%, $brown-trunk 50%, darken($brown-trunk, 8%) 100%);
+$gradient-leaf: linear-gradient(135deg, $green-medium 0%, $green-dark 100%);
+$gradient-glass: linear-gradient(135deg, rgba($white, 0.92) 0%, rgba($green-mint, 0.4) 100%);
+$gradient-hero: linear-gradient(180deg, #f8fafc 0%, #f0f7f4 50%, #e8f2ee 100%);
 
+// Sombras suaves (design system)
+$shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(45, 106, 79, 0.06);
+$shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.1), 0 6px 16px rgba(45, 106, 79, 0.08);
+$shadow-glow: 0 0 32px rgba($green-light, 0.2);
+$radius-sm: 12px;
+$radius-md: 20px;
+$radius-lg: 28px;
+$radius-xl: 36px;
+$ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);

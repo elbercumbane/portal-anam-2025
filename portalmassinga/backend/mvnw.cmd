@@ -57,6 +57,17 @@ set ERROR_CODE=0
 @REM To isolate internal variables from possible post scripts, we use another setlocal
 @setlocal
 
+@REM ==== AUTO-DETECT JAVA_HOME if not set ====
+if not "%JAVA_HOME%" == "" goto OkJHome
+if exist "C:\Program Files\Java\jdk-17\bin\java.exe" set "JAVA_HOME=C:\Program Files\Java\jdk-17" & goto OkJHome
+if exist "C:\Program Files\Java\jdk-21\bin\java.exe" set "JAVA_HOME=C:\Program Files\Java\jdk-21" & goto OkJHome
+if exist "C:\Program Files\Java\jdk-22\bin\java.exe" set "JAVA_HOME=C:\Program Files\Java\jdk-22" & goto OkJHome
+if exist "C:\Program Files\Eclipse Adoptium\jdk-17.0.14.101-hotspot\bin\java.exe" set "JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-17.0.14.101-hotspot" & goto OkJHome
+if exist "C:\Program Files\Microsoft\jdk-17.0.13.11.1-hotspot\bin\java.exe" set "JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.13.11.1-hotspot" & goto OkJHome
+for /d %%d in ("C:\Program Files\Java\jdk-*") do if exist "%%~d\bin\java.exe" set "JAVA_HOME=%%~d" & goto OkJHome
+for /d %%d in ("C:\Program Files\Eclipse Adoptium\jdk-*") do if exist "%%~d\bin\java.exe" set "JAVA_HOME=%%~d" & goto OkJHome
+for /d %%d in ("C:\Program Files\Microsoft\jdk-*") do if exist "%%~d\bin\java.exe" set "JAVA_HOME=%%~d" & goto OkJHome
+
 @REM ==== START VALIDATION ====
 if not "%JAVA_HOME%" == "" goto OkJHome
 

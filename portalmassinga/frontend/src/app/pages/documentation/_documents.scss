@@ -125,20 +125,6 @@
     }
   }
   
-  // Barra lateral decorativa
-  .card-accent-bar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, var(--card-accent) 0%, transparent 100%);
-    opacity: 0;
-    transform: scaleY(0);
-    transform-origin: top;
-    @include smooth-transition(0.4s);
-  }
-  
   // Conteúdo principal
   .card-inner {
     position: relative;
@@ -419,11 +405,6 @@
       .pattern-circle.circle-2 {
         transform: translate(10px, -10px);
       }
-    }
-    
-    .card-accent-bar {
-      opacity: 1;
-      transform: scaleY(1);
     }
     
     .icon-container {

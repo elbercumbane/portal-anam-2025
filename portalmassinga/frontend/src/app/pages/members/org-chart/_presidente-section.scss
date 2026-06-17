@@ -1,0 +1,82 @@
+// Mensagem do Presidente da Associação
+@import 'variables';
+
+.presidente-section {
+  position: relative;
+  z-index: 2;
+  padding: 48px 24px 56px;
+}
+
+.presidente-container {
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: start;
+  background: $gradient-glass;
+  border-radius: 24px;
+  padding: 40px 40px 44px;
+  box-shadow: $shadow-md;
+  border: 1px solid rgba($green-medium, 0.12);
+}
+
+.presidente-photo {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+}
+
+.presidente-content {
+  padding-top: 4px;
+}
+
+.presidente-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+  font-weight: 700;
+  color: $ink;
+  margin: 0 0 20px;
+  line-height: 1.3;
+
+  .highlight {
+    color: $green-medium;
+    font-style: italic;
+  }
+}
+
+.presidente-texto {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: $ink-muted;
+  margin: 0 0 24px;
+}
+
+.presidente-assinatura {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $green-dark;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .presidente-container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 28px 24px 32px;
+  }
+
+  .presidente-photo {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+}

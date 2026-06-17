@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DashboardStatsService } from './services/dashboard-stats.service';
 import { ChartDataService, ProvinciaData, PerformanceData, MonthlyFormData, ProvinceEvaluationData } from './services/chart-data.service';
 import { SatisfactionService, SatisfactionData } from './services/satisfaction.service';
+import { ApiClientService } from '../services/api-client.service';
+import { AuthService } from '../services/auth.service';
 
 // Import types
 import { NavigationItem } from './components/sidebar/components/navigation/navigation.component';
@@ -14,7 +16,8 @@ import { DashboardStats, QuickAction, RecentActivity, FilterItem } from './dashb
 import { 
   PROVINCES, FORM_TYPES, STATUSES, SATISFACTION_LEVELS,
   QUICK_ACTIONS, INITIAL_ACTIVITIES,
-  INITIAL_STATS, INITIAL_ASSOCIATION_STATS, INITIAL_TREASURY_STATS, INITIAL_DASHBOARD_STATS
+  INITIAL_STATS, INITIAL_ASSOCIATION_STATS, INITIAL_TREASURY_STATS, INITIAL_DASHBOARD_STATS,
+  INITIAL_SUPPORTERS_STATS, INITIAL_SYMPATHIZERS_STATS
 } from './dashboard.data';
 
 @Component({
@@ -33,8 +36,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentView = 'dashboard'; // Para controlar qual view está ativa
   greeting = 'Boa noite';
   userName = '';
+  userEmail = '';
   userRole = '';
   activeNavigationItem = 'dashboard'; // Para controlar qual item do sidebar está ativo
+  pendingMembersCount = 0; // Membros pendentes de aprovação (badge no sidebar)
+
+  /** Views de gestão/conteúdo que ocupam toda a largura à direita da sidebar */
+  private readonly fullWidthViews = new Set([
+    'dashboard',
+    'membros-gestao', 'membro-detalhe', 'membros-home', 'membros-organograma',
+    'apoio-gestao', 'simpatizantes-gestao',
+    'eventos-gestao', 'eventos-inscricoes',
+    'tesouraria-cotas', 'tesouraria-gestao', 'tesouraria-relatorios',
+    'indicadores-geral', 'indicadores-desempenho', 'indicadores-satisfacao', 'indicadores-metricas',
+    'home', 'documentacao', 'servicos', 'eventos', 'historial', 'galeria',
+    'parceiros', 'programas', 'noticias', 'associar', 'contato',
+    'projectos-ativos', 'projectos-realizados', 'candidaturas',
+    'form-management', 'attendance-lists-upload', 'attendance-lists-view',
+    'user-management', 'profile'
+  ]);
+
+  get isFullWidthContent(): boolean {
+    return this.fullWidthViews.has(this.currentView);
+  }
   
   // Propriedades do sistema de filtros
   showFilterModal = false;
@@ -56,9 +80,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   // Dashboard data - Association (from dashboard.data.ts)
   associationStats = { ...INITIAL_ASSOCIATION_STATS };
+  supportersStats = { ...INITIAL_SUPPORTERS_STATS };
+  sympathizersStats = { ...INITIAL_SYMPATHIZERS_STATS };
   treasuryStats = { ...INITIAL_TREASURY_STATS };
 
   partners: any[] = [];
+  eventStats = { total: 0, proximos: 0, inscricoes: 0 };
 
   // Dados para gráficos
   growthChartData: number[] = [];
@@ -89,21 +116,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private router: Router,
+    private route: ActivatedRoute,
     private dashboardStatsService: DashboardStatsService,
     private chartDataService: ChartDataService,
-    private satisfactionService: SatisfactionService
+    private satisfactionService: SatisfactionService,
+    private apiClient: ApiClientService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     try {
+    const user = this.authService.getCurrentUser();
+    if (user?.mustChangePassword) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.setupResponsiveLayout();
     this.loadDashboardData();
     this.updateGreeting();
     this.loadUserName();
     void this.loadUserDetails();
+    this.setupMemberDetailRouting();
     } catch (error) {
       console.error('Erro no ngOnInit do dashboard:', error);
     }
+  }
+
+  private setupMemberDetailRouting(): void {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
+      const view = params['view'];
+      const memberId = params['memberId'];
+      if (view === 'membro' && memberId) {
+        this.currentView = 'membro-detalhe';
+        this.activeNavigationItem = 'membros-gestao';
+      } else if (this.currentView === 'membro-detalhe') {
+        // Usuário clicou Voltar - voltar para gestão de membros
+        this.currentView = 'membros-gestao';
+        this.activeNavigationItem = 'membros-gestao';
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -135,14 +186,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   private async loadRealData(): Promise<void> {
     try {
+      // Carregar contagem de membros pendentes
+      this.loadPendingMembersCount();
       // Carregar dados da associação
       this.loadAssociationData();
-      
+      this.loadSupportersData();
+      this.loadSympathizersData();
+
       // Carregar dados da tesouraria
       this.loadTreasuryData();
       
       // Carregar parceiros
       this.loadPartners();
+
+      // Carregar eventos
+      this.loadEventStats();
       
       // Carregar dados do dashboard usando o serviço (sem backend)
       this.dashboardStats = await this.dashboardStatsService.loadDashboardData();
@@ -338,20 +396,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return activity.color;
   }
 
+  loadPendingMembersCount(): void {
+    this.pendingMembersCount = 0;
+    this.apiClient.getPendingApplicationsCount().subscribe({
+      next: (count) => {
+        this.pendingMembersCount = count;
+      },
+      error: () => {
+        this.pendingMembersCount = 0;
+      }
+    });
+  }
+
   // Carregar dados da associação
   private loadAssociationData(): void {
-    // Dados falsos para demonstração
-    this.associationStats = {
-      totalMembros: 187,
-      novosEsteMes: 15,
-      crescimento: 8.7,
-      membrosAtivos: 175
-    };
+    this.associationStats = { ...INITIAL_ASSOCIATION_STATS };
 
     // Dados para gráfico de crescimento (últimos 12 meses)
     this.growthChartData = [120, 125, 130, 135, 140, 145, 150, 155, 160, 170, 175, 187];
     this.growthChartMonths = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     this.growthChartMax = 200;
+  }
+
+  private loadSupportersData(): void {
+    this.supportersStats = { ...INITIAL_SUPPORTERS_STATS };
+  }
+
+  private loadSympathizersData(): void {
+    this.sympathizersStats = { ...INITIAL_SYMPATHIZERS_STATS };
   }
 
   // Carregar dados da tesouraria
@@ -378,13 +450,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Carregar parceiros
   private loadPartners(): void {
-    // TODO: Substituir por dados reais do backend
     this.partners = [
       { nome: 'Câmara Municipal de Massinga', tipo: 'Instituição Pública', ativo: true },
       { nome: 'Associação de Desenvolvimento Local', tipo: 'ONG', ativo: true },
       { nome: 'Banco de Moçambique', tipo: 'Instituição Financeira', ativo: true },
       { nome: 'Universidade Eduardo Mondlane', tipo: 'Instituição de Ensino', ativo: false }
     ];
+  }
+
+  private loadEventStats(): void {
+    this.eventStats = {
+      total: 12,
+      proximos: 3,
+      inscricoes: 47
+    };
   }
 
   // Formatar moeda
@@ -623,10 +702,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       case 'membros-organograma':
         this.currentView = 'membros-organograma';
         break;
-      case 'membros-pdf-registration':
-        this.currentView = 'membros-pdf-registration';
+      case 'apoio-gestao':
+        this.currentView = 'apoio-gestao';
+        break;
+      case 'simpatizantes-gestao':
+        this.currentView = 'simpatizantes-gestao';
+        break;
+      case 'eventos-gestao':
+        this.currentView = 'eventos-gestao';
+        break;
+      case 'eventos-inscricoes':
+        this.currentView = 'eventos-inscricoes';
         break;
       // Tesouraria
+      case 'tesouraria-cotas':
+        this.currentView = 'tesouraria-cotas';
+        break;
       case 'tesouraria-gestao':
         this.currentView = 'tesouraria-gestao';
         break;
@@ -645,6 +736,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         break;
       case 'indicadores-metricas':
         this.currentView = 'indicadores-metricas';
+        break;
+      // Configurações
+      case 'config-notificacoes':
+        this.currentView = 'config-notificacoes';
+        break;
+      case 'config-galeria':
+        this.currentView = 'galeria';  // Reutiliza componente de galeria
         break;
       default:
         this.currentView = 'dashboard';
@@ -816,18 +914,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    // Remover token e informações de sessão
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('savedEmail');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userFullName');
-    localStorage.removeItem('userDepartment');
-    localStorage.removeItem('userProvince');
-    localStorage.removeItem('userRole');
-    
-    // Redirecionamento removido - não redireciona para login
-    // this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   updateGreeting(): void {
@@ -842,33 +929,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadUserName(): void {
-    // Tentar obter o nome do usuário do localStorage
+    // Prioridade 1: AuthService (currentUser)
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser?.nome && currentUser.nome.trim() !== '') {
+      this.userName = currentUser.nome;
+      return;
+    }
+    // Prioridade 2: localStorage legado
     const savedUserFullName = localStorage.getItem('userFullName');
     const savedUserName = localStorage.getItem('userName');
     const savedEmail = localStorage.getItem('savedEmail');
-    
     if (savedUserFullName && savedUserFullName.trim() !== '') {
-      // Prioridade 1: Nome completo salvo
       this.userName = savedUserFullName;
     } else if (savedUserName && savedUserName.trim() !== '') {
-      // Prioridade 2: Nome do usuário salvo
       this.userName = savedUserName;
     } else if (savedEmail) {
-      // Prioridade 3: Extrair do email salvo
       const emailParts = savedEmail.split('@');
       if (emailParts.length > 0 && emailParts[0].trim() !== '') {
-        const nameFromEmail = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
-        this.userName = nameFromEmail;
-        // Salvar para uso futuro
-        localStorage.setItem('userName', nameFromEmail);
+        this.userName = emailParts[0].charAt(0).toUpperCase() + emailParts[0].slice(1);
       } else {
         this.userName = 'Usuário';
       }
     } else {
-      // Fallback: Usuário genérico
       this.userName = 'Usuário';
     }
     
+    // Carregar email e role do utilizador (para Detalhes da Sessão)
+    try {
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
+        const u = JSON.parse(currentUser);
+        this.userEmail = u?.email || '';
+        if (u?.role) {
+          this.userRole = this.formatRoleLabel(u.role);
+        }
+      }
+    } catch (_) {}
     console.log('Nome do usuário carregado:', this.userName);
   }
 
@@ -883,7 +979,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const departmentLabel = hasDepartment ? department!.trim() : 'Departamento não definido';
     const provinceLabel = hasProvince ? province!.trim() : 'Província não definida';
-    this.userRole = hasRole ? role!.trim() : 'Técnico Administrador';
+    if (hasRole && !this.userRole) this.userRole = this.formatRoleLabel(role!.trim());
 
     await this.fetchUserDetailsFromApi({
       forceUpdate: true,
@@ -891,6 +987,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       skipProvince: hasProvince,
       skipRole: hasRole
     });
+  }
+
+  formatRoleLabel(role: string): string {
+    const r = (role || '').toLowerCase();
+    if (r === 'super-admin') return 'Super Administrador';
+    if (r === 'admin' || r === 'administrador') return 'Administrador Principal';
+    if (r === 'membro') return 'Membro';
+    return role;
   }
 
   private async fetchUserDetailsFromApi(options: {

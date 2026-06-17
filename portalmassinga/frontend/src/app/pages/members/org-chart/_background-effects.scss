@@ -1,33 +1,30 @@
 @import 'variables';
 @import 'animations';
 
-// Página Principal
+// Página principal — fundo moderno e limpo
 .organograma-page {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  background: linear-gradient(180deg,
-    #FBFBFC 0%,
-    #F6F7F8 15%,
-    #F0F1F2 40%,
-    #EAEBED 70%,
-    #E3E5E7 100%);
-  color: #0f172a;
-  background-attachment: fixed;
+  background: $gradient-hero;
+  color: $ink;
+  background-attachment: scroll;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
-// Overlay de Fundo com mais efeitos naturais
+// Overlay sutil
 .background-overlay {
   position: fixed;
   inset: 0;
-  background: 
-    radial-gradient(ellipse at 20% 10%, rgba(15, 23, 42, 0.04) 0%, transparent 40%),
-    radial-gradient(ellipse at 80% 90%, rgba(100, 110, 120, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(15,23,42, 0.02) 0%, transparent 60%);
+  background:
+    radial-gradient(ellipse 120% 80% at 10% 0%, rgba($green-light, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 120% at 90% 100%, rgba($gold-primary, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 50% 30%, rgba($green-medium, 0.03) 0%, transparent 45%);
   z-index: 0;
+  pointer-events: none;
 }
 
-// Partículas Douradas
+// Partículas — mais discretas e elegantes
 .particles-container {
   position: fixed;
   inset: 0;
@@ -40,36 +37,32 @@
   position: absolute;
   border-radius: 50%;
   opacity: 0;
-  animation: floatParticle 25s infinite;
-  
+  animation: floatParticle 28s infinite ease-in-out;
+
   @for $i from 1 through 20 {
     &:nth-child(#{$i}) {
-      $size: 3px + random(5) * 1px;
+      $size: 2px + ($i % 3) * 1px;
       width: $size;
       height: $size;
-      left: random(100) * 1%;
-      top: random(100) * 1%;
-      animation-delay: $i * 0.8s;
-      animation-duration: 20s + random(10) * 1s;
-      
-      @if $i % 4 == 0 {
-        background: rgba($gold-shine, 0.5);
-        box-shadow: 0 0 6px rgba($gold-shine, 0.3);
-      } @else if $i % 4 == 1 {
-        background: rgba(255, 255, 255, 0.4);
-        box-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
-      } @else if $i % 4 == 2 {
-        background: rgba($gold-primary, 0.5);
-        box-shadow: 0 0 5px rgba($gold-primary, 0.3);
+      left: ($i * 5) * 1%;
+      top: ($i * 4) * 1%;
+      animation-delay: $i * 0.6s;
+      animation-duration: 22s + ($i % 5) * 2s;
+      @if $i % 3 == 0 {
+        background: rgba($gold-shine, 0.35);
+        box-shadow: 0 0 8px rgba($gold-shine, 0.2);
+      } @else if $i % 3 == 1 {
+        background: rgba($green-light, 0.25);
+        box-shadow: 0 0 6px rgba($green-light, 0.15);
       } @else {
-        background: rgba($copper, 0.4);
-        box-shadow: 0 0 4px rgba($copper, 0.2);
+        background: rgba($white, 0.5);
+        box-shadow: 0 0 4px rgba($white, 0.3);
       }
     }
   }
 }
 
-// Formas Decorativas
+// Formas decorativas — mesh suave
 .decorative-shapes {
   position: fixed;
   inset: 0;
@@ -81,31 +74,31 @@
 .shape {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
-  
+  filter: blur(80px);
+  opacity: 0.6;
+
   &.shape-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba($gold-primary, 0.12) 0%, transparent 70%);
-    top: -300px;
-    right: -200px;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba($gold-primary, 0.08) 0%, transparent 70%);
+    top: -200px;
+    right: -120px;
   }
-  
+
   &.shape-2 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba($green-light, 0.1) 0%, transparent 70%);
-    bottom: -250px;
-    left: -200px;
-  }
-  
-  &.shape-3 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba($copper, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba($green-light, 0.07) 0%, transparent 70%);
+    bottom: -180px;
+    left: -120px;
+  }
+
+  &.shape-3 {
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba($copper, 0.06) 0%, transparent 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 }
-

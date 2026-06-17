@@ -1,7 +1,6 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { gsap } from 'gsap';
-import { ApiClientService } from '../../services/api-client.service';
 
 @Component({
   selector: 'app-gallery',
@@ -13,7 +12,7 @@ import { ApiClientService } from '../../services/api-client.service';
 export class GalleryComponent implements OnInit, OnDestroy {
   @ViewChild('galeriaSection', { static: true }) galeriaSection!: ElementRef;
 
-  private apiClient = inject(ApiClientService);
+  constructor(private cdr: ChangeDetectorRef) {}
 
   // Dados para galeria de eventos
   galeria: any[] = [
@@ -24,11 +23,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
       local: 'Praça Central de Massinga',
       descricao: 'Uma feira vibrante onde produtores locais apresentam e vendem os seus produtos frescos. A comunidade reúne-se para apoiar a economia local e celebrar a riqueza dos produtos da nossa terra.',
       fotos: [
-        { src: '/assets/slider/slide1.jpg', alt: 'Feira de Produtos - Vista Geral da Praça' },
-        { src: '/assets/slider/slide2.jpg', alt: 'Feira de Produtos - Produtores Locais' },
-        { src: '/assets/slider/slide3.jpg', alt: 'Feira de Produtos - Produtos Frescos' },
-        { src: '/assets/slider/slide1.jpg', alt: 'Feira de Produtos - Comunidade Participante' },
-        { src: '/assets/slider/slide2.jpg', alt: 'Feira de Produtos - Vendas e Negócios' }
+        { src: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&q=80', alt: 'Feira de Frutas - Produtos Frescos' },
+        { src: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80', alt: 'Feira de Frutas - Banca de Frutas e Vegetais' },
+        { src: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=800&q=80', alt: 'Feira de Frutas - Frutas Tropicais' },
+        { src: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=800&q=80', alt: 'Feira de Frutas - Produtos Locais' },
+        { src: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&q=80', alt: 'Feira de Frutas - Variedade de Frutas' },
+        { src: 'https://images.unsplash.com/photo-1533900298318-6b8da3a8cf6b?w=800&q=80', alt: 'Feira de Frutas - Mercado Local' }
       ],
       categoria: 'Feira',
       participantes: 150
@@ -69,10 +69,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
       local: 'Praça Central de Massinga',
       descricao: 'Celebração da cultura local com música, dança e gastronomia tradicional, unindo a comunidade em uma festa memorável.',
       fotos: [
-        { src: '/assets/galeria/festival1.jpg', alt: 'Festival - Apresentação Cultural' },
-        { src: '/assets/galeria/festival2.jpg', alt: 'Festival - Dança Tradicional' },
-        { src: '/assets/galeria/festival3.jpg', alt: 'Festival - Música ao Vivo' },
-        { src: '/assets/galeria/festival4.jpg', alt: 'Festival - Gastronomia' }
+        { src: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80', alt: 'Festival da Cultura - Concerto ao Vivo' },
+        { src: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&q=80', alt: 'Festival da Cultura - Dança Tradicional' },
+        { src: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80', alt: 'Festival da Cultura - Música e Público' },
+        { src: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80', alt: 'Festival da Cultura - Apresentação no Palco' },
+        { src: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&q=80', alt: 'Festival da Cultura - Celebração' },
+        { src: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800&q=80', alt: 'Festival da Cultura - Artistas em Palco' }
       ],
       categoria: 'Cultural',
       participantes: 300
@@ -154,6 +156,15 @@ export class GalleryComponent implements OnInit, OnDestroy {
   eventoSelecionado: any = null;
   fotoAtual = 0;
 
+  // Índice da foto atual em cada card da galeria (slide sequencial, um card de cada vez)
+  cardPhotoIndices: number[] = [0, 0, 0, 0];
+  imageLoaded: boolean[] = [true, true, true, true]; // para transição suave (fade)
+  sectionVisible = false;
+  private cardSlideInterval: any;
+  private readonly CARD_SLIDE_STEP_MS = 5000; // intervalo entre cada avanço (um card de cada vez)
+  private currentCardToAdvance = 0;
+  private sectionObserver: IntersectionObserver | null = null;
+
   // Filtros
   categoriaAtiva = 'Todos';
   categorias: string[] = [];
@@ -163,60 +174,78 @@ export class GalleryComponent implements OnInit, OnDestroy {
   private readonly SLIDE_DURATION = 8000; // 8 segundos
 
   ngOnInit() {
-    // Carregar galeria da base de dados
-    this.loadGalleryFromDatabase();
     this.initScrollAnimations();
+    this.initCardSlideWhenSectionVisible();
     this.extrairCategorias();
-  }
-
-  /**
-   * Carrega galeria da base de dados
-   */
-  loadGalleryFromDatabase(): void {
-    this.apiClient.getHomeContent(true).subscribe({
-      next: (contents: any[]) => {
-        // Filtrar apenas eventos da galeria
-        const galleryItems = contents
-          .filter(c => c.sectionKey && c.sectionKey.startsWith('gallery_event_'))
-          .sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
-        
-        if (galleryItems.length > 0) {
-          this.galeria = galleryItems.map((item, index) => {
-            let metadata: any = {};
-            if (item.metadata) {
-              try {
-                metadata = JSON.parse(item.metadata);
-              } catch (e) {
-                console.warn('Erro ao parsear metadata de galeria:', e);
-              }
-            }
-            
-            return {
-              id: index + 1,
-              titulo: item.title || '',
-              data: metadata['data'] || '',
-              local: metadata['local'] || '',
-              descricao: item.subtitle || '',
-              fotos: metadata['fotos'] || [{ src: item.imageUrl || '/assets/slider/slide1.jpg', alt: item.title || '' }],
-              categoria: metadata['categoria'] || 'Geral',
-              participantes: metadata['participantes'] || 0
-            };
-          });
-          
-          // Atualizar categorias após carregar dados
-          this.extrairCategorias();
-        }
-      },
-      error: (error: any) => {
-        console.error('Erro ao carregar galeria da base de dados:', error);
-        // Manter dados padrão em caso de erro
-        this.extrairCategorias();
-      }
-    });
   }
 
   ngOnDestroy() {
     this.pararSlideAutomatico();
+    this.stopCardSlideLoop();
+    this.sectionObserver?.disconnect();
+  }
+
+  getCardPhotoIndex(cardIndex: number): number {
+    return this.cardPhotoIndices[cardIndex] ?? 0;
+  }
+
+  onCardImageLoad(cardIndex: number): void {
+    this.imageLoaded = this.imageLoaded.map((v, idx) => (idx === cardIndex ? true : v));
+    this.cdr.markForCheck();
+  }
+
+  isCardImageLoaded(cardIndex: number): boolean {
+    return this.imageLoaded[cardIndex] ?? true;
+  }
+
+  private initCardSlideWhenSectionVisible(): void {
+    if (!this.galeriaSection?.nativeElement) return;
+    this.sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          this.sectionVisible = entry.isIntersecting;
+          if (this.sectionVisible && !this.modalAberto) {
+            this.startCardSlideLoop();
+          } else {
+            this.stopCardSlideLoop();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    this.sectionObserver.observe(this.galeriaSection.nativeElement);
+  }
+
+  private startCardSlideLoop(): void {
+    this.stopCardSlideLoop();
+    this.cardSlideInterval = setInterval(() => {
+      const preview = this.getEventosPreview();
+      const cardIndex = this.currentCardToAdvance % 4;
+      const ev = preview[cardIndex];
+      const len = ev?.fotos?.length ?? 1;
+      if (len <= 0) {
+        this.currentCardToAdvance++;
+        return;
+      }
+      // Fade out antes de trocar a imagem
+      this.imageLoaded = this.imageLoaded.map((v, idx) => (idx === cardIndex ? false : v));
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        const nextIdx = (this.cardPhotoIndices[cardIndex] + 1) % len;
+        this.cardPhotoIndices = this.cardPhotoIndices.map((val, i) =>
+          i === cardIndex ? nextIdx : val
+        );
+        this.currentCardToAdvance++;
+        this.cdr.markForCheck();
+      }, 350);
+    }, this.CARD_SLIDE_STEP_MS);
+  }
+
+  private stopCardSlideLoop(): void {
+    if (this.cardSlideInterval) {
+      clearInterval(this.cardSlideInterval);
+      this.cardSlideInterval = null;
+    }
   }
 
   // Retorna apenas os primeiros 4 eventos para preview
@@ -280,9 +309,8 @@ export class GalleryComponent implements OnInit, OnDestroy {
     this.eventoSelecionado = evento;
     this.fotoAtual = 0;
     this.modalAberto = true;
-    // Prevenir scroll do body
+    this.stopCardSlideLoop();
     document.body.style.overflow = 'hidden';
-    // Iniciar slide automático
     this.iniciarSlideAutomatico();
   }
 
@@ -290,10 +318,11 @@ export class GalleryComponent implements OnInit, OnDestroy {
     this.modalAberto = false;
     this.eventoSelecionado = null;
     this.fotoAtual = 0;
-    // Restaurar scroll do body
     document.body.style.overflow = 'auto';
-    // Parar slide automático
     this.pararSlideAutomatico();
+    if (this.sectionVisible) {
+      this.startCardSlideLoop();
+    }
   }
 
   proximaFoto(): void {

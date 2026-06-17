@@ -206,6 +206,15 @@ $gradient-secondary: linear-gradient(135deg, #34D399 0%, #10B981 50%, #059669 10
     }
   }
 
+  .evento-cancelled-msg {
+    padding: 1.5rem;
+    background: #fef2f2;
+    border-radius: 12px;
+    border: 1px solid #fecaca;
+    strong { display: block; margin-bottom: 8px; color: #991b1b; }
+    p { margin: 0; color: #b91c1c; }
+  }
+
   .evento-details {
     display: flex;
     gap: 24px;

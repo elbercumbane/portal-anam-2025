@@ -30,36 +30,190 @@
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
-  min-width: 280px;
+  gap: 12px;
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
-.sidebar-toggle {
-  display: flex;
+.header-menu-btn {
+  display: none;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: none;
-  background: transparent;
+  border: 1px solid $sidebar-border;
   border-radius: $radius-md;
+  background: #fff;
   cursor: pointer;
   color: var(--ink-700);
   transition: all $transition-fast;
 
+  mat-icon { font-size: 22px; width: 22px; height: 22px; }
+
   &:hover {
-    background: var(--brand-50);
-    color: var(--brand-600);
+    background: #ECFDF5;
+    border-color: #10B981;
+    color: #059669;
+  }
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  .logo-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: #2563EB;
+  }
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding-left: 16px;
+  border-left: 1px solid $sidebar-border;
+}
+
+.header-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: $radius-md;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-600);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: var(--ink-100);
+    color: var(--ink-900);
+  }
+
+  &.active {
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563EB;
   }
 
   mat-icon {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.header-nav-sep {
+  color: var(--ink-300);
+  font-size: 12px;
+  user-select: none;
+  padding: 0 2px;
+}
+
+.header-nav-link.link-inicio {
+  color: #2563EB;
+
+  &:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: #1D4ED8;
+  }
+
+  &.active {
+    background: rgba(37, 99, 235, 0.15);
+    color: #1D4ED8;
+  }
+}
+
+.header-datetime {
+  display: none;
+}
+
+.header-actions .btn-anunciar {
+  background: linear-gradient(135deg, #EA580C 0%, #F97316 100%) !important;
+  color: #fff !important;
+  border: none !important;
+
+  mat-icon, span { color: #fff !important; }
+
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+.hide-mobile {
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.header-actions a.btn-voltar,
+.header-actions .btn-voltar {
+  text-decoration: none !important;
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  margin-left: 4px;
+
+  &:hover {
+    background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%) !important;
+    color: #FFFFFF !important;
+    opacity: 0.95;
+  }
+
+  mat-icon,
+  span {
+    color: #FFFFFF !important;
+  }
+}
+
+.header-actions .btn-limpar {
+  background: #F3F4F6;
+  color: #4B5563;
+  border-color: #E5E7EB;
+
+  &:hover {
+    background: #E5E7EB;
+    color: #374151;
+  }
+}
+
+.header-actions button.btn-ajuda,
+.header-actions .btn-ajuda {
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+
+  &:hover {
+    background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+    color: #FFFFFF !important;
+    opacity: 0.95;
+  }
+
+  mat-icon,
+  span {
+    color: #FFFFFF !important;
   }
 }
 
 .header-title {
+  display: block;
+  color: inherit;
+
   h1 {
     font-size: 20px;
     font-weight: 700;
@@ -146,52 +300,63 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  margin-left: auto;
 
   .action-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    height: 44px;
-    padding: 0 20px;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
     border: 1px solid $sidebar-border;
-    border-radius: $radius-lg;
+    border-radius: $radius-md;
     background: #FFFFFF;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--ink-700);
     transition: all $transition-fast;
     position: relative;
 
     &:hover {
-      background: var(--brand-50);
-      border-color: var(--brand-300);
-      color: var(--brand-600);
+      background: var(--ink-50);
+      border-color: var(--ink-300);
+      color: var(--ink-900);
     }
 
     &.primary {
-      background: var(--gradient-primary);
+      background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
       color: #FFFFFF;
       border: none;
 
       &:hover {
         opacity: 0.9;
-        transform: translateY(-1px);
-        box-shadow: $shadow-md;
       }
     }
 
     mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
 
     mat-badge {
       position: absolute;
       top: -4px;
       right: -4px;
+    }
+  }
+
+  .action-btn-sm {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
     }
   }
 }

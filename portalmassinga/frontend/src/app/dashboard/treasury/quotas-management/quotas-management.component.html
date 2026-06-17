@@ -1,0 +1,224 @@
+<div class="quotas-page">
+  <!-- Cabeçalho -->
+  <div class="page-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-icon">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="hero-text">
+        <h1>Gestão de Cotas</h1>
+        <p>Membros com dívidas não têm acesso à área de membros. Consulte nome, contacto e situação financeira.</p>
+      </div>
+    </div>
+    <button type="button" class="btn-refresh" (click)="loadMembers()" [disabled]="isLoading" matTooltip="Actualizar lista">
+      <mat-icon>refresh</mat-icon>
+      <span>Actualizar</span>
+    </button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-strip">
+    <div class="kpi-item">
+      <div class="kpi-icon total">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-value">{{ members.length }}</span>
+        <span class="kpi-label">Total de Membros</span>
+      </div>
+    </div>
+    <div class="kpi-item kpi-warning">
+      <div class="kpi-icon dividas">
+        <mat-icon>warning</mat-icon>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-value">{{ getCountDividas() }}</span>
+        <span class="kpi-label">Com Dívidas</span>
+        <span class="kpi-hint">Sem acesso à área</span>
+      </div>
+    </div>
+    <div class="kpi-item">
+      <div class="kpi-icon em-dia">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="kpi-data">
+        <span class="kpi-value">{{ getCountEmDia() }}</span>
+        <span class="kpi-label">Em Dia</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="toolbar-card">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar por nome, email, celular ou NUIT..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()">
+    </div>
+    <div class="tabs-filter">
+      <button type="button" class="tab-btn" [class.active]="activeTab === 'todos'" (click)="onTabChange('todos')">
+        Todos
+      </button>
+      <button type="button" class="tab-btn" [class.active]="activeTab === 'dividas'" (click)="onTabChange('dividas')">
+        Com Dívidas
+      </button>
+      <button type="button" class="tab-btn" [class.active]="activeTab === 'em-dia'" (click)="onTabChange('em-dia')">
+        Em Dia
+      </button>
+    </div>
+  </div>
+
+  <!-- Erro -->
+  <div *ngIf="errorMessage && !isLoading" class="error-card">
+    <div class="error-icon">
+      <mat-icon>cloud_off</mat-icon>
+    </div>
+    <div class="error-body">
+      <h3>Erro ao carregar</h3>
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="btn-retry" (click)="loadMembers()">
+        <mat-icon>refresh</mat-icon>
+        Tentar Novamente
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-card">
+    <mat-spinner diameter="44"></mat-spinner>
+    <p>A carregar membros...</p>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-card" *ngIf="!isLoading && !errorMessage">
+    <div class="table-card-header">
+      <div class="table-title">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Lista de Membros</span>
+      </div>
+      <span class="table-count">{{ filteredMembers.length }} registo{{ filteredMembers.length === 1 ? '' : 's' }}</span>
+    </div>
+
+    <div class="table-scroll">
+      <table class="members-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Contacto</th>
+            <th>Situação Financeira</th>
+            <th>Dívida</th>
+            <th>Último Pagamento</th>
+            <th class="col-actions">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of filteredMembers" class="member-row">
+            <td class="name-cell">
+              <div class="name-avatar">{{ m.nome.charAt(0) }}</div>
+              <span>{{ m.nome }}</span>
+            </td>
+            <td>
+              <div class="contact-cell">
+                <span *ngIf="m.celular" class="contact-line">
+                  <mat-icon>phone</mat-icon>{{ m.celular }}
+                </span>
+                <span *ngIf="m.email" class="contact-line email">
+                  <mat-icon>email</mat-icon>{{ m.email }}
+                </span>
+              </div>
+            </td>
+            <td>
+              <span class="situacao-badge" [ngClass]="getSituacaoClass(m.situacaoFinanceira)">
+                <mat-icon>{{ m.situacaoFinanceira === 'COM_DIVIDAS' ? 'cancel' : 'check_circle' }}</mat-icon>
+                {{ getSituacaoLabel(m.situacaoFinanceira) }}
+              </span>
+            </td>
+            <td>
+              <span *ngIf="m.situacaoFinanceira === 'COM_DIVIDAS'" class="divida-value">
+                {{ formatCurrency(m.valorEmDivida) }}
+                <small>({{ m.mesesEmDivida }} {{ m.mesesEmDivida === 1 ? 'mês' : 'meses' }})</small>
+              </span>
+              <span *ngIf="m.situacaoFinanceira === 'EM_DIA'" class="em-dia-text">—</span>
+            </td>
+            <td class="date-cell">{{ m.ultimoMesPago || '—' }}</td>
+            <td class="col-actions">
+              <button type="button" class="btn-action" (click)="viewStatement(m)" title="Ver extrato">
+                <mat-icon>receipt_long</mat-icon>
+                Extrato
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredMembers.length === 0">
+            <td colspan="6">
+              <div class="empty-state">
+                <mat-icon>people_outline</mat-icon>
+                <h3>Nenhum membro encontrado</h3>
+                <p *ngIf="activeTab !== 'todos'">Nenhum membro com esta situação.</p>
+                <p *ngIf="activeTab === 'todos'">Não há membros aprovados com registo de cotas.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Extrato -->
+  <div class="modal-overlay" *ngIf="showStatementModal" (click)="closeStatementModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">
+          <mat-icon>receipt_long</mat-icon>
+          <h2>Extrato de Pagamentos</h2>
+        </div>
+        <button type="button" class="btn-close" (click)="closeStatementModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="selectedMemberForStatement">
+        <div class="member-info-bar">
+          <div class="member-avatar">{{ selectedMemberForStatement.nome.charAt(0) }}</div>
+          <div class="member-details">
+            <strong>{{ selectedMemberForStatement.nome }}</strong>
+            <span *ngIf="selectedMemberForStatement.email">{{ selectedMemberForStatement.email }}</span>
+            <span *ngIf="selectedMemberForStatement.celular">{{ selectedMemberForStatement.celular }}</span>
+          </div>
+        </div>
+        <div *ngIf="statementLoading" class="statement-loading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>A carregar extrato...</p>
+        </div>
+        <div *ngIf="!statementLoading && statementPayments.length === 0" class="no-statement">
+          <mat-icon>info</mat-icon>
+          <p>Nenhum pagamento registado.</p>
+        </div>
+        <div *ngIf="!statementLoading && statementPayments.length > 0" class="statement-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Ano</th>
+                <th>Mês</th>
+                <th>Valor</th>
+                <th>Data Pagamento</th>
+                <th>Método</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of statementPayments">
+                <td>{{ p.year }}</td>
+                <td>{{ getMonthName(p.month) }}</td>
+                <td class="amount-cell">{{ formatCurrency(p.amount) }}</td>
+                <td>{{ p.paymentDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ p.paymentMethod || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

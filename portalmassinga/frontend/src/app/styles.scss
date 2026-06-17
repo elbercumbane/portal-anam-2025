@@ -99,8 +99,8 @@ body {
   padding: 0;
 }
 
-/* Remover limites invisíveis */
-main, .page, .content, .mat-drawer-content, .mat-sidenav-content {
+/* Remover limites invisíveis (excluir mat-sidenav-content: width 100% corta conteúdo com sidebar aberta) */
+main, .page, .content {
   width: 100%;
   max-width: none;
 }

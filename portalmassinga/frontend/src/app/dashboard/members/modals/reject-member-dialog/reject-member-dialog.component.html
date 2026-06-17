@@ -1,0 +1,24 @@
+<div class="reject-dialog">
+  <div class="dialog-header">
+    <mat-icon class="header-icon warn">cancel</mat-icon>
+    <h2>Confirmar Rejeição</h2>
+    <p>Tem certeza que deseja rejeitar esta candidatura?</p>
+  </div>
+  <div class="dialog-body">
+    <div class="member-info">
+      <p><strong>Nome:</strong> {{ data.memberName }}</p>
+      <p><strong>Email:</strong> {{ data.memberEmail }}</p>
+    </div>
+    <mat-form-field appearance="outline" class="observations-field">
+      <mat-label>Observações (opcional)</mat-label>
+      <textarea matInput [(ngModel)]="observacoes" rows="3" placeholder="Digite as observações para a rejeição..."></textarea>
+    </mat-form-field>
+  </div>
+  <div class="dialog-actions">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-flat-button color="warn" (click)="onConfirm()">
+      <mat-icon>close</mat-icon>
+      Confirmar Rejeição
+    </button>
+  </div>
+</div>

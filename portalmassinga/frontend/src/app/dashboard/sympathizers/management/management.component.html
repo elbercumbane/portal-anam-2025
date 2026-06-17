@@ -1,0 +1,131 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Gestão de Simpatizantes</h1>
+    <p>Registos de "Torne-se Simpatizante" (simpatizantes)</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <div class="stat-content">
+        <h3>{{ sympathizers.length }}</h3>
+        <p>Total de Registos</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar por nome, email, telefone ou área de interesse..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()">
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <mat-icon>error</mat-icon>
+    <div class="error-content">
+      <h3>Erro ao carregar simpatizantes</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadSympathizers()">
+        <mat-icon>refresh</mat-icon>
+        Tentar Novamente
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>A carregar registos...</p>
+  </div>
+
+  <div class="table-container" *ngIf="!isLoading && !errorMessage">
+    <table class="sympathizers-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Telefone</th>
+          <th>Área de Interesse</th>
+          <th>Comunicações</th>
+          <th>Data Registo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of filteredSympathizers" class="sympathizer-row">
+          <td class="name-cell">{{ s.fullName }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.phone || '-' }}</td>
+          <td>{{ s.areaInterest || 'Geral' }}</td>
+          <td>
+            <span class="badge" [class.badge-yes]="s.acceptCommunications" [class.badge-no]="!s.acceptCommunications">
+              {{ s.acceptCommunications ? 'Sim' : 'Não' }}
+            </span>
+          </td>
+          <td>{{ s.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td class="actions-cell">
+            <button class="btn-action btn-view" (click)="viewDetails(s)" title="Ver Detalhes">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredSympathizers.length === 0 && !isLoading && !errorMessage">
+          <td colspan="7" class="no-data">
+            <div class="empty-state">
+              <mat-icon>favorite</mat-icon>
+              <h3>Nenhum registo de simpatizante</h3>
+              <p>Os registos submetidos em <strong>Torne-se Simpatizante</strong> aparecerão aqui.</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal detalhes -->
+  <div class="modal-overlay" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="selectedSympathizer">
+      <div class="modal-header">
+        <h2>Detalhes do Registo de Simpatizante</h2>
+        <button class="btn-close" (click)="closeDetailsModal()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-row">
+          <label>Nome:</label>
+          <p>{{ selectedSympathizer.fullName }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Email:</label>
+          <p>{{ selectedSympathizer.email }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Telefone:</label>
+          <p>{{ selectedSympathizer.phone || '-' }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Área de Interesse:</label>
+          <p>{{ selectedSympathizer.areaInterest || 'Geral' }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Aceita comunicações:</label>
+          <p>{{ selectedSympathizer.acceptCommunications ? 'Sim' : 'Não' }}</p>
+        </div>
+        <div class="detail-row">
+          <label>Data de Registo:</label>
+          <p>{{ selectedSympathizer.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeDetailsModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>

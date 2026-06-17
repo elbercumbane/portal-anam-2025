@@ -1,214 +1,222 @@
 package com.anam.controller;
 
-import com.anam.entity.Membro;
+import com.anam.entity.MemberApplication;
 import com.anam.entity.User;
-import com.anam.repository.MembroRepository;
+import com.anam.repository.MemberApplicationRepository;
+import com.anam.repository.QuotaPaymentRepository;
 import com.anam.repository.UserRepository;
-import com.anam.service.QuotaService;
-import com.anam.service.SmsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final BigDecimal VALOR_COTA_MENSAL = new BigDecimal("1200");
+    private static final Map<String, UUID> tokenToUserId = new ConcurrentHashMap<>();
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private MembroRepository membroRepository;
+    private MemberApplicationRepository memberRepository;
 
     @Autowired
-    private QuotaService quotaService;
+    private QuotaPaymentRepository quotaPaymentRepository;
 
     @Autowired
-    private SmsService smsService;
+    private PasswordEncoder passwordEncoder;
 
     /**
-     * Login endpoint
-     * POST /api/auth/login
+     * Login: email + senha
+     * Retorna token (UUID simples) e dados do utilizador.
+     * Para membros: verifica cotas em falta e bloqueia se tiver dívidas (excepto admin).
+     * Para admin: alerta sobre cotas mas permite acesso.
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
+        String emailOrNuit = body != null ? (body.get("emailOrNuit") != null ? body.get("emailOrNuit") : body.get("email")) : null;
+        String password = body != null ? body.get("password") : null;
 
-        // Validação básica
-        if (email == null || password == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("success", false, "message", "Email e senha são obrigatórios"));
+        if (emailOrNuit == null || emailOrNuit.isBlank() || password == null || password.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Email/NUIT e senha são obrigatórios"
+            ));
         }
 
-        // Contas de teste para desenvolvimento
-        Map<String, Map<String, Object>> contasTeste = new HashMap<>();
-        
-        // Conta 1: Guilherme
-        Map<String, Object> guilherme = new HashMap<>();
-        guilherme.put("email", "guilherme@gmail.com");
-        guilherme.put("nome", "Guilherme Silva");
-        guilherme.put("role", "membro");
-        guilherme.put("memberId", null);
-        contasTeste.put("guilherme@gmail.com", guilherme);
-
-        // Conta 2: Elber
-        Map<String, Object> elber = new HashMap<>();
-        elber.put("email", "elber@gmail.com");
-        elber.put("nome", "Elber Cumbane");
-        elber.put("role", "membro");
-        elber.put("memberId", null);
-        contasTeste.put("elber@gmail.com", elber);
-
-        // Conta 3: Marta
-        Map<String, Object> marta = new HashMap<>();
-        marta.put("email", "martasozinh@gmail.com");
-        marta.put("nome", "Marta Fabiano dos Anjos Sozinho");
-        marta.put("role", "membro");
-        marta.put("memberId", null);
-        contasTeste.put("martasozinh@gmail.com", marta);
-
-        // Conta Admin para dashboard
-        Map<String, Object> admin = new HashMap<>();
-        admin.put("email", "admin@anam.com");
-        admin.put("nome", "Administrador");
-        admin.put("role", "admin");
-        admin.put("memberId", null);
-        contasTeste.put("admin@anam.com", admin);
-
-        // Verificar credenciais
-        String emailLower = email.toLowerCase().trim();
-        
-        // Primeiro, verificar contas de teste (para desenvolvimento)
-        if (contasTeste.containsKey(emailLower) && "123456".equals(password)) {
-            Map<String, Object> user = contasTeste.get(emailLower);
-            
-            // Gerar token simples (em produção, usar JWT)
-            String token = "token_" + System.currentTimeMillis() + "_" + emailLower.hashCode();
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("token", token);
-            response.put("user", user);
-            response.put("message", "Login realizado com sucesso");
-            
-            return ResponseEntity.ok(response);
+        String input = emailOrNuit.trim();
+        Optional<User> optUser;
+        if (input.matches("\\d+")) {
+            // NUIT: apenas dígitos - buscar membro por NUIT e obter User associado
+            optUser = memberRepository.findByNuitIgnoreCase(input)
+                    .filter(m -> "Approved".equals(m.getStatus()))
+                    .flatMap(m -> userRepository.findByMemberApplicationId(m.getId()));
+        } else {
+            // Email
+            optUser = userRepository.findByEmailIgnoreCase(input);
         }
-        
-        // Verificar usuário no banco de dados
-        Optional<User> userOpt = userRepository.findByEmail(emailLower);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            
-            // Verificar senha (em produção, usar BCrypt)
-            if (!user.getSenha().equals(password)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("success", false, "message", "Email ou senha inválidos"));
-            }
-            
-            // Verificar se usuário está ativo
-            if (!user.getAtivo()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(Map.of("success", false, "message", "Conta desativada. Entre em contato com o administrador."));
-            }
-            
-            // Verificar se membro está aprovado
-            Optional<Membro> membroOpt = membroRepository.findById(user.getMembroId());
-            if (membroOpt.isPresent()) {
-                Membro membro = membroOpt.get();
-                
-                if (!"Aprovado".equals(membro.getStatus())) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(Map.of("success", false, "message", "Sua candidatura ainda não foi aprovada. Aguarde a aprovação."));
-                }
-                
-                // Verificar cotas vencidas
-                boolean temAcesso = quotaService.membroTemAcesso(user.getMembroId());
-                if (!temAcesso) {
-                    // Enviar SMS de bloqueio (opcional - pode ser enviado apenas uma vez por dia)
-                    try {
-                        smsService.sendQuotaBlockedSms(membro.getCelular(), membro.getNomeCompleto());
-                        logger.info("SMS de bloqueio enviado para: {}", membro.getCelular());
-                    } catch (Exception e) {
-                        logger.error("Erro ao enviar SMS de bloqueio: {}", e.getMessage());
-                    }
-                    
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(Map.of(
-                                "success", false, 
-                                "message", "Acesso bloqueado devido ao não pagamento de cotas. Por favor, efetue o pagamento para reativar seu acesso.",
-                                "blocked", true
-                            ));
-                }
-            }
-            
-            // Atualizar último login
-            user.setLastLogin(java.time.LocalDateTime.now());
-            userRepository.save(user);
-            
-            // Buscar dados do membro
-            Optional<Membro> membroOpt2 = membroRepository.findById(user.getMembroId());
-            String nome = membroOpt2.map(Membro::getNomeCompleto).orElse("Membro");
-            
-            // Gerar token
-            String token = "token_" + System.currentTimeMillis() + "_" + emailLower.hashCode();
-            
-            Map<String, Object> userResponse = new HashMap<>();
-            userResponse.put("email", user.getEmail());
-            userResponse.put("nome", nome);
-            userResponse.put("role", user.getRole());
-            userResponse.put("memberId", user.getMembroId().toString());
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("token", token);
-            response.put("user", userResponse);
-            response.put("message", "Login realizado com sucesso");
-            
-            return ResponseEntity.ok(response);
+        if (optUser.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Email ou senha incorretos"
+            ));
         }
-        
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("success", false, "message", "Email ou senha inválidos"));
+
+        User user = optUser.get();
+        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "Email ou senha incorretos"
+            ));
+        }
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", user.getEmail());
+        userData.put("nome", user.getFullName());
+        userData.put("full_name", user.getFullName());
+        userData.put("role", user.getRole());
+        userData.put("memberId", user.getMemberApplicationId() != null ? user.getMemberApplicationId().toString() : null);
+        userData.put("member_id", user.getMemberApplicationId() != null ? user.getMemberApplicationId().toString() : null);
+        userData.put("mustChangePassword", user.isMustChangePassword());
+
+        // Verificar cotas em falta (apenas para membros, ou admin que também é membro)
+        boolean isAdmin = "admin".equalsIgnoreCase(user.getRole()) || "super-admin".equalsIgnoreCase(user.getRole());
+        Map<String, Object> cotasEmFalta = null;
+
+        if (user.getMemberApplicationId() != null) {
+            cotasEmFalta = checkCotasEmFalta(user.getMemberApplicationId());
+        }
+
+        if (cotasEmFalta != null && !cotasEmFalta.isEmpty()) {
+            userData.put("cotasEmFalta", cotasEmFalta);
+            // Membro com dívidas: bloquear login (retorna 200 mas success=false para o frontend mostrar modal)
+            if (!isAdmin) {
+                return ResponseEntity.ok(Map.of(
+                        "success", false,
+                        "message", "Tem cotas em atraso. Pague para aceder à área de membros.",
+                        "user", userData
+                ));
+            }
+            // Admin com dívidas: permitir mas informar
+        }
+
+        String token = UUID.randomUUID().toString();
+        tokenToUserId.put(token, user.getId());
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "token", token,
+                "user", userData
+        ));
     }
 
     /**
-     * Get current user
-     * GET /api/auth/me
+     * Alterar senha (obrigatório no primeiro login).
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestHeader(value = "Authorization", required = false) String authHeader,
+                                            @RequestBody Map<String, String> body) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Token inválido ou em falta"));
+        }
+        String token = authHeader.substring(7).trim();
+        UUID userId = tokenToUserId.get(token);
+        if (userId == null) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Token expirado ou inválido"));
+        }
+        String newPassword = body != null ? body.get("newPassword") : null;
+        if (newPassword == null || newPassword.trim().length() < 6) {
+            return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Nova senha deve ter no mínimo 6 caracteres"));
+        }
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setPasswordHash(passwordEncoder.encode(newPassword.trim()));
+                    user.setMustChangePassword(false);
+                    userRepository.save(user);
+                    return ResponseEntity.ok(Map.of("success", true, "message", "Senha alterada com sucesso"));
+                })
+                .orElse(ResponseEntity.status(401).body(Map.of("success", false, "message", "Utilizador não encontrado")));
+    }
+
+    /**
+     * Valida token e retorna dados do utilizador.
      */
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        // Em produção, validar o token JWT aqui
-        // Por enquanto, retornar sucesso se houver token
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Token válido");
-            
-            // Tentar extrair email do token (mockado)
-            String token = authHeader.substring(7);
-            if (token.contains("admin")) {
-                Map<String, Object> user = new HashMap<>();
-                user.put("email", "admin@anam.com");
-                user.put("nome", "Administrador");
-                user.put("role", "admin");
-                response.put("user", user);
-            }
-            
-            return ResponseEntity.ok(response);
+    public ResponseEntity<?> me(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of(
+                    "success", false,
+                    "message", "Token inválido ou em falta"
+            ));
         }
-        
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("success", false, "message", "Token não fornecido"));
+        String token = authHeader.substring(7).trim();
+        UUID userId = tokenToUserId.get(token);
+        if (userId == null) {
+            return ResponseEntity.status(401).body(Map.of(
+                    "success", false,
+                    "message", "Token expirado ou inválido"
+            ));
+        }
+        return userRepository.findById(userId)
+                .map(user -> {
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("email", user.getEmail());
+                    userData.put("nome", user.getFullName());
+                    userData.put("full_name", user.getFullName());
+                    userData.put("role", user.getRole());
+                    userData.put("memberId", user.getMemberApplicationId() != null ? user.getMemberApplicationId().toString() : null);
+                    userData.put("member_id", user.getMemberApplicationId() != null ? user.getMemberApplicationId().toString() : null);
+                    userData.put("mustChangePassword", user.isMustChangePassword());
+                    return ResponseEntity.ok(Map.of("success", true, "user", userData));
+                })
+                .orElse(ResponseEntity.status(401).body(Map.of("success", false, "message", "Utilizador não encontrado")));
+    }
+
+    private Map<String, Object> checkCotasEmFalta(UUID memberApplicationId) {
+        Optional<MemberApplication> optApp = memberRepository.findById(memberApplicationId);
+        if (optApp.isEmpty()) return null;
+        MemberApplication m = optApp.get();
+        if (!"Approved".equals(m.getStatus())) return null;
+
+        LocalDateTime approvedAt = m.getApprovedAt();
+        LocalDateTime refDate = approvedAt != null ? approvedAt : m.getCreatedAt();
+        int startYear = refDate.getYear();
+        int startMonth = refDate.getMonthValue();
+
+        List<com.anam.entity.QuotaPayment> payments = quotaPaymentRepository.findByMemberApplicationIdOrderByYearDescMonthDesc(memberApplicationId);
+        Set<YearMonth> paidMonths = new HashSet<>();
+        for (com.anam.entity.QuotaPayment p : payments) {
+            if ("Paid".equalsIgnoreCase(p.getStatus())) {
+                paidMonths.add(YearMonth.of(p.getYear(), p.getMonth()));
+            }
+        }
+
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+        int mesesEmDivida = 0;
+        YearMonth current = YearMonth.of(currentYear, currentMonth);
+        YearMonth start = YearMonth.of(startYear, startMonth);
+        for (YearMonth ym = start; !ym.isAfter(current); ym = ym.plusMonths(1)) {
+            if (!paidMonths.contains(ym)) mesesEmDivida++;
+        }
+
+        if (mesesEmDivida <= 0) return null;
+
+        BigDecimal valorTotal = VALOR_COTA_MENSAL.multiply(BigDecimal.valueOf(mesesEmDivida));
+        return Map.of(
+                "meses", mesesEmDivida,
+                "dataVencimento", String.format("%d-%02d-01", currentYear, currentMonth),
+                "valorTotal", valorTotal
+        );
     }
 }

@@ -12,6 +12,13 @@ interface OrgNode {
   children?: OrgNode[];
 }
 
+interface MensagemMembro {
+  nome: string;
+  cargo: string;
+  texto: string;
+  foto?: string;
+}
+
 @Component({
   selector: 'app-org-chart',
   standalone: false,
@@ -20,6 +27,35 @@ interface OrgNode {
 })
 export class OrgChartComponent implements OnInit, OnDestroy {
   activeNode: string | null = null;
+
+  mensagensMembros: MensagemMembro[] = [
+    {
+      nome: 'Gilberto Matsenguane',
+      cargo: 'Membro do Conselho',
+      texto: 'Como membro do conselho da ANAM, trabalho para que a nossa estrutura reflita o compromisso com Massinga. Acreditamos numa gestão transparente e orientada ao impacto na comunidade.',
+      foto: '/assets/FOTO1%20ANAM.jpeg'
+    },
+    {
+      nome: 'Carlos Muchanga',
+      cargo: 'Membro do Conselho',
+      texto: 'A ANAM deu-me as ferramentas para organizar o meu negócio. No conselho, contribuímos para que a associação continue a apoiar os empreendedores de Massinga.',
+      foto: '/assets/FOTO%203%20ANAM.jpeg'
+    },
+    {
+      nome: 'António Machel',
+      cargo: 'Membro do Conselho',
+      texto: 'Ser membro do conselho da ANAM significa fazer parte de um projecto colectivo. Temos mentoria, eventos e uma comunidade que acredita no desenvolvimento do nosso distrito.',
+      foto: '/assets/FOTO%204%20ANAM.jpeg'
+    },
+    {
+      nome: 'João Pedro',
+      cargo: 'Membro do Conselho',
+      texto: 'A ANAM valoriza o que fazemos aqui. No conselho, procuramos que as oportunidades de networking e os programas de capacitação cheguem a todos.',
+      foto: '/assets/slider/slide2.jpg'
+    }
+  ];
+
+  private readonly imageFallback = '/assets/anam-logo.png';
   
   // Estrutura organizacional
   orgStructure: OrgNode = {
@@ -109,10 +145,6 @@ export class OrgChartComponent implements OnInit, OnDestroy {
     this.initializeAnimations();
   }
 
-  voltar(): void {
-    this.router.navigate(['/']);
-  }
-
   ngOnDestroy(): void {
     // Limpeza se necessário
   }
@@ -157,5 +189,13 @@ export class OrgChartComponent implements OnInit, OnDestroy {
    */
   contactMember(email: string): void {
     window.location.href = `mailto:${email}`;
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (!img.dataset['fallback']) {
+      img.dataset['fallback'] = 'true';
+      img.src = this.imageFallback;
+    }
   }
 }

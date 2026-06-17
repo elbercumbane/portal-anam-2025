@@ -39,7 +39,7 @@ export class ShellComponent {
   
   navItems = [
     { label: 'Início', path: '' },
-    { label: 'Historial', path: '', fragment: 'historial' },
+    { label: 'Sobre Nós', path: 'sobre-nos', fragment: '' },
     { label: 'Eventos', path: 'eventos' },
     { label: 'Serviços', path: 'servicos' },
     { label: 'Documentação', path: 'documentacao' },
@@ -57,9 +57,8 @@ export class ShellComponent {
   }
   
   scrollToSection(sectionId: string) {
-    if (sectionId === 'historial') {
-      // Navegar para a home e depois fazer scroll para a seção
-      window.location.href = '/#historial';
+    if (sectionId === 'sobre-nos') {
+      window.location.href = '/sobre-nos';
     }
   }
 }

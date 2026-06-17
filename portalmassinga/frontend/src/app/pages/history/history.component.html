@@ -1,12 +1,11 @@
-<!-- Hero Editorial -->
+<!-- Hero Sobre Nós -->
 <section class="historial-hero">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <span class="hero-edition">Edição Especial</span>
     <h1 class="hero-title">
-      Nossa <span class="highlight">História</span>
+      Sobre <span class="highlight">Nós</span>
     </h1>
-    <p class="hero-subtitle">27 Anos de Transformação e Impacto Social</p>
+    <p class="hero-subtitle">A ANAM em Massinga — quem somos e o impacto que geramos no distrito</p>
     <div class="hero-meta">
       <span class="meta-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -15,7 +14,7 @@
           <line x1="8" y1="2" x2="8" y2="6"></line>
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        1998 - 2025
+        2022 - 2026
       </span>
       <span class="meta-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -34,7 +33,7 @@
   </div>
 </section>
 
-<!-- Introdução Editorial -->
+<!-- Introdução resumida -->
 <section class="intro-section">
   <div class="container">
     <div class="intro-content">
@@ -44,118 +43,84 @@
       </h2>
       <div class="intro-text">
         <p class="dropcap">
-          Em 1998, um grupo de naturais e amigos de Massinga reuniu-se com um sonho comum: criar uma 
-          associação que pudesse catalisar o desenvolvimento social, cultural e económico da região. 
-          O que começou como uma pequena iniciativa de 15 membros fundadores, transformou-se numa 
-          organização robusta que hoje impacta milhares de vidas.
-        </p>
-        <p>
-          Ao longo de mais de duas décadas, a ANAM tem sido protagonista em inúmeras iniciativas que 
-          moldaram positivamente a comunidade de Massinga. Desde programas de alfabetização até projetos 
-          de desenvolvimento sustentável, cada capítulo da nossa história é marcado por dedicação, união 
-          e resultados concretos.
+          Em 2022, a ANAM consolidou a sua presença em Massinga para catalisar o desenvolvimento social, cultural e económico da região. 
+          De um núcleo dedicado de associados, crescemos para uma organização que em 2026 impacta milhares de vidas através de programas de formação, 
+          apoio ao empreendedorismo e iniciativas comunitárias no distrito de Massinga.
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Timeline Editorial -->
-<section class="timeline-section">
+<!-- Marcos Históricos – logo abaixo da introdução -->
+<section class="timeline-section timeline-tree-section">
   <div class="container">
     <div class="timeline-header">
       <h2 class="section-title">Marcos <span class="highlight">Históricos</span></h2>
       <p class="section-subtitle">Uma jornada de conquistas e transformações</p>
     </div>
-    
-    <div class="timeline-magazine">
-      <article class="milestone-article" *ngFor="let milestone of milestones; let i = index" 
-               [class.reverse]="i % 2 !== 0"
-               [attr.data-index]="i">
-        
-        <!-- Imagem da matéria -->
-        <div class="article-image">
-          <img [src]="milestone.imagem" [alt]="milestone.titulo">
-          <div class="image-overlay">
-            <span class="categoria-tag">{{ milestone.categoria }}</span>
-          </div>
-          <div class="ano-badge">{{ milestone.ano }}</div>
-        </div>
-        
-        <!-- Conteúdo da matéria -->
-        <div class="article-content">
-          <div class="content-wrapper">
-            <span class="article-year">{{ milestone.ano }}</span>
-            <h3 class="article-title">{{ milestone.titulo }}</h3>
-            <div class="article-meta">
-              <span class="meta-tag">{{ milestone.categoria }}</span>
-              <span class="meta-divider">•</span>
-              <span class="meta-reading">3 min leitura</span>
-            </div>
-            <p class="article-text">{{ milestone.descricao }}</p>
-            
-            <!-- Quote decorativo -->
-            <div class="article-quote" *ngIf="i === 0 || i === 3">
-              <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
-              </svg>
-              <p>"Um marco que mudou para sempre a nossa comunidade"</p>
-            </div>
-          </div>
+    <div class="tree-grid">
+      <article class="tree-fruto" *ngFor="let milestone of milestones; let i = index" [attr.data-index]="i" [style.--fruto-color]="getMilestoneColor(milestone.ano)">
+        <span class="fruto-connector fruto-connector-right" *ngIf="i === 0 || i === 1 || i === 3"></span>
+        <span class="fruto-connector fruto-connector-down" *ngIf="i === 3"></span>
+        <span class="fruto-connector fruto-connector-2024-to-2025" *ngIf="i === 2"></span>
+        <div class="fruto-node">
+          <span class="fruto-ano">{{ milestone.ano }}</span>
+          <h3 class="fruto-titulo">{{ milestone.titulo }}</h3>
+          <span class="fruto-categoria">{{ milestone.categoria }}</span>
+          <p class="fruto-descricao">{{ milestone.descricao }}</p>
         </div>
       </article>
     </div>
   </div>
 </section>
 
-<!-- Galeria Estilo Revista -->
-<section class="magazine-gallery">
+<!-- Impacto em Números -->
+<section class="impacto-section">
   <div class="container">
-    <div class="gallery-header">
-      <h2 class="section-title">Memórias em <span class="highlight">Imagens</span></h2>
-      <p class="section-subtitle">Momentos que definem quem somos</p>
+    <div class="section-header">
+      <h2 class="section-title">Impacto Gerado em <span class="highlight">Massinga</span></h2>
+      <p class="section-subtitle">Resultados concretos (2022–2024)</p>
     </div>
-    
-    <div class="photo-essay">
-      <div class="essay-large">
-        <img src="/assets/slider/slide1.jpg" alt="Momentos Históricos">
-        <div class="essay-caption">
-          <h4>Construindo o Futuro</h4>
-          <p>Membros fundadores na primeira assembleia geral, 1998</p>
-        </div>
-      </div>
-      
-      <div class="essay-grid">
-        <div class="essay-small">
-          <img src="/assets/slider/slide2.jpg" alt="Evento Comunitário">
-          <div class="essay-caption">
-            <p>Celebração comunitária, 2005</p>
-          </div>
-        </div>
-        <div class="essay-small">
-          <img src="/assets/slider/slide3.jpg" alt="Projeto Social">
-          <div class="essay-caption">
-            <p>Projeto de desenvolvimento, 2010</p>
-          </div>
-        </div>
-        <div class="essay-small">
-          <img src="/assets/slider/slide1.jpg" alt="Formação">
-          <div class="essay-caption">
-            <p>Centro de formação, 2015</p>
-          </div>
-        </div>
-        <div class="essay-small">
-          <img src="/assets/slider/slide2.jpg" alt="Eventos">
-          <div class="essay-caption">
-            <p>Assembleia geral, 2020</p>
-          </div>
-        </div>
+    <div class="impacto-grid">
+      <div class="impacto-card" *ngFor="let indicador of indicadores; let i = index" [attr.data-index]="i">
+        <span class="impacto-valor">{{ indicador.valor }}</span>
+        <span class="impacto-descricao">{{ indicador.descricao }}</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Testemunhos Estilo Editorial -->
+<!-- O que dizem os empreendedores -->
+<section class="depoimentos-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">O Que Dizem os <span class="highlight">Nossos Empreendedores</span></h2>
+      <p class="section-subtitle">Histórias reais de transformação e crescimento</p>
+      <p class="section-intro">
+        Jovens, comerciantes e agricultores de Massinga partilham o impacto da formação, mentoria e rede da ANAM no seu dia a dia e nos seus negócios.
+      </p>
+    </div>
+    <div class="depoimentos-grid">
+      <article class="depoimento-card" *ngFor="let depoimento of depoimentos; let i = index" [attr.data-index]="i">
+        <div class="depoimento-header">
+          <div class="depoimento-avatar"><span>{{ depoimento.nome.charAt(0) }}</span></div>
+          <div class="depoimento-info">
+            <h3 class="depoimento-nome">{{ depoimento.nome }}</h3>
+            <p class="depoimento-cargo">{{ depoimento.cargo }}</p>
+            <p class="depoimento-negocio">{{ depoimento.negocio }}</p>
+          </div>
+        </div>
+        <div class="depoimento-avaliacao">
+          <span *ngFor="let star of [1,2,3,4,5]" class="star" [class.active]="star <= depoimento.avaliacao">★</span>
+        </div>
+        <blockquote class="depoimento-texto">"{{ depoimento.texto }}"</blockquote>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Vozes da Comunidade -->
 <section class="testimonials-section" #testimonialSection>
   <div class="container">
     <div class="testimonials-header">

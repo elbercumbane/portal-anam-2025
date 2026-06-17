@@ -1,214 +1,189 @@
 @import 'variables';
 @import 'animations';
 
-// Timeline Estilo Revista - Compacta
+// Verde alinhado ao resto do portal
+$primary-green: #51B155;
+
+// Timeline – Árvore com frutos
 .timeline-section {
-  padding: 60px 0; // Reduzido de 120px
-  background: #ffffff; // Branco
+  padding: 80px 0 100px;
+  background: linear-gradient(180deg, #fafaf8 0%, #f5f3ef 50%, #fafaf8 100%);
+
+  &.timeline-tree-section {
+    padding: 70px 0 90px;
+  }
 }
 
 .timeline-header {
   text-align: center;
-  margin-bottom: 50px; // Reduzido de 80px
-  
+  margin-bottom: 56px;
+
   .section-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
     color: #1a1a1a;
-    margin: 0 0 16px;
-    
+    margin: 0 0 12px;
+
     .highlight {
-      color: #4CAF50; // Verde
+      color: $primary-green;
       font-style: italic;
     }
   }
-  
+
   .section-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: #666;
     margin: 0;
   }
 }
 
-.timeline-magazine {
-  max-width: 1200px;
+// —— Grid 3+3 (árvore com frutos) ——
+.tree-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 32px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-// Artigo Estilo Revista - Compacto
-.milestone-article {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px; // Reduzido de 60px
-  margin-bottom: 60px; // Reduzido de 120px
-  opacity: 0;
-  animation: fadeInUp 0.8s ease forwards;
-  
-  @for $i from 0 through 10 {
-    &[data-index="#{$i}"] {
-      animation-delay: #{$i * 0.2}s;
-    }
-  }
-  
-  &.reverse {
-    direction: rtl;
-    
-    .article-content {
-      direction: ltr;
-    }
-    
-    .article-image {
-      direction: ltr;
-    }
-  }
-  
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    margin-bottom: 80px;
-    
-    &.reverse {
-      direction: ltr;
-    }
-  }
-}
-
-.article-image {
+.tree-fruto {
   position: relative;
-  height: 350px; // Reduzido de 500px
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); // Reduzido
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s ease;
-  }
-  
-  .image-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
-    display: flex;
-    align-items: flex-end;
-    padding: 24px;
-    
-    .categoria-tag {
-      background: rgba(255, 255, 255, 0.95);
-      color: #1a1a1a;
-      padding: 8px 20px;
-      border-radius: 50px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-  }
-  
-  .ano-badge {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    background: #4CAF50; // Verde
-    color: white;
-    font-family: 'Playfair Display', serif;
-    font-size: 1.75rem; // Reduzido
-    font-weight: 900;
-    padding: 12px 20px; // Reduzido
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); // Reduzido
-  }
-  
-  &:hover img {
-    transform: scale(1.05);
-  }
-}
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
 
-.article-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  
-  .content-wrapper {
-    .article-year {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.5rem; // Reduzido de 5rem
-      font-weight: 900;
-      color: rgba(76, 175, 80, 0.1); // Verde
-      line-height: 1;
-      margin-bottom: -15px; // Reduzido
-      display: block;
-    }
-    
-    .article-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.5rem, 2.5vw, 2rem); // Reduzido
-      font-weight: 800;
-      color: #1a1a1a;
-      margin: 0 0 12px; // Reduzido
-      line-height: 1.3;
-    }
-    
-    .article-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px; // Reduzido
-      margin-bottom: 16px; // Reduzido
-      font-size: 0.8rem; // Reduzido
-      color: #666;
-      
-      .meta-tag {
-        background: rgba(76, 175, 80, 0.1); // Verde
-        color: #4CAF50; // Verde
-        padding: 4px 10px; // Reduzido
-        border-radius: 50px;
-        font-weight: 600;
-      }
-      
-      .meta-divider {
-        color: #ccc;
-      }
-      
-      .meta-reading {
-        font-weight: 500;
-      }
-    }
-    
-    .article-text {
-      font-size: 1rem; // Reduzido
-      line-height: 1.7; // Reduzido
-      color: #444;
-      margin: 0 0 24px; // Reduzido
-    }
-    
-    .article-quote {
-      border-left: 4px solid #4CAF50; // Verde
-      padding-left: 20px; // Reduzido
-      margin-top: 24px; // Reduzido
-      position: relative;
-      
-      .quote-icon {
-        position: absolute;
-        top: -8px;
-        left: -12px;
-        width: 28px; // Reduzido
-        height: 28px;
-        color: #4CAF50; // Verde
-        opacity: 0.3;
-      }
-      
-      p {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.125rem; // Reduzido
-        font-style: italic;
-        color: #4CAF50; // Verde
-        margin: 0;
-        line-height: 1.6;
-      }
+  @for $i from 0 through 12 {
+    &[data-index="#{$i}"] {
+      animation-delay: #{$i * 0.08}s;
     }
   }
 }
 
+// Ligações entre frutos (linhas)
+.fruto-connector {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.fruto-connector-right {
+  top: 50%;
+  left: 100%;
+  width: 32px;
+  height: 3px;
+  margin-top: -2px;
+  margin-left: -2px;
+  background: linear-gradient(90deg, var(--fruto-color, #51B155), rgba(81, 177, 85, 0.2));
+  border-radius: 2px;
+}
+
+.fruto-connector-down {
+  top: 100%;
+  left: 50%;
+  width: 3px;
+  height: 28px;
+  margin-left: -2px;
+  margin-top: -2px;
+  background: linear-gradient(180deg, var(--fruto-color, #51B155), rgba(81, 177, 85, 0.2));
+  border-radius: 2px;
+}
+
+// Linha diagonal de 2024 (index 2) para 2025 (index 3)
+.fruto-connector-2024-to-2025 {
+  top: 100%;
+  left: 50%;
+  width: 3px;
+  height: 140px;
+  margin-left: -2px;
+  margin-top: -2px;
+  transform-origin: top center;
+  transform: rotate(-58deg);
+  background: linear-gradient(180deg, var(--fruto-color, #51B155), rgba(81, 177, 85, 0.15));
+  border-radius: 2px;
+}
+
+.fruto-node {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  padding: 22px 24px;
+  background: #fff;
+  border: 2px solid var(--fruto-color, rgba(81, 177, 85, 0.5));
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--fruto-color, $primary-green);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .tree-fruto:hover & {
+    transform: scale(1.03);
+    border-color: var(--fruto-color, $primary-green);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.fruto-ano {
+  display: inline-block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--fruto-color, $primary-green);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.fruto-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.fruto-categoria {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--fruto-color, $primary-green);
+  margin-bottom: 10px;
+}
+
+.fruto-descricao {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #555;
+  margin: 0;
+}
+
+// Responsivo: 2 colunas em tablet, 1 em mobile
+@media (max-width: 900px) {
+  .tree-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .fruto-connector,
+  .fruto-connector-2024-to-2025 {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .tree-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

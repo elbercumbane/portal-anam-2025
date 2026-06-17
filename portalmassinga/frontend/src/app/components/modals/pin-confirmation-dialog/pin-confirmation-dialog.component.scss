@@ -1,157 +1,137 @@
+$accent: #0d9488;
+$accent-dark: #0f766e;
+
 .dialog-container {
-  min-width: 500px;
-  max-width: 600px;
+  min-width: 0;
+  max-width: 480px;
 }
 
 .dialog-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem;
-  border-bottom: 1px solid #e0e0e0;
-  
-  h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #211712;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, $accent-dark, $accent);
+  color: white;
+
+  .header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon { color: white; }
   }
-  
-  .close-button {
-    color: #6c5e58;
-  }
+
+  h2 { margin: 0 0 0.15rem; font-size: 1.1rem; font-weight: 700; }
+  p { margin: 0; font-size: 0.85rem; opacity: 0.9; }
+  .close-button { margin-left: auto; color: white; }
 }
 
-.dialog-body {
-  padding: 1.5rem;
-}
-
-.dialog-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  padding: 1.5rem;
-  border-top: 1px solid #e0e0e0;
-  
-  button {
-    min-width: 140px;
-    
-    mat-icon {
-      margin-right: 0.5rem;
-    }
-  }
-}
+.dialog-body { padding: 1.5rem; }
 
 .payment-notification {
   text-align: center;
-  padding: 2rem 1rem;
-  
-  .notification-icon {
+
+  .phone-visual {
     position: relative;
-    display: inline-block;
-    margin-bottom: 2rem;
-    
-    .phone-icon {
-      font-size: 4rem;
-      width: 4rem;
-      height: 4rem;
-      color: #8b785f;
+    display: inline-flex;
+    margin-bottom: 1.25rem;
+
+    mat-icon {
+      font-size: 3.5rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      color: $accent;
       position: relative;
-      z-index: 2;
+      z-index: 1;
     }
-    
-    .notification-pulse {
+
+    .pulse-ring {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 4rem;
-      height: 4rem;
+      inset: -12px;
       border-radius: 50%;
-      background: rgba(139, 120, 95, 0.3);
-      animation: pulse 2s infinite;
+      border: 2px solid rgba(13, 148, 136, 0.4);
+      animation: pulse 2s ease-out infinite;
     }
   }
-  
+
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: #211712;
-    margin: 0 0 1rem 0;
+    color: #0f172a;
+    margin: 0 0 0.5rem;
   }
-  
+
   p {
-    margin: 0.75rem 0;
-    color: #6c5e58;
-    font-size: 1rem;
-    
-    &.instruction {
-      font-weight: 600;
-      color: #8b785f;
-      margin-top: 1rem;
-    }
+    margin: 0.35rem 0;
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
-  
-  .processing-indicator {
-    margin-top: 2rem;
-    
-    .processing-text {
-      margin-top: 1rem;
-      font-weight: 600;
-      color: #8b785f;
-    }
+
+  .instruction {
+    font-weight: 600;
+    color: $accent-dark;
+    margin: 0.75rem 0 1.25rem;
   }
+}
+
+.progress-wrap {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 auto 0.5rem;
+  max-width: 280px;
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $accent, #14b8a6);
+    border-radius: 999px;
+    transition: width 0.2s linear;
+  }
+}
+
+.countdown {
+  font-size: 0.8rem !important;
+  color: #94a3b8 !important;
+  margin-bottom: 1rem !important;
+}
+
+.processing-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  background: #f0fdfa;
+  border-radius: 12px;
+  color: $accent-dark;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .payment-success {
   text-align: center;
-  padding: 2rem 1rem;
-  
+  padding: 1rem 0;
+
   .success-icon {
-    font-size: 5rem;
-    width: 5rem;
-    height: 5rem;
-    color: #4caf50;
-    margin-bottom: 1.5rem;
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #059669;
+    margin-bottom: 0.75rem;
   }
-  
-  h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #211712;
-    margin: 0 0 1rem 0;
-  }
-  
-  p {
-    color: #6c5e58;
-    font-size: 1rem;
-    margin: 0;
-  }
+
+  h3 { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem; }
+  p { color: #64748b; margin: 0; }
 }
 
 @keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(2);
-    opacity: 0;
-  }
+  0% { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
 }
-
-@media (max-width: 768px) {
-  .dialog-container {
-    min-width: 100%;
-    margin: 1rem;
-  }
-  
-  .dialog-actions {
-    flex-direction: column;
-    
-    button {
-      width: 100%;
-    }
-  }
-}
-

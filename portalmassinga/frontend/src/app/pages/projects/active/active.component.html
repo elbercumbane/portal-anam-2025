@@ -13,10 +13,24 @@
 
   <!-- Grid de Projectos -->
   <div class="projectos-showcase">
-    <article class="projecto-card" *ngFor="let projeto of projetos; let i = index" [attr.data-index]="i">
+    <article
+      class="projecto-card"
+      *ngFor="let projeto of projetos; let i = index"
+      [attr.data-index]="i"
+      [style.--card-primary]="projeto.theme.primary"
+      [style.--card-secondary]="projeto.theme.secondary"
+      [style.--card-accent]="projeto.theme.accent"
+      [style.--card-light]="projeto.theme.light"
+      [style.--card-dark]="projeto.theme.dark"
+      [style.--kpi-1]="projeto.theme.kpi1"
+      [style.--kpi-2]="projeto.theme.kpi2"
+      [style.--kpi-3]="projeto.theme.kpi3">
+      <div class="card-accent-bar"></div>
+
       <!-- Imagem/Visual do Projecto -->
       <div class="card-visual">
         <div class="visual-gradient"></div>
+        <span class="categoria-badge">{{ projeto.categoria }}</span>
         <div class="visual-icon">
           <svg *ngIf="i === 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21V11m14 10V11"/>
@@ -47,7 +61,8 @@
           <div class="progress-circle">
             <svg viewBox="0 0 100 100">
               <circle class="progress-bg" cx="50" cy="50" r="45"/>
-              <circle class="progress-bar" cx="50" cy="50" r="45" 
+              <circle class="progress-bar" cx="50" cy="50" r="45"
+                      [style.stroke]="projeto.theme.primary"
                       [style.stroke-dasharray]="(projeto.progresso || 0) * 2.83 + ', 283'"/>
             </svg>
             <div class="progress-value">
@@ -77,7 +92,7 @@
 
         <!-- KPIs em Destaque -->
         <div class="kpis-row" *ngIf="projeto.kpis">
-          <div class="kpi-item">
+          <div class="kpi-item kpi-item--1">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -89,7 +104,7 @@
             <span class="kpi-value">{{ projeto.kpis.beneficiarios }}</span>
             <span class="kpi-label">Beneficiários</span>
           </div>
-          <div class="kpi-item">
+          <div class="kpi-item kpi-item--2">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
@@ -100,7 +115,7 @@
             <span class="kpi-value">{{ projeto.kpis.parcerias }}</span>
             <span class="kpi-label">Parcerias</span>
           </div>
-          <div class="kpi-item">
+          <div class="kpi-item kpi-item--3">
             <div class="kpi-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -126,7 +141,7 @@
 
         <!-- Acções -->
         <div class="card-actions">
-          <a class="btn-outline" [href]="projeto.linkPlano" target="_blank">
+          <button type="button" class="btn-outline" (click)="abrirPlano(projeto, $event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
               <polyline points="14 2 14 8 20 8"/>
@@ -134,19 +149,72 @@
               <line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
             Ver Plano
-          </a>
-          <a class="btn-primary" [href]="projeto.linkDetalhes">
+          </button>
+          <button type="button" class="btn-primary" (click)="abrirDetalhes(projeto, $event)">
             Detalhes
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
             </svg>
-          </a>
+          </button>
         </div>
       </div>
 
       <!-- Decoração -->
       <div class="card-decoration"></div>
     </article>
+  </div>
+
+  <!-- Modal Plano / Detalhes -->
+  <div class="projeto-modal" *ngIf="projetoSelecionado && modalTipo" (click)="fecharModal()">
+    <div
+      class="modal-panel"
+      (click)="$event.stopPropagation()"
+      [style.--card-primary]="projetoSelecionado.theme.primary"
+      [style.--card-light]="projetoSelecionado.theme.light"
+      [style.--card-dark]="projetoSelecionado.theme.dark">
+      <button class="modal-close" (click)="fecharModal()" aria-label="Fechar">×</button>
+
+      <div class="modal-header">
+        <span class="modal-badge">{{ projetoSelecionado.status }}</span>
+        <h3>{{ projetoSelecionado.titulo }}</h3>
+        <p class="modal-meta">{{ projetoSelecionado.dataInicio }} – {{ projetoSelecionado.dataFim }} · {{ projetoSelecionado.orcamento }}</p>
+      </div>
+
+      <div class="modal-body" *ngIf="modalTipo === 'plano'">
+        <h4>Objectivo</h4>
+        <p>{{ projetoSelecionado.plano.objetivo }}</p>
+        <h4>Fases do projecto</h4>
+        <ol>
+          <li *ngFor="let fase of projetoSelecionado.plano.fases">{{ fase }}</li>
+        </ol>
+        <h4>Entregas previstas</h4>
+        <ul>
+          <li *ngFor="let entrega of projetoSelecionado.plano.entregas">{{ entrega }}</li>
+        </ul>
+      </div>
+
+      <div class="modal-body" *ngIf="modalTipo === 'detalhes'">
+        <p class="detalhes-texto">{{ projetoSelecionado.detalhes }}</p>
+        <div class="detalhes-stats">
+          <div class="stat">
+            <strong>{{ projetoSelecionado.progresso }}%</strong>
+            <span>Progresso</span>
+          </div>
+          <div class="stat" *ngIf="projetoSelecionado.kpis">
+            <strong>{{ projetoSelecionado.kpis.beneficiarios }}</strong>
+            <span>Beneficiários</span>
+          </div>
+          <div class="stat" *ngIf="projetoSelecionado.kpis">
+            <strong>{{ projetoSelecionado.kpis.parcerias }}</strong>
+            <span>Parcerias</span>
+          </div>
+        </div>
+        <div class="detalhes-parceiros">
+          <span>Parceiros:</span>
+          <span class="tag" *ngFor="let p of projetoSelecionado.parceiros">{{ p }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

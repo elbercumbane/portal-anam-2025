@@ -1,0 +1,260 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-top">
+      <div>
+        <h1>Gestão de Eventos</h1>
+        <p>Crie, edite e visualize eventos. Veja inscrições por tipo de participante. Eventos passados não podem ser editados.</p>
+      </div>
+      <button class="btn-new-event" (click)="openCreateModal()">
+        <mat-icon>add</mat-icon>
+        Novo evento
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total"><mat-icon>event</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ events.length }}</h3>
+        <p>Eventos</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon inscritos"><mat-icon>people</mat-icon></div>
+      <div class="stat-content">
+        <h3>{{ totalInscricoes }}</h3>
+        <p>Total de Inscrições</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-message">
+    <mat-icon>error</mat-icon>
+    <div class="error-content">
+      <h3>Erro ao carregar eventos</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadEvents()"><mat-icon>refresh</mat-icon> Tentar Novamente</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>A carregar eventos...</p>
+  </div>
+
+  <div class="events-grid" *ngIf="!isLoading && !errorMessage">
+    <div *ngFor="let e of events" class="event-card" [class.cancelled]="e.isCancelled">
+      <div class="event-card-image" [style.backgroundImage]="e.imageUrl ? 'url(' + e.imageUrl + ')' : 'none'">
+        <span class="badge-cancelled" *ngIf="e.isCancelled">Evento cancelado</span>
+      </div>
+      <div class="event-card-body">
+        <h3 class="event-title">{{ e.title }}</h3>
+        <p class="event-date">{{ dateDisplay(e) }}</p>
+        <p class="event-meta">{{ e.timeSlot }} · {{ e.location }}</p>
+        <p class="event-level">{{ getLevelAccessLabel(e.levelAccess) }}</p>
+        <div class="event-cancelled-msg" *ngIf="e.isCancelled && e.cancelledMessage">
+          <strong>Mensagem:</strong> {{ e.cancelledMessage }}
+        </div>
+        <div class="event-actions">
+          <button class="btn-view" (click)="openViewModal(e)" title="Ver participantes">
+            <mat-icon>visibility</mat-icon>
+            Ver ({{ e.registrationCount }})
+          </button>
+          <button class="btn-edit" *ngIf="e.canEdit" (click)="openEditModal(e)" title="Editar">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+          <button class="btn-cancel" *ngIf="e.canCancel" (click)="openCancelModal(e)" title="Cancelar evento">
+            <mat-icon>cancel</mat-icon>
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="events.length === 0" class="no-events">
+      <mat-icon>event</mat-icon>
+      <h3>Nenhum evento</h3>
+      <p>Crie um novo evento ou execute o script SQL da tabela <code>events</code> na base de dados.</p>
+    </div>
+  </div>
+
+  <!-- Modal Ver participantes -->
+  <div class="modal-overlay" *ngIf="showViewModal" (click)="closeViewModal()">
+    <div class="modal-content modal-view" (click)="$event.stopPropagation()" *ngIf="viewingEvent">
+      <div class="modal-header">
+        <h2>Participantes: {{ viewingEvent.title }}</h2>
+        <button class="btn-close" (click)="closeViewModal()"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="modal-body">
+        <div class="filter-row">
+          <label>Tipo de participante:</label>
+          <select [(ngModel)]="participantTypeFilter" (ngModelChange)="onParticipantTypeFilterChange()">
+            <option value="todos">Todos</option>
+            <option value="membro">Membro</option>
+            <option value="simpatizante">Simpatizante</option>
+            <option value="apoiante">Apoiante</option>
+            <option value="publico">Público Geral</option>
+          </select>
+        </div>
+        <table class="participants-table">
+          <thead>
+            <tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Tipo</th><th>Data inscrição</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of participants">
+              <td>{{ p.fullName }}</td>
+              <td>{{ p.email }}</td>
+              <td>{{ p.phone }}</td>
+              <td>{{ getParticipantTypeLabel(p.participantType) }}</td>
+              <td>{{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+            <tr *ngIf="participants.length === 0"><td colspan="5" class="no-data">Nenhum participante</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Editar -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="editingEvent">
+      <div class="modal-header">
+        <h2>Editar evento</h2>
+        <button class="btn-close" (click)="closeEditModal()"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="saveError" class="save-error">{{ saveError }}</div>
+        <div class="form-group">
+          <label>Imagem do card (URL)</label>
+          <input type="text" [(ngModel)]="editForm.imageUrl" placeholder="/assets/... ou URL">
+        </div>
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" [(ngModel)]="editForm.title" placeholder="Título do evento">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data início (ex.: 15 de Janeiro, 2024)</label>
+            <input type="text" [(ngModel)]="editForm.eventDateStart" placeholder="Data início">
+          </div>
+          <div class="form-group">
+            <label>Data fim (pode ser igual)</label>
+            <input type="text" [(ngModel)]="editForm.eventDateEnd" placeholder="Data fim">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data fim (para verificação de “evento passado”)</label>
+          <input type="date" [(ngModel)]="editForm.endDate" placeholder="YYYY-MM-DD">
+        </div>
+        <div class="form-group">
+          <label>Horário</label>
+          <input type="text" [(ngModel)]="editForm.timeSlot" placeholder="Ex: 09:00 - 16:00">
+        </div>
+        <div class="form-group">
+          <label>Local</label>
+          <input type="text" [(ngModel)]="editForm.location" placeholder="Local">
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea [(ngModel)]="editForm.description" rows="3" placeholder="Descrição"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Nível de acesso</label>
+          <select [(ngModel)]="editForm.levelAccess">
+            <option value="publico">Público</option>
+            <option value="membros">Membros</option>
+            <option value="simpatizantes">Simpatizantes</option>
+            <option value="apoiantes">Apoiantes</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeEditModal()">Cancelar</button>
+        <button class="btn-primary" (click)="saveEvent()" [disabled]="saveInProgress">{{ saveInProgress ? 'A guardar...' : 'Guardar' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Criar evento -->
+  <div class="modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Criar novo evento</h2>
+        <button class="btn-close" (click)="closeCreateModal()"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="saveError" class="save-error">{{ saveError }}</div>
+        <div class="form-group">
+          <label>Imagem do card (URL)</label>
+          <input type="text" [(ngModel)]="createForm.imageUrl" placeholder="/assets/... ou URL">
+        </div>
+        <div class="form-group">
+          <label>Título *</label>
+          <input type="text" [(ngModel)]="createForm.title" placeholder="Título do evento" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data início</label>
+            <input type="text" [(ngModel)]="createForm.eventDateStart" placeholder="Ex: 15 de Janeiro, 2024">
+          </div>
+          <div class="form-group">
+            <label>Data fim (pode ser igual)</label>
+            <input type="text" [(ngModel)]="createForm.eventDateEnd" placeholder="Data fim">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data fim (verificação)</label>
+          <input type="date" [(ngModel)]="createForm.endDate" placeholder="YYYY-MM-DD">
+        </div>
+        <div class="form-group">
+          <label>Horário</label>
+          <input type="text" [(ngModel)]="createForm.timeSlot" placeholder="Ex: 09:00 - 16:00">
+        </div>
+        <div class="form-group">
+          <label>Local</label>
+          <input type="text" [(ngModel)]="createForm.location" placeholder="Local">
+        </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea [(ngModel)]="createForm.description" rows="3" placeholder="Descrição"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Nível de acesso</label>
+          <select [(ngModel)]="createForm.levelAccess">
+            <option value="publico">Público</option>
+            <option value="membros">Membros</option>
+            <option value="simpatizantes">Simpatizantes</option>
+            <option value="apoiantes">Apoiantes</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCreateModal()">Cancelar</button>
+        <button class="btn-primary" (click)="createEvent()" [disabled]="saveInProgress || !createForm.title.trim()">{{ saveInProgress ? 'A criar...' : 'Criar evento' }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cancelar evento -->
+  <div class="modal-overlay" *ngIf="showCancelModal" (click)="closeCancelModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="cancellingEvent">
+      <div class="modal-header">
+        <h2>Cancelar evento</h2>
+        <button class="btn-close" (click)="closeCancelModal()"><mat-icon>close</mat-icon></button>
+      </div>
+      <div class="modal-body">
+        <p class="cancel-warning">Este evento pode ter pessoas inscritas. A mensagem abaixo será exibida no card do evento em vez do conteúdo normal.</p>
+        <div *ngIf="saveError" class="save-error">{{ saveError }}</div>
+        <div class="form-group">
+          <label>Mensagem de desculpas *</label>
+          <textarea [(ngModel)]="cancelMessage" rows="4" placeholder="Ex.: Lamentamos informar que este evento foi cancelado. Pedimos desculpas pelo incómodo." required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="closeCancelModal()">Voltar</button>
+        <button class="btn-danger" (click)="confirmCancel()" [disabled]="saveInProgress || !cancelMessage.trim()">{{ saveInProgress ? 'A cancelar...' : 'Cancelar evento' }}</button>
+      </div>
+    </div>
+  </div>
+</div>

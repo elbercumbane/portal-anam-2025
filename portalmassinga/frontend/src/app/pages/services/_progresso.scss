@@ -1,11 +1,7 @@
 @import 'variables';
 @import 'animations';
 
-$primary-green: #2C674C;
-$green-medium: #2C674C;
-$cream: #FAF8F5;
-
-// Timeline / Progresso
+// Timeline / Progresso (usa variáveis de variables)
 .progresso-section {
   padding: 80px 0;
   background: linear-gradient(180deg, $cream 0%, #F5F3EF 50%, $cream 100%);

@@ -22,12 +22,12 @@ $transition-fast: 0.2s ease;
 $transition-normal: 0.3s ease;
 $transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-// Bordas
-$border-radius-small: 8px;
-$border-radius-medium: 12px;
-$border-radius-large: 16px;
-$border-radius-xl: 20px;
-$border-radius-xxl: 24px;
+// Bordas (campos bem arredondados)
+$border-radius-small: 12px;
+$border-radius-medium: 16px;
+$border-radius-large: 20px;
+$border-radius-xl: 24px;
+$border-radius-xxl: 28px;
 
 // Sombras
 $shadow-small: 0 2px 8px rgba(0, 0, 0, 0.1);

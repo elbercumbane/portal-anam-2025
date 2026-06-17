@@ -1,0 +1,38 @@
+// ============================================
+// RODAPÉ DA PÁGINA MARKETPLACE
+// Não sobrepõe a sidebar: margem à esquerda quando sidebar aberta
+// ============================================
+
+@import 'variables';
+
+.marketplace-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  width: 100%;
+  margin-left: $sidebar-width;
+  padding: 16px 32px;
+  background: #FFFFFF;
+  border-top: 1px solid $sidebar-border;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+  transition: margin-left $transition-normal;
+}
+
+.marketplace-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--ink-600);
+}
+
+.footer-copy {
+  color: var(--ink-500);
+}
+
+// Quando a sidebar está recolhida (só ícones), rodapé com margem da sidebar colapsada
+.marketplace2-page .marketplace-layout.sidebar-closed + .marketplace-footer {
+  margin-left: $sidebar-width-collapsed;
+}

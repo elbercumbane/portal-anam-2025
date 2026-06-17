@@ -1,60 +1,75 @@
-<!-- Secção A: Hero Emocional -->
+<!-- Hero -->
 <section class="hero-section">
+  <div class="hero-bg" style="background-image: url('/assets/apoio/apoio-hero-comunidade.jpg')"></div>
   <div class="hero-overlay"></div>
+
   <div class="hero-content">
+    <span class="hero-badge">Apoio à ANAM</span>
     <h1 class="hero-title">
       O teu apoio à <span class="highlight">Associação</span><br>
       transforma vidas e constrói o futuro.
     </h1>
     <p class="hero-subtitle">
-      Descobre como o teu apoio é essencial para transformar Massinga e construir um futuro melhor para todos.
+      Descobre como o teu contributo é essencial para transformar Massinga e construir um futuro melhor para todos.
     </p>
-    <button class="hero-cta" (click)="scrollToSupport()">
-      <span>Apoiar Agora</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
-    </button>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <strong>500+</strong>
+        <span>Beneficiários</span>
+      </div>
+      <div class="stat">
+        <strong>12</strong>
+        <span>Projectos activos</span>
+      </div>
+      <div class="stat">
+        <strong>100%</strong>
+        <span>Transparência</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <button class="hero-cta hero-cta--primary" (click)="scrollToSupport()">
+        Apoiar Agora
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+      <button class="hero-cta hero-cta--ghost" (click)="scrollToSection('niveis-apoiar')">
+        Ver Níveis de Apoio
+      </button>
+    </div>
   </div>
 </section>
 
-<!-- Secção B: Por que Apoiar -->
+<!-- Por que Apoiar -->
 <section id="porque-apoiar" class="why-support-section">
   <div class="container">
     <div class="section-header">
+      <span class="section-badge">A nossa missão</span>
       <h2>Por que <span class="highlight-text">Apoiar</span> a ANAM?</h2>
       <p class="section-description">
-        Acreditamos que a <strong>transparência</strong> é a base da confiança. Quando apoias a ANAM, sabes exactamente onde e como o teu contributo está a fazer a diferença.
+        A <strong>transparência</strong> é a base da confiança. Quando apoias a ANAM, sabes exactamente onde e como o teu contributo está a fazer a diferença.
       </p>
     </div>
-    
-    <div class="why-support-content">
-      <div class="why-support-grid">
-        <div class="why-support-card">
-          <div class="why-icon" [innerHTML]="getIconSvg('search', '#4CAF50')"></div>
-          <h3>Transparência Total</h3>
-          <p>Acompanha em tempo real como o teu apoio está a transformar vidas. Relatórios detalhados, resultados mensuráveis e impacto visível em cada projecto.</p>
-        </div>
-        <div class="why-support-card">
-          <div class="why-icon heart-icon" [innerHTML]="getIconSvg('heart', '#EF4444')"></div>
-          <h3>Impacto Real</h3>
-          <p>Cada contribuição, seja em tempo, conhecimento ou recursos, gera transformações concretas na vida de pessoas reais em Massinga.</p>
-        </div>
-        <div class="why-support-card">
-          <div class="why-icon" [innerHTML]="getIconSvg('handshake', '#0B2F41')"></div>
-          <h3>Comunidade Forte</h3>
-          <p>Faz parte de uma rede de pessoas comprometidas com o desenvolvimento sustentável e o crescimento da nossa comunidade.</p>
-        </div>
-      </div>
+
+    <div class="why-support-grid">
+      <article class="why-support-card" *ngFor="let pillar of pillars; let i = index">
+        <span class="card-number">0{{ i + 1 }}</span>
+        <div class="why-icon" [class.heart-icon]="pillar.iconType === 'heart'" [innerHTML]="getIconSvg(pillar.iconType, pillar.color)"></div>
+        <h3>{{ pillar.title }}</h3>
+        <p>{{ pillar.description }}</p>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- Secção C: Formas de Apoio -->
+<!-- Formas de Apoio -->
 <section id="formas-apoiar" class="support-ways-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header section-header--light">
+      <span class="section-badge section-badge--light">Contribui à tua maneira</span>
       <h2>Como Podes <span class="highlight-text">Apoiar</span></h2>
       <p class="section-description">
         O teu apoio não é apenas monetário. Existem várias formas de contribuir para a transformação de Massinga.
@@ -62,54 +77,63 @@
     </div>
 
     <div class="support-ways-grid">
-      <div class="support-way-card" *ngFor="let way of supportWays; let i = index">
-        <div class="way-icon" [innerHTML]="getIconSvg(way.iconType, getIconColor(i))"></div>
+      <article class="support-way-card" *ngFor="let way of supportWays; let i = index">
+        <div class="way-icon" [innerHTML]="getIconSvg(way.iconType, '#4CAF50')"></div>
         <h3>{{ way.title }}</h3>
         <p>{{ way.description }}</p>
-      </div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- Secção D: Níveis de Apoio -->
+<!-- Níveis de Apoio -->
 <section id="niveis-apoiar" class="support-levels-section">
   <div class="container">
     <div class="section-header">
+      <span class="section-badge">Reconhecimento</span>
       <h2>Níveis de <span class="highlight-text">Apoio</span></h2>
       <p class="section-description">
-        A ANAM reconhece e honra os seus apoiantes através de diferentes níveis, cada um com benefícios exclusivos e reconhecimento especial.
+        A ANAM honra os seus apoiantes com benefícios exclusivos e reconhecimento especial em cada nível.
       </p>
     </div>
 
     <div class="support-levels-grid">
-      <div class="support-level-card" *ngFor="let level of supportLevels" [class]="'level-' + level.levelClass">
+      <article
+        class="support-level-card"
+        *ngFor="let level of supportLevels"
+        [class]="'level-' + level.levelClass"
+        [class.level-featured]="level.levelClass === 'gold'">
+        <span class="level-tag" *ngIf="level.levelClass === 'gold'">Mais popular</span>
         <div class="medal-icon-large" [innerHTML]="getMedalIcon(level.levelClass)"></div>
         <h3>{{ level.name }}</h3>
         <p class="level-description">{{ level.description }}</p>
         <ul class="level-benefits">
           <li *ngFor="let benefit of level.benefits">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
             {{ benefit }}
           </li>
         </ul>
-      </div>
+        <button type="button" class="level-cta" (click)="scrollToSupport()">Quero apoiar</button>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- Secção E: CTA -->
+<!-- CTA Final -->
 <section class="final-cta-section">
   <div class="container">
-    <div class="cta-content">
-      <h2>Junta-te a Nós</h2>
-      <p>
-        O teu apoio, seja qual for a forma, faz a diferença em Massinga. 
-        Junta-te à nossa missão de transformar vidas e construir um futuro melhor.
-      </p>
+    <div class="cta-panel">
+      <div class="cta-text">
+        <h2>Junta-te a Nós</h2>
+        <p>
+          O teu apoio, seja qual for a forma, faz a diferença em Massinga.
+          Junta-te à nossa missão de transformar vidas e construir um futuro melhor.
+        </p>
+      </div>
       <button class="cta-button-large" (click)="scrollToSupport()">
-        <span>Apoiar Agora</span>
+        Tornar-me Apoiante
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
@@ -118,4 +142,3 @@
     </div>
   </div>
 </section>
-

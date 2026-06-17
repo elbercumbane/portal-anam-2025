@@ -1,153 +1,382 @@
-.confirmation-container {
+@import '../pay-quotas/variables';
+@import '../quota-pages-shared';
+
+$accent: #0d9488;
+
+.confirmed-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+  position: relative;
+  padding: calc(76px + 2rem) 1.5rem 3rem;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 30%, #f8fafc 100%);
 }
 
-.confirmation-content {
-  max-width: 600px;
-  width: 100%;
+.page-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(13, 148, 136, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 80%, rgba(20, 184, 166, 0.06) 0%, transparent 45%);
+}
+
+.confirmed-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.success-banner {
   text-align: center;
-  
-  .success-icon-wrapper {
-    margin-bottom: 2rem;
-    
-    .success-icon {
-      font-size: 5rem;
-      width: 5rem;
-      height: 5rem;
-      color: #4caf50;
-      animation: scaleIn 0.5s ease;
+  margin-bottom: 1.5rem;
+
+  .success-circle {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #059669, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(5, 150, 105, 0.35);
+    animation: popIn 0.5s ease;
+
+    mat-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      color: white;
     }
   }
-  
+
   h1 {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    color: #211712;
-    margin: 0 0 1rem 0;
-    font-family: 'Playfair Display', serif;
+    color: #0f172a;
+    margin: 0 0 0.35rem;
   }
-  
-  .confirmation-message {
-    font-size: 1.2rem;
-    color: #6c5e58;
-    margin-bottom: 2rem;
+
+  p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
   }
 }
 
-.receipt-info-card {
-  margin: 2rem 0;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  
-  mat-card-content {
-    padding: 2rem;
+.receipt-ticket {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(13, 148, 136, 0.15);
+  box-shadow: 0 8px 32px rgba(13, 148, 136, 0.1);
+  overflow: hidden;
+}
+
+.receipt-brand-header {
+  position: relative;
+  background: linear-gradient(135deg, #0d5d56, #0f766e);
+  color: white;
+
+  .brand-accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #ffd700;
   }
-  
-  .receipt-info {
+
+  .brand-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.15rem 1.25rem 1.15rem 1.4rem;
+  }
+
+  .brand-name {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+  }
+
+  .brand-full {
+    margin: 0.3rem 0 0;
+    font-size: 0.72rem;
+    opacity: 0.9;
+    max-width: 200px;
+    line-height: 1.35;
+  }
+
+  .brand-right {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      background: rgba(139, 120, 95, 0.05);
-      border-radius: 8px;
-      
-      .info-label {
-        font-size: 1rem;
-        color: #6c5e58;
-        font-weight: 600;
-      }
-      
-      .info-value {
-        font-size: 1.1rem;
-        color: #211712;
-        font-weight: 700;
-        
-        &.amount {
-          color: #8b785f;
-          font-size: 1.3rem;
-        }
-      }
-    }
+    align-items: flex-end;
+    gap: 0.15rem;
+    text-align: right;
+  }
+
+  .receipt-type {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .receipt-ref {
+    font-size: 0.75rem;
+    opacity: 0.85;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .status-pill {
+    margin-top: 0.25rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.2);
+
+    &.pago { background: #059669; }
   }
 }
 
-.action-buttons {
+.receipt-body {
+  padding: 1.1rem 1.25rem 1.2rem;
+}
+
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+.info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  border-top: 3px solid $accent;
+
+  .card-label {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: $accent;
+    margin-bottom: 0.3rem;
+  }
+
+  strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #0f172a;
+    margin-bottom: 0.15rem;
+  }
+
+  .card-meta {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748b;
+    line-height: 1.35;
+  }
+}
+
+.cotas-table-wrap {
+  margin-bottom: 1rem;
+
+  .block-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $accent;
+    margin-bottom: 0.45rem;
+  }
+}
+
+.cotas-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.78rem;
+
+  thead {
+    background: #0d5d56;
+    color: white;
+
+    th {
+      padding: 0.45rem 0.55rem;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+
+      &:first-child { width: 32px; text-align: center; }
+      &:nth-child(3), &:nth-child(4) { width: 88px; }
+    }
+  }
+
+  tbody td {
+    padding: 0.45rem 0.55rem;
+    border-top: 1px solid #e2e8f0;
+    color: #334155;
+
+    &:first-child {
+      text-align: center;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    &:nth-child(3), &:nth-child(4) {
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+  }
+
+  tbody tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  tbody tr.summary-row td {
+    background: #f1f5f9;
+    border-top: 2px solid #cbd5e1;
+    font-weight: 700;
+    color: #0d5d56;
+  }
+}
+
+.total-banner {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
-  
-  button {
-    min-width: 180px;
-    height: 48px;
-    font-size: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1px solid #6ee7b7;
+  border-radius: 12px;
+  margin-bottom: 0.85rem;
+
+  span {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0d5d56;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  strong {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f766e;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.receipt-debt {
+  display: flex;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 1rem;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 12px;
+
+  mat-icon { color: #d97706; flex-shrink: 0; }
+
+  strong { display: block; font-size: 0.875rem; color: #92400e; }
+  span { font-size: 0.8rem; color: #78716c; }
+
+  &.em-dia {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+
+    mat-icon { color: #16a34a; }
+    strong { color: #166534; }
+    span { color: #15803d; }
+  }
+}
+
+.receipt-footer {
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+
+  strong {
+    display: block;
+    font-size: 0.8rem;
+    color: $accent;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.15rem;
+  }
+
+  span {
+    font-size: 0.65rem;
+    color: #94a3b8;
+  }
+}
+
+.confirmed-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 1.25rem;
+    height: 44px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    color: #64748b;
     font-weight: 600;
-    border-radius: 8px;
-    
-    mat-icon {
-      margin-right: 0.5rem;
-    }
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+    &:hover { border-color: $accent; color: $accent; }
   }
-  
-  .btn-ver-recibo {
-    background: linear-gradient(135deg, #8b785f 0%, #96775a 100%);
-    color: #fff;
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(139, 120, 95, 0.3);
-    }
-  }
-  
-  .btn-voltar {
-    border-color: #8b785f;
-    color: #8b785f;
-    
-    &:hover {
-      background: rgba(139, 120, 95, 0.1);
-    }
+
+  .btn-finalizar {
+    width: 100%;
+    max-width: 420px;
+    height: 50px;
+    justify-content: center;
+    font-size: 1rem;
   }
 }
 
-@keyframes scaleIn {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+:host {
+  display: block;
 }
 
-@media (max-width: 768px) {
-  .confirmation-content {
-    h1 {
-      font-size: 2rem;
-    }
-    
-    .confirmation-message {
-      font-size: 1rem;
-    }
-  }
-  
-  .action-buttons {
-    flex-direction: column;
-    
-    button {
-      width: 100%;
-    }
-  }
+:host ::ng-deep body.navbar-solid .navbar {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 480px) {
+  .confirmed-page { padding: calc(76px + 1.25rem) 1rem 2rem; }
+}

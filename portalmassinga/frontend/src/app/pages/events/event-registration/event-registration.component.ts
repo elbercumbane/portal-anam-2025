@@ -8,6 +8,8 @@ import { EventSuccessDialogComponent } from '../event-success-dialog/event-succe
 import { EventConfirmationDialogComponent } from '../event-confirmation-dialog/event-confirmation-dialog.component';
 import { EventThankYouDialogComponent } from '../event-thank-you-dialog/event-thank-you-dialog.component';
 import { EventTicketService } from '../event-ticket.service';
+import { ApiClientService } from '../../../services/api-client.service';
+import { forkJoin } from 'rxjs';
 
 interface Evento {
   id: string;
@@ -18,6 +20,8 @@ interface Evento {
   descricao: string;
   imagem: string;
   nivelAcesso?: 'publico' | 'membros' | 'simpatizantes' | 'apoiantes';
+  isCancelled?: boolean;
+  cancelledMessage?: string;
 }
 
 @Component({
@@ -84,7 +88,8 @@ export class EventRegistrationComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private ticketService: EventTicketService
+    private ticketService: EventTicketService,
+    private apiClient: ApiClientService
   ) {
     this.registrationForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3)]],
@@ -98,8 +103,6 @@ export class EventRegistrationComponent implements OnInit {
   ngOnInit() {
     const eventoId = this.route.snapshot.paramMap.get('id');
     const disponiveis = this.route.snapshot.queryParamMap.get('disponiveis');
-    
-    // Obter eventos já inscritos
     const minhasInscricoes = JSON.parse(localStorage.getItem('minhasInscricoes') || '[]');
     const eventosInscritosIds = new Set<string>();
     minhasInscricoes.forEach((insc: any) => {
@@ -107,22 +110,46 @@ export class EventRegistrationComponent implements OnInit {
       insc.outrosEventos?.forEach((id: string) => eventosInscritosIds.add(id));
     });
 
+    this.apiClient.getEvents().subscribe({
+      next: (list: any[]) => {
+        const arr = Array.isArray(list) ? list : [];
+        if (arr.length > 0) {
+          this.todosEventos = arr.map((e: any) => ({
+            id: e.id,
+            titulo: e.title ?? e.titulo ?? '',
+            data: e.eventDate ?? e.event_date ?? '',
+            local: e.location ?? e.local ?? '',
+            hora: e.timeSlot ?? e.time_slot ?? '',
+            descricao: e.description ?? '',
+            imagem: e.imageUrl ?? e.imagem ?? '/assets/mercado-maputo.jpg',
+            nivelAcesso: (e.levelAccess ?? e.nivelAcesso ?? 'publico') as Evento['nivelAcesso'],
+            isCancelled: e.isCancelled === true,
+            cancelledMessage: e.cancelledMessage ?? e.cancelled_message ?? ''
+          }));
+        }
+        this.applyEventosSelection(eventoId, disponiveis, eventosInscritosIds);
+      },
+      error: () => {
+        this.applyEventosSelection(eventoId, disponiveis, eventosInscritosIds);
+      }
+    });
+  }
+
+  private applyEventosSelection(eventoId: string | null, disponiveis: string | null, eventosInscritosIds: Set<string>) {
+    const disponiveisParaInscricao = this.todosEventos.filter(e => !e.isCancelled);
     if (eventoId) {
       this.eventoAtual = this.todosEventos.find(e => e.id === eventoId) || null;
-      // Filtrar outros eventos (excluir o atual e os já inscritos)
-      this.outrosEventos = this.todosEventos.filter(e => 
+      this.outrosEventos = disponiveisParaInscricao.filter(e =>
         e.id !== eventoId && !eventosInscritosIds.has(e.id)
       );
     } else {
-      // Se há query param de disponíveis, usar apenas esses
       if (disponiveis) {
         const idsDisponiveis = disponiveis.split(',');
-        this.outrosEventos = this.todosEventos.filter(e => 
+        this.outrosEventos = disponiveisParaInscricao.filter(e =>
           idsDisponiveis.includes(e.id) && !eventosInscritosIds.has(e.id)
         );
       } else {
-        // Mostrar todos os eventos não inscritos
-        this.outrosEventos = this.todosEventos.filter(e => !eventosInscritosIds.has(e.id));
+        this.outrosEventos = disponiveisParaInscricao.filter(e => !eventosInscritosIds.has(e.id));
       }
     }
   }
@@ -197,21 +224,8 @@ export class EventRegistrationComponent implements OnInit {
       return;
     }
 
-    // Salvar inscrições (simulado - apenas frontend)
-    const inscricoes = {
-      eventoPrincipal: this.eventoAtual?.id || null,
-      outrosEventos: this.eventosSelecionados,
-      dadosParticipante: this.registrationForm.value,
-      dataInscricao: new Date().toISOString()
-    };
-    
-    // Salvar no localStorage (simulado)
-    const minhasInscricoes = JSON.parse(localStorage.getItem('minhasInscricoes') || '[]');
-    minhasInscricoes.push(inscricoes);
-    localStorage.setItem('minhasInscricoes', JSON.stringify(minhasInscricoes));
-
-    // Gerar e baixar ticket
-    const eventosInscritos = [];
+    const dadosParticipante = this.registrationForm.value;
+    const eventosInscritos: Evento[] = [];
     if (this.eventoAtual) {
       eventosInscritos.push(this.eventoAtual);
     }
@@ -220,15 +234,53 @@ export class EventRegistrationComponent implements OnInit {
       if (evento) eventosInscritos.push(evento);
     });
 
-    // Gerar ticket para cada evento (em paralelo)
+    // Enviar cada inscrição para o backend (base de dados)
+    const registrations$ = eventosInscritos.map(evento =>
+      this.apiClient.createEventRegistration({
+        eventId: evento.id,
+        eventTitle: evento.titulo,
+        eventDate: evento.data,
+        eventLocation: evento.local,
+        fullName: dadosParticipante.nome,
+        email: dadosParticipante.email,
+        phone: dadosParticipante.telefone,
+        participantType: dadosParticipante.tipoParticipante,
+        receiveWhatsApp: !!dadosParticipante.receberWhatsApp
+      })
+    );
+
+    forkJoin(registrations$).subscribe({
+      next: () => {
+        this.finalizarInscricaoLocal(dadosParticipante, eventosInscritos);
+      },
+      error: (err) => {
+        const msg = err?.message || 'Erro ao registar inscrição. Tente novamente.';
+        alert(msg);
+      }
+    });
+  }
+
+  private finalizarInscricaoLocal(dadosParticipante: any, eventosInscritos: Evento[]) {
+    const inscricoes = {
+      eventoPrincipal: this.eventoAtual?.id || null,
+      outrosEventos: this.eventosSelecionados,
+      dadosParticipante,
+      dataInscricao: new Date().toISOString()
+    };
+
+    const minhasInscricoes = JSON.parse(localStorage.getItem('minhasInscricoes') || '[]');
+    minhasInscricoes.push(inscricoes);
+    localStorage.setItem('minhasInscricoes', JSON.stringify(minhasInscricoes));
+
     Promise.all(
-      eventosInscritos.map(evento => this.ticketService.generateTicket(inscricoes, evento))
+      eventosInscritos.map(evento => this.ticketService.generateTicket(
+        { ...inscricoes, dadosParticipante },
+        evento
+      ))
     ).then(() => {
-      // Abrir popup de sucesso após gerar todos os tickets
       this.openSuccessDialog();
     }).catch(error => {
       console.error('Erro ao gerar tickets:', error);
-      // Mesmo assim, abrir popup de sucesso
       this.openSuccessDialog();
     });
   }

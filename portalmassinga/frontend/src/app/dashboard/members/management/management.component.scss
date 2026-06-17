@@ -1,3 +1,4 @@
+@use '../../management-layout' as mgmt;
 @import '../../pages/_shared-styles.scss';
 
 // Variáveis de cores (idênticas ao formulário)
@@ -10,177 +11,33 @@ $color-membros-blue: #3b82f6;
 $color-membros-blue-secondary: #2563eb;
 @include category-theme($color-membros-blue, $color-membros-blue-secondary);
 
+:host {
+  @include mgmt.host-block;
+}
+
 .page-container {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  @include mgmt.page-root;
 }
 
-.page-header {
-  margin-bottom: 32px;
-  
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 8px 0;
-  }
-  
-  p {
-    font-size: 1rem;
-    color: #6b7280;
-    margin: 0;
-  }
-}
-
-// Estatísticas
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
-  
-  .stat-card {
-    background: white;
-    border-radius: 20px;
-    padding: 28px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid #e5e7eb;
-    position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, $color-membros-blue 0%, $color-membros-blue-secondary 100%);
-    }
-    
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba($color-membros-blue, 0.15);
-      border-color: $color-membros-blue;
-    }
-    
-    .stat-icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, $color-membros-blue 0%, $color-membros-blue-secondary 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba($color-membros-blue, 0.3);
-      flex-shrink: 0;
-      
-      mat-icon {
-        font-size: 32px;
-        width: 32px;
-        height: 32px;
-      }
-      
-      &.total {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      }
-      
-      &.pending {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      }
-      
-      &.approved {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      }
-    }
-    
-    .stat-content {
-      flex: 1;
-      
-      h3 {
-        font-size: 36px;
-        font-weight: 800;
-        color: #1f2937;
-        margin: 0 0 6px 0;
-        line-height: 1;
-        letter-spacing: -0.5px;
-      }
-      
-      p {
-        font-size: 14px;
-        color: #6b7280;
-        margin: 0;
-        font-weight: 600;
-        letter-spacing: 0.2px;
-      }
-    }
+  @include mgmt.kpi-strip-base;
+
+  .stat-icon {
+    &.total { background: #dbeafe; color: $color-membros-blue; }
+    &.pending { background: #fef3c7; color: #d97706; }
+    &.approved { background: #ecfdf5; color: #059669; }
   }
 }
 
-// Filtros e Busca
 .filters-section {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  border: 1px solid #e5e7eb;
-  
-  .search-box {
-    flex: 1;
-    min-width: 300px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    
-    mat-icon {
-      position: absolute;
-      left: 16px;
-      color: #6b7280;
-      z-index: 1;
-    }
-    
-    input {
-      width: 100%;
-      padding: 14px 16px 14px 48px;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      background: #f9fafb;
-      
-      &:hover {
-        background: white;
-        border-color: #d1d5db;
-      }
-      
-      &:focus {
-        outline: none;
-        border-color: $color-membros-blue;
-        box-shadow: 0 0 0 3px rgba($color-membros-blue, 0.1);
-      }
-      
-      &::placeholder {
-        color: #9ca3af;
-      }
-    }
-  }
-  
+  @include mgmt.toolbar-card-base;
+
   .filter-box {
     position: relative;
     display: flex;
     align-items: center;
     min-width: 200px;
-    
+
     mat-icon {
       position: absolute;
       left: 16px;
@@ -188,27 +45,27 @@ $color-membros-blue-secondary: #2563eb;
       z-index: 1;
       pointer-events: none;
     }
-    
+
     select {
       width: 100%;
-      padding: 14px 16px 14px 48px;
-      border: 2px solid #e5e7eb;
-      border-radius: 12px;
-      font-size: 14px;
-      background: #f9fafb;
+      padding: 0.7rem 2.5rem 0.7rem 2.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      background: #f8fafc;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 16px center;
       background-size: 12px;
-      
+
       &:hover {
         background-color: white;
-        border-color: #d1d5db;
+        border-color: #cbd5e1;
       }
-      
+
       &:focus {
         outline: none;
         border-color: $color-membros-blue;
@@ -216,6 +73,10 @@ $color-membros-blue-secondary: #2563eb;
       }
     }
   }
+}
+
+.table-container {
+  @include mgmt.table-card-base;
 }
 
 // Loading Container
@@ -447,6 +308,11 @@ $color-membros-blue-secondary: #2563eb;
     background: #fee2e2;
     color: #991b1b;
   }
+
+  &.status-inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
 }
 
 .actions-cell {
@@ -498,10 +364,10 @@ $color-membros-blue-secondary: #2563eb;
       }
     }
     
-    &.btn-delete {
+    &.btn-deactivate {
       &:hover {
-        background: #fee2e2;
-        color: #ef4444;
+        background: #f3f4f6;
+        color: #6b7280;
       }
     }
   }
@@ -549,33 +415,56 @@ $color-membros-blue-secondary: #2563eb;
   }
 }
 
-// Modal
+// Modal - Fullscreen, sem efeitos, só fecha pelo botão X
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 24px;
-  animation: fadeIn 0.3s ease;
+  pointer-events: auto;
+
+  &.modal-overlay-fullscreen {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.5);
+
+    // Não fecha ao clicar fora - pointer-events no overlay não propagam para fechar
+    .modal-content {
+      pointer-events: auto;
+    }
+  }
 }
 
 .modal-content {
-  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+  background: #ffffff;
   border-radius: 20px;
   max-width: 850px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   padding: 0;
+  pointer-events: auto;
+
+  &.modal-content-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+    width: 100%;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 
 .modal-header {
