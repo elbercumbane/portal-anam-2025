@@ -5,7 +5,7 @@ services:
     container_name: anam-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: elber123
+      POSTGRES_PASSWORD: admin123
       POSTGRES_DB: anam
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pt_BR.UTF-8"
       LANG: pt_BR.UTF-8
@@ -32,7 +32,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/anam?useUnicode=true&characterEncoding=UTF-8&stringtype=unspecified
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: elber123
+      SPRING_DATASOURCE_PASSWORD: admin123
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SERVER_PORT: 8081
       SERVER_SERVLET_CONTEXT_PATH: /api

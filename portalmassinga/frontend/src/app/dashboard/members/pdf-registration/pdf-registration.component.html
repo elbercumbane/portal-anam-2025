@@ -1,0 +1,339 @@
+<div class="page-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <mat-icon class="header-icon">picture_as_pdf</mat-icon>
+      <div>
+        <h1 class="page-title">Cadastro por PDF</h1>
+        <p class="page-subtitle">Extraia dados de membros de formulários digitalizados usando inteligência artificial</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== PHASE: UPLOAD ======================== -->
+  <div *ngIf="phase === 'upload'" class="upload-container">
+
+    <!-- Error banner -->
+    <div *ngIf="overallError" class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ overallError }}</span>
+    </div>
+
+    <!-- Drop zone -->
+    <div
+      class="drop-zone"
+      [class.dragging]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <mat-icon class="drop-icon">upload_file</mat-icon>
+      <h2>Arraste o PDF aqui</h2>
+      <p>ou</p>
+      <label class="file-label" for="pdfFileInput">
+        <mat-icon>folder_open</mat-icon>
+        Escolher ficheiro
+      </label>
+      <input
+        id="pdfFileInput"
+        type="file"
+        accept=".pdf"
+        class="hidden-input"
+        (change)="onFileSelected($event)"
+      />
+      <p class="drop-hint">Apenas PDFs · Máximo 20MB · Suporta 2–3 formulários por página</p>
+    </div>
+
+    <!-- Selected file info -->
+    <div *ngIf="selectedFile" class="file-info">
+      <mat-icon>description</mat-icon>
+      <div class="file-details">
+        <span class="file-name">{{ selectedFile.name }}</span>
+        <span class="file-size">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</span>
+      </div>
+      <button mat-icon-button (click)="onReset()" matTooltip="Remover ficheiro">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Process button -->
+    <div class="upload-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        class="process-btn"
+        [disabled]="!selectedFile"
+        (click)="onProcessPdf()"
+      >
+        <mat-icon>auto_awesome</mat-icon>
+        Processar PDF
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ======================== PHASE: LOADING ======================== -->
+  <div *ngIf="phase === 'loading'" class="loading-container">
+    <mat-spinner diameter="64"></mat-spinner>
+    <h2>A processar o PDF...</h2>
+    <p>{{ processingMessage }}</p>
+    <p class="loading-hint">Este processo pode demorar 10–20 segundos</p>
+  </div>
+
+  <!-- ======================== PHASE: REVIEW ======================== -->
+  <div *ngIf="phase === 'review'" class="review-container">
+
+    <!-- Summary bar -->
+    <div class="summary-bar">
+      <div class="summary-info">
+        <span class="summary-count">
+          <mat-icon>people</mat-icon>
+          {{ extractedMembers.length }} membro(s) extraído(s)
+        </span>
+        <span class="summary-saved" *ngIf="savedCount > 0">
+          <mat-icon>check_circle</mat-icon>
+          {{ savedCount }} guardado(s)
+        </span>
+      </div>
+      <div class="summary-actions">
+        <button mat-stroked-button (click)="onReset()">
+          <mat-icon>arrow_back</mat-icon>
+          Novo PDF
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="!anyUnsaved"
+          (click)="onSaveAll()"
+        >
+          <mat-icon>save_all</mat-icon>
+          Guardar Todos
+        </button>
+      </div>
+    </div>
+
+    <!-- No members extracted -->
+    <div *ngIf="extractedMembers.length === 0" class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>Nenhum membro foi encontrado neste PDF.</p>
+      <p class="empty-hint">Certifique-se de que o PDF contém formulários de inscrição legíveis.</p>
+      <button mat-stroked-button (click)="onReset()">Tentar com outro PDF</button>
+    </div>
+
+    <!-- Member panels -->
+    <mat-accordion multi>
+      <mat-expansion-panel
+        *ngFor="let member of extractedMembers"
+        class="member-panel"
+        [class.panel-saved]="member._saved"
+        [class.panel-error]="member._error"
+        [expanded]="!member._saved"
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>person</mat-icon>
+            <span class="panel-name">
+              {{ member.nomeCompleto || ('Membro ' + (member._index + 1)) }}
+            </span>
+          </mat-panel-title>
+          <mat-panel-description>
+            <span *ngIf="member._saved" class="status-badge saved">
+              <mat-icon>check_circle</mat-icon> Guardado
+            </span>
+            <span *ngIf="member._saving" class="status-badge saving">
+              <mat-spinner diameter="16"></mat-spinner> A guardar...
+            </span>
+            <span *ngIf="member._error && !member._saving" class="status-badge error">
+              <mat-icon>error</mat-icon> Erro
+            </span>
+            <span *ngIf="!member._saved && !member._saving && !member._error" class="status-badge pending">
+              Por guardar
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Error message -->
+        <div *ngIf="member._error" class="member-error">
+          <mat-icon>error_outline</mat-icon>
+          {{ member._error }}
+        </div>
+
+        <!-- Form fields -->
+        <div class="member-form">
+
+          <!-- Personal data -->
+          <h3 class="section-title">
+            <mat-icon>badge</mat-icon>
+            Dados Pessoais
+          </h3>
+          <div class="form-grid">
+
+            <mat-form-field appearance="outline" class="full-width" [class.field-empty]="isFieldEmpty(member.nomeCompleto)">
+              <mat-label>Nome Completo *</mat-label>
+              <input matInput [(ngModel)]="member.nomeCompleto" [name]="'name_' + member._index" />
+              <mat-icon matSuffix *ngIf="isFieldEmpty(member.nomeCompleto)" color="warn">warning</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.nomePai)">
+              <mat-label>Nome do Pai *</mat-label>
+              <input matInput [(ngModel)]="member.nomePai" [name]="'father_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.nomeMae)">
+              <mat-label>Nome da Mãe *</mat-label>
+              <input matInput [(ngModel)]="member.nomeMae" [name]="'mother_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data de Nascimento *</mat-label>
+              <input matInput type="date" [(ngModel)]="member.dataNascimento" [name]="'dob_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Estado Civil *</mat-label>
+              <mat-select [(ngModel)]="member.estadoCivil" [name]="'marital_' + member._index">
+                <mat-option *ngFor="let opt of maritalStatusOptions" [value]="opt">{{ opt }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.profissao)">
+              <mat-label>Profissão *</mat-label>
+              <input matInput [(ngModel)]="member.profissao" [name]="'job_' + member._index" />
+            </mat-form-field>
+
+          </div>
+
+          <!-- Contact -->
+          <h3 class="section-title">
+            <mat-icon>contact_phone</mat-icon>
+            Contactos
+          </h3>
+          <div class="form-grid">
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.celular)">
+              <mat-label>Celular *</mat-label>
+              <input matInput [(ngModel)]="member.celular" [name]="'mobile_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.email)">
+              <mat-label>Email *</mat-label>
+              <input matInput type="email" [(ngModel)]="member.email" [name]="'email_' + member._index" />
+              <mat-icon matSuffix *ngIf="isFieldEmpty(member.email)" color="warn">warning</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone</mat-label>
+              <input matInput [(ngModel)]="member.telefone" [name]="'phone_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.rua)">
+              <mat-label>Rua / Avenida *</mat-label>
+              <input matInput [(ngModel)]="member.rua" [name]="'street_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.bairro)">
+              <mat-label>Bairro *</mat-label>
+              <input matInput [(ngModel)]="member.bairro" [name]="'neighborhood_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" [class.field-empty]="isFieldEmpty(member.cidade)">
+              <mat-label>Cidade *</mat-label>
+              <input matInput [(ngModel)]="member.cidade" [name]="'city_' + member._index" />
+            </mat-form-field>
+
+          </div>
+
+          <!-- Spouse -->
+          <h3 class="section-title">
+            <mat-icon>favorite</mat-icon>
+            Cônjuge <span class="optional-label">(opcional)</span>
+          </h3>
+          <div class="form-grid">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do Cônjuge</mat-label>
+              <input matInput [(ngModel)]="member.nomeConjuge" [name]="'spouse_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Data de Nasc. do Cônjuge</mat-label>
+              <input matInput type="date" [(ngModel)]="member.dataNascimentoConjuge" [name]="'spouse_dob_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Filiação Pai (Cônjuge)</mat-label>
+              <input matInput [(ngModel)]="member.filiacaoPaiConjuge" [name]="'spouse_father_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Filiação Mãe (Cônjuge)</mat-label>
+              <input matInput [(ngModel)]="member.filiacaoMaeConjuge" [name]="'spouse_mother_' + member._index" />
+            </mat-form-field>
+
+          </div>
+
+          <!-- Work -->
+          <h3 class="section-title">
+            <mat-icon>work</mat-icon>
+            Trabalho <span class="optional-label">(opcional)</span>
+          </h3>
+          <div class="form-grid">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Local de Trabalho</mat-label>
+              <input matInput [(ngModel)]="member.localTrabalho" [name]="'workplace_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Cargo</mat-label>
+              <input matInput [(ngModel)]="member.cargo" [name]="'role_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Endereço de Trabalho</mat-label>
+              <input matInput [(ngModel)]="member.enderecoTrabalho" [name]="'work_addr_' + member._index" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone de Trabalho</mat-label>
+              <input matInput [(ngModel)]="member.telefoneTrabalho" [name]="'work_phone_' + member._index" />
+            </mat-form-field>
+
+          </div>
+
+          <!-- Other -->
+          <div class="form-grid">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Outras Informações</mat-label>
+              <textarea matInput rows="3" [(ngModel)]="member.outrasInformacoes" [name]="'other_' + member._index"></textarea>
+            </mat-form-field>
+          </div>
+
+          <!-- Terms + Save button -->
+          <div class="member-footer">
+            <mat-checkbox [(ngModel)]="member.aceitaTermos" [name]="'terms_' + member._index" color="primary">
+              Aceita os Termos e Condições
+            </mat-checkbox>
+
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="member._saved || member._saving || !member.aceitaTermos"
+              (click)="onSaveMember(member)"
+            >
+              <mat-spinner *ngIf="member._saving" diameter="18"></mat-spinner>
+              <mat-icon *ngIf="!member._saving && !member._saved">save</mat-icon>
+              <mat-icon *ngIf="member._saved">check</mat-icon>
+              {{ member._saved ? 'Guardado' : (member._saving ? 'A guardar...' : 'Guardar Membro') }}
+            </button>
+          </div>
+
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+  </div>
+
+</div>

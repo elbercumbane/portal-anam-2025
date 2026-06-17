@@ -91,7 +91,7 @@ export class NavigationComponent implements OnInit, OnChanges {
     this.projectosExpanded = projectosItems.includes(this.activeItem);
 
     // Expand membros submenu if any item is active
-    const membrosItems = ['membros', 'membros-home', 'membros-gestao', 'membros-cadastro', 'membros-organograma'];
+    const membrosItems = ['membros', 'membros-home', 'membros-gestao', 'membros-cadastro', 'membros-organograma', 'membros-pdf-registration'];
     this.membrosExpanded = membrosItems.includes(this.activeItem);
 
     // Expand tesouraria submenu if any item is active
@@ -246,6 +246,13 @@ export class NavigationComponent implements OnInit, OnChanges {
         label: 'Organograma',
         icon: 'account_tree',
         route: '/dashboard/pages/membros/organograma',
+        active: false
+      },
+      {
+        id: 'membros-pdf-registration',
+        label: 'Cadastro por PDF',
+        icon: 'picture_as_pdf',
+        route: '/dashboard/pages/membros/pdf-registration',
         active: false
       }
     ];

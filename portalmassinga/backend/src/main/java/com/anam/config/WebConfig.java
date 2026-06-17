@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        // Configurar recursos estáticos apenas para caminhos específicos
+        // Configurarrecursos estáticos apenas para caminhos específicos
         // Não interceptar rotas da API
         registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");

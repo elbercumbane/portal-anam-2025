@@ -1,0 +1,385 @@
+.page-container {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+// ---- Header ----
+.page-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #c62828;
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+
+  .page-subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+// ---- Error banner ----
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+// ---- Upload phase ----
+.upload-container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.drop-zone {
+  border: 2px dashed #bdbdbd;
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  background: #fafafa;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: default;
+
+  &.dragging {
+    border-color: #c62828;
+    background: #fff5f5;
+  }
+
+  .drop-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    color: #9e9e9e;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  p {
+    margin: 0 0 12px;
+    color: #888;
+    font-size: 14px;
+  }
+
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #c62828;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #b71c1c;
+    }
+  }
+
+  .drop-hint {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 8px;
+  }
+}
+
+.hidden-input {
+  display: none;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 16px;
+
+  mat-icon {
+    color: #c62828;
+    flex-shrink: 0;
+  }
+
+  .file-details {
+    flex: 1;
+    min-width: 0;
+
+    .file-name {
+      display: block;
+      font-weight: 500;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-size {
+      font-size: 12px;
+      color: #888;
+    }
+  }
+}
+
+.upload-actions {
+  text-align: center;
+  margin-top: 24px;
+
+  .process-btn {
+    padding: 12px 32px;
+    font-size: 15px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// ---- Loading phase ----
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px;
+  text-align: center;
+
+  mat-spinner {
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+
+  .loading-hint {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #aaa;
+  }
+}
+
+// ---- Review phase ----
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .summary-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .summary-count,
+    .summary-saved {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .summary-saved {
+      color: #2e7d32;
+
+      mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    }
+  }
+
+  .summary-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 32px;
+  color: #888;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p { margin: 4px 0; }
+
+  .empty-hint {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+}
+
+// ---- Member panels ----
+.member-panel {
+  border-radius: 10px !important;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important;
+
+  &.panel-saved {
+    border-left: 4px solid #2e7d32;
+  }
+
+  &.panel-error {
+    border-left: 4px solid #c62828;
+  }
+
+  .panel-name {
+    font-weight: 500;
+    margin-left: 8px;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+
+  &.saved   { background: #e8f5e9; color: #2e7d32; }
+  &.saving  { background: #e3f2fd; color: #1565c0; }
+  &.error   { background: #ffebee; color: #c62828; }
+  &.pending { background: #fff8e1; color: #f57f17; }
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+// ---- Member form ----
+.member-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.member-form {
+  padding: 8px 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #c62828; }
+
+  .optional-label {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 400;
+    text-transform: none;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0 16px;
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+
+  &.field-empty {
+    ::ng-deep .mat-form-field-outline {
+      border-color: #ff8f00 !important;
+    }
+    ::ng-deep .mat-form-field-label {
+      color: #ff8f00;
+    }
+  }
+}
+
+.member-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}

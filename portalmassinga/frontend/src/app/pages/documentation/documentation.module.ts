@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { DocsHomeComponent } from './docs-home.component';
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    MatIconModule
+    MatIconModule,
+    PdfViewerModule
   ]
 })
 export class DocumentationModule { }

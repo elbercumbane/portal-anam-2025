@@ -62,7 +62,8 @@
         <app-members-home *ngIf="currentView === 'membros-home'" (navigationClick)="onNavigationClick($event)"></app-members-home>
         <app-members-management *ngIf="currentView === 'membros-gestao'" (navigationClick)="onNavigationClick($event)"></app-members-management>
         <app-org-chart *ngIf="currentView === 'membros-organograma'" (navigationClick)="onNavigationClick($event)"></app-org-chart>
-        
+        <app-members-pdf-registration *ngIf="currentView === 'membros-pdf-registration'"></app-members-pdf-registration>
+
         <!-- Tesouraria -->
         <app-treasury-management *ngIf="currentView === 'tesouraria-gestao'" (navigationClick)="onNavigationClick($event)"></app-treasury-management>
         <app-treasury-reports *ngIf="currentView === 'tesouraria-relatorios'" (navigationClick)="onNavigationClick($event)"></app-treasury-reports>

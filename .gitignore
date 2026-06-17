@@ -9,6 +9,7 @@ build/
 **/build/
 out-tsc/
 **/out-tsc/
+**/target/
 
 # Logs
 *.log

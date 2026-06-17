@@ -90,6 +90,7 @@ import { ApplicationsComponent } from './projects/applications/applications.comp
 import { MembersHomeComponent } from './members/home/home.component';
 import { MembersManagementComponent } from './members/management/management.component';
 import { MembersOrgChartComponent } from './members/org-chart/org-chart.component';
+import { MembersPdfRegistrationComponent } from './members/pdf-registration/pdf-registration.component';
 // Treasury
 import { PayQuotasComponent } from './treasury/pay-quotas/pay-quotas.component';
 import { TreasuryManagementComponent } from './treasury/management/management.component';
@@ -171,6 +172,7 @@ const routes: Routes = [
     MembersHomeComponent,
     MembersManagementComponent,
     MembersOrgChartComponent,
+    MembersPdfRegistrationComponent,
     // Treasury
     PayQuotasComponent,
     TreasuryManagementComponent,

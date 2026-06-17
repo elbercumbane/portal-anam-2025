@@ -26,6 +26,38 @@ export class DocsHomeComponent implements OnInit, OnDestroy {
   filtroAtivo: string = 'Todos';
   
   documentos: Documento[] = [
+    // ========== DOCUMENTOS REAIS ==========
+    {
+      id: 100,
+      tipo: 'Relatórios',
+      titulo: 'Lista de Candidatos a Membros da ANAM',
+      descricao: 'Listagem oficial dos candidatos a membros da Associação Nacional de Armadores de Moçambique (ANAM).',
+      tamanho: 'PDF',
+      icon: 'description',
+      cor: '#10B981',
+      url: 'assets/docs/lista-candidatos-membros-anam.pdf'
+    },
+    {
+      id: 101,
+      tipo: 'Relatórios',
+      titulo: 'Ergimino Mucale',
+      descricao: 'Documento oficial referente ao membro Ergimino Mucale da ANAM.',
+      tamanho: 'PDF',
+      icon: 'person',
+      cor: '#34D399',
+      url: 'assets/docs/ergimino-mucale.pdf'
+    },
+    {
+      id: 102,
+      tipo: 'Relatórios',
+      titulo: 'Mario Sevene',
+      descricao: 'Documento oficial referente ao membro Mario Sevene da ANAM.',
+      tamanho: 'PDF',
+      icon: 'person',
+      cor: '#059669',
+      url: 'assets/docs/mario-sevene.pdf'
+    },
+
     // ========== ESTATUTOS (3) ==========
     {
       id: 1,
@@ -201,7 +233,7 @@ export class DocsHomeComponent implements OnInit, OnDestroy {
   filtrar(tipo: string): void {
     this.filtroAtivo = tipo;
   }
-  
+
   getIconSvg(iconName: string): SafeHtml {
     const iconMap: { [key: string]: string } = {
       'gavel': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0s-.83-.83 0-1.66L11.34 12"/><path d="M17.64 15L20 12.64"/><path d="M20.5 11.5l-1-1"/><path d="M15.5 6.5l-1-1"/><path d="M12 2l-2 2"/><path d="M6.5 7.5L5 6"/><path d="M8 2l2 2"/><path d="M3 3l18 18"/></svg>',
@@ -230,7 +262,7 @@ export class DocsHomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Remover classe quando sair da página
     document.body.classList.remove('navbar-solid');
+    document.body.style.overflow = '';
   }
 }
