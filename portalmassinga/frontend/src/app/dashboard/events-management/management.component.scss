@@ -1,141 +1,70 @@
+@use '../management-layout' as mgmt;
+
 $color-events: #059669;
 $color-events-secondary: #047857;
 
 :host {
-  display: block;
+  @include mgmt.host-block;
 }
 
 .page-container {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-  min-height: calc(100vh - 64px);
+  @include mgmt.page-root;
 }
 
 .page-header {
-  margin-bottom: 32px;
-  background: white;
-  padding: 28px 32px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba($color-events, 0.15);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $color-events 0%, $color-events-secondary 100%);
-  }
+  @include mgmt.legacy-page-header($color-events, $color-events-secondary);
 
   .header-top {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 24px;
+    gap: 1.25rem;
     flex-wrap: wrap;
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 8px 0;
-  }
-
-  p {
-    font-size: 1rem;
-    color: #6b7280;
-    margin: 0;
+    width: 100%;
   }
 
   .btn-new-event {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 20px;
+    padding: 0.6rem 1rem;
     border-radius: 10px;
-    background: $color-events;
+    background: linear-gradient(145deg, $color-events, $color-events-secondary);
     color: white;
     border: none;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    .mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
   }
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
+  @include mgmt.kpi-strip-base;
 
-  .stat-card {
-    position: relative;
-    background: white;
-    border-radius: 20px;
-    padding: 28px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e7eb;
-    overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, $color-events 0%, $color-events-secondary 100%);
+  .stat-icon {
+    &.total {
+      background: #ecfdf5;
+      color: $color-events;
     }
 
-    .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      flex-shrink: 0;
-
-      &.total {
-        background: linear-gradient(135deg, $color-events 0%, $color-events-secondary 100%);
-      }
-
-      &.inscritos {
-        background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
-      }
-
-      ::ng-deep mat-icon,
-      .mat-icon {
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .stat-content h3 {
-      margin: 0;
-      font-size: 1.75rem;
-      color: #1f2937;
-    }
-
-    .stat-content p {
-      margin: 4px 0 0 0;
-      font-size: 0.9rem;
-      color: #6b7280;
+    &.inscritos {
+      background: #ede9fe;
+      color: #7c3aed;
     }
   }
+}
+
+.filters-section {
+  @include mgmt.toolbar-card-base;
+}
+
+.table-container {
+  @include mgmt.table-card-base;
 }
 
 .error-message {

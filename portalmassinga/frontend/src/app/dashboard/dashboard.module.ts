@@ -64,6 +64,8 @@ import { StatsCardsComponent } from './components/stats-cards/stats-cards.compon
 import { MembersCardComponent } from './components/cards/members-card/members-card.component';
 import { TreasuryCardComponent } from './components/cards/treasury-card/treasury-card.component';
 import { PartnersCardComponent } from './components/cards/partners-card/partners-card.component';
+import { SupportersCardComponent } from './components/cards/supporters-card/supporters-card.component';
+import { SympathizersCardComponent } from './components/cards/sympathizers-card/sympathizers-card.component';
 import { DashboardHeaderCardComponent } from './components/cards/dashboard-header-card/dashboard-header-card.component';
 // Attendance lists
 import { AttendanceUploadComponent } from './attendance-lists/upload/attendance-upload.component';
@@ -155,6 +157,8 @@ const routes: Routes = [
     MembersCardComponent,
     TreasuryCardComponent,
     PartnersCardComponent,
+    SupportersCardComponent,
+    SympathizersCardComponent,
     DashboardHeaderCardComponent,
     // Attendance lists
     AttendanceUploadComponent,

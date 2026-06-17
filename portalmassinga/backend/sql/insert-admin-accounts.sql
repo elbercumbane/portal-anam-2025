@@ -1,13 +1,13 @@
 -- Contas de administrador são criadas automaticamente pela aplicação ao iniciar (DataLoader).
 -- Este script é OPCIONAL - use apenas se quiser criar/atualizar manualmente.
 --
--- Contas criadas automaticamente:
---   admin@anam.co.mz  / admin123  (Administrador Principal)
---   admin2@anam.co.mz / admin123  (Administrador Secundário)
+-- Contas criadas automaticamente (DataLoader):
+--   admin@anam.co.mz  / anam{ANO}  (ex: anam2026) — Administrador Principal
+--   admin2@anam.co.mz / anam{ANO}  — Administrador Secundário
 --
 -- Para executar manualmente (após criar a tabela users), descomente e ajuste o hash:
 -- O hash BCrypt deve ser gerado pela aplicação. Exemplo em Java:
---   String hash = new BCryptPasswordEncoder().encode("admin123");
+--   String hash = new BCryptPasswordEncoder().encode("anam2026");
 
 -- INSERT INTO users (id, email, password_hash, full_name, role, created_at, updated_at)
 -- VALUES

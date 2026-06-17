@@ -1,10 +1,15 @@
 <!-- Hero Editorial -->
 <section class="projectos-hero">
-  <video #heroVideo class="hero-video" autoplay muted playsinline>
-    <source src="/assets/video/farm.mov" type="video/quicktime">
-    <source src="/assets/video/farm.mov" type="video/mp4">
-  </video>
+  <div class="hero-slider" aria-hidden="true">
+    <div
+      class="hero-slide"
+      *ngFor="let slide of slides; let i = index"
+      [class.active]="currentSlide === i"
+      [style.background-image]="'url(' + slide.imagem + ')'">
+    </div>
+  </div>
   <div class="hero-overlay"></div>
+
   <div class="hero-content">
     <h1 class="hero-title">
       Transformando <span class="highlight">Vidas</span>
@@ -63,6 +68,36 @@
       </nav>
     </div>
   </div>
+
+  <div class="hero-slider-controls">
+    <button type="button" class="hero-arrow" (click)="prevSlide()" aria-label="Imagem anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button type="button" class="hero-arrow" (click)="nextSlide()" aria-label="Próxima imagem">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <div class="hero-footer">
+    <div class="hero-progress">
+      <div class="hero-progress-bar" [style.width.%]="progressPercent"></div>
+    </div>
+    <div class="hero-dots">
+      <button
+        type="button"
+        *ngFor="let slide of slides; let i = index"
+        class="hero-dot"
+        [class.active]="currentSlide === i"
+        (click)="goToSlide(i)"
+        [attr.aria-label]="slide.legenda">
+      </button>
+    </div>
+  </div>
+
   <div class="hero-scroll-indicator">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -111,13 +146,3 @@
     </div>
   </div>
 </section>
-
-<button class="scroll-top-btn" [class.at-top]="isAtTop" (click)="handleScrollButton()" aria-label="Navegação scroll">
-  <svg *ngIf="!isAtTop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
-  <svg *ngIf="isAtTop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <polyline points="6 9 12 15 18 9"></polyline>
-  </svg>
-</button>
-

@@ -6,58 +6,100 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-navbar-clock',
   template: `
     <div class="datetime-block">
-      <div class="time-line">{{ currentTime }}</div>
-      <div class="date-line">{{ currentDate }}</div>
+      <div class="clock-icon-wrap">
+        <mat-icon>schedule</mat-icon>
+      </div>
+      <div class="datetime-text">
+        <div class="time-line">{{ currentTime }}</div>
+        <div class="date-line">{{ currentDate }}</div>
+      </div>
     </div>
   `,
   styles: [`
     .datetime-block {
       display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.4rem 0.875rem;
+      background: rgba(5, 150, 105, 0.06);
+      border: 1px solid rgba(5, 150, 105, 0.15);
+      border-radius: 12px;
+    }
+
+    .clock-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #059669;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+
+      mat-icon {
+        font-size: 17px;
+        width: 17px;
+        height: 17px;
+        color: white;
+      }
+    }
+
+    .datetime-text {
+      display: flex;
       flex-direction: column;
       align-items: flex-end;
-      justify-content: center;
-      margin-right: 0.75rem;
       text-align: right;
     }
 
     .time-line {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #059669;
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.02em;
-      line-height: 1.25;
+      line-height: 1.2;
     }
 
     .date-line {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 500;
-      color: #334155;
+      color: #475569;
       line-height: 1.3;
-      margin-top: 0.1rem;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     @media (max-width: 768px) {
       .datetime-block {
-        margin-right: 0.5rem;
+        padding: 0.35rem 0.625rem;
+        gap: 0.5rem;
       }
-      .time-line {
-        font-size: 1.1rem;
-      }
-      .date-line {
-        font-size: 0.75rem;
-      }
-    }
 
-    @media (max-width: 480px) {
-      .datetime-block {
-        margin-right: 0.35rem;
+      .clock-icon-wrap {
+        width: 28px;
+        height: 28px;
+
+        mat-icon {
+          font-size: 15px;
+          width: 15px;
+          height: 15px;
+        }
       }
+
       .time-line {
         font-size: 1rem;
       }
+
       .date-line {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+        max-width: 120px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .date-line {
+        display: none;
       }
     }
   `]

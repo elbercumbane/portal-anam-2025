@@ -152,6 +152,25 @@
         </button>
       </form>
 
+      <!-- Acesso de teste (apresentação) -->
+      <div class="demo-access-panel">
+        <p class="demo-access-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M9 3h6l3 7H6l3-7z"/><path d="M12 10v4"/><circle cx="12" cy="18" r="1"/>
+          </svg>
+          Acessos de teste
+        </p>
+        <p class="demo-access-hint">Senha padrão: <strong>anam{{ currentYear }}</strong> (anam + ano corrente)</p>
+        <div class="demo-access-list">
+          <button type="button" class="demo-access-chip" *ngFor="let acc of demoAcessos"
+            (click)="usarAcessoDemo(acc.email, acc.password)">
+            <span class="chip-label">{{ acc.label }}</span>
+            <span class="chip-creds">{{ acc.email }} · {{ acc.password }}</span>
+            <span class="chip-dest">{{ acc.destino }}</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Divisor -->
       <div class="divider">
         <span>ou</span>

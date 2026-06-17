@@ -1,57 +1,118 @@
-<!-- Hero Section - Novo Layout Simples -->
-<section class="hero-section" aria-labelledby="hero-title">
+<section class="hero-section" aria-labelledby="hero-title" [style.--accent-color]="activeSlide.accentColor">
+  <!-- Fundo com slides -->
   <div class="hero-background">
     <div class="hero-slider">
-      <div class="hero-slide" 
-           *ngFor="let slide of slides; let i = index"
-           [class.active]="currentSlide === i"
-           [style.background-image]="'url(' + slide.imagem + ')'">
+      <div
+        class="hero-slide"
+        *ngFor="let slide of slides; let i = index"
+        [class.active]="currentSlide === i"
+        [style.background-image]="'url(' + slide.imagem + ')'">
       </div>
     </div>
-    <div class="hero-overlay overlay-green-light"></div>
+    <div class="hero-overlay" [ngClass]="activeSlide.overlay"></div>
+    <div class="hero-grain" aria-hidden="true"></div>
   </div>
-  
-  <div class="hero-container" [class.transitioning]="isTransitioning">
-    <h1 id="hero-title" class="hero-title">
-      <span class="hero-title-text" [innerHTML]="getCurrentTitle()"></span>
-    </h1>
-    
-    <p class="hero-subtitle" [innerHTML]="getCurrentSubtitle()"></p>
-    
-    <div class="hero-actions">
-      <a [routerLink]="getCurrentButton().link" 
-         class="hero-cta-button"
-         [style.background-color]="getCurrentButton().color">
-        {{ getCurrentButton().text }}
+
+  <!-- Conteúdo -->
+  <div class="hero-layout">
+    <div
+      class="hero-container"
+      [class.transitioning]="isTransitioning"
+      [attr.data-key]="contentKey"
+      [style.--accent-color]="activeSlide.accentColor">
+
+      <div class="hero-meta">
+        <span class="hero-badge">{{ activeSlide.badge }}</span>
+        <span class="hero-counter">{{ slideCounter }}</span>
+      </div>
+
+      <h1 id="hero-title" class="hero-title">
+        <span class="hero-title-text" [innerHTML]="activeSlide.titulo"></span>
+      </h1>
+
+      <p class="hero-subtitle" [innerHTML]="activeSlide.subtitulo"></p>
+
+      <ul class="hero-valores" *ngIf="activeSlide.valores?.length">
+        <li *ngFor="let valor of activeSlide.valores">
+          <span class="valor-icon" aria-hidden="true">
+            <svg *ngIf="valor.icon === 'competencias'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/>
+            </svg>
+            <svg *ngIf="valor.icon === 'networking'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <svg *ngIf="valor.icon === 'oportunidades'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </span>
+          <div class="valor-text">
+            <strong>{{ valor.label }}</strong>
+            <span>{{ valor.desc }}</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="hero-actions">
+        <a
+          [routerLink]="activeSlide.button.link"
+          class="hero-cta-button"
+          [style.--btn-color]="activeSlide.button.color">
+          {{ activeSlide.button.text }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <a routerLink="/sobre" class="hero-cta-secondary">Conheça a ANAM</a>
+      </div>
+    </div>
+
+    <!-- Navegação lateral -->
+    <div class="hero-nav">
+      <button class="hero-arrow" (click)="prevSlide()" aria-label="Slide anterior">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
+          <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-      </a>
+      </button>
+      <button class="hero-arrow" (click)="nextSlide()" aria-label="Próximo slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
     </div>
   </div>
-  
-  <!-- Controles do Slider -->
-  <div class="hero-controls">
-    <button 
-      *ngFor="let slide of slides; let i = index"
-      class="hero-dot" 
-      [class.active]="currentSlide === i"
-      (click)="goToSlide(i)"
-      [attr.aria-label]="'Slide ' + (i + 1)">
-    </button>
+
+  <!-- Barra de progresso + indicadores -->
+  <div class="hero-footer">
+    <div class="hero-progress">
+      <div class="hero-progress-bar" [style.width.%]="progressPercent"></div>
+    </div>
+    <div class="hero-controls">
+      <button
+        *ngFor="let slide of slides; let i = index"
+        class="hero-dot"
+        [class.active]="currentSlide === i"
+        [style.--dot-color]="slide.accentColor"
+        (click)="goToSlide(i)"
+        [attr.aria-label]="'Slide ' + (i + 1) + ': ' + slide.badge">
+        <span class="dot-label">{{ slide.badge }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint" aria-hidden="true">
+    <span>Explorar</span>
+    <div class="scroll-line"></div>
   </div>
 </section>
 
-<!-- NOVA ESTRUTURA DA HOME -->
 <app-stats-section></app-stats-section>
 <app-history-section></app-history-section>
 <app-events-section></app-events-section>
 <app-news-section></app-news-section>
 <app-gallery></app-gallery>
 <home-parceiros></home-parceiros>
-
-<!-- Botão Flutuante Scroll to Top -->
-<app-scroll-to-top></app-scroll-to-top>
-
-

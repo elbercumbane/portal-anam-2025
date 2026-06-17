@@ -81,23 +81,27 @@ export class AuthService {
   }
 
   private validateToken(): void {
-    this.apiClient.getCurrentUser().subscribe({
-      next: (response: any) => {
-        if (response.success && response.user) {
-          const usuario: Usuario = {
-            email: response.user.email,
-            nome: response.user.nome || response.user.full_name,
-            role: response.user.role || 'membro',
-            memberId: response.user.memberId || response.user.member_id,
-            mustChangePassword: response.user.mustChangePassword === true
-          };
-          this.currentUserSubject.next(usuario);
-          localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
+    this.apiClient.validateSession().subscribe({
+      next: (result) => {
+        if (!result.valid) {
+          this.logout();
+          return;
         }
-      },
-      error: () => {
-        // Token inválido, fazer logout
-        this.logout();
+
+        const user = result.user;
+        if (!user) {
+          return;
+        }
+
+        const usuario: Usuario = {
+          email: user.email,
+          nome: user.nome || user.full_name || user.fullName,
+          role: user.role || 'membro',
+          memberId: user.memberId || user.member_id,
+          mustChangePassword: user.mustChangePassword === true
+        };
+        this.currentUserSubject.next(usuario);
+        localStorage.setItem(STORAGE_KEYS.USUARIO_ATUAL, JSON.stringify(usuario));
       }
     });
   }
@@ -175,11 +179,31 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.currentUserSubject.value !== null;
+    if (this.currentUserSubject.value !== null) {
+      return true;
+    }
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN_AUTH);
+    const usuarioSalvo = localStorage.getItem(STORAGE_KEYS.USUARIO_ATUAL);
+    return !!(token && usuarioSalvo);
   }
 
   getCurrentUser(): Usuario | null {
-    return this.currentUserSubject.value;
+    if (this.currentUserSubject.value) {
+      return this.currentUserSubject.value;
+    }
+
+    const usuarioSalvo = localStorage.getItem(STORAGE_KEYS.USUARIO_ATUAL);
+    if (!usuarioSalvo) {
+      return null;
+    }
+
+    try {
+      const usuario = JSON.parse(usuarioSalvo) as Usuario;
+      this.currentUserSubject.next(usuario);
+      return usuario;
+    } catch {
+      return null;
+    }
   }
 
   changePassword(newPassword: string): Observable<{ success: boolean; message?: string }> {

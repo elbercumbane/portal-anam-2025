@@ -96,31 +96,108 @@ public class QuotaPaymentController {
     }
 
     /**
+     * Situação de cotas por NUIT (público — página Pagar Cotas).
+     */
+    @GetMapping("/status/by-nuit/{nuit}")
+    public ResponseEntity<?> getStatusByNuit(@PathVariable String nuit) {
+        if (nuit == null || nuit.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("message", "NUIT é obrigatório"));
+        }
+        return memberRepository.findByNuitIgnoreCase(nuit.trim())
+                .map(this::buildStatusResponse)
+                .orElseGet(() -> ResponseEntity.status(404).body(Map.of("message", "Membro não encontrado")));
+    }
+
+    /**
+     * Situação de cotas por ID do membro (utilizador autenticado).
+     */
+    @GetMapping("/status/member/{memberId}")
+    public ResponseEntity<?> getStatusByMemberId(@PathVariable UUID memberId) {
+        return memberRepository.findById(memberId)
+                .map(this::buildStatusResponse)
+                .orElseGet(() -> ResponseEntity.status(404).body(Map.of("message", "Membro não encontrado")));
+    }
+
+    private ResponseEntity<?> buildStatusResponse(MemberApplication m) {
+        if (m.getStatus() == null || !"Approved".equals(m.getStatus())) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Apenas membros aprovados podem pagar cotas",
+                    "status", m.getStatus() != null ? m.getStatus() : "Unknown"
+            ));
+        }
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+        MemberQuotaStatusDTO dto = buildMemberQuotaStatus(m, currentYear, currentMonth);
+        if (dto == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Não foi possível calcular a situação de cotas"));
+        }
+        return ResponseEntity.ok(dto);
+    }
+
+    /**
      * Registar um pagamento de cota (para integração com pay-quotas).
      */
     @PostMapping
     public ResponseEntity<?> createPayment(@RequestBody CreateQuotaPaymentDTO request) {
         if (request.getMemberApplicationId() == null || !memberRepository.existsById(request.getMemberApplicationId())) {
-            return ResponseEntity.badRequest().body("Membro não encontrado");
+            return ResponseEntity.badRequest().body(Map.of("message", "Membro não encontrado"));
         }
         if (request.getMonths() == null || request.getMonths().isEmpty()) {
-            return ResponseEntity.badRequest().body("Meses obrigatórios");
+            return ResponseEntity.badRequest().body(Map.of("message", "Meses obrigatórios"));
         }
+
+        String reference = request.getReference() != null && !request.getReference().isBlank()
+                ? request.getReference().trim()
+                : "PAY-" + System.currentTimeMillis();
+
+        int created = 0;
+        int skipped = 0;
+        List<Map<String, Object>> saved = new ArrayList<>();
 
         for (int month : request.getMonths()) {
             if (month < 1 || month > 12) continue;
+
+            List<QuotaPayment> existing = quotaPaymentRepository.findByMemberAndYearMonth(
+                    request.getMemberApplicationId(), request.getYear(), month);
+            boolean alreadyPaid = existing.stream()
+                    .anyMatch(p -> "Paid".equalsIgnoreCase(p.getStatus()));
+            if (alreadyPaid) {
+                skipped++;
+                continue;
+            }
+
             QuotaPayment p = new QuotaPayment();
             p.setMemberApplicationId(request.getMemberApplicationId());
             p.setYear(request.getYear());
             p.setMonth(month);
-            p.setAmount(VALOR_COTA_MENSAL.multiply(BigDecimal.ONE));
+            p.setAmount(VALOR_COTA_MENSAL);
             p.setPaymentDate(request.getPaymentDate() != null ? request.getPaymentDate() : LocalDate.now());
             p.setPaymentMethod(request.getPaymentMethod());
-            p.setReference(request.getReference());
+            p.setReference(reference);
             p.setStatus("Paid");
-            quotaPaymentRepository.save(p);
+            QuotaPayment savedPayment = quotaPaymentRepository.save(p);
+            created++;
+            saved.add(Map.of(
+                    "id", savedPayment.getId().toString(),
+                    "year", savedPayment.getYear(),
+                    "month", savedPayment.getMonth(),
+                    "amount", savedPayment.getAmount()
+            ));
         }
-        return ResponseEntity.status(201).build();
+
+        if (created == 0) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Nenhum mês novo foi registado (já pagos ou inválidos)",
+                    "skipped", skipped
+            ));
+        }
+
+        return ResponseEntity.status(201).body(Map.of(
+                "reference", reference,
+                "paymentsCreated", created,
+                "skipped", skipped,
+                "payments", saved
+        ));
     }
 
     private MemberQuotaStatusDTO buildMemberQuotaStatus(MemberApplication m, int currentYear, int currentMonth) {
@@ -149,11 +226,17 @@ public class QuotaPaymentController {
         }
 
         int mesesEmDivida = 0;
+        List<String> mesesEmFalta = new ArrayList<>();
+        List<String> mesesPagos = new ArrayList<>();
         YearMonth current = YearMonth.of(currentYear, currentMonth);
         YearMonth start = YearMonth.of(startYear, startMonth);
         for (YearMonth ym = start; !ym.isAfter(current); ym = ym.plusMonths(1)) {
+            String key = String.format("%d-%02d", ym.getYear(), ym.getMonthValue());
             if (!paidMonths.contains(ym)) {
                 mesesEmDivida++;
+                mesesEmFalta.add(key);
+            } else {
+                mesesPagos.add(key);
             }
         }
 
@@ -170,6 +253,8 @@ public class QuotaPaymentController {
         dto.setMesesEmDivida(mesesEmDivida);
         dto.setValorEmDivida(valorEmDivida);
         dto.setUltimoMesPago(ultimoMesPago);
+        dto.setMesesEmFalta(mesesEmFalta);
+        dto.setMesesPagos(mesesPagos);
         return dto;
     }
 

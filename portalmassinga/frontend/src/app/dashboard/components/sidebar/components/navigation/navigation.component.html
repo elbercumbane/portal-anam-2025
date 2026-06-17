@@ -12,7 +12,7 @@
     </div>
 
     <mat-divider class="nav-divider"></mat-divider>
-    <div class="section-title">Gestão</div>
+    <div class="section-title">Tesouraria</div>
 
     <div class="nav-item-wrapper">
       <a class="nav-item expandable"
@@ -33,6 +33,9 @@
         </a>
       </div>
     </div>
+
+    <mat-divider class="nav-divider"></mat-divider>
+    <div class="section-title">Associação</div>
 
     <div class="nav-item-wrapper nav-item-with-badge">
       <a class="nav-item"
@@ -109,14 +112,14 @@
   <!-- Bloco inferior: Configurações + Projectos + Logout -->
   <div class="nav-block nav-block--bottom">
     <mat-divider class="nav-divider"></mat-divider>
-    <div class="section-title">Configurações</div>
+    <div class="section-title">Mídia &amp; Conteúdo</div>
 
     <div class="nav-item-wrapper">
       <a class="nav-item expandable"
          [class.active]="configuracoesExpanded || activeItem === 'home' || activeItem === 'documentacao' || activeItem === 'servicos' || activeItem === 'eventos' || activeItem === 'historial' || activeItem === 'galeria' || activeItem === 'parceiros' || activeItem === 'programas' || activeItem === 'noticias' || activeItem === 'associar' || activeItem === 'contato' || activeItem === 'config-notificacoes' || activeItem === 'config-galeria'"
          (click)="toggleConfiguracoes()">
-        <mat-icon class="nav-icon">settings</mat-icon>
-        <span class="nav-text">Gestão de Páginas</span>
+        <mat-icon class="nav-icon">web</mat-icon>
+        <span class="nav-text">Editar Páginas do Site</span>
         <mat-icon class="dropdown-icon" [class.rotated]="configuracoesExpanded">expand_more</mat-icon>
       </a>
     </div>

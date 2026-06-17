@@ -2,31 +2,43 @@
 // DASHBOARD CONTAINER & LAYOUT
 // ============================================
 
+@use './dashboard-theme' as theme;
+
 .dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(160deg, #f0f9ff 0%, #f8fafc 35%, #ecfeff 60%, #f1f5f9 100%);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(30, 64, 175, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 100%, rgba(5, 150, 105, 0.06) 0%, transparent 50%),
+    theme.$dash-bg;
 }
 
 .sidenav-container {
   min-height: 100vh;
-  
-  // Ocultar scrollbar do container
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
-  
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
     width: 0;
     height: 0;
   }
-  
-  // Ocultar scrollbar nos elementos internos do Angular Material
+
   ::ng-deep {
+    .mat-sidenav-content {
+      width: auto !important;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
     .mat-drawer-inner-container,
     .mat-sidenav-inner-container {
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
-      
+
       &::-webkit-scrollbar {
         display: none !important;
         width: 0 !important;
@@ -37,9 +49,8 @@
 }
 
 // Sidenav: tema escuro aplicado pelo componente app-sidebar (sidebar.component.scss)
-// Aqui apenas garantir que não sobrescrevemos o fundo
 .sidenav {
-  width: 300px;
+  width: 280px;
   background: transparent;
   border: none;
 
@@ -53,25 +64,239 @@
 }
 
 .main-content {
-  background: linear-gradient(165deg, #f0f9ff 0%, #f8fafc 40%, #ecfeff 70%, #f1f5f9 100%);
+  background: theme.$dash-bg;
   min-height: 100vh;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .dashboard-content {
-  max-width: 1400px;
+  width: 100%;
+  max-width: min(1400px, 100%);
   margin: 0 auto;
   padding: 2rem;
+  box-sizing: border-box;
+  min-width: 0;
 
   &.full-width-content {
-    max-width: none;
-    width: 100%;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    max-width: 100%;
+    padding: 1.5rem 2rem;
+    margin: 0;
   }
 }
 
 .dashboard-main {
-  padding: 1.5rem 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: clip;
+  text-align: left;
+
+  // Ícones alinhados à esquerda nos cards e KPIs
+  .kpi-item,
+  .modern-card {
+    text-align: left;
+  }
+
+  .kpi-item {
+    justify-content: flex-start;
+    align-items: center;
+
+    .kpi-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      mat-icon {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 24px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+      }
+    }
+
+    .kpi-data {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  .modern-card {
+    .card-header-modern {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .icon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      align-self: flex-start;
+
+      mat-icon {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 20px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+      }
+    }
+
+    .header-text {
+      text-align: left;
+    }
+
+    .main-stat,
+    .card-footer {
+      text-align: left;
+    }
+  }
+}
+
+// ============================================
+// KPI STRIP
+// ============================================
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  .kpi-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 0.875rem;
+    background: theme.$dash-surface;
+    border: 1px solid theme.$dash-border;
+    border-radius: 14px;
+    padding: 1.125rem 1.25rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, theme.$dash-accent, theme.$dash-success);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+      transform: translateY(-2px);
+      border-color: rgba(30, 64, 175, 0.2);
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+
+      mat-icon {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 1;
+        margin: 0;
+      }
+
+      &.members {
+        background: theme.$dash-accent-light;
+        color: theme.$dash-accent;
+      }
+
+      &.quotas {
+        background: #ecfdf5;
+        color: theme.$dash-success;
+      }
+
+      &.events {
+        background: #ede9fe;
+        color: #7c3aed;
+      }
+
+      &.supporters {
+        background: #ede9fe;
+        color: #7c3aed;
+      }
+
+      &.sympathizers {
+        background: #fce7f3;
+        color: #db2777;
+      }
+
+      &.pending {
+        background: #fef3c7;
+        color: theme.$dash-warning;
+      }
+    }
+
+    .kpi-data {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+      min-width: 0;
+
+      .kpi-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: theme.$dash-text;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: -0.02em;
+      }
+
+      .kpi-label {
+        font-size: 0.75rem;
+        color: theme.$dash-text-muted;
+        font-weight: 600;
+        line-height: 1.3;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+    }
+  }
 }
 
 .loading-container {
@@ -93,8 +318,8 @@
 
 .modern-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0.875rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -107,28 +332,28 @@
 
   .charts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
     margin-bottom: 1.25rem;
   }
 
   .modern-chart-card {
-    background: white;
+    background: theme.$dash-surface;
     border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(5, 182, 212, 0.1);
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    border: 1px solid theme.$dash-border;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
 
     &:hover {
-      box-shadow: 0 6px 24px rgba(5, 182, 212, 0.12);
+      box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
       transform: translateY(-2px);
     }
 
     .chart-header {
-      padding: 1.25rem 1.25rem 0.875rem;
-      border-bottom: 1px solid #F3F4F6;
-      background: linear-gradient(to bottom, rgba(5, 182, 212, 0.02), transparent);
+      padding: 1.125rem 1.25rem 0.875rem;
+      border-bottom: 1px solid theme.$dash-border;
+      background: transparent;
 
       .chart-title-section {
         display: flex;
@@ -136,36 +361,41 @@
         gap: 0.875rem;
 
         mat-icon {
-          font-size: 1.75rem;
-          width: 1.75rem;
-          height: 1.75rem;
-          color: #05B6D4;
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+          color: theme.$dash-accent;
           margin-top: 0.125rem;
         }
 
         h3 {
           margin: 0 0 0.25rem;
-          font-size: 1.125rem;
-          font-weight: 700;
-          color: var(--ink-900, #0F172A);
+          font-size: 1rem;
+          font-weight: 600;
+          color: theme.$dash-text;
         }
 
         p {
           margin: 0;
           font-size: 0.8125rem;
-          color: #64748b;
+          color: theme.$dash-text-muted;
         }
       }
     }
 
     .chart-body {
       padding: 1.25rem;
+      max-width: 100%;
+      overflow-x: auto;
 
       .growth-chart-svg,
       .treasury-chart-svg {
         width: 100%;
         height: auto;
-        max-height: 280px;
+        min-height: 220px;
+        max-height: 320px;
+        display: block;
+        max-width: 100%;
 
         .grid {
           opacity: 0.4;
@@ -194,20 +424,20 @@
 // ============================================
 
 .partners-section-card {
-  background: white;
+  background: theme.$dash-surface;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(5, 182, 212, 0.1);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid theme.$dash-border;
   padding: 1.5rem;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 
   .section-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #F3F4F6;
+    margin-bottom: 1.125rem;
+    padding-bottom: 0.875rem;
+    border-bottom: 1px solid theme.$dash-border;
 
     .section-title-group {
       display: flex;
@@ -216,34 +446,33 @@
       flex: 1;
 
       mat-icon {
-        font-size: 1.5rem;
-        width: 1.5rem;
-        height: 1.5rem;
-        color: #05B6D4;
+        font-size: 1.375rem;
+        width: 1.375rem;
+        height: 1.375rem;
+        color: theme.$dash-accent;
         margin-top: 0.125rem;
       }
 
       h3 {
         margin: 0 0 0.25rem;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--ink-900, #0F172A);
+        font-size: 1rem;
+        font-weight: 600;
+        color: theme.$dash-text;
       }
 
       p {
         margin: 0;
         font-size: 0.8125rem;
-        color: #64748b;
+        color: theme.$dash-text-muted;
       }
     }
 
     .view-all-btn {
-      color: #05B6D4;
+      color: theme.$dash-accent;
       transition: all 0.2s ease;
 
       &:hover {
-        background: rgba(5, 182, 212, 0.1);
-        transform: translateX(4px);
+        background: theme.$dash-accent-light;
       }
     }
   }
@@ -251,7 +480,7 @@
   .partners-content {
     .partners-grid-compact {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 0.875rem;
 
       .partner-card-compact {
@@ -264,8 +493,8 @@
 
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(5, 182, 212, 0.15);
-          border-color: #05B6D4;
+          box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+          border-color: theme.$dash-accent;
         }
 
         &.active {
@@ -283,10 +512,10 @@
             width: 36px;
             height: 36px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #05B6D4 0%, #8B5CF6 100%);
+            background: theme.$dash-accent-light;
             display: grid;
             place-items: center;
-            color: white;
+            color: theme.$dash-accent;
 
             mat-icon {
               font-size: 1.125rem;
@@ -431,15 +660,52 @@
 // RESPONSIVE DESIGN
 // ============================================
 
+@media (max-width: 1400px) {
+  .kpi-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .modern-cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .modern-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1024px) {
   .dashboard-content {
     padding: 1.5rem;
+
+    &.full-width-content {
+      padding: 1.25rem 1.5rem;
+    }
+  }
+
+  .charts-section .charts-grid {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 768px) {
   .dashboard-content {
     padding: 1rem;
+
+    &.full-width-content {
+      padding: 1rem;
+    }
+  }
+
+  .kpi-strip {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 
   .modern-cards-grid {

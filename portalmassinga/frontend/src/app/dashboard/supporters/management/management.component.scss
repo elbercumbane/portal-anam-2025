@@ -1,69 +1,18 @@
-// Gestão de Apoiantes - layout melhorado
+@use '../../management-layout' as mgmt;
+
 $color-apoio: #0d9488;
 $color-apoio-secondary: #0f766e;
 
 :host {
-  display: block;
+  @include mgmt.host-block;
 }
 
 .page-container {
-  padding: 28px;
-  max-width: 1440px;
-  margin: 0 auto;
-  min-height: calc(100vh - 64px);
+  @include mgmt.page-root;
 }
 
 .page-header {
-  margin-bottom: 20px;
-  background: white;
-  padding: 24px 28px;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-
-  .page-header-content {
-    flex: 1;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #111827;
-    margin: 0 0 4px 0;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin: 0;
-  }
-
-  .page-header-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 14px 24px;
-    background: #f0fdfa;
-    border-radius: 12px;
-    border: 1px solid #99f6e4;
-    
-    .stat-number {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: $color-apoio;
-      line-height: 1.2;
-    }
-    
-    .stat-label {
-      font-size: 0.8rem;
-      color: #047857;
-    }
-  }
+  @include mgmt.legacy-page-header($color-apoio, $color-apoio-secondary);
 }
 
 // Escondido - total movido para header
@@ -126,16 +75,8 @@ $color-apoio-secondary: #0f766e;
 }
 
 .filters-section {
+  @include mgmt.toolbar-card-base;
   margin-bottom: 20px;
-  background: white;
-  padding: 20px 24px;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
 
   .search-box {
     display: flex;
@@ -237,11 +178,7 @@ $color-apoio-secondary: #0f766e;
 }
 
 .table-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  overflow: hidden;
+  @include mgmt.table-card-base;
 }
 
 .supporters-table {

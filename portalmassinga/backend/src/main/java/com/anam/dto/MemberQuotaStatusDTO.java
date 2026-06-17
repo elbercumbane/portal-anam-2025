@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,4 +29,8 @@ public class MemberQuotaStatusDTO {
     private BigDecimal valorEmDivida;
     /** Último mês pago (ex: "2025-01") ou null */
     private String ultimoMesPago;
+    /** Meses em falta no formato YYYY-MM */
+    private List<String> mesesEmFalta = new ArrayList<>();
+    /** Meses já pagos no formato YYYY-MM */
+    private List<String> mesesPagos = new ArrayList<>();
 }

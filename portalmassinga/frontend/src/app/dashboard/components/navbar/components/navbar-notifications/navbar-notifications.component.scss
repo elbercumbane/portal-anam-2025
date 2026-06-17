@@ -1,20 +1,30 @@
+$action-default: #059669;
+$action-hover: #047857;
+
 .notifications-btn {
-  color: #059669;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  color: $action-default;
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(5, 150, 105, 0.12);
+  background: rgba(5, 150, 105, 0.04);
 
   .notification-icon {
-    color: #059669;
-    font-size: 1.5rem;
-    width: 1.5rem;
-    height: 1.5rem;
+    color: $action-default;
+    font-size: 1.35rem;
+    width: 1.35rem;
+    height: 1.35rem;
   }
 
   &:hover {
-    color: #047857;
-    background-color: rgba(5, 150, 105, 0.08);
+    color: $action-hover;
+    background-color: rgba(5, 150, 105, 0.12);
+    border-color: rgba(5, 150, 105, 0.25);
+    transform: translateY(-1px);
 
     .notification-icon {
-      color: #047857;
+      color: $action-hover;
     }
   }
 }

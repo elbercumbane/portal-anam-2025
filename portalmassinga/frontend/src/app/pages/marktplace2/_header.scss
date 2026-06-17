@@ -30,9 +30,31 @@
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   min-width: 0;
   flex: 0 1 auto;
+}
+
+.header-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid $sidebar-border;
+  border-radius: $radius-md;
+  background: #fff;
+  cursor: pointer;
+  color: var(--ink-700);
+  transition: all $transition-fast;
+
+  mat-icon { font-size: 22px; width: 22px; height: 22px; }
+
+  &:hover {
+    background: #ECFDF5;
+    border-color: #10B981;
+    color: #059669;
+  }
 }
 
 .header-logo {
@@ -118,11 +140,25 @@
 }
 
 .header-datetime {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink-600);
-  white-space: nowrap;
-  padding: 0 8px;
+  display: none;
+}
+
+.header-actions .btn-anunciar {
+  background: linear-gradient(135deg, #EA580C 0%, #F97316 100%) !important;
+  color: #fff !important;
+  border: none !important;
+
+  mat-icon, span { color: #fff !important; }
+
+  &:hover {
+    opacity: 0.92;
+  }
+}
+
+.hide-mobile {
+  @media (max-width: 640px) {
+    display: none;
+  }
 }
 
 .header-actions a.btn-voltar,

@@ -1,6 +1,16 @@
 <div class="user-profile-card">
-  <div class="profile-avatar">
-    <span class="avatar-initials">{{ getUserInitials() }}</span>
+  <div class="profile-avatar-wrap">
+    <div class="profile-avatar">
+      <span class="avatar-initials">{{ getUserInitials() }}</span>
+    </div>
+    <span class="online-dot" title="Sessão activa"></span>
   </div>
-  <span class="profile-name">{{ userInfo.username || 'Usuário' }}</span>
+
+  <div class="profile-details">
+    <span class="profile-name" [title]="userInfo.username">{{ userInfo.username || 'Usuário' }}</span>
+    <span class="profile-role-badge" *ngIf="userInfo.role">
+      {{ userInfo.role }}
+    </span>
+    <span class="profile-email" *ngIf="userInfo.email">{{ userInfo.email }}</span>
+  </div>
 </div>

@@ -12,6 +12,27 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrl: './why-support.component.scss'
 })
 export class WhySupportComponent {
+  pillars = [
+    {
+      iconType: 'search',
+      color: '#4CAF50',
+      title: 'Transparência Total',
+      description: 'Acompanha em tempo real como o teu apoio está a transformar vidas. Relatórios detalhados, resultados mensuráveis e impacto visível em cada projecto.'
+    },
+    {
+      iconType: 'heart',
+      color: '#388E3C',
+      title: 'Impacto Real',
+      description: 'Cada contribuição, seja em tempo, conhecimento ou recursos, gera transformações concretas na vida de pessoas reais em Massinga.'
+    },
+    {
+      iconType: 'handshake',
+      color: '#2E7D32',
+      title: 'Comunidade Forte',
+      description: 'Faz parte de uma rede de pessoas comprometidas com o desenvolvimento sustentável e o crescimento da nossa comunidade.'
+    }
+  ];
+
   supportWays = [
     {
       iconType: 'volunteer',
@@ -192,14 +213,17 @@ export class WhySupportComponent {
   }
 
   getIconColor(index: number): string {
-    const colors = ['#4CAF50', '#0B2F41', '#FFD700', '#4CAF50', '#EF4444', '#0B2F41'];
-    return colors[index % colors.length];
+    return '#4CAF50';
   }
 
   constructor(
     private router: Router,
     private sanitizer: DomSanitizer
   ) {}
+
+  scrollToSection(id: string): void {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   scrollToSupport(): void {
     this.router.navigate(['/apoio/torne-se-apoiante']);

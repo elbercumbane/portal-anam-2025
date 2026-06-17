@@ -16,7 +16,8 @@ import { DashboardStats, QuickAction, RecentActivity, FilterItem } from './dashb
 import { 
   PROVINCES, FORM_TYPES, STATUSES, SATISFACTION_LEVELS,
   QUICK_ACTIONS, INITIAL_ACTIVITIES,
-  INITIAL_STATS, INITIAL_ASSOCIATION_STATS, INITIAL_TREASURY_STATS, INITIAL_DASHBOARD_STATS
+  INITIAL_STATS, INITIAL_ASSOCIATION_STATS, INITIAL_TREASURY_STATS, INITIAL_DASHBOARD_STATS,
+  INITIAL_SUPPORTERS_STATS, INITIAL_SYMPATHIZERS_STATS
 } from './dashboard.data';
 
 @Component({
@@ -39,6 +40,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userRole = '';
   activeNavigationItem = 'dashboard'; // Para controlar qual item do sidebar está ativo
   pendingMembersCount = 0; // Membros pendentes de aprovação (badge no sidebar)
+
+  /** Views de gestão/conteúdo que ocupam toda a largura à direita da sidebar */
+  private readonly fullWidthViews = new Set([
+    'dashboard',
+    'membros-gestao', 'membro-detalhe', 'membros-home', 'membros-organograma',
+    'apoio-gestao', 'simpatizantes-gestao',
+    'eventos-gestao', 'eventos-inscricoes',
+    'tesouraria-cotas', 'tesouraria-gestao', 'tesouraria-relatorios',
+    'indicadores-geral', 'indicadores-desempenho', 'indicadores-satisfacao', 'indicadores-metricas',
+    'home', 'documentacao', 'servicos', 'eventos', 'historial', 'galeria',
+    'parceiros', 'programas', 'noticias', 'associar', 'contato',
+    'projectos-ativos', 'projectos-realizados', 'candidaturas',
+    'form-management', 'attendance-lists-upload', 'attendance-lists-view',
+    'user-management', 'profile'
+  ]);
+
+  get isFullWidthContent(): boolean {
+    return this.fullWidthViews.has(this.currentView);
+  }
   
   // Propriedades do sistema de filtros
   showFilterModal = false;
@@ -60,9 +80,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   
   // Dashboard data - Association (from dashboard.data.ts)
   associationStats = { ...INITIAL_ASSOCIATION_STATS };
+  supportersStats = { ...INITIAL_SUPPORTERS_STATS };
+  sympathizersStats = { ...INITIAL_SYMPATHIZERS_STATS };
   treasuryStats = { ...INITIAL_TREASURY_STATS };
 
   partners: any[] = [];
+  eventStats = { total: 0, proximos: 0, inscricoes: 0 };
 
   // Dados para gráficos
   growthChartData: number[] = [];
@@ -167,12 +190,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.loadPendingMembersCount();
       // Carregar dados da associação
       this.loadAssociationData();
+      this.loadSupportersData();
+      this.loadSympathizersData();
 
       // Carregar dados da tesouraria
       this.loadTreasuryData();
       
       // Carregar parceiros
       this.loadPartners();
+
+      // Carregar eventos
+      this.loadEventStats();
       
       // Carregar dados do dashboard usando o serviço (sem backend)
       this.dashboardStats = await this.dashboardStatsService.loadDashboardData();
@@ -369,6 +397,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadPendingMembersCount(): void {
+    this.pendingMembersCount = 0;
     this.apiClient.getPendingApplicationsCount().subscribe({
       next: (count) => {
         this.pendingMembersCount = count;
@@ -381,18 +410,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Carregar dados da associação
   private loadAssociationData(): void {
-    // Dados falsos para demonstração
-    this.associationStats = {
-      totalMembros: 187,
-      novosEsteMes: 15,
-      crescimento: 8.7,
-      membrosAtivos: 175
-    };
+    this.associationStats = { ...INITIAL_ASSOCIATION_STATS };
 
     // Dados para gráfico de crescimento (últimos 12 meses)
     this.growthChartData = [120, 125, 130, 135, 140, 145, 150, 155, 160, 170, 175, 187];
     this.growthChartMonths = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     this.growthChartMax = 200;
+  }
+
+  private loadSupportersData(): void {
+    this.supportersStats = { ...INITIAL_SUPPORTERS_STATS };
+  }
+
+  private loadSympathizersData(): void {
+    this.sympathizersStats = { ...INITIAL_SYMPATHIZERS_STATS };
   }
 
   // Carregar dados da tesouraria
@@ -419,13 +450,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Carregar parceiros
   private loadPartners(): void {
-    // TODO: Substituir por dados reais do backend
     this.partners = [
       { nome: 'Câmara Municipal de Massinga', tipo: 'Instituição Pública', ativo: true },
       { nome: 'Associação de Desenvolvimento Local', tipo: 'ONG', ativo: true },
       { nome: 'Banco de Moçambique', tipo: 'Instituição Financeira', ativo: true },
       { nome: 'Universidade Eduardo Mondlane', tipo: 'Instituição de Ensino', ativo: false }
     ];
+  }
+
+  private loadEventStats(): void {
+    this.eventStats = {
+      total: 12,
+      proximos: 3,
+      inscricoes: 47
+    };
   }
 
   // Formatar moeda
@@ -954,7 +992,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   formatRoleLabel(role: string): string {
     const r = (role || '').toLowerCase();
     if (r === 'super-admin') return 'Super Administrador';
-    if (r === 'admin' || r === 'administrador') return 'Administrador';
+    if (r === 'admin' || r === 'administrador') return 'Administrador Principal';
     if (r === 'membro') return 'Membro';
     return role;
   }

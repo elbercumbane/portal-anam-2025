@@ -2,7 +2,7 @@
 @import 'variables';
 
 .pagar-cotas-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 76px);
   position: relative;
   background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 20%, #f0fdfa 60%, #f8fafc 100%);
   padding: 0 1.5rem 4rem;

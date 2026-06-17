@@ -1,146 +1,197 @@
 <section class="noticias-page" #noticiasContent>
-  <!-- Fundo vermelho desde o topo -->
-  <div class="red-background-top"></div>
-  
-  <!-- Hero Dinâmico com Carrossel de Destaques -->
-  <div class="news-hero-dynamic">
-    <div class="hero-container">
-      <!-- Carrossel de Slides -->
-      <div class="hero-carousel">
-        <div class="carousel-wrapper">
-          <div 
-            class="carousel-slides" 
-            [style.transform]="'translateX(-' + (currentSlide * 100) + '%)'">
-            <div 
-              class="carousel-slide" 
-              *ngFor="let noticia of getFeaturedSlides(); let i = index"
-              (click)="selecionarNoticia(noticia)">
-              <div class="slide-image">
-                <img 
-                  *ngIf="noticia.imagem" 
-                  [src]="noticia.imagem" 
-                  [alt]="noticia.titulo"
-                  class="slide-img">
-                <div class="image-placeholder" *ngIf="!noticia.imagem">
-                  <span class="placeholder-icon">📰</span>
-                </div>
-              </div>
-              <div class="slide-content">
-                <span class="slide-badge">Destaque</span>
-                <h1 class="slide-title">{{ noticia.titulo }}</h1>
-                <p class="slide-excerpt">{{ noticia.resumo }}</p>
-                <div class="slide-meta">
-                  <span class="slide-category">{{ noticia.categoria }}</span>
-                  <span class="slide-date">{{ noticia.data }}</span>
-                </div>
-              </div>
-            </div>
+  <!-- Hero verde -->
+  <header class="news-hero-green">
+    <div class="hero-pattern" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-intro">
+        <span class="hero-badge">Notícias ANAM</span>
+        <h1 class="hero-title">Últimas <span class="title-accent">Notícias</span></h1>
+        <p class="hero-subtitle">Mantenha-se informado sobre as novidades e atividades da nossa comunidade</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>{{ noticias.length }}</strong>
+            <span>Artigos</span>
+          </div>
+          <div class="stat-divider" aria-hidden="true"></div>
+          <div class="stat">
+            <strong>{{ getCategorias().length }}</strong>
+            <span>Categorias</span>
           </div>
         </div>
-        
-        <!-- Controles de Navegação -->
-        <button class="carousel-btn carousel-prev" (click)="previousSlide()" aria-label="Slide anterior">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        <button class="carousel-btn carousel-next" (click)="nextSlide()" aria-label="Próximo slide">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </button>
-        
-        <!-- Indicadores de Slide -->
-        <div class="carousel-indicators">
-          <button 
-            *ngFor="let slide of getFeaturedSlides(); let i = index"
-            class="indicator" 
-            [class.active]="currentSlide === i"
-            (click)="goToSlide(i)"
-            [attr.aria-label]="'Ir para slide ' + (i + 1)">
-          </button>
-        </div>
       </div>
+
+      <article class="hero-featured-card" (click)="selecionarNoticia(featuredNoticia)" *ngIf="featuredNoticia">
+        <div class="featured-image">
+          <img [src]="featuredNoticia.imagem" [alt]="featuredNoticia.titulo" class="featured-img" loading="eager" (error)="onImageError($event)">
+          <span class="featured-tag">Em destaque</span>
+        </div>
+        <div class="featured-body">
+          <div class="featured-meta">
+            <span class="featured-category">{{ featuredNoticia.categoria }}</span>
+            <time class="featured-date">{{ featuredNoticia.data }}</time>
+          </div>
+          <h2 class="featured-title">{{ featuredNoticia.titulo }}</h2>
+          <p class="featured-excerpt">{{ featuredNoticia.resumo }}</p>
+          <span class="featured-cta">
+            Ler artigo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </article>
     </div>
-  </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="#f8faf8"/>
+      </svg>
+    </div>
+  </header>
 
-  <!-- Conteúdo Principal - Layout Grid estilo Windows 11 -->
-  <div class="news-main-content">
-    <div class="content-container">
-      <!-- Filtros de Categoria -->
-      <div class="category-filters">
-        <button 
-          class="filter-btn" 
-          [class.active]="categoriaFiltro === ''"
-          (click)="filtrarPorCategoria('')">
-          Todas
-        </button>
-        <button 
-          *ngFor="let categoria of getCategorias()" 
-          class="filter-btn"
-          [class.active]="categoriaFiltro === categoria"
-          (click)="filtrarPorCategoria(categoria)">
-          {{ categoria }}
-        </button>
+  <!-- Destaques secundários -->
+  <section class="highlights-section" *ngIf="!categoriaFiltro && secondaryHighlights.length">
+    <div class="section-container">
+      <div class="section-heading">
+        <h2>Destaques da semana</h2>
+        <p>As notícias mais recentes da associação</p>
       </div>
-
-      <!-- Grid de Notícias -->
-      <div class="news-grid">
-        <article 
-          class="news-card" 
-          *ngFor="let noticia of getFilteredNews(); let i = index"
-          (click)="selecionarNoticia(noticia)"
-          [class.featured]="i === 0 && categoriaFiltro === ''">
-          
-          <div class="card-image">
-            <img 
-              *ngIf="noticia.imagem" 
-              [src]="noticia.imagem" 
-              [alt]="noticia.titulo"
-              class="card-img">
-            <div class="image-placeholder-card" *ngIf="!noticia.imagem">
-              <span class="placeholder-icon-card">📰</span>
-            </div>
-            <span class="card-category-badge">{{ noticia.categoria }}</span>
+      <div class="highlights-grid">
+        <article
+          class="highlight-card"
+          *ngFor="let noticia of secondaryHighlights"
+          (click)="selecionarNoticia(noticia)">
+          <div class="highlight-image">
+            <img [src]="noticia.imagem" [alt]="noticia.titulo" loading="lazy" (error)="onImageError($event)">
+            <span class="highlight-category">{{ noticia.categoria }}</span>
           </div>
-          
-          <div class="card-content">
-            <div class="card-meta">
-              <span class="card-date">{{ noticia.data }}</span>
-            </div>
-            <h3 class="card-title">{{ noticia.titulo }}</h3>
-            <p class="card-excerpt">{{ noticia.resumo }}</p>
-            <div class="card-footer">
-              <span class="read-more">Ler mais →</span>
-            </div>
+          <div class="highlight-content">
+            <time>{{ noticia.data }}</time>
+            <h3>{{ noticia.titulo }}</h3>
+            <p>{{ noticia.resumo }}</p>
           </div>
         </article>
       </div>
     </div>
+  </section>
+
+  <!-- Conteúdo principal -->
+  <div class="news-body">
+    <div class="section-container news-layout">
+      <main class="news-main">
+        <div class="toolbar">
+          <div class="toolbar-heading">
+            <h2>{{ categoriaFiltro || 'Todas as notícias' }}</h2>
+            <span class="result-count">{{ getGridNews().length }} artigo{{ getGridNews().length !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="category-filters" role="tablist" aria-label="Filtrar por categoria">
+            <button
+              class="filter-btn"
+              role="tab"
+              [class.active]="categoriaFiltro === ''"
+              [attr.aria-selected]="categoriaFiltro === ''"
+              (click)="filtrarPorCategoria('')">
+              Todas
+            </button>
+            <button
+              *ngFor="let categoria of getCategorias()"
+              class="filter-btn"
+              role="tab"
+              [class.active]="categoriaFiltro === categoria"
+              [attr.aria-selected]="categoriaFiltro === categoria"
+              (click)="filtrarPorCategoria(categoria)">
+              {{ categoria }}
+            </button>
+          </div>
+        </div>
+
+        <div class="news-grid" *ngIf="getGridNews().length; else emptyState">
+          <article
+            class="news-card"
+            *ngFor="let noticia of getGridNews()"
+            (click)="selecionarNoticia(noticia)">
+            <div class="card-image">
+              <img [src]="noticia.imagem" [alt]="noticia.titulo" loading="lazy" (error)="onImageError($event)">
+            </div>
+            <div class="card-body">
+              <span class="card-category">{{ noticia.categoria }}</span>
+              <time class="card-date">{{ noticia.data }}</time>
+              <h3 class="card-title">{{ noticia.titulo }}</h3>
+              <p class="card-excerpt">{{ noticia.resumo }}</p>
+              <span class="card-link">Ler mais</span>
+            </div>
+          </article>
+        </div>
+
+        <ng-template #emptyState>
+          <div class="empty-state">
+            <div class="empty-icon" aria-hidden="true">📰</div>
+            <h3>Nenhuma notícia encontrada</h3>
+            <p>Não existem artigos nesta categoria. Experimente outro filtro.</p>
+            <button class="empty-btn" (click)="filtrarPorCategoria('')">Ver todas</button>
+          </div>
+        </ng-template>
+      </main>
+
+      <aside class="news-sidebar" aria-label="Painel lateral">
+        <div class="sidebar-block">
+          <h3 class="sidebar-title">Categorias</h3>
+          <ul class="sidebar-categories">
+            <li>
+              <button [class.active]="categoriaFiltro === ''" (click)="filtrarPorCategoria('')">
+                Todas
+                <span>{{ noticias.length }}</span>
+              </button>
+            </li>
+            <li *ngFor="let cat of getCategorias()">
+              <button [class.active]="categoriaFiltro === cat" (click)="filtrarPorCategoria(cat)">
+                {{ cat }}
+                <span>{{ getCountByCategory(cat) }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-block">
+          <h3 class="sidebar-title">Mais recentes</h3>
+          <ul class="sidebar-recent">
+            <li *ngFor="let noticia of getRecentNews()">
+              <button (click)="selecionarNoticia(noticia)">
+                <span class="recent-title">{{ noticia.titulo }}</span>
+                <time>{{ noticia.data }}</time>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-cta">
+          <h4>Quer fazer parte?</h4>
+          <p>Junte-se à ANAM e acompanhe de perto o desenvolvimento de Massinga.</p>
+          <a routerLink="/associar-se" class="sidebar-cta-btn">Torne-se Membro</a>
+        </div>
+      </aside>
+    </div>
   </div>
 
-  <!-- Modal/Overlay para Detalhes da Notícia -->
-  <div class="news-modal" *ngIf="noticiaSelecionada" (click)="fecharDetalhes()">
+  <!-- Modal de leitura -->
+  <div class="news-modal" *ngIf="noticiaSelecionada" (click)="fecharDetalhes()" role="dialog" aria-modal="true">
     <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="fecharDetalhes()">×</button>
-      
-      <div class="modal-header">
-        <span class="modal-category">{{ noticiaSelecionada.categoria }}</span>
-        <span class="modal-date">{{ noticiaSelecionada.data }}</span>
+      <button class="modal-close" (click)="fecharDetalhes()" aria-label="Fechar">×</button>
+
+      <div class="modal-hero">
+        <img [src]="noticiaSelecionada.imagem" [alt]="noticiaSelecionada.titulo" class="modal-hero-img" (error)="onImageError($event)">
+        <div class="modal-hero-overlay"></div>
+        <div class="modal-hero-text">
+          <span class="modal-category">{{ noticiaSelecionada.categoria }}</span>
+          <h2 class="modal-title">{{ noticiaSelecionada.titulo }}</h2>
+          <time class="modal-date">{{ noticiaSelecionada.data }}</time>
+        </div>
       </div>
-      
-      <h2 class="modal-title">{{ noticiaSelecionada.titulo }}</h2>
-      
-      <div class="modal-image" *ngIf="noticiaSelecionada.imagem">
-        <img [src]="noticiaSelecionada.imagem" [alt]="noticiaSelecionada.titulo" class="modal-img">
-      </div>
-      
+
       <div class="modal-body">
-        <p class="modal-resumo">{{ noticiaSelecionada.resumo }}</p>
+        <p class="modal-lead">{{ noticiaSelecionada.resumo }}</p>
         <div class="modal-divider"></div>
-        <p class="modal-conteudo" *ngIf="noticiaSelecionada.conteudo">
-          {{ noticiaSelecionada.conteudo }}
-        </p>
+        <p class="modal-text">{{ noticiaSelecionada.conteudo }}</p>
       </div>
     </div>
   </div>

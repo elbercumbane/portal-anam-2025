@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { gsap } from 'gsap';
+import { NOTICIAS } from '../../../news/news.data';
 
 interface NewsItem {
   id: number;
@@ -24,35 +25,15 @@ export class NewsSectionComponent implements OnInit, AfterViewInit {
   
   constructor(private elementRef: ElementRef) {}
   
-  news: NewsItem[] = [
-    {
-      id: 1,
-      title: 'Nova Parceria com Empresas Locais',
-      excerpt: 'A ANAM estabeleceu uma nova parceria estratégica com empresas locais para promover o desenvolvimento económico da região.',
-      date: '15 de Janeiro, 2025',
-      category: 'Parcerias',
-      image: '/assets/slider/slide1.jpg',
-      link: '/noticias/1'
-    },
-    {
-      id: 2,
-      title: 'Workshop de Capacitação Realizado com Sucesso',
-      excerpt: 'Mais de 50 participantes beneficiaram do workshop de capacitação em gestão empresarial realizado no mês passado.',
-      date: '10 de Janeiro, 2025',
-      category: 'Eventos',
-      image: '/assets/slider/slide2.jpg',
-      link: '/noticias/2'
-    },
-    {
-      id: 3,
-      title: 'Projeto de Desenvolvimento Comunitário Iniciado',
-      excerpt: 'Iniciámos um novo projeto focado no desenvolvimento sustentável das comunidades rurais do distrito de Massinga.',
-      date: '5 de Janeiro, 2025',
-      category: 'Projetos',
-      image: '/assets/slider/slide3.jpg',
-      link: '/noticias/3'
-    }
-  ];
+  news: NewsItem[] = NOTICIAS.slice(0, 3).map(n => ({
+    id: n.id,
+    title: n.titulo,
+    excerpt: n.resumo,
+    date: n.data,
+    category: n.categoria,
+    image: n.imagem,
+    link: '/noticias'
+  }));
 
   ngOnInit() {
     // Inicialização

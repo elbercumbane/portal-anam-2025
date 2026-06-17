@@ -1,141 +1,31 @@
-// Gestão de Simpatizantes - estilos autocontidos
+@use '../../management-layout' as mgmt;
+
 $color-sympathizer: #7c3aed;
 $color-sympathizer-secondary: #6d28d9;
 
 :host {
-  display: block;
+  @include mgmt.host-block;
 }
 
 .page-container {
-  padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-  min-height: calc(100vh - 64px);
+  @include mgmt.page-root;
 }
 
 .page-header {
-  margin-bottom: 32px;
-  background: white;
-  padding: 28px 32px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba($color-sympathizer, 0.15);
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $color-sympathizer 0%, $color-sympathizer-secondary 100%);
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 8px 0;
-  }
-
-  p {
-    font-size: 1rem;
-    color: #6b7280;
-    margin: 0;
-  }
+  @include mgmt.legacy-page-header($color-sympathizer, $color-sympathizer-secondary);
 }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
-
-  .stat-card {
-    position: relative;
-    background: white;
-    border-radius: 20px;
-    padding: 28px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e5e7eb;
-    overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, $color-sympathizer 0%, $color-sympathizer-secondary 100%);
-    }
-
-    .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, $color-sympathizer 0%, $color-sympathizer-secondary 100%);
-      color: white;
-      flex-shrink: 0;
-
-      ::ng-deep mat-icon,
-      .mat-icon {
-        font-size: 28px;
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .stat-content h3 {
-      margin: 0;
-      font-size: 1.75rem;
-      color: #1f2937;
-    }
-
-    .stat-content p {
-      margin: 4px 0 0 0;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-  }
+  @include mgmt.kpi-strip-base;
+  margin-bottom: 1.25rem;
 }
 
 .filters-section {
-  margin-bottom: 24px;
+  @include mgmt.toolbar-card-base;
+}
 
-  .search-box {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 12px 16px;
-    max-width: 400px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-
-    .mat-icon {
-      color: #9ca3af;
-      flex-shrink: 0;
-    }
-
-    input {
-      border: none;
-      outline: none;
-      flex: 1;
-      font-size: 1rem;
-      background: transparent;
-    }
-  }
+.table-container {
+  @include mgmt.table-card-base;
 }
 
 .error-message {

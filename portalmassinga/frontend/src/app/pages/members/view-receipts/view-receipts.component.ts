@@ -2,18 +2,28 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { DecimalPipe } from '@angular/common';
 import { gsap } from 'gsap';
+import { NavbarComponent } from '../../../components/navbar/navbar.component';
 import { ApiClientService } from '../../../services/api-client.service';
+import { ReceiptPdfService } from '../../../services/receipt-pdf.service';
+import { PaymentReceiptData } from '../../../components/modals/payment-receipt-dialog/payment-receipt-dialog.component';
 import { NotMemberDialogComponent } from '../../../components/modals/not-member-dialog/not-member-dialog.component';
+import {
+  DEMO_NUITS,
+  DEMO_NUIT_NAO_MEMBRO,
+  DEMO_NUIT_RECIBOS,
+  DEMO_RECIBOS_CELULAR,
+  seedDemoReceiptsIfEmpty,
+  isNonMemberDemoNuit,
+  maskPhoneNumber,
+  generateOtpFromPhone
+} from '../quota-demo.data';
 
 export interface PaymentReceipt {
   id: string;
@@ -28,6 +38,14 @@ export interface PaymentReceipt {
   status: 'pago' | 'pendente';
 }
 
+type ReceiptFlowStep = 'nuit' | 'otp' | 'results';
+
+interface PendingMember {
+  nuit: string;
+  nome: string;
+  telefone: string;
+}
+
 @Component({
   selector: 'app-consultar-recibos',
   standalone: true,
@@ -36,25 +54,32 @@ export interface PaymentReceipt {
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    DecimalPipe
+    DecimalPipe,
+    NavbarComponent
   ],
   templateUrl: './view-receipts.component.html',
   styleUrls: ['./view-receipts.component.scss']
 })
 export class ViewReceiptsComponent implements OnInit, AfterViewInit, OnDestroy {
-  consultReceiptForm!: FormGroup;
-  step = 1;
-  memberData: { nuit: string; nome: string; telefone: string } | null = null;
+  consultForm!: FormGroup;
+  otpForm!: FormGroup;
+  flowStep: ReceiptFlowStep = 'nuit';
+  memberData: { nuit: string; nome: string } | null = null;
+  pendingMember: PendingMember | null = null;
+  demoNaoMembro = DEMO_NUIT_NAO_MEMBRO;
+  maskedPhone = '';
+  otpEnviado = '';
+  otpSending = false;
+  otpCopied = false;
+  otpError: string | null = null;
   receipts: PaymentReceipt[] = [];
   filteredReceipts: PaymentReceipt[] = [];
   consultLoading = false;
+  lookupError: string | null = null;
   particles = Array.from({ length: 15 }, (_, i) => i + 1);
   private animations: gsap.core.Tween[] = [];
 
@@ -63,30 +88,38 @@ export class ViewReceiptsComponent implements OnInit, AfterViewInit, OnDestroy {
     private snackBar: MatSnackBar,
     public router: Router,
     public dialog: MatDialog,
-    private apiClient: ApiClientService
+    private apiClient: ApiClientService,
+    private receiptPdfService: ReceiptPdfService
   ) {}
 
-  get phoneSuffix(): string {
-    if (!this.memberData?.telefone || this.memberData.telefone.length < 4) return '****';
-    return this.memberData.telefone.slice(-4);
+  get showResults(): boolean {
+    return this.flowStep === 'results' && !!this.memberData && !this.consultLoading;
   }
 
-  get telefoneMascarado(): string {
-    const t = this.consultReceiptForm.get('telefone')?.value || '';
-    if (t.length < 4) return '***';
-    return t.slice(0, 2) + '***' + t.slice(-4);
+  get showOtpStep(): boolean {
+    return this.flowStep === 'otp' && !this.consultLoading;
+  }
+
+  get showNuitStep(): boolean {
+    return this.flowStep === 'nuit' && !this.consultLoading;
+  }
+
+  get currentStepNum(): number {
+    if (this.flowStep === 'nuit') return 1;
+    if (this.flowStep === 'otp') return 2;
+    return 3;
   }
 
   ngOnInit(): void {
-    this.consultReceiptForm = this.fb.group({
-      nuit: ['', [Validators.required, Validators.pattern(/^[0-9]{9,21}$/)]],
-      telefone: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
-      otp: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
+    document.body.classList.add('navbar-solid');
+
+    this.consultForm = this.fb.group({
+      nuit: ['', [Validators.required, Validators.pattern(/^[0-9]{9,21}$/)]]
     });
-    this.consultReceiptForm.get('telefone')?.clearValidators();
-    this.consultReceiptForm.get('telefone')?.updateValueAndValidity();
-    this.consultReceiptForm.get('otp')?.clearValidators();
-    this.consultReceiptForm.get('otp')?.updateValueAndValidity();
+    this.otpForm = this.fb.group({
+      otp: ['', [Validators.required, Validators.pattern(/^[0-9]{5}$/)]]
+    });
+    seedDemoReceiptsIfEmpty();
     this.loadReceiptsFromStorage();
   }
 
@@ -95,122 +128,175 @@ export class ViewReceiptsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    document.body.classList.remove('navbar-solid');
     this.animations.forEach(anim => anim.kill());
   }
 
-  private initializeAnimations(): void {
-    const overlay = document.querySelector('.animated-overlay');
-    if (overlay) {
-      this.animations.push(gsap.to(overlay, {
-        opacity: 0.6, scale: 1.1, duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut'
-      }));
-    }
-    document.querySelectorAll('.particle').forEach((p, i) => {
-      this.animations.push(gsap.to(p, {
-        y: -window.innerHeight - 100, x: `+=${(Math.random() - 0.5) * 200}`,
-        rotation: 360, opacity: 0, duration: 15 + Math.random() * 10,
-        delay: i * 0.3, repeat: -1, ease: 'none'
-      }));
-    });
-    document.querySelectorAll('.element').forEach((el, i) => {
-      this.animations.push(gsap.to(el, {
-        rotation: 360, scale: 1.2, duration: 20 + i * 5, repeat: -1, ease: 'none'
-      }));
-    });
+  isFieldInvalid(field: string): boolean {
+    const ctrl = this.consultForm.get(field);
+    return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  }
+
+  isOtpInvalid(): boolean {
+    const ctrl = this.otpForm.get('otp');
+    return !!(ctrl && ctrl.invalid && (ctrl.dirty || ctrl.touched));
+  }
+
+  usarNuitDemo(nuit: string): void {
+    this.consultForm.patchValue({ nuit });
+    this.buscarPorNuit();
   }
 
   buscarPorNuit(): void {
-    if (this.consultReceiptForm.get('nuit')?.invalid) {
-      this.consultReceiptForm.get('nuit')?.markAsTouched();
+    if (this.consultForm.invalid) {
+      this.consultForm.markAllAsTouched();
       return;
     }
-    const nuit = (this.consultReceiptForm.get('nuit')?.value || '').trim();
+    const nuit = (this.consultForm.get('nuit')?.value || '').trim();
+
+    if (isNonMemberDemoNuit(nuit)) {
+      this.dialog.open(NotMemberDialogComponent, { width: '460px', maxWidth: '95vw' });
+      return;
+    }
+
     this.consultLoading = true;
+    this.lookupError = null;
+    this.memberData = null;
+    this.filteredReceipts = [];
+    this.otpError = null;
+
+    const demo = DEMO_NUITS.find(d => d.nuit === nuit);
+    if (demo) {
+      this.iniciarVerificacaoOtp({
+        nuit: demo.nuit,
+        nome: demo.nome,
+        telefone: DEMO_RECIBOS_CELULAR
+      });
+      return;
+    }
 
     this.apiClient.getApplicationByNuit(nuit).subscribe({
       next: (app: any) => {
-        this.memberData = {
-          nuit: app.nuit || nuit,
-          nome: app.fullName || app.nome || '',
-          telefone: (app.mobilePhone || app.celular || '').replace(/\D/g, '').slice(-9)
-        };
-        if (!this.memberData.telefone || this.memberData.telefone.length < 9) {
-          this.snackBar.open('O membro não tem telefone registado. Contacte a associação.', 'Fechar', { duration: 4000 });
+        const telefone = app.phone || app.celular || app.mobile || '';
+        if (!telefone) {
           this.consultLoading = false;
+          this.lookupError = 'Membro encontrado, mas sem telefone registado. Contacte a ANAM.';
           return;
         }
-        this.step = 2;
-        this.consultReceiptForm.get('telefone')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{9}$/)]);
-        this.consultReceiptForm.get('telefone')?.updateValueAndValidity();
-        this.consultReceiptForm.get('telefone')?.setValue('');
-        this.consultLoading = false;
+        this.iniciarVerificacaoOtp({
+          nuit: app.nuit || nuit,
+          nome: app.fullName || app.nome || '',
+          telefone
+        });
       },
       error: () => {
         this.consultLoading = false;
         this.dialog.open(NotMemberDialogComponent, {
-          width: '440px',
+          width: '460px',
           maxWidth: '95vw'
         });
       }
     });
   }
 
-  onTelefoneInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let v = input.value.replace(/\D/g, '').slice(0, 9);
-    this.consultReceiptForm.get('telefone')?.setValue(v, { emitEvent: false });
-    input.value = v;
-    this.consultReceiptForm.get('telefone')?.updateValueAndValidity();
-  }
+  private iniciarVerificacaoOtp(member: PendingMember): void {
+    this.pendingMember = member;
+    this.maskedPhone = maskPhoneNumber(member.telefone);
+    this.otpEnviado = generateOtpFromPhone(member.telefone);
+    this.otpSending = true;
+    this.otpForm.reset();
 
-  confirmarTelefone(): void {
-    const telefone = (this.consultReceiptForm.get('telefone')?.value || '').replace(/\D/g, '');
-    const memberPhone = (this.memberData?.telefone || '').replace(/\D/g, '').slice(-9);
-    if (telefone !== memberPhone) {
-      this.consultReceiptForm.get('telefone')?.setErrors({ nomatch: true });
-      this.consultReceiptForm.get('telefone')?.markAsTouched();
-      return;
-    }
-    this.step = 3;
-    this.consultReceiptForm.get('otp')?.setValidators([Validators.required, Validators.pattern(/^[0-9]{6}$/)]);
-    this.consultReceiptForm.get('otp')?.updateValueAndValidity();
-    this.consultReceiptForm.get('otp')?.setValue('');
-    this.snackBar.open('Código enviado. Verifique o seu telemóvel.', 'Fechar', { duration: 3000 });
-  }
-
-  verificarOtp(): void {
-    if (this.consultReceiptForm.get('otp')?.invalid) {
-      this.consultReceiptForm.get('otp')?.markAsTouched();
-      return;
-    }
-    this.consultLoading = true;
     setTimeout(() => {
       this.consultLoading = false;
-      this.step = 4;
-      this.filtrarRecibosPorMembro();
-      this.snackBar.open('Código verificado com sucesso', 'Fechar', { duration: 2000 });
+      this.otpSending = false;
+      this.flowStep = 'otp';
+      this.otpCopied = false;
+    }, 1200);
+  }
+
+  onOtpInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 5);
+    this.otpForm.patchValue({ otp: digits });
+    this.otpError = null;
+  }
+
+  async copiarOtp(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.otpEnviado);
+      this.otpCopied = true;
+      setTimeout(() => (this.otpCopied = false), 2500);
+    } catch {
+      this.otpError = 'Não foi possível copiar. Seleccione o código manualmente.';
+    }
+  }
+
+  preencherOtp(): void {
+    this.otpForm.patchValue({ otp: this.otpEnviado });
+    this.otpError = null;
+  }
+
+  validarOtp(): void {
+    const otp = (this.otpForm.get('otp')?.value || '').trim();
+    if (otp.length !== 5) {
+      this.otpError = 'O código deve ter exactamente 5 dígitos.';
+      this.otpForm.markAllAsTouched();
+      return;
+    }
+    if (otp !== this.otpEnviado) {
+      this.otpError = 'Código incorrecto. Verifique os 5 dígitos e tente novamente.';
+      return;
+    }
+    if (!this.pendingMember) return;
+
+    this.memberData = { nuit: this.pendingMember.nuit, nome: this.pendingMember.nome };
+    this.filteredReceipts = this.receipts.filter(r => r.numeroMembro === this.pendingMember!.nuit);
+    this.flowStep = 'results';
+    this.otpError = null;
+
+    if (this.filteredReceipts.length === 0) {
+      this.snackBar.open('Nenhum recibo encontrado para este NUIT.', 'Fechar', { duration: 3500 });
+    }
+  }
+
+  reenviarOtp(): void {
+    if (!this.pendingMember) return;
+    this.otpSending = true;
+    this.otpError = null;
+    this.otpForm.reset();
+    setTimeout(() => {
+      this.otpSending = false;
+      this.otpCopied = false;
+      this.snackBar.open('Novo código enviado por SMS.', 'Fechar', { duration: 3000 });
     }, 800);
   }
 
-  voltar(): void {
-    if (this.step === 2) {
-      this.step = 1;
-      this.memberData = null;
-      this.consultReceiptForm.get('telefone')?.clearValidators();
-      this.consultReceiptForm.get('telefone')?.setValue('');
-    } else if (this.step === 3) {
-      this.step = 2;
-      this.consultReceiptForm.get('otp')?.clearValidators();
-      this.consultReceiptForm.get('otp')?.setValue('');
-    }
+  voltarParaNuit(): void {
+    this.flowStep = 'nuit';
+    this.pendingMember = null;
+    this.otpError = null;
+    this.otpForm.reset();
   }
 
-  filtrarRecibosPorMembro(): void {
-    const nuit = this.memberData?.nuit || '';
-    const telefone = (this.consultReceiptForm.get('telefone')?.value || '').replace(/\D/g, '');
-    this.filteredReceipts = this.receipts.filter(r =>
-      r.numeroMembro === nuit || r.numeroTelefone === telefone
-    );
+  novaConsulta(): void {
+    this.flowStep = 'nuit';
+    this.memberData = null;
+    this.pendingMember = null;
+    this.filteredReceipts = [];
+    this.lookupError = null;
+    this.otpError = null;
+    this.maskedPhone = '';
+    this.otpEnviado = '';
+    this.consultForm.reset();
+    this.otpForm.reset();
+  }
+
+  baixarRecibo(receipt: PaymentReceipt): void {
+    const data: PaymentReceiptData = {
+      ...receipt,
+      dataPagamento: receipt.dataPagamento
+    };
+    this.receiptPdfService.generateReceiptPdf(data);
   }
 
   loadReceiptsFromStorage(): void {
@@ -228,12 +314,21 @@ export class ViewReceiptsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private initializeAnimations(): void {
+    const overlay = document.querySelector('.animated-overlay');
+    if (overlay) {
+      this.animations.push(gsap.to(overlay, {
+        opacity: 0.6, scale: 1.1, duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut'
+      }));
+    }
+    document.querySelectorAll('.query-card').forEach((card, i) => {
+      gsap.from(card, { opacity: 0, y: 20, duration: 0.6, delay: i * 0.08, ease: 'power3.out' });
+    });
+  }
+
   abrirDialogBeneficios(): void {
     import('../../../components/modals/beneficios-dialog/beneficios-dialog.component').then(m => {
-      this.dialog.open(m.BeneficiosDialogComponent, {
-        width: '700px',
-        maxWidth: '90vw'
-      });
+      this.dialog.open(m.BeneficiosDialogComponent, { width: '420px', maxWidth: '90vw' });
     });
   }
 }

@@ -1,127 +1,23 @@
 <div class="dialog-container">
   <div class="dialog-header">
-    <h2>
-      <mat-icon>stars</mat-icon>
-      Benefícios de Pagar Cotas
-    </h2>
-    <button mat-icon-button (click)="onClose()" class="close-button">
+    <mat-icon>stars</mat-icon>
+    <h2>Benefícios de membro</h2>
+    <button mat-icon-button (click)="onClose()" class="close-button" type="button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  
+
   <div class="dialog-body">
-    <div class="intro-section">
-      <p class="intro-text">
-        Ao pagar as suas cotas regularmente, você contribui para o crescimento e desenvolvimento da nossa associação, 
-        garantindo acesso a diversos benefícios exclusivos.
-      </p>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div class="benefits-list">
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>verified</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Participação Ativa</h3>
-          <p>Tenha voz ativa nas decisões da associação e participe de assembleias e votações importantes.</p>
-        </div>
-      </div>
-
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>event</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Eventos Exclusivos</h3>
-          <p>Acesso prioritário a eventos, workshops, palestras e atividades organizadas pela associação.</p>
-        </div>
-      </div>
-
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>support</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Suporte e Assistência</h3>
-          <p>Receba suporte especializado e assistência em questões relacionadas à sua área de atuação.</p>
-        </div>
-      </div>
-
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>network_check</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Networking</h3>
-          <p>Conecte-se com outros profissionais e expanda sua rede de contatos dentro da associação.</p>
-        </div>
-      </div>
-
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>school</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Desenvolvimento Profissional</h3>
-          <p>Acesso a recursos educacionais, materiais de estudo e oportunidades de capacitação.</p>
-        </div>
-      </div>
-
-      <div class="benefit-item">
-        <div class="benefit-icon">
-          <mat-icon>receipt</mat-icon>
-        </div>
-        <div class="benefit-content">
-          <h3>Documentação Regularizada</h3>
-          <p>Mantenha sua documentação em dia e receba recibos oficiais de todos os pagamentos realizados.</p>
-        </div>
-      </div>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div class="why-pay-section">
-      <h3 class="why-title">
-        <mat-icon>help_outline</mat-icon>
-        Por que pagar cotas?
-      </h3>
-      <p class="why-text">
-        As cotas são essenciais para manter a associação funcionando e oferecer serviços de qualidade aos membros. 
-        Com o pagamento regular, garantimos:
-      </p>
-      <ul class="why-list">
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Manutenção da infraestrutura e recursos da associação</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Organização de eventos e atividades para os membros</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Suporte contínuo e desenvolvimento de novos serviços</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Representação e defesa dos interesses dos membros</span>
-        </li>
-        <li>
-          <mat-icon>check_circle</mat-icon>
-          <span>Sustentabilidade e crescimento da organização</span>
-        </li>
-      </ul>
-    </div>
+    <p class="intro">Pagar cotas mantém a sua associação activa e dá-lhe acesso a:</p>
+    <ul class="benefits-simple">
+      <li><mat-icon>how_to_vote</mat-icon> Voz nas decisões da ANAM</li>
+      <li><mat-icon>event</mat-icon> Eventos e formações exclusivas</li>
+      <li><mat-icon>groups</mat-icon> Rede de contactos profissionais</li>
+      <li><mat-icon>receipt_long</mat-icon> Recibos oficiais de pagamento</li>
+    </ul>
   </div>
-  
+
   <div class="dialog-actions">
-    <button mat-raised-button color="primary" (click)="onClose()">
-      <mat-icon>check</mat-icon>
-      <span>Entendi</span>
-    </button>
+    <button mat-raised-button color="primary" type="button" (click)="onClose()">Entendi</button>
   </div>
 </div>
-

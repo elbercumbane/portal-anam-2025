@@ -1,25 +1,22 @@
-// Sidebar - Gradiente suave (claro), mesmo padrão cyan/teal
-$sidebar-bg: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 40%, #ecfeff 70%, #f0f9ff 100%);
-$sidebar-border: rgba(6, 182, 212, 0.2);
-$sidebar-glow: rgba(6, 182, 212, 0.12);
-$accent: #0891b2;
-$accent-soft: rgba(6, 182, 212, 0.25);
+@use '../../dashboard-theme' as theme;
+
+$sidebar-bg: theme.$dash-sidebar-bg;
+$sidebar-border: rgba(5, 150, 105, 0.15);
+$accent: theme.$dash-sidebar-accent;
+$accent-light: rgba(5, 150, 105, 0.08);
 $text-primary: #0f172a;
-$text-muted: #475569;
-$glass: rgba(255, 255, 255, 0.6);
+$text-muted: theme.$dash-sidebar-text;
+$green-dark: #047857;
 
 .sidenav {
-  width: 300px;
+  width: 280px;
   background: $sidebar-bg;
   border-right: 1px solid $sidebar-border;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.8),
-    8px 0 32px rgba(6, 182, 212, 0.08);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 2px 0 16px rgba(5, 150, 105, 0.06);
+  transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -30,70 +27,37 @@ $glass: rgba(255, 255, 255, 0.6);
     height: 0;
   }
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:
-      radial-gradient(ellipse 100% 60% at 0% 20%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
-      radial-gradient(ellipse 80% 80% at 100% 80%, rgba(34, 211, 238, 0.04) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: linear-gradient(180deg, $accent 0%, #22d3ee 50%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  &:hover {
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.9),
-      10px 0 40px rgba(6, 182, 212, 0.1);
-    border-right-color: rgba(6, 182, 212, 0.3);
-
-    &::after {
-      opacity: 0.5;
-    }
-  }
-
   @media (max-width: 768px) {
-    width: 280px;
+    width: 260px;
   }
 
   @media (max-width: 480px) {
-    width: 260px;
+    width: 100%;
   }
 }
 
 .sidebar-brand {
-  padding: 1rem 1.25rem;
+  padding: 1.35rem 1.25rem 1.1rem;
   border-bottom: 1px solid $sidebar-border;
   flex-shrink: 0;
+  background: linear-gradient(180deg, rgba(5, 150, 105, 0.07) 0%, transparent 100%);
 
   .brand-name {
     display: block;
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: $text-primary;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: $accent;
     letter-spacing: 0.06em;
+    line-height: 1.1;
   }
 
   .brand-desc {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: $text-muted;
-    margin-top: 0.15rem;
+    margin-top: 0.35rem;
+    line-height: 1.4;
+    font-weight: 500;
   }
 }
 
@@ -107,8 +71,6 @@ $glass: rgba(255, 255, 255, 0.6);
   z-index: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: 1px solid $sidebar-border;
-  box-shadow: 6px 0 24px rgba(6, 182, 212, 0.06);
   scrollbar-width: none;
   -ms-overflow-style: none;
 
@@ -133,8 +95,8 @@ $glass: rgba(255, 255, 255, 0.6);
 
   .close-btn {
     color: $text-muted;
-    background: transparent;
-    border: none;
+    background: $accent-light;
+    border: 1px solid $sidebar-border;
     border-radius: 8px;
     width: 32px;
     height: 32px;
@@ -152,12 +114,8 @@ $glass: rgba(255, 255, 255, 0.6);
     }
 
     &:hover {
-      color: $text-primary;
-      background: rgba(100, 116, 139, 0.1);
-    }
-
-    &:active {
-      background: rgba(100, 116, 139, 0.15);
+      color: $accent;
+      background: rgba(5, 150, 105, 0.15);
     }
   }
 }
@@ -174,17 +132,13 @@ $glass: rgba(255, 255, 255, 0.6);
   .mat-sidenav-inner-container {
     scrollbar-width: none;
     -ms-overflow-style: none;
+    background: $sidebar-bg !important;
     &::-webkit-scrollbar { display: none; width: 0; height: 0; }
   }
   mat-sidenav {
     scrollbar-width: none;
     -ms-overflow-style: none;
+    background: $sidebar-bg !important;
     &::-webkit-scrollbar { display: none; width: 0; height: 0; }
-  }
-}
-
-@media (max-width: 480px) {
-  .sidenav {
-    width: 100%;
   }
 }

@@ -1,49 +1,113 @@
-<div class="confirmation-container">
-  <div class="confirmation-content">
-    <div class="success-icon-wrapper">
-      <mat-icon class="success-icon">check_circle</mat-icon>
+<app-navbar appName="ANAM"></app-navbar>
+
+<div class="confirmed-page">
+  <div class="page-bg"></div>
+
+  <div class="confirmed-wrapper" *ngIf="receiptData">
+    <div class="success-banner">
+      <div class="success-circle">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <h1>Pagamento confirmado!</h1>
+      <p>O seu pagamento foi processado com sucesso.</p>
     </div>
-    
-    <h1>Pagamento Confirmado!</h1>
-    <p class="confirmation-message">O seu pagamento foi processado com sucesso.</p>
-    
-    <mat-card class="receipt-info-card" *ngIf="receiptData">
-      <mat-card-content>
-        <div class="receipt-info">
-          <div class="info-row">
-            <span class="info-label">Referência do Recibo:</span>
-            <span class="info-value">{{ receiptData.id }}</span>
+
+    <!-- Recibo ANAM -->
+    <div class="receipt-ticket">
+      <header class="receipt-brand-header">
+        <div class="brand-accent"></div>
+        <div class="brand-content">
+          <div class="brand-left">
+            <h2 class="brand-name">ANAM</h2>
+            <p class="brand-full">Associação de Naturais e Amigos de Massinga</p>
           </div>
-          <div class="info-row">
-            <span class="info-label">Data de Pagamento:</span>
-            <span class="info-value">{{ receiptData.dataPagamento | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Valor Pago:</span>
-            <span class="info-value amount">{{ receiptData.valorTotal | number }} MT</span>
+          <div class="brand-right">
+            <span class="receipt-type">Recibo de Cota</span>
+            <span class="receipt-ref">Nº {{ receiptData.id }}</span>
+            <span class="status-pill pago">PAGO</span>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
-    
-    <div class="action-buttons">
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="btn-ver-recibo"
-        (click)="verRecibo()"
-        *ngIf="receiptData">
+      </header>
+
+      <div class="receipt-body">
+        <div class="info-cards">
+          <div class="info-card">
+            <span class="card-label">Membro</span>
+            <strong>{{ receiptData.nomeMembro }}</strong>
+            <span class="card-meta">NUIT: {{ receiptData.numeroMembro }}</span>
+            <span class="card-meta" *ngIf="receiptData.emailMembro">{{ receiptData.emailMembro }}</span>
+          </div>
+          <div class="info-card">
+            <span class="card-label">Pagamento</span>
+            <strong>{{ receiptData.metodoPagamento }}</strong>
+            <span class="card-meta">{{ receiptData.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="card-meta" *ngIf="receiptData.numeroTelefone">+258 {{ receiptData.numeroTelefone }}</span>
+          </div>
+        </div>
+
+        <div class="cotas-table-wrap" *ngIf="mesesLista.length">
+          <span class="block-label">Detalhes das cotas</span>
+          <table class="cotas-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Descrição</th>
+                <th>Preço unit.</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of mesesLista; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>Cota — {{ m }}</td>
+                <td>{{ precoUnitario | number:'1.2-2' }} MT</td>
+                <td><strong>{{ precoUnitario | number:'1.2-2' }} MT</strong></td>
+              </tr>
+              <tr class="summary-row">
+                <td colspan="3">Total ({{ mesesLista.length }} cotas)</td>
+                <td><strong>{{ receiptData.valorTotal | number:'1.2-2' }} MT</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="total-banner">
+          <span>Total pago</span>
+          <strong>{{ receiptData.valorTotal | number:'1.2-2' }} MT</strong>
+        </div>
+
+        <div class="receipt-debt" *ngIf="receiptData.mesesEmDividaRestantes !== undefined && receiptData.mesesEmDividaRestantes > 0">
+          <mat-icon>info</mat-icon>
+          <div>
+            <strong>Ainda em falta: {{ receiptData.mesesEmDividaRestantes }} mês{{ receiptData.mesesEmDividaRestantes > 1 ? 'es' : '' }}</strong>
+            <span>{{ receiptData.valorDividaRestante | number }} MT por regularizar</span>
+          </div>
+        </div>
+
+        <div class="receipt-debt em-dia" *ngIf="receiptData.mesesEmDividaRestantes === 0">
+          <mat-icon>celebration</mat-icon>
+          <div>
+            <strong>Cotas em dia!</strong>
+            <span>Obrigado pelo seu compromisso com a ANAM.</span>
+          </div>
+        </div>
+
+        <footer class="receipt-footer">
+          <strong>ANAM</strong>
+          <span>Documento gerado electronicamente · {{ receiptData.dataPagamento | date:'yyyy' }}</span>
+        </footer>
+      </div>
+    </div>
+
+    <div class="confirmed-actions">
+      <button type="button" class="btn-outline" (click)="verRecibo()" *ngIf="receiptData">
         <mat-icon>picture_as_pdf</mat-icon>
-        <span>Ver Recibo</span>
+        Descarregar PDF
       </button>
-      <button 
-        mat-stroked-button 
-        routerLink="/membros/pagar-cotas"
-        class="btn-voltar">
-        <mat-icon>arrow_back</mat-icon>
-        <span>Voltar</span>
+      <button type="button" class="btn-primary-action btn-finalizar" routerLink="/membros/pagar-cotas">
+        <mat-icon>done_all</mat-icon>
+        Finalizar
       </button>
     </div>
   </div>
 </div>
-

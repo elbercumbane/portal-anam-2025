@@ -2,10 +2,12 @@
 // PROJECTOS ACTIVOS - DESIGN ESPETACULAR
 // ========================================
 
-// Variáveis
-$primary-green: #2C674C;
-$green-medium: #2C674C;
-$green-dark: #1B4332;
+// Paleta ANAM unificada
+$primary-green: #4CAF50;
+$green-medium: #43A047;
+$green-dark: #388E3C;
+$green-light: #66BB6A;
+$green-50: #E8F5E9;
 
 // ============ INTRO DA SECÇÃO ============
 .ativos-page {
@@ -34,7 +36,7 @@ $green-dark: #1B4332;
     }
     
     span {
-      color: $green-dark;
+      color: var(--card-dark);
       font-weight: 700;
       font-size: 0.85rem;
       text-transform: uppercase;
@@ -81,59 +83,61 @@ $green-dark: #1B4332;
 
 // ============ CARD DO PROJECTO ============
 .projecto-card {
+  --card-primary: #{$primary-green};
+  --card-secondary: #{$green-light};
+  --card-accent: #{$green-medium};
+  --card-light: #{$green-50};
+  --card-dark: #{$green-dark};
+  --kpi-1: #{$primary-green};
+  --kpi-2: #{$green-medium};
+  --kpi-3: #{$green-light};
+
   background: #fff;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 
+  box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.08),
     0 2px 10px rgba(0, 0, 0, 0.04);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   opacity: 0;
   animation: cardEntrance 0.6s ease forwards;
-  
+  border: 1px solid rgba(0, 0, 0, 0.04);
+
   @for $i from 0 through 5 {
     &[data-index="#{$i}"] {
       animation-delay: #{$i * 0.15}s;
     }
   }
-  
+
   &:hover {
-    transform: translateY(-12px);
-    box-shadow: 
-      0 25px 60px rgba(0, 0, 0, 0.15),
-      0 10px 25px rgba(0, 0, 0, 0.1);
-    
-    .card-visual {
-      .visual-gradient {
-        opacity: 0.85;
-      }
-      
-      .visual-icon svg {
-        transform: scale(1.15) rotate(5deg);
-      }
+    transform: translateY(-10px);
+    box-shadow:
+      0 25px 60px rgba(0, 0, 0, 0.12),
+      0 10px 25px color-mix(in srgb, var(--card-primary) 15%, transparent);
+
+    .visual-icon {
+      transform: scale(1.08);
+      box-shadow: 0 8px 24px color-mix(in srgb, var(--card-primary) 30%, transparent);
     }
-    
-    .card-decoration {
-      transform: scale(1.5);
-      opacity: 0.15;
-    }
-    
+
     .btn-primary {
-      transform: translateX(5px);
+      filter: brightness(1.05);
     }
   }
-  
-  .card-decoration {
+
+  .card-accent-bar {
     position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba($primary-green, 0.2) 0%, transparent 70%);
-    border-radius: 50%;
-    transition: all 0.5s ease;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--card-primary);
+    z-index: 3;
+  }
+
+  .card-decoration {
+    display: none;
   }
 }
 
@@ -152,63 +156,76 @@ $green-dark: #1B4332;
 .card-visual {
   position: relative;
   height: 140px;
-  background: linear-gradient(135deg, #f5f4f0 0%, #ebe9e4 100%);
+  background: linear-gradient(180deg, var(--card-light) 0%, #f6faf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  
+  border-bottom: 1px solid rgba(76, 175, 80, 0.08);
+
   .visual-gradient {
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 30% 30%, rgba($primary-green, 0.08) 0%, transparent 50%);
-    opacity: 1;
-    transition: opacity 0.4s ease;
+    display: none;
   }
-  
+
+  .categoria-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 5px 12px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid color-mix(in srgb, var(--card-primary) 25%, transparent);
+    border-radius: 50px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--card-dark);
+    backdrop-filter: blur(8px);
+  }
+
   .visual-icon {
     position: relative;
     z-index: 2;
-    width: 70px;
-    height: 70px;
-    background: white;
-    border: 1px solid rgba($primary-green, 0.15);
+    width: 72px;
+    height: 72px;
+    background: #fff;
+    border: 2px solid color-mix(in srgb, var(--card-primary) 20%, transparent);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-    
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--card-primary) 18%, transparent);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+
     svg {
       width: 32px;
       height: 32px;
-      stroke: $primary-green;
+      stroke: var(--card-primary);
       transition: transform 0.4s ease;
     }
   }
-  
+
   .status-badge {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    background: rgba($primary-green, 0.9);
+    background: var(--card-primary);
     border-radius: 50px;
     color: white;
     font-weight: 600;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    
+
     .pulse {
       width: 6px;
       height: 6px;
-      background: white;
+      background: #fff;
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
@@ -253,41 +270,39 @@ $green-dark: #1B4332;
 .progress-section {
   display: flex;
   align-items: center;
-  gap: 25px;
-  margin-bottom: 25px;
-  padding: 20px;
-  background: linear-gradient(135deg, rgba($green-dark, 0.03) 0%, rgba($primary-green, 0.05) 100%);
+  gap: 20px;
+  margin-bottom: 22px;
+  padding: 18px;
+  background: #f6faf6;
   border-radius: 16px;
-  border: 1px solid rgba($primary-green, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.1);
 }
 
 .progress-circle {
   position: relative;
-  width: 75px;
-  height: 75px;
+  width: 78px;
+  height: 78px;
   flex-shrink: 0;
-  
+
   svg {
     width: 100%;
     height: 100%;
     transform: rotate(-90deg);
   }
-  
+
   .progress-bg {
     fill: none;
-    stroke: rgba($primary-green, 0.15);
+    stroke: color-mix(in srgb, var(--card-primary) 18%, transparent);
     stroke-width: 8;
   }
-  
+
   .progress-bar {
     fill: none;
-    stroke: url(#progressGradient);
     stroke-width: 8;
     stroke-linecap: round;
-    stroke: $primary-green;
     transition: stroke-dasharray 1s ease;
   }
-  
+
   .progress-value {
     position: absolute;
     inset: 0;
@@ -295,18 +310,18 @@ $green-dark: #1B4332;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    
+
     .number {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
-      color: $green-dark;
+      color: var(--card-dark);
       line-height: 1;
     }
-    
+
     .percent {
-      font-size: 0.7rem;
-      color: $primary-green;
+      font-size: 0.65rem;
+      color: var(--card-primary);
       font-weight: 700;
     }
   }
@@ -317,28 +332,28 @@ $green-dark: #1B4332;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
+
   .info-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: #666;
-    
+
     svg {
       width: 18px;
       height: 18px;
-      stroke: $primary-green;
+      stroke: var(--card-secondary);
       flex-shrink: 0;
     }
-    
+
     &.highlight {
       font-weight: 700;
-      color: $green-dark;
-      font-size: 1.05rem;
-      
+      color: var(--card-dark);
+      font-size: 1.02rem;
+
       svg {
-        stroke: $primary-green;
+        stroke: var(--card-accent);
       }
     }
   }
@@ -355,44 +370,75 @@ $green-dark: #1B4332;
 .kpi-item {
   text-align: center;
   padding: 12px 8px;
-  background: #fafafa;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all 0.3s ease;
-  
+  border: 1px solid transparent;
+
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-3px);
   }
-  
+
+  &--1 {
+    background: color-mix(in srgb, var(--kpi-1) 10%, #fff);
+    border-color: color-mix(in srgb, var(--kpi-1) 20%, transparent);
+
+    .kpi-icon {
+      background: color-mix(in srgb, var(--kpi-1) 18%, #fff);
+      svg { stroke: var(--kpi-1); }
+    }
+
+    .kpi-value { color: var(--kpi-1); }
+  }
+
+  &--2 {
+    background: color-mix(in srgb, var(--kpi-2) 10%, #fff);
+    border-color: color-mix(in srgb, var(--kpi-2) 20%, transparent);
+
+    .kpi-icon {
+      background: color-mix(in srgb, var(--kpi-2) 18%, #fff);
+      svg { stroke: var(--kpi-2); }
+    }
+
+    .kpi-value { color: var(--kpi-2); }
+  }
+
+  &--3 {
+    background: color-mix(in srgb, var(--kpi-3) 10%, #fff);
+    border-color: color-mix(in srgb, var(--kpi-3) 20%, transparent);
+
+    .kpi-icon {
+      background: color-mix(in srgb, var(--kpi-3) 18%, #fff);
+      svg { stroke: var(--kpi-3); }
+    }
+
+    .kpi-value { color: var(--kpi-3); }
+  }
+
   .kpi-icon {
     width: 36px;
     height: 36px;
     margin: 0 auto 8px;
-    background: rgba($primary-green, 0.08);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     svg {
       width: 18px;
       height: 18px;
-      stroke: $primary-green;
     }
   }
-  
+
   .kpi-value {
     display: block;
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: #333;
     margin-bottom: 2px;
   }
-  
+
   .kpi-label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -402,41 +448,46 @@ $green-dark: #1B4332;
 
 // ============ PARCEIROS ============
   .parceiros-section {
-  margin-bottom: 25px;
-  padding-top: 20px;
-  border-top: 1px solid rgba($primary-green, 0.1);
-  
+  margin-bottom: 22px;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--card-primary) 12%, transparent);
+
   .parceiros-label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: #888;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
-  
+
   .parceiros-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
-  
+
   .parceiro-tag {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, rgba($primary-green, 0.08) 0%, rgba($green-medium, 0.12) 100%);
-    border: 1px solid rgba($primary-green, 0.15);
+    padding: 7px 14px;
+    background: var(--card-light);
+    border: 1px solid color-mix(in srgb, var(--card-primary) 20%, transparent);
     border-radius: 50px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    color: $primary-green;
+    color: var(--card-dark);
     transition: all 0.3s ease;
-    
+
+    &:nth-child(odd),
+    &:nth-child(even) {
+      background: #f6faf6;
+      border-color: rgba(76, 175, 80, 0.15);
+      color: var(--card-dark);
+    }
+
     &:hover {
-      background: linear-gradient(135deg, rgba($primary-green, 0.15) 0%, rgba($green-medium, 0.2) 100%);
-      border-color: rgba($primary-green, 0.3);
-      color: $green-dark;
       transform: translateY(-2px);
+      box-shadow: 0 4px 10px color-mix(in srgb, var(--card-primary) 15%, transparent);
     }
   }
 }
@@ -453,24 +504,26 @@ $green-dark: #1B4332;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 20px;
-  background: transparent;
-  border: 2px solid rgba($primary-green, 0.25);
+  padding: 13px 18px;
+  background: #fff;
+  border: 2px solid color-mix(in srgb, var(--card-primary) 35%, transparent);
   border-radius: 12px;
-  color: $primary-green;
+  color: var(--card-dark);
   font-weight: 700;
-  font-size: 0.9rem;
-  text-decoration: none;
+  font-size: 0.88rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  
+  font-family: inherit;
+
   svg {
     width: 18px;
     height: 18px;
+    stroke: var(--card-primary);
   }
-  
+
   &:hover {
-    background: rgba($primary-green, 0.08);
-    border-color: $primary-green;
+    background: var(--card-light);
+    border-color: var(--card-primary);
     transform: translateY(-2px);
   }
 }
@@ -481,29 +534,200 @@ $green-dark: #1B4332;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 20px;
-  background: transparent;
-  border: 1px solid rgba($primary-green, 0.3);
-  border-radius: 8px;
-  color: $primary-green;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-decoration: none;
+  padding: 13px 18px;
+  background: var(--card-primary);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  
+  font-family: inherit;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--card-primary) 25%, transparent);
+
   svg {
     width: 16px;
     height: 16px;
-    stroke: $primary-green;
+    stroke: #fff;
     transition: transform 0.3s ease;
   }
-  
+
   &:hover {
-    background: rgba($primary-green, 0.08);
-    border-color: rgba($primary-green, 0.5);
-    
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--card-primary) 45%, transparent);
+
     svg {
       transform: translateX(4px);
+    }
+  }
+}
+
+// ============ MODAL ============
+.projeto-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeInUp 0.25s ease;
+
+  .modal-panel {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 28px 32px 32px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--card-primary) 20%, transparent);
+    border-top: 4px solid var(--card-primary);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--card-light);
+    color: var(--card-dark);
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--card-primary);
+      color: #fff;
+    }
+  }
+
+  .modal-header {
+    margin-bottom: 20px;
+    padding-right: 40px;
+
+    .modal-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--card-light);
+      color: var(--card-dark);
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin: 0 0 8px;
+      line-height: 1.3;
+    }
+
+    .modal-meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .modal-body {
+    h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--card-dark);
+      margin: 20px 0 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #555;
+      margin: 0;
+    }
+
+    ol, ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.7;
+
+      li + li {
+        margin-top: 6px;
+      }
+    }
+
+    .detalhes-texto {
+      margin-bottom: 20px;
+    }
+
+    .detalhes-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+
+      .stat {
+        text-align: center;
+        padding: 14px 8px;
+        background: $green-50;
+        border-radius: 12px;
+        border: 1px solid rgba($primary-green, 0.15);
+
+        strong {
+          display: block;
+          font-size: 1.25rem;
+          color: var(--card-dark);
+          margin-bottom: 4px;
+        }
+
+        span {
+          font-size: 0.7rem;
+          color: #888;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+        }
+      }
+    }
+
+    .detalhes-parceiros {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #666;
+
+      .tag {
+        padding: 5px 12px;
+        background: $green-50;
+        border: 1px solid rgba($primary-green, 0.2);
+        border-radius: 50px;
+        font-weight: 600;
+        color: var(--card-dark);
+        font-size: 0.8rem;
+      }
     }
   }
 }

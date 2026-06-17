@@ -3,8 +3,24 @@
 
 @import 'variables';
 @import 'animations';
-@import 'hero-section';
+@import '../quota-pages-shared';
 @import 'background-effects';
 @import 'cards';
 @import 'forms';
+@import 'quota-flow';
 @import 'responsive';
+
+:host {
+  display: block;
+}
+
+:host ::ng-deep body.navbar-solid .navbar {
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+::ng-deep .quota-dialog-panel .mat-mdc-dialog-container {
+  padding: 0 !important;
+  border-radius: 16px !important;
+  overflow: hidden;
+}

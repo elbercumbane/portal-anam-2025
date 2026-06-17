@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { STORAGE_KEYS } from './auth.data';
 import { environment } from '../../environments/environment';
@@ -93,6 +93,23 @@ export class ApiClientService {
       );
   }
 
+  /** Valida sessão sem derrubar o utilizador em falhas de rede. */
+  validateSession(): Observable<{ valid: boolean; user?: any }> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/auth/me`, { headers: this.getHeaders() }).pipe(
+      map((response: any) => ({
+        valid: true,
+        user: response?.user ?? response
+      })),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          return of({ valid: false });
+        }
+        return of({ valid: true });
+      })
+    );
+  }
+
   changePassword(newPassword: string): Observable<any> {
     const apiUrl = this.getApiUrl();
     return this.http.post(`${apiUrl}/auth/change-password`, { newPassword }, { headers: this.getHeaders() })
@@ -164,6 +181,24 @@ export class ApiClientService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  /** Situação de cotas por NUIT (página Pagar Cotas — público) */
+  getQuotaStatusByNuit(nuit: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    const trimmed = (nuit || '').trim();
+    if (!trimmed) {
+      return throwError(() => new Error('NUIT é obrigatório'));
+    }
+    return this.http.get(`${apiUrl}/quota-payments/status/by-nuit/${encodeURIComponent(trimmed)}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  /** Situação de cotas por ID do membro (utilizador autenticado) */
+  getQuotaStatusByMemberId(memberId: string): Observable<any> {
+    const apiUrl = this.getApiUrl();
+    return this.http.get(`${apiUrl}/quota-payments/status/member/${memberId}`)
+      .pipe(catchError(this.handleError));
   }
 
   /** Busca candidatura por NUIT (para página Pagar Cotas) - endpoint público */
@@ -550,7 +585,7 @@ export class ApiClientService {
   }): Observable<any> {
     const apiUrl = this.getApiUrl();
     return this.http.post(`${apiUrl}/quota-payments`, data, {
-      headers: this.getHeaders()
+      headers: { 'Content-Type': 'application/json' }
     }).pipe(
       catchError(this.handleError)
     );

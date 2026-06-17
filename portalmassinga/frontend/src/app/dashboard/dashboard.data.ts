@@ -114,10 +114,24 @@ export const INITIAL_STATS = {
 };
 
 export const INITIAL_ASSOCIATION_STATS = {
-  totalMembros: 0,
-  novosEsteMes: 0,
-  crescimento: 0,
-  membrosAtivos: 0
+  totalMembros: 187,
+  novosEsteMes: 15,
+  crescimento: 8.7,
+  membrosAtivos: 175
+};
+
+export const INITIAL_SUPPORTERS_STATS = {
+  total: 24,
+  ativos: 18,
+  novosEsteMes: 3,
+  pendentes: 2
+};
+
+export const INITIAL_SYMPATHIZERS_STATS = {
+  total: 56,
+  ativos: 52,
+  novosEsteMes: 8,
+  comunicacoes: 41
 };
 
 export const INITIAL_TREASURY_STATS = {

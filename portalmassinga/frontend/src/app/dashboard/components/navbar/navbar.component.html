@@ -1,34 +1,45 @@
-<!-- Professional Top Navbar -->
 <mat-toolbar class="top-navbar">
-  <!-- Left Section: Menu (só abre; fechar fica no sidebar) + Título ANAM -->
   <div class="navbar-left">
     <app-navbar-menu-button *ngIf="!isHandset || !sidebarOpen" (toggleSidebar)="onToggleSidebar()"></app-navbar-menu-button>
+
+    <div class="navbar-brand">
+      <div class="brand-row">
+        <span class="brand-acronym">ANAM</span>
+        <span class="brand-badge">Painel Admin</span>
+      </div>
+      <span class="brand-subtitle">{{ subtitle }}</span>
+    </div>
   </div>
-  
-  <!-- Center Section: Search -->
+
   <div class="navbar-center">
     <app-navbar-search (search)="onSearch($event)"></app-navbar-search>
   </div>
-  
-  <!-- Right Section: Data/Hora + Actions & Profile -->
+
   <div class="navbar-right">
-    <!-- Data e Hora (como área de membros: hora em cima verde, data em baixo) -->
     <app-navbar-clock></app-navbar-clock>
 
+    <div class="navbar-divider"></div>
+
     <app-navbar-actions>
-      <!-- Notifications -->
-      <app-navbar-notifications 
+      <button
+        mat-icon-button
+        class="action-btn refresh-btn"
+        matTooltip="Actualizar dashboard"
+        (click)="onRefreshDashboard()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <app-navbar-notifications
         [notificationCount]="notificationCount"
         (notificationsClick)="onNotificationsClick()">
       </app-navbar-notifications>
-      
-      <!-- Divider -->
+
       <div class="action-divider"></div>
-      
-      <!-- User Profile -->
-      <app-navbar-user-profile 
+
+      <app-navbar-user-profile
         [userName]="userName"
         [userRole]="userRole"
+        [userEmail]="userEmail"
         (profileOptionClick)="onProfileOptionClick($event)">
       </app-navbar-user-profile>
     </app-navbar-actions>

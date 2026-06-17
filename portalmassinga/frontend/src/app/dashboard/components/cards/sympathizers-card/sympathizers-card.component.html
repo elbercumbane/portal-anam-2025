@@ -1,0 +1,32 @@
+<div class="modern-card sympathizers-modern-card" (click)="onCardClick()">
+  <div class="card-glow"></div>
+  <div class="card-background-pattern"></div>
+  <div class="card-content-wrapper">
+    <div class="card-header-modern">
+      <div class="icon-wrapper">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <div class="header-text">
+        <h3>Simpatizantes</h3>
+        <span class="card-subtitle">Comunidade interessada</span>
+      </div>
+    </div>
+    <div class="main-stat">
+      <span class="big-number">{{ stats?.total || 0 }}</span>
+      <div class="stat-change positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+{{ stats?.novosEsteMes || 0 }} este mês</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="footer-item">
+        <span class="footer-label">Ativos</span>
+        <span class="footer-value">{{ stats?.ativos || 0 }}</span>
+      </div>
+      <div class="footer-item">
+        <span class="footer-label">Comunicações</span>
+        <span class="footer-value">{{ stats?.comunicacoes || 0 }}</span>
+      </div>
+    </div>
+  </div>
+</div>

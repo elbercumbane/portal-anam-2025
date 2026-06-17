@@ -10,6 +10,7 @@ import { CotasPendentesDialogComponent, CotasPendentesData } from '../components
 import { ChooseDestinationDialogComponent, ChooseDestinationData } from '../components/modals/choose-destination-dialog/choose-destination-dialog.component';
 import { ChangePasswordDialogComponent } from '../components/modals/change-password-dialog/change-password-dialog.component';
 import { AdminCotasAvisoDialogComponent, AdminCotasAvisoData } from '../components/modals/admin-cotas-aviso-dialog/admin-cotas-aviso-dialog.component';
+import { DEMO_ACESSOS_LOGIN } from '../pages/members/quota-demo.data';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,8 @@ export class LoginComponent implements OnInit {
   // Estados de foco dos campos
   emailFocused = false;
   passwordFocused = false;
+  demoAcessos = DEMO_ACESSOS_LOGIN;
+  currentYear = new Date().getFullYear();
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +66,10 @@ export class LoginComponent implements OnInit {
 
   togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
+  }
+
+  usarAcessoDemo(email: string, password: string): void {
+    this.form.patchValue({ emailOrNuit: email, senha: password });
   }
 
   private mostrarLoginSucessoEDepois(callback: () => void): void {

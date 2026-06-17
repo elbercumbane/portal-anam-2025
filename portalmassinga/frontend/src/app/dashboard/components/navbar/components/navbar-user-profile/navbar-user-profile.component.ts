@@ -1,71 +1,23 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-navbar-user-profile',
-  styleUrls: ['./navbar-user-profile.component.scss'],
-  template: `
-    <button 
-      mat-button 
-      class="user-dropdown-trigger"
-      [matMenuTriggerFor]="profileMenu">
-      <span class="user-name">{{ userName }}</span>
-      <mat-icon class="dropdown-arrow">expand_more</mat-icon>
-    </button>
-    
-    <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
-      <div class="profile-header">
-        <div class="profile-avatar">
-          <span class="avatar-text">{{ getUserInitials() }}</span>
-        </div>
-        <div class="profile-info">
-          <div class="profile-name">{{ userName }}</div>
-        </div>
-      </div>
-      
-      <mat-divider></mat-divider>
-      
-      <button mat-menu-item (click)="onProfileOption('profile')">
-        <mat-icon>person</mat-icon>
-        <span>Perfil</span>
-      </button>
-      
-      <button mat-menu-item (click)="onProfileOption('users')">
-        <mat-icon>group</mat-icon>
-        <span>Gestão de Usuários</span>
-      </button>
-      
-      <button mat-menu-item (click)="onProfileOption('settings')">
-        <mat-icon>settings</mat-icon>
-        <span>Configurações</span>
-      </button>
-      
-      <mat-divider></mat-divider>
-      
-      <button mat-menu-item (click)="onProfileOption('logout')" class="logout-item">
-        <mat-icon>logout</mat-icon>
-        <span>Sair</span>
-      </button>
-    </mat-menu>
-  `,
+  templateUrl: './navbar-user-profile.component.html',
+  styleUrls: ['./navbar-user-profile.component.scss']
 })
 export class NavbarUserProfileComponent implements OnInit {
   @Input() userName: string = 'Usuário';
   @Input() userRole: string = 'Administrador';
+  @Input() userEmail: string = '';
   @Output() profileOptionClick = new EventEmitter<string>();
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Obter nome do usuário: prioridade AuthService > localStorage > input
+    const currentUser = this.authService.getCurrentUser();
+
     if (!this.userName || this.userName === 'Usuário' || this.userName === 'DSI') {
-      const currentUser = this.authService.getCurrentUser();
       if (currentUser?.nome) {
         this.userName = currentUser.nome;
       } else {
@@ -80,23 +32,47 @@ export class NavbarUserProfileComponent implements OnInit {
         }
       }
     }
+
+    if (!this.userEmail) {
+      if (currentUser?.email) {
+        this.userEmail = currentUser.email;
+      } else {
+        const savedEmail = localStorage.getItem('userEmail');
+        if (savedEmail) {
+          this.userEmail = savedEmail;
+        }
+      }
+    }
+
+    if (!this.userRole || this.userRole === 'Administrador') {
+      const role = currentUser?.role || localStorage.getItem('userRole');
+      if (role) {
+        this.userRole = this.formatRoleLabel(role);
+      }
+    }
   }
 
   getUserInitials(): string {
     if (!this.userName || this.userName.trim() === '') {
       return 'U';
     }
-    
-    const nameParts = this.userName.trim().split(' ');
+
+    const nameParts = this.userName.trim().split(/\s+/);
     if (nameParts.length === 1) {
-      // Se houver apenas um nome, pegar as duas primeiras letras
       return nameParts[0].substring(0, 2).toUpperCase();
-    } else {
-      // Pegar a primeira letra do primeiro e último nome
-      const firstInitial = nameParts[0].charAt(0).toUpperCase();
-      const lastInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
-      return firstInitial + lastInitial;
     }
+
+    const firstInitial = nameParts[0].charAt(0).toUpperCase();
+    const lastInitial = nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+    return firstInitial + lastInitial;
+  }
+
+  formatRoleLabel(role: string): string {
+    const r = (role || '').toLowerCase();
+    if (r === 'super-admin') return 'Super Administrador';
+    if (r === 'admin' || r === 'administrador') return 'Administrador Principal';
+    if (r === 'membro') return 'Membro';
+    return role;
   }
 
   onProfileOption(option: string): void {

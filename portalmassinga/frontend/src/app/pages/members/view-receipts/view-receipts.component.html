@@ -1,21 +1,18 @@
-<!-- Hero Section -->
-<section class="receipts-hero" aria-labelledby="receipts-title">
-  <div class="hero-overlay"></div>
+<!-- Hero -->
+<app-navbar appName="ANAM"></app-navbar>
+
+<section class="quota-page-hero" aria-labelledby="receipts-title">
   <div class="hero-content">
-    <h1 id="receipts-title">Pagamento e Consulta de Cotas</h1>
-    <p class="lead">Efetue o pagamento das suas cotas ou consulte os seus recibos de forma rápida e segura.</p>
+    <h1 id="receipts-title">Consultar Recibos</h1>
+    <p class="lead">Consulte os recibos de pagamento das suas cotas de forma rápida e segura.</p>
     <div class="hero-actions">
-      <button 
-        mat-raised-button 
-        class="hero-btn hero-btn-primary"
+      <button mat-raised-button class="hero-btn hero-btn-primary"
         [class.active]="router.url.includes('/pagar-cotas')"
         routerLink="/membros/pagar-cotas">
         <mat-icon>payment</mat-icon>
         <span>Pagar Cotas</span>
       </button>
-      <button 
-        mat-raised-button 
-        class="hero-btn hero-btn-secondary"
+      <button mat-raised-button class="hero-btn hero-btn-secondary"
         [class.active]="router.url.includes('/consultar-recibos')"
         routerLink="/membros/consultar-recibos">
         <mat-icon>receipt_long</mat-icon>
@@ -24,18 +21,14 @@
     </div>
   </div>
   <div class="hero-benefits">
-    <button 
-      mat-stroked-button 
-      class="benefits-btn"
-      (click)="abrirDialogBeneficios()">
+    <button type="button" class="benefits-btn" (click)="abrirDialogBeneficios()">
       <mat-icon>info</mat-icon>
       <span>Benefícios</span>
     </button>
   </div>
 </section>
 
-<!-- Conteúdo Principal -->
-<div class="consultar-recibos-container">
+<div class="consultar-recibos-container pagar-cotas-container">
   <div class="background-effects">
     <div class="animated-overlay"></div>
     <div class="floating-particles">
@@ -47,183 +40,200 @@
       <div class="element element-3"></div>
     </div>
   </div>
-  
+
   <div class="content-section">
-    <mat-card class="section-card consult-card">
-      <mat-card-header>
-        <mat-card-title class="consult-title">Consultar Recibos</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <form [formGroup]="consultReceiptForm" class="consult-form">
-          
-          <!-- Passo 1: NUIT -->
-          <div *ngIf="step === 1" class="step-block">
-            <p class="instruction-text">Digite o seu NUIT para identificar a sua conta de membro.</p>
-            <mat-form-field appearance="outline" class="full-width field-rounded">
-              <mat-label>NUIT</mat-label>
-              <input 
-                matInput 
-                type="text"
-                formControlName="nuit"
-                placeholder="Digite o seu NUIT"
-                (keyup.enter)="buscarPorNuit()">
-              <mat-icon matPrefix>badge</mat-icon>
-              <mat-error *ngIf="consultReceiptForm.get('nuit')?.hasError('required')">
-                NUIT é obrigatório
-              </mat-error>
-              <mat-error *ngIf="consultReceiptForm.get('nuit')?.hasError('pattern')">
-                Digite um NUIT válido (9 a 21 dígitos)
-              </mat-error>
-            </mat-form-field>
-          </div>
+    <div class="content-wrapper quota-flow">
 
-          <!-- Passo 2: Confirmar número (parcial) -->
-          <div *ngIf="step === 2" class="step-block">
-            <p class="partial-number-info">
-              <mat-icon>phone</mat-icon>
-              O número de telefone associado ao seu NUIT termina em <strong>{{ phoneSuffix }}</strong>
+      <!-- Passos -->
+      <div class="steps-bar" *ngIf="flowStep !== 'nuit' || consultLoading">
+        <div class="step" [class.active]="currentStepNum >= 1" [class.done]="currentStepNum > 1">
+          <span class="step-num">1</span>
+          <span class="step-label">NUIT</span>
+        </div>
+        <div class="step-line" [class.done]="currentStepNum > 1"></div>
+        <div class="step" [class.active]="currentStepNum >= 2" [class.done]="currentStepNum > 2">
+          <span class="step-num">2</span>
+          <span class="step-label">SMS</span>
+        </div>
+        <div class="step-line" [class.done]="currentStepNum > 2"></div>
+        <div class="step" [class.active]="currentStepNum >= 3">
+          <span class="step-num">3</span>
+          <span class="step-label">Recibos</span>
+        </div>
+      </div>
+
+      <div class="query-card">
+
+        <!-- Passo 1: NUIT -->
+        <div *ngIf="showNuitStep">
+          <div class="flow-section">
+            <div class="section-icon"><mat-icon>receipt_long</mat-icon></div>
+            <h2>Identificar membro</h2>
+            <p class="section-desc">Introduza o NUIT. Enviaremos um código de 5 dígitos por SMS para confirmar a identidade.</p>
+
+            <div class="demo-panel">
+              <div class="demo-title">
+                <mat-icon>science</mat-icon>
+                NUIT de teste
+              </div>
+              <div class="demo-chips">
+                <button type="button" class="demo-chip" (click)="usarNuitDemo('400111222')">
+                  <span class="chip-nuit">400111222</span>
+                  <span class="chip-desc">Ana Machel Demo</span>
+                  <span class="chip-badge em-dia">Com recibos</span>
+                </button>
+                <button type="button" class="demo-chip demo-chip-warn" (click)="usarNuitDemo(demoNaoMembro.nuit)">
+                  <span class="chip-nuit">{{ demoNaoMembro.nuit }}</span>
+                  <span class="chip-desc">{{ demoNaoMembro.nome }}</span>
+                  <span class="chip-badge nao-membro">Não é membro</span>
+                </button>
+              </div>
+            </div>
+
+            <form [formGroup]="consultForm" class="nuit-form" (ngSubmit)="buscarPorNuit()">
+              <div class="quota-form-group" [class.has-error]="isFieldInvalid('nuit')">
+                <label for="nuit-recibos">NUIT <span class="required">*</span></label>
+                <div class="input-with-icon">
+                  <mat-icon class="field-icon">badge</mat-icon>
+                  <input id="nuit-recibos" type="text" formControlName="nuit" class="form-input"
+                    [class.error]="isFieldInvalid('nuit')"
+                    placeholder="Digite o seu NUIT" (keyup.enter)="buscarPorNuit()">
+                </div>
+                <span class="field-error" *ngIf="isFieldInvalid('nuit') && consultForm.get('nuit')?.hasError('required')">
+                  NUIT é obrigatório
+                </span>
+                <span class="field-error" *ngIf="isFieldInvalid('nuit') && consultForm.get('nuit')?.hasError('pattern')">
+                  NUIT inválido (9–21 dígitos)
+                </span>
+              </div>
+              <div class="error-message" *ngIf="lookupError" role="alert">
+                <mat-icon>error_outline</mat-icon>
+                <span>{{ lookupError }}</span>
+              </div>
+              <button type="submit" class="btn-primary-action"
+                [disabled]="consultForm.invalid || consultLoading">
+                <mat-icon>sms</mat-icon>
+                Enviar código SMS
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading-state" *ngIf="consultLoading || otpSending">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>{{ otpSending ? 'A enviar código por SMS...' : 'A verificar NUIT...' }}</p>
+        </div>
+
+        <!-- Passo 2: OTP -->
+        <div *ngIf="showOtpStep" class="flow-section otp-step">
+          <div class="section-icon"><mat-icon>sms</mat-icon></div>
+          <h2>Verificação por SMS</h2>
+          <p class="section-desc">
+            Receberá um código de <strong>5 dígitos</strong> via SMS no número
+            <strong class="masked-phone">{{ maskedPhone }}</strong>
+          </p>
+
+          <div class="otp-sim-panel">
+            <p class="otp-sim-label">Simulação de SMS</p>
+            <p class="otp-sim-text">
+              ANAM: O seu código é <strong class="otp-code">{{ otpEnviado }}</strong>
             </p>
-            <p class="instruction-text">Complete o número de telefone para confirmar a sua identidade.</p>
-            <mat-form-field appearance="outline" class="full-width field-rounded">
-              <mat-label>Número de Telefone</mat-label>
-              <span matPrefix class="phone-prefix">+258</span>
-              <input 
-                matInput 
-                type="tel"
-                formControlName="telefone"
-                placeholder="84 123 4567"
-                maxlength="9"
-                (input)="onTelefoneInput($event)">
-              <mat-icon matSuffix>phone</mat-icon>
-              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('required')">
-                Telefone é obrigatório
-              </mat-error>
-              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('pattern')">
-                Digite 9 dígitos
-              </mat-error>
-              <mat-error *ngIf="consultReceiptForm.get('telefone')?.hasError('nomatch')">
-                O número não corresponde ao associado ao seu NUIT
-              </mat-error>
-            </mat-form-field>
+            <div class="otp-sim-actions">
+              <button type="button" class="btn-copy-otp" (click)="copiarOtp()">
+                <mat-icon>{{ otpCopied ? 'check' : 'content_copy' }}</mat-icon>
+                {{ otpCopied ? 'Copiado!' : 'Copiar código' }}
+              </button>
+              <button type="button" class="btn-fill-otp" (click)="preencherOtp()">
+                <mat-icon>edit</mat-icon>
+                Preencher
+              </button>
+            </div>
           </div>
 
-          <!-- Passo 3: Código OTP -->
-          <div *ngIf="step === 3" class="step-block">
-            <p class="otp-info">
-              <mat-icon>sms</mat-icon>
-              Código enviado para <strong>{{ telefoneMascarado }}</strong>
-            </p>
-            <p class="instruction-text">Digite o código de 6 dígitos que recebeu.</p>
-            <mat-form-field appearance="outline" class="full-width field-rounded otp-field">
-              <mat-label>Código de Verificação</mat-label>
-              <input 
-                matInput 
-                type="text"
-                formControlName="otp"
-                placeholder="000000"
-                maxlength="6"
-                (keyup.enter)="verificarOtp()">
-              <mat-icon matPrefix>vpn_key</mat-icon>
-              <mat-error *ngIf="consultReceiptForm.get('otp')?.hasError('required')">
-                Código é obrigatório
-              </mat-error>
-              <mat-error *ngIf="consultReceiptForm.get('otp')?.hasError('pattern')">
-                Digite 6 dígitos
-              </mat-error>
-            </mat-form-field>
-          </div>
+          <form [formGroup]="otpForm" class="nuit-form" (ngSubmit)="validarOtp()">
+            <div class="quota-form-group" [class.has-error]="isOtpInvalid() || otpError">
+              <label for="otp-code">Código SMS <span class="required">*</span></label>
+              <div class="input-with-icon">
+                <mat-icon class="field-icon">pin</mat-icon>
+                <input id="otp-code" type="text" formControlName="otp" class="form-input otp-input"
+                  [class.error]="isOtpInvalid() || otpError"
+                  placeholder="00000" maxlength="5" inputmode="numeric"
+                  (input)="onOtpInput($event)" (keyup.enter)="validarOtp()">
+              </div>
+              <span class="field-hint">Digite o código de 5 dígitos recebido por SMS</span>
+              <span class="field-error" *ngIf="otpError">{{ otpError }}</span>
+            </div>
 
-          <!-- Botões de Ação -->
-          <div class="action-buttons">
-            <button 
-              *ngIf="step === 1"
-              mat-raised-button 
-              class="btn-consultar"
-              type="button"
-              (click)="buscarPorNuit()"
-              [disabled]="consultReceiptForm.get('nuit')?.invalid || consultLoading">
-              <mat-icon>search</mat-icon>
-              <span>Buscar</span>
-              <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
-            </button>
+            <div class="otp-actions">
+              <button type="submit" class="btn-primary-action" [disabled]="otpForm.invalid">
+                <mat-icon>verified_user</mat-icon>
+                Confirmar e ver recibos
+              </button>
+              <button type="button" class="btn-secondary-action" (click)="reenviarOtp()" [disabled]="otpSending">
+                <mat-icon>refresh</mat-icon>
+                Reenviar código
+              </button>
+              <button type="button" class="btn-link-action" (click)="voltarParaNuit()">
+                <mat-icon>arrow_back</mat-icon>
+                Alterar NUIT
+              </button>
+            </div>
+          </form>
+        </div>
 
-            <button 
-              *ngIf="step === 2"
-              mat-raised-button 
-              class="btn-consultar"
-              type="button"
-              (click)="confirmarTelefone()"
-              [disabled]="consultReceiptForm.get('telefone')?.invalid || consultLoading">
-              <mat-icon>arrow_forward</mat-icon>
-              <span>Continuar</span>
-              <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
-            </button>
-
-            <button 
-              *ngIf="step === 3"
-              mat-raised-button 
-              class="btn-consultar"
-              type="button"
-              (click)="verificarOtp()"
-              [disabled]="consultReceiptForm.get('otp')?.invalid || consultLoading">
-              <mat-icon>verified</mat-icon>
-              <span>Verificar Código</span>
-              <mat-spinner *ngIf="consultLoading" diameter="20" class="inline-spinner"></mat-spinner>
-            </button>
-
-            <button 
-              *ngIf="step < 3"
-              mat-stroked-button 
-              class="btn-voltar"
-              type="button"
-              (click)="voltar()">
-              <mat-icon>arrow_back</mat-icon>
-              <span>Voltar</span>
-            </button>
-
-            <button 
-              mat-stroked-button 
-              class="btn-voltar"
-              routerLink="/membros"
-              type="button">
-              <mat-icon>home</mat-icon>
-              <span>Página Membros</span>
+        <!-- Passo 3: Resultados -->
+        <div *ngIf="showResults">
+          <div class="member-header">
+            <div class="member-avatar"><mat-icon>person</mat-icon></div>
+            <div class="member-meta">
+              <h2>{{ memberData!.nome }}</h2>
+              <p>NUIT {{ memberData!.nuit }}</p>
+            </div>
+            <button mat-stroked-button type="button" class="btn-change" (click)="novaConsulta()">
+              <mat-icon>swap_horiz</mat-icon>
+              Nova consulta
             </button>
           </div>
-        </form>
 
-        <!-- Lista de Recibos -->
-        <div *ngIf="step === 4" class="receipts-list">
           <div *ngIf="filteredReceipts.length === 0" class="no-receipts">
             <mat-icon>receipt_long</mat-icon>
-            <p>Nenhum recibo encontrado</p>
+            <p>Nenhum recibo encontrado para este NUIT.</p>
+            <p class="hint">Efectue um pagamento em «Pagar Cotas» para gerar recibos.</p>
           </div>
 
-          <div *ngFor="let receipt of filteredReceipts" class="receipt-card">
-            <div class="receipt-header">
-              <div class="receipt-id">
-                <mat-icon>receipt</mat-icon>
-                <span>{{ receipt.id }}</span>
+          <div class="receipts-list" *ngIf="filteredReceipts.length > 0">
+            <p class="results-count">{{ filteredReceipts.length }} recibo{{ filteredReceipts.length > 1 ? 's' : '' }} encontrado{{ filteredReceipts.length > 1 ? 's' : '' }}</p>
+            <div *ngFor="let receipt of filteredReceipts" class="receipt-card">
+              <div class="receipt-header">
+                <div class="receipt-id">
+                  <mat-icon>receipt</mat-icon>
+                  <span>{{ receipt.id }}</span>
+                </div>
+                <span class="receipt-status pago">Pago</span>
               </div>
-              <span class="receipt-status" [class.pago]="receipt.status === 'pago'">
-                {{ receipt.status === 'pago' ? 'Pago' : 'Pendente' }}
-              </span>
-            </div>
-            <div class="receipt-body">
-              <div class="receipt-info">
-                <p><strong>Membro:</strong> {{ receipt.nomeMembro }}</p>
-                <p><strong>Data:</strong> {{ receipt.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</p>
-                <p><strong>Meses:</strong> {{ receipt.meses.join(', ') }}</p>
-                <p><strong>Método:</strong> {{ receipt.metodoPagamento }}</p>
-              </div>
-              <div class="receipt-total">
-                <span class="total-label">Total Pago</span>
-                <span class="total-value">{{ receipt.valorTotal | number }} MT</span>
+              <div class="receipt-body">
+                <div class="receipt-info">
+                  <p><strong>Data:</strong> {{ receipt.dataPagamento | date:'dd/MM/yyyy HH:mm' }}</p>
+                  <p><strong>Meses:</strong> {{ receipt.meses.join(', ') }}</p>
+                  <p><strong>Método:</strong> {{ receipt.metodoPagamento }}</p>
+                </div>
+                <div class="receipt-actions">
+                  <div class="receipt-total">
+                    <span class="total-label">Total</span>
+                    <span class="total-value">{{ receipt.valorTotal | number }} MT</span>
+                  </div>
+                  <button type="button" class="btn-download-receipt" (click)="baixarRecibo(receipt)">
+                    <mat-icon>download</mat-icon>
+                    Baixar PDF
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+
+      </div>
+    </div>
   </div>
 </div>

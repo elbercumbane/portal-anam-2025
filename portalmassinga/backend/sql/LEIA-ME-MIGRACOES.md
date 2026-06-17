@@ -1,6 +1,14 @@
 # Scripts SQL e Migrações
 
-## Ordem de execução recomendada
+## Script mãe (recomendado no pgAdmin)
+
+Se a base **anam2025** já existe, execute **um único ficheiro**:
+
+**`run-all-scripts-mae.sql`**
+
+No pgAdmin: botão direito em **anam2025** → **Query Tool** → abrir o ficheiro → **Execute (F5)**.
+
+## Ordem de execução (scripts individuais)
 
 1. **create-database-anam2025.sql** – Base e tabelas principais
 2. **alter-member-applications-add-nuit.sql** – Adiciona coluna NUIT

@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-beneficios-dialog',
@@ -13,9 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatDividerModule
+    MatIconModule
   ],
   templateUrl: './beneficios-dialog.component.html',
   styleUrls: ['./beneficios-dialog.component.scss']

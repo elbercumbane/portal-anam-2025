@@ -1,5 +1,5 @@
 <div class="dashboard-header-card">
-  <div class="header-background"></div>
+  <div class="header-bg-pattern"></div>
   <div class="header-content">
     <div class="greeting-section">
       <div class="greeting-icon">
@@ -11,22 +11,27 @@
           <span class="user-name">{{ userName }}!</span>
         </h2>
         <p class="welcome-message">
-          Bem-vindo ao Dashboard da ANAM - Associação de Naturais e Amigos de Massinga.
+          Bem-vindo ao Dashboard da ANAM — Associação de Naturais e Amigos de Massinga.
         </p>
       </div>
     </div>
 
-    <div class="quick-actions">
-      <button mat-icon-button class="action-btn" matTooltip="Atualizar dados">
-        <mat-icon>refresh</mat-icon>
-      </button>
-      <button mat-icon-button class="action-btn" matTooltip="Configurações">
-        <mat-icon>settings</mat-icon>
-      </button>
-      <button mat-icon-button class="action-btn" matTooltip="Ajuda">
-        <mat-icon>help_outline</mat-icon>
-      </button>
+    <div class="header-meta">
+      <div class="meta-chip">
+        <mat-icon>verified</mat-icon>
+        <span>Sistema activo</span>
+      </div>
+      <div class="quick-actions">
+        <button mat-icon-button class="action-btn" matTooltip="Actualizar dados">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn" matTooltip="Configurações">
+          <mat-icon>settings</mat-icon>
+        </button>
+        <button mat-icon-button class="action-btn" matTooltip="Ajuda">
+          <mat-icon>help_outline</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>
-

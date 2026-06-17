@@ -4,116 +4,93 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-navbar-search',
-  
   template: `
     <div class="search-container">
       <mat-icon class="search-icon">search</mat-icon>
-      <input 
-        type="text" 
-        placeholder="Pesquisar..." 
-        class="search-input">
+      <input
+        type="text"
+        placeholder="Pesquisar membros, eventos, relatórios..."
+        class="search-input"
+        (input)="onSearch($event)">
+      <kbd class="search-shortcut" *ngIf="showShortcut">Ctrl+K</kbd>
     </div>
   `,
   styles: [`
     .search-container {
       display: flex;
       align-items: center;
-      background: white;
-      border: 2px solid #e9ecef;
-      border-radius: 25px;
-      padding: 0.5rem 1rem;
-      margin-right: 1rem;
-      transition: all 0.3s ease;
-      min-width: 250px;
-      
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid rgba(5, 150, 105, 0.2);
+      border-radius: 12px;
+      padding: 0.55rem 0.875rem;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
       &:focus-within {
-        border-color: #05B6D4;
-        box-shadow: 0 0 0 3px rgba(5, 182, 212, 0.15);
-        transform: translateY(-1px);
+        border-color: #059669;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
       }
-      
+
       .search-icon {
-        color: #0891B2;
+        color: #059669;
         margin-right: 0.5rem;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          color: #05B6D4;
-          transform: scale(1.1);
-        }
+        font-size: 1.15rem;
+        width: 1.15rem;
+        height: 1.15rem;
+        flex-shrink: 0;
       }
-      
+
       .search-input {
         border: none;
         outline: none;
         background: transparent;
-        font-size: 0.9rem;
-        color: #2c3e50;
+        font-size: 0.875rem;
+        color: #0f172a;
         width: 100%;
-        
+        min-width: 0;
+
         &::placeholder {
-          color: #999;
+          color: #94a3b8;
         }
       }
-    }
-    
-    @media (max-width: 1024px) {
-      .search-container {
-        min-width: 200px;
-        margin-right: 0.75rem;
-        
-        .search-input {
-          font-size: 0.85rem;
-        }
+
+      .search-shortcut {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.45rem;
+        font-size: 0.65rem;
+        font-family: inherit;
+        color: #64748b;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        flex-shrink: 0;
+        margin-left: 0.5rem;
       }
     }
-    
+
     @media (max-width: 768px) {
       .search-container {
-        min-width: 150px;
-        margin-right: 0.5rem;
-        padding: 0.4rem 0.75rem;
-        
+        padding: 0.45rem 0.75rem;
+
         .search-input {
           font-size: 0.8rem;
         }
-        
-        .search-icon {
-          font-size: 1.1rem;
+
+        .search-shortcut {
+          display: none;
         }
-      }
-    }
-    
-    @media (max-width: 600px) {
-      .search-container {
-        min-width: 120px;
-        margin-right: 0.25rem;
-        padding: 0.3rem 0.5rem;
-        
-        .search-input {
-          font-size: 0.75rem;
-        }
-        
-        .search-icon {
-          font-size: 1rem;
-          margin-right: 0.25rem;
-        }
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .search-container {
-        display: none;
       }
     }
   `]
 })
 export class NavbarSearchComponent {
   @Output() search = new EventEmitter<string>();
+  showShortcut = typeof window !== 'undefined' && window.innerWidth > 768;
 
-  onSearch(event: any): void {
-    const query = event.target.value;
+  onSearch(event: Event): void {
+    const query = (event.target as HTMLInputElement).value;
     this.search.emit(query);
   }
 }

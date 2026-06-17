@@ -24,6 +24,7 @@ export class NavbarComponent {
   @Input() subtitle: string = 'Associação de Naturais e Amigos de Massinga';
   @Input() notificationCount: number = 3;
   @Input() userName: string = 'DSI';
+  @Input() userEmail: string = '';
   @Input() userRole: string = 'Administrador';
 
   @Output() toggleSidebar = new EventEmitter<void>();
