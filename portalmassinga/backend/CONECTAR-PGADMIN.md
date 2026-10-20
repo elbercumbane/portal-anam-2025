@@ -1,45 +1,119 @@
-# Conectar pgAdmin 4 ao Backend (PostgreSQL)
+# 🔌 Como Conectar ao PostgreSQL Docker no pgAdmin
 
-O backend usa a base de dados **anam2025**. Use os mesmos dados no pgAdmin para ver e editar os dados (incluindo candidaturas de membros).
+## 📋 Passo a Passo Detalhado
 
-## Dados de conexão (igual ao application.properties)
+### 1. Abrir o pgAdmin
 
-| Campo        | Valor              |
-|-------------|--------------------|
-| **Host**    | `localhost`        |
-| **Porta**   | `5432`             |
-| **Base de dados** | `anam2025` |
-| **Utilizador**   | `postgres`   |
-| **Palavra-passe** | (a que está em `application.properties`: `spring.datasource.password`) |
+Abra o pgAdmin4 no seu computador.
 
-No seu projeto está configurado: `spring.datasource.password=santos133` (altere no pgAdmin se mudar no properties).
+### 2. Adicionar Novo Servidor
 
-## Passos no pgAdmin 4
+1. No painel esquerdo, encontre **"Servers"**
+2. Clique com **botão direito** em **"Servers"**
+3. Selecione **"Create"** > **"Server..."**
 
-1. Abra o **pgAdmin 4**.
-2. No painel esquerdo, clique com o botão direito em **Servers** → **Register** → **Server...** (ou use um servidor já existente).
-3. Aba **General**: nome, por exemplo `PostgreSQL Local`.
-4. Aba **Connection**:
-   - **Host:** `localhost`
-   - **Port:** `5432`
-   - **Maintenance database:** `postgres`
-   - **Username:** `postgres`
-   - **Password:** (a mesma do `application.properties`)
-   - Opcional: marque **Save password**.
-5. Clique em **Save**.
+### 3. Preencher Dados de Conexão
 
-## Ver as tabelas de membros
+#### Aba "General"
 
-1. Expanda: **Servers** → **PostgreSQL Local** → **Databases** → **anam2025** → **Schemas** → **public** → **Tables**.
-2. Tabelas usadas pelo backend:
-   - **member_applications** – candidaturas de membros
-   - **application_dependents** – dependentes de cada candidatura
+- **Name:** `PostgreSQL Docker` (ou qualquer nome que preferir)
+  - Este é apenas um nome para identificar a conexão no pgAdmin
 
-Para ver os registos: clique com o botão direito na tabela → **View/Edit Data** → **All Rows**.
+#### Aba "Connection" (IMPORTANTE!)
 
-## Resumo
+Preencha exatamente assim:
 
-- **Backend:** `http://localhost:8080/api` (Spring Boot).
-- **Base de dados:** `anam2025` em `localhost:5432`, utilizador `postgres`.
-- **Registos de membros:** feitos na página **Associar-se** do portal (ou via API `POST /api/member-applications`).
-- **Visualizar no dashboard:** após login no dashboard, ir a **Área de Membros** → **Gestão de Membros**.
+- **Host name/address:** `localhost`
+- **Port:** `5432`
+- **Maintenance database:** `anam`
+- **Username:** `postgres`
+- **Password:** `elber123`
+- ✅ **Marque a opção "Save password"** (para não ter que digitar sempre)
+
+### 4. Salvar Conexão
+
+Clique em **"Save"** no canto inferior direito.
+
+### 5. Verificar Conexão
+
+Se tudo estiver correto, você verá:
+- ✅ O servidor aparece na lista com um ícone verde
+- ✅ Pode expandir e ver: `Databases` > `anam`
+
+### 6. Ver os Dados
+
+1. Expanda: **Servers** > **PostgreSQL Docker** > **Databases** > **anam**
+2. Expanda: **Schemas** > **public** > **Tables**
+3. Você verá a tabela **`membros`**
+4. Clique com **botão direito** em **`membros`**
+5. Selecione **"View/Edit Data"** > **"All Rows"**
+6. Você verá todos os membros cadastrados!
+
+## 🔍 Verificar se Docker está Rodando
+
+Antes de conectar, certifique-se de que o Docker está rodando:
+
+```bash
+cd portalmassinga\backend
+docker-compose ps
+```
+
+Deve mostrar:
+- `anam-postgres` - Status: Up (healthy)
+- `anam-backend` - Status: Up (healthy)
+
+## ⚠️ Problemas Comuns
+
+### Erro: "Could not connect to server"
+
+**Solução:**
+1. Verifique se o Docker está rodando: `docker-compose ps`
+2. Verifique se o PostgreSQL Docker está na porta 5432:
+   ```bash
+   docker-compose ps
+   ```
+   Deve mostrar: `0.0.0.0:5432->5432/tcp`
+
+### Erro: "Password authentication failed"
+
+**Solução:**
+- Certifique-se de que a senha está correta: `elber123`
+- Verifique se está usando o usuário: `postgres`
+
+### Erro: "Database does not exist"
+
+**Solução:**
+- Certifique-se de que o Maintenance database está como: `anam`
+- Não use `postgres` como database inicial
+
+### Não consegue ver a tabela `membros`
+
+**Solução:**
+1. Expanda completamente: Databases > anam > Schemas > public > Tables
+2. Se não aparecer, a tabela pode não ter sido criada ainda
+3. Execute o script SQL: `sql/create-database-anam.sql`
+
+## 📊 Dados de Conexão Resumidos
+
+```
+Tipo: PostgreSQL
+Host: localhost
+Porta: 5432
+Database: anam
+Usuário: postgres
+Senha: elber123
+```
+
+## ✅ Teste Rápido
+
+Após conectar, execute esta query para verificar:
+
+```sql
+SELECT COUNT(*) FROM membros;
+```
+
+Deve retornar o número de membros cadastrados.
+
+## 🎯 Dica
+
+Salve esta conexão como favorita no pgAdmin para acesso rápido no futuro!

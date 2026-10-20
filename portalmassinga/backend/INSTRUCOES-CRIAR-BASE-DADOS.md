@@ -45,11 +45,8 @@ Após criar a base de dados, execute o script SQL:
 ## Verificar se Funcionou
 
 Após criar a base de dados e executar o script SQL, você deve ver as tabelas:
-- `member_applications` (inclui: registration_device, registration_browser, registration_user_agent, created_at para data de registo)
+- `member_applications`
 - `application_dependents`
-
-Se a tabela `member_applications` já existir sem as colunas de registo, execute também:
-- `sql/add-registration-device-browser.sql`
 
 No pgAdmin4, expanda:
 - Databases > anam2025 > Schemas > public > Tables

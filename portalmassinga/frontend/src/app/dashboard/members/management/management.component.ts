@@ -300,6 +300,23 @@ export class MembersManagementComponent implements OnInit {
     });
   }
 
+  deactivateMember(member: Member): void {
+    if (!confirm(`Tem certeza que deseja desativar ${member.nome}?`)) {
+      return;
+    }
+    this.isLoading = true;
+    this.apiClient.deactivateMemberApplication(member.id).subscribe({
+      next: () => {
+        alert('Membro desativado com sucesso.');
+        this.loadMembers();
+      },
+      error: (error) => {
+        alert('Erro ao desativar membro: ' + (error.error?.message || error.message || 'Erro desconhecido'));
+        this.isLoading = false;
+      }
+    });
+  }
+
   deleteMember(memberId: string): void {
     if (confirm('Tem certeza que deseja excluir este membro?')) {
       alert('Nota: A exclusão de membros ainda não está disponível no backend.');

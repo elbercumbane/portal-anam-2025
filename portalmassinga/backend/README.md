@@ -54,17 +54,23 @@ spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
 
-### 4. Levantar o backend
-
-Na pasta `backend`:
+### 4. Compilar e Executar
 
 ```bash
+# Windows (PowerShell) - dentro da pasta backend/
+.\mvnw.cmd clean install
 .\mvnw.cmd spring-boot:run
+
+# Windows (CMD) - dentro da pasta backend/
+mvnw.cmd clean install
+mvnw.cmd spring-boot:run
+
+# Linux/Mac - dentro da pasta backend/
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
-O Maven Wrapper detecta o JDK automaticamente se `JAVA_HOME` não estiver definido. No Linux/Mac use `./mvnw spring-boot:run`.
-
-A aplicação fica disponível em: `http://localhost:8080/api`
+A aplicação estará disponível em: `http://localhost:8080/api`
 
 ## 📡 Endpoints da API
 
@@ -142,7 +148,7 @@ backend-spring/
 │   │       └── application.properties
 │   └── test/
 ├── sql/
-│   └── create-database-anam2025.sql
+│   └── create-database-anam.sql
 ├── pom.xml
 └── README.md
 ```
@@ -165,9 +171,11 @@ A aplicação valida automaticamente:
 
 ## 🛠️ Desenvolvimento
 
-Para levantar o backend use sempre, na pasta `backend`:
+Para desenvolvimento com hot-reload, use:
 
 ```bash
-.\mvnw.cmd spring-boot:run
+mvn spring-boot:run
 ```
+
+O Spring Boot DevTools está configurado para recarregar automaticamente as mudanças.
 
